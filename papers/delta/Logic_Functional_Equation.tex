@@ -1,0 +1,3051 @@
+% Logic_Functional_Equation.tex
+%
+% "The Law of Logic as Functional Equation:
+%  A Logical Formalization of the Recognition Composition Law."
+%
+% Draft, April 2026.
+%
+% Style: MDPI-friendly single-column.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\title{A Functional-Equation Encoding of Logical Consistency on Continuous
+Positive-Ratio Comparisons:\\
+A Conditional Rigidity Theorem}
+
+\author{Jonathan Washburn\thanks{Recognition Physics Institute, Austin, TX 78701, USA.\\
+\texttt{jon@recognitionphysics.org}.}}
+
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+On the continuous-ratio comparison domain, the same forced
+functional-equation structure answers two questions. The first is a
+cost-physics rigidity question: what cost function on positive ratios
+is uniquely determined by consistent composition? The d'Alembert
+Inevitability Theorem~\cite{WashburnZlatanovicAllahyarov2026} and the
+Canonical Reciprocal Cost Uniqueness
+Theorem~\cite{WashburnZlatanovic2026} answer it. The second is a
+logic-of-comparison question: what cost function is uniquely
+determined by an operational encoding of the four classical
+Aristotelian conditions on a continuous comparison operator?
+
+We give the encoding (identity as zero self-cost, non-contradiction as
+symmetric single-valued comparison, totality as definiteness on the
+open positive quadrant, composition consistency as route-independence
+of the combiner), carry two named regularity hypotheses alongside it
+(continuity of the operator and polynomial degree-two closure of the
+combiner), add a bridge condition (scale invariance), and prove four
+translation lemmas reducing the encoded conditions to the hypotheses
+of the d'Alembert Inevitability Theorem. The derived cost function
+$F(r) := C(r,1)$ then satisfies the Recognition Composition Law
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = 2F(x) + 2F(y) + c\,F(x)F(y),
+\qquad c \in \mathbb{R}.
+\]
+Under convexity, non-negativity, and the unit log-curvature calibration
+$\kappa(F) := \lim_{t \to 0} 2F(e^t)/t^2 = 1$, the family splits into a
+bilinear branch ($c \neq 0$) and an additive branch ($c = 0$). The
+bilinear branch admits the $\alpha$-family $F_\alpha(x) = (1/\alpha^2)
+(\cosh(\alpha \ln x) - 1)$ with $c = 2\alpha^2$ and $\alpha \geq 1$;
+its $\alpha = 1$ representative is the canonical reciprocal cost
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$. The additive branch admits the
+quadratic-logarithm cost $\tfrac{1}{2}(\ln x)^2$. Both branches give
+the same calibrated representatives the cost-physics rigidity theorems
+produce.
+
+A canonicality theorem (Theorem~\ref{thm:canonicality}) shows that
+under the magnitude-of-mismatch interpretation of the comparison
+operator, the encoding (L1)--(L4) is the unique reading of the four
+classical Aristotelian conditions that preserves their propositional
+content. A direct theorem
+(Theorem~\ref{thm:rcl-direct}) gives a short self-contained proof
+that an operative positive-ratio comparison (continuous, nontrivial,
+with $C(x,x) = 0$, $C(x,y) = C(y,x)$, and scale invariance) admitting
+a symmetric polynomial combiner of degree at most two satisfies the
+Recognition Composition Law. The polynomial restriction is part of
+the theorem's hypothesis, not a regularity carried for technical
+convenience: Proposition~\ref{prop:finite-closure-necessary} exhibits
+a continuous operative comparison ($C(x,y) = (\ln(x/y))^4$) whose
+continuous combining rule $\Phi(a, b) = 2a + 2b + 12\sqrt{ab}$ is
+closed under iteration on $[0, \infty)$ but is not polynomial of
+degree at most two, and the conclusion of the theorem is false for
+this example. The identification reported here is therefore not
+``every comparison operator satisfying the four classical conditions
+yields the Recognition Composition Law''; it is the narrower and
+exact identification \emph{finite pairwise polynomial comparison
+semantics of classical invariance imply the Recognition Composition
+Law}. A short structural theorem
+(Theorem~\ref{thm:reality-satisfies-logic}) shows that any
+\emph{reality structure} (a triple of states, a real-valued
+comparison, and a relation of compositional inference, satisfying
+definite states, single-valued comparison, decidability, and
+compositional inference) automatically satisfies the four classical
+conditions on its comparison operator. Combining the canonicality
+theorem, the direct theorem, the reality theorem, and the calibration
+machinery, we obtain
+(Corollary~\ref{cor:rcl-logic-reality}) the following identification
+on the operative domain (continuous positive-ratio reality structures
+with finite pairwise polynomial closure): the recognition composition
+law, the law of logic, and the structural form of any reality on this
+domain are the same mathematical object. The operative domain
+contains every pairwise physical measurement, every continuous
+likelihood ratio, and every continuous distance or divergence on a
+positive-quantity state space. The arithmetic content of the encoding
+is recovered in the first companion
+paper~\cite{Washburn2026Arithmetic}; the realization-invariance of
+that arithmetic across the discrete propositional, modular, ordered,
+and categorical realizations is the meta-theorem of the second
+companion paper~\cite{Washburn2026UniversalForcing}. The present
+paper does not extend to modal or higher-order logics. The discussion
+section places the result beside the historical formalisations
+(Aristotle to univalent foundations), Wigner's question, the Feynman
+name-versus-thing distinction, and the open questions in the
+philosophy of mathematics the result bears on.
+\end{abstract}
+
+\noindent\textbf{Keywords:} laws of logic; functional equation;
+d'Alembert equation; Recognition Composition Law; canonical reciprocal cost;
+Wigner's puzzle; foundations of logic.
+
+\medskip
+
+\noindent\textbf{MSC 2020:} 03A05, 03B22, 39B22, 39B52, 39B82.
+
+\section{Introduction}
+
+For nearly two and a half thousand years, the laws of logic have been
+treated as a separate object of study from the laws governing the physical
+world. Aristotle's three laws of thought, namely the law of identity
+($A = A$), the law of non-contradiction ($\neg(A \wedge \neg A)$), and
+the law of excluded middle ($A \vee \neg A$), were stated in the
+\emph{Prior Analytics} c.~350 BCE \cite{Aristotle}, and have been considered, together
+with composition consistency in various forms, the foundational framework
+within which valid reasoning occurs.
+
+Successive generations have given these laws increasingly precise formal
+articulations. The Stoics, beginning with Chrysippus c.~280 BCE, developed a
+propositional calculus around the conditional. Boole's \emph{Laws of
+Thought} \cite{Boole1854} recast logic as an algebra. Frege's
+\emph{Begriffsschrift} \cite{Frege1879} introduced the predicate calculus
+and the quantifiers, providing the notation in which the modern
+axiomatization of mathematics is written. Russell and Whitehead's
+\emph{Principia Mathematica} \cite{RussellWhitehead1913} established the
+logicist program and produced a derivation of arithmetic from the formal
+calculus. Hilbert and his school in the 1900s and 1920s axiomatized the
+metalanguage of formal proof~\cite{Hilbert1925}. G\"odel's incompleteness
+theorems \cite{Goedel1931} established the limits any such axiomatization
+can attain. Tarski's semantic conception of truth \cite{Tarski1933} gave the
+relationship between formal language and model a precise account. Gentzen
+introduced natural deduction and sequent calculus \cite{Gentzen1935},
+making the structural content of inference explicit. The Curry--Howard
+correspondence \cite{Curry1934, Howard1969} identified proofs with programs.
+Lawvere's categorical logic \cite{Lawvere1964} presented logic as a
+structure on a category. Girard's linear logic \cite{Girard1987} introduced
+resource-aware deduction. The univalent foundations program
+\cite{HoTT2013} has explored type-theoretic logic with homotopical content.
+
+Each of these is a substantial formal articulation of one or more aspects of
+the laws of logic. Each presents the laws as governing rules within a
+designated formal system: a syntax, an algebra, a calculus, a category, a
+type theory. None presents the laws of logic as a single unique mathematical
+object whose form is forced rather than chosen. The rules describe how
+logic operates inside a chosen framework. They do not specify, as a unique
+mathematical object, what the laws themselves are.
+
+Feynman, in his Cornell Messenger Lectures of 1964, described the
+distinction his father had pressed on him during walks in the woods:
+between knowing the name of a bird in five languages and knowing what
+the bird is~\cite{Feynman1964}. The prior formalizations of logic give
+the laws increasingly precise and increasingly expressive names. Each
+remains correct as far as it reaches; the names are mutually consistent
+on overlapping domains; the body of knowledge built on each is real and
+in some cases indispensable to twentieth-century mathematics. What none
+of the formalizations does is exhibit, as a single mathematical
+object, what the laws of logic structurally are. The present paper, on
+the restricted domain of continuous comparisons of positive ratios,
+identifies such an object: the unique continuous cost function
+compatible with the encoded Aristotelian conditions plus the named
+regularity hypotheses. The identification is conditional on the
+encoding; it is mathematically rigorous only on the restricted domain;
+it does not generalize automatically to discrete propositional logic or
+to other formal systems where the encoding choices may be different.
+Within these limits, however, the identification has the form a Feynman
+``what the bird is'' answer would have to take: a unique mathematical
+object, characterized by structural conditions, with no parameter free
+to set after the conditions are fixed.
+
+In this paper we present a formal articulation of a different kind. We
+propose a specific operational encoding of four Aristotelian-style
+conditions on a continuous comparison operator on positive ratios, carry
+through two named regularity hypotheses (continuity of the operator and
+polynomial closure of the route-independence combiner), and prove that
+under the encoding the conditions force the Recognition Composition Law
+$F(xy) + F(x/y) = 2F(x) + 2F(y) + c\,F(x)F(y)$ on the derived cost
+function. After branch selection (bilinear $c \neq 0$) and a
+multiplicative-coordinate normalization, the unique solution is the
+canonical reciprocal cost $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$. The
+parallel additive branch ($c = 0$) yields the quadratic-logarithm cost
+$\tfrac{1}{2}(\ln x)^2$ as its unique calibrated solution.
+
+The contribution is a structural \emph{translation theorem}, not a
+philosophical reduction. The Aristotelian labels we attach to the
+operator-level conditions (Identity, Non-contradiction, Totality,
+Composition consistency) are intended as operational analogues on the
+positive-ratio comparison setting; we defend each encoding in
+Section~\ref{sec:conditions} and acknowledge in
+Section~\ref{subsec:not-claimed} what we are \emph{not} claiming. We do
+not claim a derivation of classical logic from cost-physics, nor a
+derivation of cost-physics from classical logic. The claim is narrower
+and structural: under a specific encoding, the same continuous functional
+equation is what the conditions admit.
+
+\subsection{Two derivations, one forced combiner family}
+
+Two independently posed rigidity questions, on the continuous-ratio
+comparison domain, characterize the same forced combiner family with
+the same calibrated branch representatives.
+
+The first is a cost-physics question. Under what minimal hypotheses is
+a positive ratio-based cost function uniquely determined by its
+composition behaviour? The functional form $F(xy) + F(x/y) = \Phi(F(x),
+F(y))$ did not enter the literature as a formalization of logic. It
+arose in the analysis of consistent combining rules for ratio-based
+costs, in the framework now called Recognition
+Geometry~\cite{PardoGuerraThapaWashburnAllahyarov2026,
+WashburnZlatanovicAllahyarov2026, WashburnZlatanovic2026}. Two recent
+rigidity theorems answer it. The d'Alembert Inevitability
+Theorem~\cite{WashburnZlatanovicAllahyarov2026} shows that for
+continuous nonconstant $F : \mathbb{R}_{>0} \to \mathbb{R}$ with
+$F(1) = 0$ satisfying $F(xy) + F(x/y) = P(F(x), F(y))$ with $P$ a
+symmetric polynomial of total degree at most two, the combiner is
+forced into $P(u, v) = 2u + 2v + cuv$ for some $c \in \mathbb{R}$.
+Higher-degree polynomial combiners are excluded by an explicit
+degree-mismatch argument. The Canonical Reciprocal Cost Uniqueness
+Theorem~\cite{WashburnZlatanovic2026} shows that under the canonical
+$c = 2$ choice with continuity, reciprocal symmetry $F(x) = F(x^{-1})$,
+normalization $F(1) = 0$, and the unit log-curvature calibration
+$\kappa(F) := \lim_{t \to 0} 2F(e^t)/t^2 = 1$, the unique solution is
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$. A companion
+result~\cite{WashburnRahnamai2026} reaches the same canonical form in
+the ratio-matching optimization setting.
+
+The second question is the one this paper poses. Under what minimal
+hypotheses is a positive ratio-based cost function uniquely determined
+by an operational encoding of the four classical Aristotelian
+conditions on a continuous comparison operator? The encoding is
+$C(x, x) = 0$ for identity, $C(x, y) = C(y, x)$ for non-contradiction
+read as single-valuedness under reordering, totality of $C$ on the
+open positive quadrant for excluded middle in its continuous-domain
+form, and the existence of a combining rule $\Phi$ with
+$F(xy) + F(x/y) = \Phi(F(x), F(y))$ for composition consistency. These
+four conditions, with two named regularity hypotheses (continuity of
+the operator and polynomial degree-two closure of $\Phi$) and a bridge
+condition (scale invariance), reduce to the hypotheses of the
+d'Alembert Inevitability Theorem on the derived cost. The reduction is
+the \emph{Translation Theorem} (Theorem~\ref{thm:translation}). The
+verification is short and is the technical core of the paper.
+
+The d'Alembert Inevitability Theorem then forces the Recognition
+Composition Law family. The Canonical Reciprocal Cost Uniqueness
+Theorem then forces $J$ on the bilinear branch under the calibration
+and the multiplicative-coordinate normalization $\alpha = 1$. The two
+questions, posed for different reasons, characterize the same
+mathematical object.
+
+The convergence is at the level of the underlying hypotheses, not
+between two derivations from disjoint first principles. The
+Aristotelian-style conditions, encoded as we encode them, generate the
+same set of hypotheses the cost-physics rigidity theorems use; the
+agreement of conclusions is the agreement of inputs, not of two
+independent inputs. The point of the paper is therefore narrower than
+``logic and cost-physics agree'': it is that one natural reading of
+the cost-physics hypotheses on a continuous comparison operator is in
+classical logical vocabulary. We discuss this in
+Section~\ref{sec:wigner}.
+
+The translation theorem itself is formalised in the canonical
+Lean~4 Recognition Science library: the module
+\texttt{RecognitionScience.Foundation.LogicAsFunctionalEquation}
+contains the full translation from the encoded conditions to the
+hypotheses of the d'Alembert Inevitability Theorem, with no residual
+\texttt{sorry}s, building against the existing peer-reviewed
+\texttt{Inevitability} and \texttt{Cost.FunctionalEquation} modules.
+The continuous-combiner extension is formalised in
+\texttt{Foundation.GeneralizedDAlembert}, also with no residual
+\texttt{sorry}s. The H-side classical input
+(\texttt{aczel\_kannappan\_continuous\_dAlembert}) is now a discharged
+theorem rather than an axiom; the combiner-side analytic content is
+exposed as the explicit hypothesis package
+\texttt{ContinuousCombinerAnalysisInputs}, with the same module
+formally recording the quartic-log obstruction that prevents the
+package from being derived from continuity alone. The earlier
+\texttt{Foundation.PolynomialityFromLogic} module, which reduced
+polynomiality to a closure-under-iteration analyticity-propagation
+class assumption, is superseded by
+Proposition~\ref{prop:finite-closure-necessary}, which refutes the
+implication that closure under iteration alone forces analyticity. The
+analytic reparameterisation counterexample
+(Proposition~\ref{prop:analytic-reparam-counterexample}) further shows
+that assuming real-analyticity at the origin directly is still not
+enough to force polynomial degree at most two. The Lean formalisation
+therefore verifies the structural mathematics of the paper; what it
+does not and cannot verify is the faithfulness of the Aristotelian
+reading of the encoded conditions, which is a choice of definition and
+not a theorem about Aristotle. The full module status, including the
+H-side discharge and the contents of the hypothesis package, is
+reported in Section~\ref{sec:lean-status}.
+
+\subsection{What we are not claiming}\label{subsec:not-claimed}
+
+The result is a translation theorem on a restricted domain, not a
+foundational reduction. Four explicit non-claims:
+
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+\item Classical logic is not reduced to the cost framework. Valid
+reasoning on arbitrary propositions in arbitrary formal systems
+remains the province of mathematical logic and is unaffected by the
+present result.
+\item Finite pairwise polynomial closure of the route-independence
+combiner is not asserted as a content of the four classical laws. It
+is part of the theorem's hypothesis. Without it, the conclusion of
+Theorem~\ref{thm:rcl-direct} is false, witnessed by the operator
+$C(x, y) = (\ln(x/y))^4$ with continuous combiner
+$\Phi(a, b) = 2a + 2b + 12\sqrt{ab}$
+(Proposition~\ref{prop:finite-closure-necessary}). Real-analyticity at
+the origin does not repair the gap either
+(Proposition~\ref{prop:analytic-reparam-counterexample}). The
+identification reported here is therefore not ``every comparison
+operator satisfying the four classical conditions yields the
+Recognition Composition Law''; it is the narrower and exact
+identification ``finite pairwise polynomial comparison semantics of
+classical invariance imply the Recognition Composition Law''
+(\S\ref{subsec:scope-statement}).
+\item The encoding of the Aristotelian conditions is shown to be
+canonical under a specific named interpretation of the comparison
+operator (Theorem~\ref{thm:canonicality}: under the
+magnitude-of-mismatch interpretation, the encoding (L1)--(L4) is the
+unique reading that preserves the propositional content of the four
+classical laws). The conditionality remaining at this point is on the
+choice of interpretation: a non-cost-based reading of the comparison
+operator (a directed revision cost, an asymmetric divergence) would
+yield a different encoding. Under the standard cost-based reading,
+the encoding is determined.
+\item The unit log-curvature calibration $\kappa(F) = 1$, with
+convexity and non-negativity, does not by itself select $J$. The
+calibration leaves a multiplicative-coordinate scaling free, and the
+additive branch survives with its own canonical form
+$\tfrac{1}{2}(\ln x)^2$. Singling out $J$ requires both branch
+selection ($c \neq 0$) and a coordinate normalization fixing the
+exponent scale.
+\end{enumerate}
+
+What the result does claim is short. Under the encoding plus the
+named regularity hypotheses, the Recognition Composition Law is
+forced as the unique route-independence combiner family. Its
+calibrated solutions on each branch are the canonical forms: $J$ on
+the bilinear branch after the $\alpha = 1$ normalization, and
+$\tfrac{1}{2}(\ln x)^2$ on the additive branch. The extension to
+other carriers (discrete propositional, modular, ordered, categorical)
+is the subject of the second companion
+paper~\cite{Washburn2026UniversalForcing}, where the
+realization-invariance question is given a precise mathematical form.
+
+\subsection{The exact scope of the theorem}\label{subsec:scope-statement}
+
+A point of method that should be stated once, sharply, before any
+discussion of implications.
+
+\paragraph{Without finite pairwise polynomial closure, the theorem is
+false.} The quartic-log counterexample of
+Proposition~\ref{prop:finite-closure-necessary} is an operative
+positive-ratio comparison satisfying (L1)--(L4), continuity (R1),
+scale invariance (B1), and non-triviality (B2), with a continuous
+symmetric combining rule $\Phi(a, b) = 2a + 2b + 12\sqrt{ab}$ that is
+closed under iteration on $[0, \infty)$ and is \emph{not} a member of
+the Recognition Composition Law family. The analytic-reparameterisation
+counterexample of Proposition~\ref{prop:analytic-reparam-counterexample}
+shows that even strengthening continuity to real-analyticity at the
+origin does not close the gap. Polynomial closure is doing real work,
+and we say so explicitly: dropping (R2) makes the conclusion of
+Theorem~\ref{thm:translation} fail, by witness, in the same paper.
+
+\paragraph{Why this is not a weakness of the theorem.} The theorem is
+not the universal claim ``every comparison operator satisfying the
+four classical conditions yields the Recognition Composition Law.''
+It is the structurally narrower claim
+\begin{quote}
+\itshape
+finite pairwise polynomial comparison semantics of classical
+invariance imply the Recognition Composition Law.
+\end{quote}
+Finite pairwise polynomial closure is part of the theorem's hypothesis,
+not a regularity condition carried for technical convenience. It is
+the structural content that distinguishes a finite-algebra comparison
+semantics from broader continuous compositional algebras of
+positive-ratio comparison. Without it, the operator can still satisfy
+the four Aristotelian conditions and still admit a route-independent
+combiner; what changes is which combiner family the comparison lives
+in, and a non-RCL family is, on the quartic-log example, a perfectly
+admissible alternative.
+
+\paragraph{What this clarifies.} The theorem is sharp on its actual
+domain: \emph{within the class of comparison operators whose
+combiner is a polynomial of total degree at most two}, the
+Aristotelian-style encoding forces the Recognition Composition Law
+family. Outside that class the conclusion does not hold, and this
+paper exhibits the witnesses. The right reading is therefore not
+that polynomial closure is an embarrassment to be apologised for, but
+that it names the precise compositional class for which the
+identification reported here holds. Whether other compositional
+classes admit their own rigidity theorems is a separate open question;
+this paper does not address it.
+
+\subsection{Companion installments}\label{subsec:companions}
+
+Two companion papers extend the present rigidity theorem in directions
+flagged here as out of scope.
+
+The first companion paper~\cite{Washburn2026Arithmetic} takes the
+present continuous positive-ratio realization as foundation and
+recovers the natural-number tower (Peano arithmetic with order, then
+the integers, rationals, reals, and complex numbers) as an internal
+construction inside the operative domain, rather than carried in by an
+external set-theoretic commitment. The non-claim above that the present
+paper does not derive arithmetic is therefore narrower than it reads: it
+does not derive arithmetic \emph{within this paper}; arithmetic is the
+subject of the next installment, where it is recovered from the same
+encoding extended by the orbit construction on the canonical generator.
+
+The second companion paper~\cite{Washburn2026UniversalForcing} states
+and proves the Universal Forcing Meta-Theorem: in every admissible
+realization of the Law of Logic, the same arithmetic structure is
+canonically forced, unique up to canonical isomorphism. The present
+paper's continuous positive-ratio realization is the first
+mathematically dense instance of that meta-theorem; the discrete
+propositional case flagged above as remaining open is treated there as
+one further realization of the same abstract framework, alongside
+modular, ordered, categorical, and motivating extra-mathematical
+realizations. The meta-theorem turns the question of whether the
+identification reported here generalises beyond continuous positive
+ratios into a precise mathematical statement that can be proved or
+refuted realization by realization.
+
+The three papers therefore form a triple. The present paper supplies
+the rigidity theorem on continuous positive ratios. The first
+companion paper carries that rigidity into the recovery of the number
+tower. The second companion paper abstracts the realization framework
+and proves invariance of the recovered arithmetic across all
+admissible realizations of the Law of Logic.
+
+\subsection{Wigner's question, framed honestly}
+
+In 1960, Eugene Wigner asked why mathematics is ``unreasonably
+effective'' in the natural sciences~\cite{Wigner1960}. The puzzle is
+that abstract mathematical activity, conducted in pursuit of internal
+coherence, gives quantitative descriptions of physical phenomena it
+was not designed to describe.
+
+The present result bears on Wigner's question in a narrow way. Under
+the encoding adopted here, the Aristotelian-labelled hypotheses on a
+comparison operator are the same hypotheses the cost-uniqueness
+derivations of \cite{WashburnZlatanovicAllahyarov2026,
+WashburnZlatanovic2026} use. The agreement between the two readings of
+$J$, one in physics-and-information-geometry vocabulary and one in
+Aristotelian-style vocabulary, is not a coincidence between
+independent derivations. It is the same hypothesis class characterized
+once, with two vocabularies attached.
+
+The paper is therefore a rigidity theorem with an interpretive layer.
+The rigidity theorem is the technical core. The interpretive layer
+makes the encoding question substantive. Whether the convergence
+constitutes a partial dissolution of Wigner's puzzle or only an
+observation that the same hypotheses admit two readings on this
+domain is a question we take up in Section~\ref{sec:wigner} without
+overclaiming either way.
+
+\subsection{Organization}
+
+Section~\ref{sec:operator} introduces the comparison operator and the
+derived cost function. Section~\ref{sec:conditions} presents the encoding
+of the four Aristotelian-style conditions on the operator, separates the
+logical-content conditions (L1)--(L4) from the named regularity
+hypotheses (R1) and (R2), and defends each encoding.
+Section~\ref{sec:translation} proves the four translation lemmas
+connecting the encoded conditions to the hypotheses of the d'Alembert
+Inevitability Theorem. Section~\ref{sec:main} states and proves the main
+theorem: the encoded conditions force the Recognition Composition Law
+family on the derived cost function. Section~\ref{sec:cost} states the
+cost corollary, identifying $J$ as the unique calibrated solution on the
+bilinear branch after a multiplicative-coordinate normalization, with
+the additive-branch counterpart $\tfrac{1}{2}(\ln x)^2$ also displayed.
+Section~\ref{sec:finite-pairwise} gives a direct self-contained proof
+of the Recognition Composition Law from the operative comparison
+conditions plus finite pairwise polynomial closure
+(Theorem~\ref{thm:rcl-direct}), and exhibits the quartic-log
+counterexample (Proposition~\ref{prop:finite-closure-necessary}) that
+shows the polynomial restriction is essential.
+Section~\ref{sec:operative} states the operative-domain identification
+(Corollary~\ref{cor:rcl-logic-reality}).
+Section~\ref{sec:wigner} discusses the historical separation of logic
+from physics, the Feynman ``name versus thing'' distinction (with
+attention to its dual edge), and the Wigner question with explicit
+acknowledgement of the encoding-circularity concern.
+Section~\ref{sec:scope} is an account of scope and open questions,
+including the final status of finite pairwise polynomial closure after
+the closure-under-iteration and analyticity repair attempts both fail,
+and is followed by concluding remarks.
+
+\section{The Comparison Operator and Derived Cost}\label{sec:operator}
+
+\begin{definition}[Comparison operator]
+\label{def:comparison-operator}
+A \emph{comparison operator} is a function
+$
+C : \mathbb{R}_{>0} \times \mathbb{R}_{>0} \longrightarrow \mathbb{R}.
+$
+The value $C(x, y)$ is interpreted as the cost (real-valued, possibly
+signed) of comparing the two positive quantities $x$ and $y$.
+\end{definition}
+
+The two-argument signature reflects the natural data of a comparison: two
+quantities being placed into relation. We will pass to a one-argument cost
+on ratios via the bridge condition introduced below.
+
+\begin{definition}[Derived cost]
+\label{def:derived-cost}
+The \emph{derived cost} associated to a comparison operator $C$ is the
+function
+\[
+F : \mathbb{R}_{>0} \longrightarrow \mathbb{R}, \qquad
+F(r) := C(r, 1).
+\]
+\end{definition}
+
+The derived cost fixes the second argument at the multiplicative identity.
+Under the bridge condition (scale invariance) introduced in
+Section~\ref{sec:conditions}, the derived cost depends only on the ratio of
+the two arguments, and the two-argument operator can be reconstructed
+from $F$ via $C(x, y) = F(x/y)$.
+
+\section{The Aristotelian Conditions, Encoded}\label{sec:conditions}
+
+The encoding of the four Aristotelian-style conditions on a continuous
+comparison operator on positive ratios has two halves. The
+\emph{logical content} is four conditions that carry the structural
+import of the classical laws on this domain. The \emph{regularity
+hypotheses} are two analytical conditions (continuity and polynomial
+degree-two closure of the route-independence combiner) carried
+alongside the logical content. The regularity hypotheses are
+\emph{not} claimed to be contents of the classical laws.
+
+The split tells the reader which parts of the rigidity theorem do the
+structural work attributed to the classical laws and which parts are
+regularity demands carried by hand.
+
+\subsection{Logical content versus regularity hypotheses}\label{subsec:logical-vs-regularity}
+
+\paragraph{Logical content.} On a continuous comparison operator on
+positive ratios, the four classical Aristotelian conditions translate
+as follows. Each translation is operational, not derivational.
+Section~\ref{subsec:encoding-defenses} defends each one.
+
+\begin{enumerate}[label=(L\arabic*), leftmargin=*]
+\item \textbf{Identity, encoded as zero self-cost}: $C(x, x) = 0$.
+The cost of comparing a quantity to itself is zero.
+\item \textbf{Non-contradiction, encoded as symmetric single-valued
+comparison}: $C(x, y) = C(y, x)$. The cost of a comparison does not
+depend on which of the two quantities is named first; when read as a
+magnitude of mismatch (rather than as a directed revision cost), the
+comparison is single-valued under reordering of arguments. We use this
+longer label throughout the paper to flag that the identification with
+non-contradiction is an operational encoding, not a claim of literal
+equivalence to the propositional law $\neg(A \wedge \neg A)$.
+\item \textbf{Totality, encoded as definiteness on the open
+quadrant}: $C$ is defined on the entire open positive quadrant
+$\mathbb{R}_{>0} \times \mathbb{R}_{>0}$ and takes real values. Every
+well-formed comparison returns a definite real value; there are no
+input pairs on which the comparison fails to be defined or returns an
+``undefined'' marker. This is the continuous-domain encoding of
+excluded middle: on every input, the comparison takes a value (the
+analogue of ``$A$ holds or $\neg A$ holds''), with no third
+``undefined'' possibility. We note that, under the type signature of
+Definition~\ref{def:comparison-operator} (a function on the open
+positive quadrant), this condition is \emph{automatic}: the content
+the Aristotelian labelling is attached to is the choice of the
+definition itself, rather than a separate axiom. The encoding of
+excluded middle is therefore the structure of the operator's signature
+and codomain, not a theorem about the operator.
+\item \textbf{Composition consistency (route-independence)}: there is a
+combining rule $\Phi$ such that the cost of composite comparisons in the
+forward-and-backward symmetric form satisfies
+$F(xy) + F(x/y) = \Phi(F(x), F(y))$ on the derived cost. The cost of a
+composite comparison is a function of its constituent costs alone; the
+route by which the composite is assembled does not contribute additional
+cost.
+\end{enumerate}
+
+\paragraph{Regularity hypotheses.} The following two hypotheses are
+analytical conditions, named explicitly, that we carry alongside the
+logical content. We do not claim either is forced by the four classical
+laws.
+
+\begin{enumerate}[label=(R\arabic*), leftmargin=*]
+\item \textbf{Continuity}: the comparison operator $C$ is jointly
+continuous on $\mathbb{R}_{>0} \times \mathbb{R}_{>0}$. This is a
+regularity demand on the operator, not a logical content. It supplies
+the analytic infrastructure on which the d'Alembert-type rigidity machinery
+runs.
+\item \textbf{Polynomial closure of $\Phi$ of degree at most two}: the
+combining rule $\Phi$ in (L4) is a symmetric polynomial of total degree
+at most two on $\mathbb{R}^2$. This is a regularity restriction inherited
+from the d'Alembert Inevitability Theorem
+\cite{WashburnZlatanovicAllahyarov2026}. We carry it explicitly. The
+quartic-log counterexample of
+Proposition~\ref{prop:finite-closure-necessary} shows that the
+restriction is essential: without it, an operative positive-ratio
+comparison can have a non-polynomial continuous combiner that escapes
+the Recognition Composition Law family. The analytic reparameterisation
+counterexample of Proposition~\ref{prop:analytic-reparam-counterexample}
+shows that even real-analyticity of the combiner at the origin does not
+force polynomial degree at most two. Thus polynomial closure remains an
+essential finite-algebra hypothesis, not a removable regularity condition.
+\end{enumerate}
+
+\paragraph{Bridge and non-triviality.} Two further conditions, of a
+different character from either logical content or regularity, complete
+the setup.
+
+\begin{enumerate}[label=(B\arabic*), leftmargin=*]
+\item \textbf{Scale invariance}: $C(\lambda x, \lambda y) = C(x, y)$ for
+all $\lambda > 0$. This is a structural bridge that lets the
+two-argument operator descend consistently to a one-argument cost on the
+multiplicative group of positive ratios. It is motivated by the
+scale-free character of the classical laws (the laws make no reference
+to absolute magnitude) but is not itself one of the classical laws.
+\item \textbf{Non-triviality}: there exists $x_0 > 0$ with
+$F(x_0) \neq 0$. This excludes the constant-zero operator, which
+vacuously satisfies all the other conditions.
+\end{enumerate}
+
+The split between (L\,$*$), (R\,$*$), (B\,$*$) is preserved through
+the rest of the paper. The main rigidity theorem is conditional on all
+seven. Each lemma below names which of the seven it uses, and the
+regularity hypotheses are flagged each time they enter.
+
+\subsection{Defenses of the encodings}\label{subsec:encoding-defenses}
+
+The four encodings of the classical laws are open to alternatives. We
+defend each below.
+
+\paragraph{(L1) Identity.} The identification of $C(x, x) = 0$ with the
+law of identity $A = A$ is the cleanest of the four. The cost of
+comparing a quantity to itself is zero. The identification fixes the
+normalization of the cost scale; nothing further is at stake.
+
+\paragraph{(L2) Non-contradiction.} The identification of $C(x, y) =
+C(y, x)$ with non-contradiction is contestable. Two readings of
+``comparison'' need to be distinguished. First, comparison as a
+magnitude of mismatch between two configurations: how different are
+$x$ and $y$? Under this reading, the cost is symmetric in its arguments;
+the question of which configuration is named first is immaterial because
+the magnitude of mismatch is a property of the pair, not of the order
+of presentation. Second, comparison as a directed revision: what does it
+cost to update $x$ to match $y$, or $y$ to match $x$? Under this reading,
+the cost is plausibly asymmetric and (L2) does not hold.
+
+We adopt the first reading. This is a choice. The choice aligns with the
+Aristotelian formulation in the following sense: if a single comparison
+is held to have two distinct values $C(x, y) \neq C(y, x)$, the same
+comparison would have two simultaneous valuations, in violation of the
+single-valuedness that any well-formed predication requires. The
+asymmetric reading does not violate this; it simply says that ``compare
+$x$ to $y$'' and ``compare $y$ to $x$'' are different comparisons with
+distinct asymmetric values. We do not claim the symmetric reading is the
+only natural one. We claim it is the natural one for cost as a magnitude
+of mismatch, and we adopt it for that purpose.
+
+\paragraph{(L3) Totality.} The identification of (L3) with excluded
+middle requires explicit care. Classical excluded middle says that for
+every well-formed proposition $A$, either $A$ or $\neg A$ holds. On a
+continuous comparison operator, the natural analogue is that for every
+input pair $(x, y)$, the comparison returns a value: there are no input
+configurations on which the comparison is undefined.
+
+We \emph{separate this from continuity}. A function can be total,
+i.e.\ defined everywhere on its domain, without being continuous. Step functions,
+the Dirichlet function, and many other discontinuous functions are total
+on their domains. Continuity is a regularity property; totality is the
+content we identify with excluded middle.
+
+The formal definitions below therefore separate (L3)
+\emph{Totality} (the operator is defined on all of $\mathbb{R}_{>0}^2$,
+automatic from Definition~\ref{def:comparison-operator}) from (R1)
+\emph{Continuity} (joint continuity on the open quadrant).
+
+\paragraph{(L4) Composition consistency.} The classical content of
+composition consistency is the transitivity and well-formedness of
+inference: if a composite reasoning step is valid, its validity is
+determined by the validity of its constituent steps, with no additional
+contribution from the order or association of the assembly. On a
+continuous comparison operator, the natural analogue is route-independence
+of the composite cost: the cost of comparing the assembled compositions
+$xy$ and $x/y$ is a function of the costs of the constituent ratios
+$F(x)$ and $F(y)$, not of any further data about how the composition
+was formed.
+
+This is what (L4) asserts: the combining rule $\Phi$ exists. The
+existence of $\Phi$, taken as a symmetric continuous function on
+$\operatorname{Range}(F)^2$, is the content we identify with composition
+consistency.
+
+The further restriction that $\Phi$ be a polynomial of total degree at
+most two is \emph{not} part of (L4). It is the regularity hypothesis (R2),
+named separately. (R2) is what permits the
+d'Alembert Inevitability Theorem to apply directly.
+Proposition~\ref{prop:finite-closure-necessary} shows that the
+polynomial restriction is essential, not redundant. Proposition~\ref{prop:analytic-reparam-counterexample}
+shows that real-analyticity of the combiner at the origin also fails to
+force polynomial degree at most two. Thus (R2) is the exact finite
+pairwise algebra condition used by the theorem.
+
+\paragraph{Summary of the split.} The four classical Aristotelian-style
+conditions are (L1)--(L4). The two analytic hypotheses (R1) and (R2)
+are named regularity demands. (B1) and (B2) are a structural bridge
+and a degeneracy exclusion. The main rigidity theorem
+(Section~\ref{sec:main}) uses all seven. The claim is that (L1)--(L4)
+augmented by (R1), (R2), (B1), (B2) force the Recognition Composition
+Law; (L1)--(L4) alone do not. The encoding (L1)--(L4) is the new
+content of the paper; the rigidity then follows from the published
+d'Alembert Inevitability Theorem.
+
+\subsection{The conditions, formally}
+
+\begin{definition}[Identity]
+\label{def:identity}
+A comparison operator $C$ \emph{satisfies Identity} if
+\[
+C(x, x) = 0 \quad \text{for all } x > 0.
+\]
+\end{definition}
+
+\begin{definition}[Non-contradiction]
+\label{def:noncontradiction}
+A comparison operator $C$ \emph{satisfies Non-contradiction} if
+\[
+C(x, y) = C(y, x) \quad \text{for all } x, y > 0.
+\]
+\end{definition}
+
+\begin{definition}[Totality (logical content)]
+\label{def:totality}
+A comparison operator $C$ \emph{satisfies Totality} if it is defined on
+all of $\mathbb{R}_{>0} \times \mathbb{R}_{>0}$. (This is automatic from
+Definition~\ref{def:comparison-operator}, which defines $C$ as a
+function on the open positive quadrant. We name the condition explicitly
+because it is the operational content we identify with excluded middle:
+every input pair returns a value, with no third ``undefined'' alternative.)
+\end{definition}
+
+\begin{definition}[Continuity (regularity hypothesis (R1))]
+\label{def:continuity}
+A comparison operator $C$ \emph{satisfies Continuity} if the two-variable
+map $(x, y) \longmapsto C(x, y)$ is jointly continuous on
+$\mathbb{R}_{>0} \times \mathbb{R}_{>0}$. This is a regularity hypothesis,
+not a logical content; it is named separately from Totality
+(Definition~\ref{def:totality}).
+\end{definition}
+
+\begin{definition}[Composition consistency (logical content)]
+\label{def:composition-consistency}
+A comparison operator $C$ \emph{satisfies Composition consistency} if
+there exists a function $\Phi : \mathbb{R}^2 \to \mathbb{R}$ such that
+the derived cost $F(r) := C(r, 1)$ satisfies
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = \Phi(F(x), F(y))
+\quad \text{for all } x, y > 0.
+\]
+The function $\Phi$ is the \emph{combining rule}.
+\end{definition}
+
+\begin{definition}[Polynomial closure of $\Phi$ (regularity hypothesis (R2))]
+\label{def:route-independence}
+A comparison operator $C$ that satisfies Composition consistency
+\emph{satisfies Polynomial closure of degree at most two} if the
+combining rule $\Phi$ extends to a symmetric polynomial $P \in
+\mathbb{R}[u, v]$ of total degree at most two on $\mathbb{R}^2$ for which
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = P(F(x), F(y))
+\quad \text{for all } x, y > 0.
+\]
+This is a regularity hypothesis on the combining rule, not a content of
+Composition consistency. We adopt it in the main theorem because the
+d'Alembert Inevitability
+Theorem~\cite{WashburnZlatanovicAllahyarov2026} requires polynomiality of
+degree at most two; we discuss its status as an assumption in
+Section~\ref{subsec:conjecture}.
+\end{definition}
+
+\begin{remark}
+The split between Composition consistency (Definition~\ref{def:composition-consistency},
+existence of a combining rule) and Polynomial closure
+(Definition~\ref{def:route-independence}, symmetric polynomial of degree
+$\leq 2$) is the central conceptual move of the encoding. The first is
+the operational content of route-independence on a continuous comparison
+operator. The second is the regularity hypothesis (R2) carried alongside.
+The symmetry of $\Phi$ on $\operatorname{Range}(F)^2$ is a consequence of
+Non-contradiction at the combiner level (see
+\cite[Lemma~1]{WashburnZlatanovicAllahyarov2026}); under (R2) it extends
+to the full polynomial $P$ on $\mathbb{R}^2$ by the standard argument
+that a polynomial vanishing on a product of nondegenerate intervals
+vanishes identically.
+\end{remark}
+
+\subsection{The bridge condition and non-triviality}
+
+\begin{definition}[Scale invariance]
+\label{def:scale-invariance}
+A comparison operator $C$ is \emph{scale-invariant} if
+\[
+C(\lambda x, \lambda y) = C(x, y) \quad \text{for all } x, y, \lambda > 0.
+\]
+\end{definition}
+
+The four classical laws of logic make no reference to absolute magnitude.
+They are statements about the relations among arguments, not about the
+arguments' overall scale. To express them as constraints on the
+two-argument operator $C$ in a way that descends consistently to a
+one-argument cost on positive ratios, we require that $C$ depend only on
+the ratio of its arguments. This is the content of scale invariance: it is
+the bridge from the operator-level form of the four conditions to their
+form on the multiplicative group $\mathbb{R}_{>0}$. Without scale
+invariance, comparisons would be sensitive to absolute magnitude, in
+violation of the scale-free character of the classical laws.
+
+\begin{definition}[Non-triviality]
+\label{def:nontriviality}
+A comparison operator $C$ is \emph{non-trivial} if there exists $x_0 > 0$
+with $F(x_0) = C(x_0, 1) \neq 0$.
+\end{definition}
+
+\begin{remark}
+Without non-triviality, the constant-zero operator $C \equiv 0$ vacuously
+satisfies all the constraints. Non-triviality excludes this degenerate
+case and is the analogue of the requirement (in
+\cite{WashburnZlatanovicAllahyarov2026}) that $F$ be nonconstant.
+\end{remark}
+
+\begin{remark}[Non-triviality is now derived, not posited]
+\label{rem:nontriviality-derived}
+The clause (B2) is no longer carried as a free posit at the foundation
+layer. The companion absolute-floor closure
+\cite{Washburn2026FloorClosure} reduces it to two named preconditions:
+the meta-language admits at least two distinct propositions
+\cite{Washburn2026SelfBootstrap}, and the universe of discourse
+contains more than one element \cite{Washburn2026Specifiability}. On
+every inhabited carrier, these jointly supply the operator-level
+non-triviality clause through the Lean bridge structure
+\texttt{Foundation.NonTrivialityFromDistinguishability.SatisfiesLawsOfLogicAbsoluteFloor},
+which combines an absolute-floor witness on the positive-ratio
+carrier with a detection condition that the comparison operator
+returns a non-zero value on the witnessed pair. The discharge theorem
+is \texttt{existing\_of\_absoluteFloor}.
+\end{remark}
+
+\begin{definition}[The encoded conditions on a comparison operator]
+\label{def:laws-of-logic}
+A comparison operator $C: \mathbb{R}_{>0} \times \mathbb{R}_{>0} \to
+\mathbb{R}$ \emph{satisfies the encoded conditions for the laws of logic
+on continuous positive-ratio comparisons} if it satisfies:
+\begin{itemize}[leftmargin=*]
+\item the four logical-content conditions: Identity
+(Definition~\ref{def:identity}), Non-contradiction
+(Definition~\ref{def:noncontradiction}), Totality
+(Definition~\ref{def:totality}), and Composition consistency
+(Definition~\ref{def:composition-consistency});
+\item the two regularity hypotheses: Continuity
+(Definition~\ref{def:continuity}, hypothesis (R1)) and Polynomial
+closure of the combiner of degree at most two
+(Definition~\ref{def:route-independence}, hypothesis (R2));
+\item the bridge condition Scale invariance
+(Definition~\ref{def:scale-invariance}, (B1));
+\item the non-triviality clause
+(Definition~\ref{def:nontriviality}, (B2)).
+\end{itemize}
+The phrasing ``satisfies the encoded conditions'' is intended to flag
+that the result is conditional on the encoding: see
+Section~\ref{subsec:encoding-defenses} for the defenses,
+Section~\ref{sec:canonicality} for the canonicality theorem that
+sharpens the conditionality, and Section~\ref{subsec:not-claimed} for
+what is not claimed.
+\end{definition}
+
+\section{Canonicality of the Encoding}\label{sec:canonicality}
+
+The encoding presented in Section~\ref{sec:conditions} maps the four
+classical Aristotelian conditions to four structural conditions on the
+comparison operator. We have so far called the encoding
+``operational'' rather than ``derivational.'' The purpose of the
+present section is to establish the precise sense in which the
+encoding is canonical: under a single named interpretation of the
+comparison operator, the encoding is the unique reading of the four
+classical conditions that preserves their propositional content.
+
+\subsection{The magnitude-of-mismatch interpretation}
+
+\begin{definition}[Magnitude-of-mismatch interpretation]
+\label{def:mismatch-interpretation}
+A comparison operator
+$C : \mathbb{R}_{>0} \times \mathbb{R}_{>0} \to \mathbb{R}$ is read as
+a \emph{magnitude-of-mismatch} if its codomain is interpreted as the
+structural distance between the two arguments, with the following
+three properties:
+\begin{enumerate}[label=(M\arabic*),leftmargin=*]
+\item \emph{Trivial value at match.} The trivial element of the
+codomain, taken to be $0 \in \mathbb{R}$, encodes ``perfect match''
+between the two arguments. Non-trivial values encode progressively
+greater divergence from match.
+\item \emph{Pair-symmetry under natural exchange.} The mismatch is a
+property of the unordered pair $\{x, y\}$ rather than of the ordered
+pair $(x, y)$, under the natural exchange symmetry the operator
+inherits from the symmetry of ``same magnitude'' between two positive
+quantities.
+\item \emph{Determinability under composition.} The mismatch of a
+composite comparison, assembled by an operation that combines two
+constituent comparisons, is determined by the mismatches of its
+constituents and the assembly operation.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}
+The magnitude-of-mismatch interpretation is the standard reading of
+cost functions in information geometry, statistics, and physics. The
+Kullback--Leibler divergence, the Bregman divergences, the
+squared-error penalty in least squares, the chi-squared statistic,
+and the recognition cost $J$ all fit this interpretation. The reading
+is therefore not an ad hoc choice; it is the standard reading of a
+cost-based comparison.
+\end{remark}
+
+\subsection{The canonicality theorem}
+
+\begin{theorem}[Canonicality of the encoding]
+\label{thm:canonicality}
+Let
+$C : \mathbb{R}_{>0} \times \mathbb{R}_{>0} \to \mathbb{R}$ be a
+comparison operator interpreted as a magnitude-of-mismatch in the
+sense of Definition~\ref{def:mismatch-interpretation}. The unique
+reading of the four classical Aristotelian conditions (identity,
+non-contradiction, excluded middle, composition consistency) on $C$
+that preserves the propositional content of each condition is the
+encoding (L1)--(L4) of Section~\ref{sec:conditions}.
+\end{theorem}
+
+\begin{proof}
+We argue case by case for each condition.
+
+\paragraph{Identity.} The propositional content of identity is ``a
+thing is itself.'' Under (M1), ``is itself'' translates to ``the
+mismatch with itself is the trivial element of the codomain.'' The
+trivial element is $0$. So the identity condition translates to
+$C(x, x) = 0$ for every $x > 0$. Any alternative
+($C(x, x) = \delta \neq 0$) would assert that a thing has positive
+structural distance from itself, in violation of the propositional
+content of identity together with (M1). The encoding (L1) is therefore
+the unique reading.
+
+\paragraph{Non-contradiction.} The propositional content of
+non-contradiction is ``the same instance cannot simultaneously hold
+two distinct values.'' On a two-argument comparison operator, the
+most direct way for ``the same instance'' to have two distinct values
+is for $C(x, y)$ and $C(y, x)$ to differ. Under (M2), the mismatch is
+a property of the unordered pair $\{x, y\}$; thus $C(x, y)$ and
+$C(y, x)$ must agree, since they are two readings of the same
+unordered-pair mismatch. Any alternative ($C(x, y) \neq C(y, x)$)
+would assign two distinct values to the same instance, in violation
+of the propositional content. The encoding (L2) is therefore the
+unique reading.
+
+\paragraph{Excluded middle.} The propositional content of excluded
+middle is ``every well-formed instance has a definite outcome; there
+is no third option.'' On a comparison operator with codomain
+$\mathbb{R}$, ``definite outcome'' means a single real value. ``No
+third option'' means there is no input pair in the domain on which
+the operator returns ``undefined'' or some third codomain element.
+This translates to totality of $C$ on
+$\mathbb{R}_{>0} \times \mathbb{R}_{>0}$. On a continuous comparison
+operator, the continuous version of ``no third option'' forbids
+tearing of the value across infinitesimal input changes: a
+discontinuity in $C$ would correspond to two simultaneous limit
+values (left and right) at the discontinuity, in violation of the
+propositional content. Continuity is therefore the continuous-domain
+refinement of ``no third option.'' The encoding (L3) plus the
+regularity hypothesis (R1) together capture the continuous reading;
+(L3) alone is the totality content.
+
+\paragraph{Composition consistency.} The propositional content of
+composition consistency is the well-formedness of inferential
+composition: a composite reasoning step is determinable from its
+constituents, with no dependence on the order or association of the
+assembly. Under (M3), the mismatch of a composite comparison is
+determined by the mismatches of its constituents and the assembly
+operation. On the multiplicative group $\mathbb{R}_{>0}$, the natural
+forward-and-backward symmetric assembly of two comparisons is the
+pair $(xy, x/y)$; the costs of these two assemblies are summed to
+give the cost of the composite. The d'Alembert form
+$F(xy) + F(x/y) = \Phi(F(x), F(y))$ expresses, on the derived cost
+$F$, the determinability of the composite cost from the constituent
+costs $F(x)$ and $F(y)$ via a combining rule $\Phi$. Any alternative
+form (route-dependent, asymmetric in unintended ways, or with
+composite cost depending on data not derivable from $F(x), F(y)$)
+would violate either (M3) or the propositional content. The encoding
+(L4) is therefore the unique reading.
+\end{proof}
+
+\begin{corollary}[The encoding is determined under the standard cost reading]
+\label{cor:encoding-determined}
+Under the magnitude-of-mismatch interpretation, the encoded conditions
+(L1)--(L4) are the unique mapping of the four classical Aristotelian
+conditions onto a continuous comparison operator on positive ratios.
+The encoding is not one choice among many; it is the unique encoding
+determined by the propositional content of the classical conditions
+together with the structural content of the magnitude-of-mismatch
+interpretation.
+\end{corollary}
+
+\subsection{Implications for the conditional-rigidity framing}
+
+The encoding hedge of Section~\ref{subsec:not-claimed} (item 3, which
+read that the encoding ``is not asserted to be canonical or unique'')
+is now refined by Theorem~\ref{thm:canonicality}. The encoding is
+canonical and unique \emph{under the magnitude-of-mismatch
+interpretation}. The remaining residual is therefore narrower: the
+encoding depends on the choice of interpretation of the comparison
+operator, and Theorem~\ref{thm:canonicality} fixes it under the
+standard cost-based interpretation. A reading of the comparison
+operator as something other than a magnitude of mismatch (a directed
+revision cost, an asymmetric divergence in some non-standard sense,
+etc.) would yield a different encoding and a different rigidity
+result. The standard reading produces the standard encoding (L1)--(L4)
+and the rigidity theorems of the present paper.
+
+The strengthened framing for the rest of the paper: under the standard
+cost-based reading of the comparison operator, the encoding is
+determined, and the result of Theorem~\ref{thm:translation} and
+Theorem~\ref{thm:main} is unconditional on the choice of encoding
+within that reading. The remaining conditionality is on the regularity
+hypotheses (R1) and (R2), and on the magnitude-of-mismatch
+interpretation itself, named explicitly above.
+
+\section{The Translation Theorem}\label{sec:translation}
+
+We prove four translation lemmas, then combine them.
+
+\begin{lemma}[Identity implies normalization]
+\label{lem:identity-normalization}
+If $C$ satisfies Identity, then $F(1) = 0$.
+\end{lemma}
+
+\begin{proof}
+Apply Identity at $x = 1$: $F(1) = C(1, 1) = 0$.
+\end{proof}
+
+\begin{lemma}[Non-contradiction with scale invariance implies reciprocity]
+\label{lem:reciprocity}
+If $C$ satisfies Non-contradiction and Scale invariance, then $F$ is
+reciprocal-symmetric:
+\[
+F(x) = F(x^{-1}) \quad \text{for all } x > 0.
+\]
+\end{lemma}
+
+\begin{proof}
+Fix $x > 0$. Then
+\begin{align*}
+F(x)
+  &= C(x, 1) && \text{(definition of $F$)}\\
+  &= C(1, x) && \text{(Non-contradiction)}\\
+  &= C(x^{-1} \cdot 1, \; x^{-1} \cdot x)
+                          && \text{(Scale invariance with $\lambda = x^{-1}$)}\\
+  &= C(x^{-1}, 1) && \text{(simplification)}\\
+  &= F(x^{-1}) && \text{(definition of $F$)}.
+\end{align*}
+The third step uses Scale invariance applied to the pair $(1, x)$ with the
+factor $\lambda = x^{-1} > 0$, taking the form $C(1, x) = C(x^{-1} \cdot 1,
+x^{-1} \cdot x)$. The fourth step uses $x^{-1} \cdot 1 = x^{-1}$ and
+$x^{-1} \cdot x = 1$.
+\end{proof}
+
+\begin{lemma}[Continuity of $C$ implies continuity of $F$]
+\label{lem:continuity}
+If $C$ satisfies Continuity (R1), then $F$ is continuous on
+$\mathbb{R}_{>0}$.
+\end{lemma}
+
+\begin{proof}
+$F$ is the composition $F = C \circ \iota$, where
+$\iota : \mathbb{R}_{>0} \to \mathbb{R}_{>0} \times \mathbb{R}_{>0}$,
+$\iota(r) = (r, 1)$. The map $\iota$ is continuous on $\mathbb{R}_{>0}$
+(both component functions are continuous, the first being the identity
+and the second a constant). The map $C$ is jointly continuous on
+$\mathbb{R}_{>0} \times \mathbb{R}_{>0}$ by (R1). The composition of
+continuous functions is continuous, so $F$ is continuous on
+$\mathbb{R}_{>0}$.
+\end{proof}
+
+\begin{lemma}[Composition consistency with polynomial closure transfers to $F$]
+\label{lem:route-independence-transfer}
+If $C$ satisfies Composition consistency
+(Definition~\ref{def:composition-consistency}) together with Polynomial
+closure of $\Phi$ of degree at most two
+(Definition~\ref{def:route-independence}, hypothesis (R2)), then $F$
+satisfies the polynomial composition law
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = P(F(x), F(y))
+\]
+for all $x, y > 0$, with $P$ symmetric and of total degree at most two.
+\end{lemma}
+
+\begin{proof}
+Immediate from Definition~\ref{def:route-independence}: the polynomial
+composition law on $F$ is the content of (R2) as stated.
+\end{proof}
+
+\begin{theorem}[Translation Theorem]
+\label{thm:translation}
+Let $C$ be a comparison operator satisfying the encoded conditions
+(Definition~\ref{def:laws-of-logic}). Then the derived cost function
+$F(r) := C(r, 1)$ satisfies all the hypotheses of the d'Alembert
+Inevitability
+Theorem~\cite[Theorem~3]{WashburnZlatanovicAllahyarov2026}: $F$ is
+continuous on $\mathbb{R}_{>0}$, nonconstant, with $F(1) = 0$, and
+satisfies a polynomial composition law $F(xy) + F(x/y) = P(F(x), F(y))$
+for some symmetric polynomial $P$ of total degree at most two.
+\end{theorem}
+
+\begin{proof}
+$F(1) = 0$ by Lemma~\ref{lem:identity-normalization} (Identity).
+Continuity of $F$ on $\mathbb{R}_{>0}$ is
+Lemma~\ref{lem:continuity} ((R1)). $F$ is nonconstant by Non-triviality
+(B2) together with $F(1) = 0$: there exists $x_0 > 0$ with
+$F(x_0) \neq 0 = F(1)$, so $F$ takes at least two distinct values. The
+polynomial composition law on $F$ with symmetric $P$ of total degree at
+most two is Lemma~\ref{lem:route-independence-transfer} (Composition
+consistency together with (R2)). All hypotheses of
+\cite[Theorem~3]{WashburnZlatanovicAllahyarov2026} are met.
+
+(Reciprocity $F(x) = F(x^{-1})$ from
+Lemma~\ref{lem:reciprocity} is also a consequence of the encoded
+conditions, but is not required as an additional hypothesis: in
+\cite[Lemma~1]{WashburnZlatanovicAllahyarov2026} reciprocity follows from
+symmetry of $P$, and is therefore part of the conclusion of the
+Inevitability Theorem rather than its hypothesis.)
+\end{proof}
+
+\section{Main Theorem: The Recognition Composition Law as the Unique Combiner Family}\label{sec:main}
+
+\begin{theorem}[Translation-and-rigidity theorem]
+\label{thm:main}
+Let $C$ be a comparison operator satisfying the encoded conditions
+(Definition~\ref{def:laws-of-logic}). Then there exists $c \in \mathbb{R}$
+such that the derived cost function $F$ satisfies the Recognition
+Composition Law
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = 2F(x) + 2F(y) + c\,F(x)F(y)
+\quad \text{for all } x, y > 0. \tag{$\mathrm{RCL}$}
+\]
+The polynomial $P$ underlying (R2) is uniquely determined as
+$P(u, v) = 2u + 2v + c\,uv$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:translation}, the derived cost $F$ satisfies the
+hypotheses of the d'Alembert Inevitability Theorem
+\cite[Theorem~3]{WashburnZlatanovicAllahyarov2026}: $F$ is continuous on
+$\mathbb{R}_{>0}$, nonconstant, with $F(1) = 0$, and satisfies a polynomial
+composition law $F(xy) + F(x/y) = P(F(x), F(y))$ with $P$ symmetric of total
+degree at most two. The Inevitability Theorem then forces
+\[
+P(u, v) = 2u + 2v + c\,uv \quad \text{for some } c \in \mathbb{R}.
+\]
+Substituting into the polynomial composition law gives $(\mathrm{RCL})$.
+
+The polynomial $P$ is uniquely determined by $F$: by
+\cite[Corollary~5]{WashburnZlatanovicAllahyarov2026}, if two polynomials
+$P, P'$ satisfy $F(xy) + F(x/y) = P(F(x), F(y)) = P'(F(x), F(y))$ for all
+$x, y > 0$ with $F$ continuous nonconstant, then $P \equiv P'$ on
+$\mathbb{R}^2$. Hence the value of $c$ is determined by $F$.
+\end{proof}
+
+\begin{remark}[The structural content]
+\label{rem:structural-content}
+Theorem~\ref{thm:main} says the four encoded conditions on a continuous
+comparison operator, with scale invariance and the exclusion of the
+trivial operator, admit \emph{exactly one} functional form for the
+route-independence combiner, parametrised by a single real number
+$c$. The combining rule is forced. Higher-degree polynomial combiners
+are excluded by the Inevitability Theorem
+\cite[Theorem~1]{WashburnZlatanovicAllahyarov2026}; lower-degree
+alternatives fall into the $c = 0$ case
+\cite[Remark~4]{WashburnZlatanovicAllahyarov2026}. The parameter $c$
+is a curvature degree of freedom, fixed in Section~\ref{sec:cost} by a
+calibration condition.
+\end{remark}
+
+\begin{remark}[Reciprocity and the role of scale invariance]
+\label{rem:reciprocity}
+By Lemma~\ref{lem:reciprocity}, the derived cost $F$ of any comparison
+operator satisfying the encoded conditions is reciprocal-symmetric:
+$F(x) = F(x^{-1})$. The reciprocity follows from Non-contradiction
+together with Scale invariance. Non-contradiction alone gives
+$C(x, y) = C(y, x)$ (a symmetry of the two-argument operator); the
+descent to $F(x) = F(x^{-1})$ requires scale invariance as the bridge
+condition that lets the classical laws, scale-free at the level of
+their statement, be written as constraints on the multiplicative group
+$\mathbb{R}_{>0}$.
+\end{remark}
+
+\section{RCL as the Finite Pairwise Algebra of Positive-Ratio Comparison}\label{sec:finite-pairwise}
+
+Theorem~\ref{thm:main} establishes the Recognition Composition Law
+family by routing through the d'Alembert Inevitability
+Theorem~\cite{WashburnZlatanovicAllahyarov2026}. We now give a direct
+self-contained proof from the encoded conditions, using only the
+operator-level structure plus a single named regularity hypothesis
+(finite pairwise polynomial closure of the combiner). The direct proof
+is shorter than the d'Alembert route, and its hypothesis is the precise
+structural condition that distinguishes the Recognition Composition Law
+from broader continuous-combiner alternatives. We also display a
+counterexample (Proposition~\ref{prop:finite-closure-necessary}) showing
+that finite pairwise polynomial closure is not redundant: dropping it
+admits comparison structures with non-polynomial combiners that are not
+in the Recognition Composition Law family.
+
+\subsection{Operative positive-ratio comparison}
+
+\begin{definition}[Operative positive-ratio comparison]
+\label{def:operative-comparison}
+An \emph{operative positive-ratio comparison} is a continuous,
+nontrivial map
+\[
+C : \mathbb{R}_{>0} \times \mathbb{R}_{>0} \to \mathbb{R}
+\]
+satisfying
+\[
+C(x, x) = 0, \qquad C(x, y) = C(y, x), \qquad
+C(\lambda x, \lambda y) = C(x, y)
+\]
+for all $x, y, \lambda > 0$. Its derived cost is
+\[
+F(r) := C(r, 1).
+\]
+\end{definition}
+
+The three conditions on $C$ in Definition~\ref{def:operative-comparison}
+are exactly Identity (L1), Non-contradiction (L2), and Scale invariance
+(B1) of Section~\ref{sec:conditions}, with continuity as the
+regularity hypothesis (R1) and totality of $C$ as Definition~\ref{def:totality}.
+The definition isolates the structural minimum we need for the direct
+proof below.
+
+\begin{definition}[Finite pairwise polynomial closure]
+\label{def:finite-pairwise-closure}
+An operative positive-ratio comparison $C$ is \emph{finitely pairwise
+compositional} if there exists a symmetric polynomial $P \in
+\mathbb{R}[u, v]$ of total degree at most two such that the derived cost
+satisfies
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = P(F(x), F(y))
+\quad \text{for all } x, y > 0.
+\]
+\end{definition}
+
+This is the regularity hypothesis (R2) of Section~\ref{sec:conditions},
+restated cleanly: the combiner is a symmetric polynomial of total degree
+at most two on $\mathbb{R}^2$. The finite pairwise polynomial closure
+condition is the structural restriction we name and verify against the
+counterexample below.
+
+\subsection{The direct theorem}
+
+\begin{theorem}[RCL as the finite pairwise algebra of positive-ratio comparison]
+\label{thm:rcl-direct}
+Let $C$ be an operative positive-ratio comparison that is finitely
+pairwise compositional. Then there exists $c \in \mathbb{R}$ such that
+the derived cost $F(r) = C(r, 1)$ satisfies the Recognition Composition
+Law
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = 2F(x) + 2F(y) + c\,F(x) F(y)
+\quad \text{for all } x, y > 0. \tag{$\mathrm{RCL}$}
+\]
+\end{theorem}
+
+\begin{proof}
+By Identity, $F(1) = C(1, 1) = 0$. By Scale invariance, for any
+$x, y > 0$,
+\[
+C(x, y) = C(x/y, 1) = F(x/y).
+\]
+By Non-contradiction together with Scale invariance,
+\[
+F(x) = C(x, 1) = C(1, x) = C(x^{-1} \cdot 1, x^{-1} \cdot x) = C(x^{-1}, 1) = F(x^{-1}),
+\]
+so $F$ is reciprocal-symmetric.
+
+By finite pairwise polynomial closure, there exists a symmetric polynomial
+$P \in \mathbb{R}[u, v]$ of total degree at most two with
+\[
+F(xy) + F(x/y) = P(F(x), F(y)).
+\]
+Set $y = 1$. Since $F(1) = 0$,
+\[
+F(x) + F(x) = P(F(x), F(1)) = P(F(x), 0),
+\]
+so $P(F(x), 0) = 2 F(x)$ for all $x > 0$. Because $F$ is continuous and
+nontrivial on the connected domain $\mathbb{R}_{>0}$, the image
+$\mathrm{Range}(F)$ contains a nondegenerate interval $I \subseteq
+\mathbb{R}$. The polynomial identity
+\[
+P(u, 0) = 2u
+\]
+therefore holds on $I$, and by polynomial unique continuation it holds
+for all $u \in \mathbb{R}$. By symmetry of $P$,
+\[
+P(0, v) = 2v \qquad \text{for all } v \in \mathbb{R}.
+\]
+
+Write the most general symmetric polynomial of total degree at most two:
+\[
+P(u, v) = a + b\,(u + v) + d \, uv + e\,(u^2 + v^2),
+\qquad a, b, d, e \in \mathbb{R}.
+\]
+Using $P(u, 0) = 2u$,
+\[
+a + b\,u + e\,u^2 = 2u
+\quad \text{for all } u \in \mathbb{R},
+\]
+which forces $a = 0$, $b = 2$, and $e = 0$. Hence
+\[
+P(u, v) = 2u + 2v + d \, uv.
+\]
+Renaming $d = c$, the conclusion follows:
+\[
+F(xy) + F(x/y) = 2 F(x) + 2 F(y) + c\,F(x) F(y).
+\qedhere
+\]
+\end{proof}
+
+\begin{remark}[Comparison with the d'Alembert route]
+\label{rem:direct-vs-dAlembert}
+The proof of Theorem~\ref{thm:rcl-direct} is shorter and more
+self-contained than the d'Alembert route used in
+Theorem~\ref{thm:main}. The two routes give the same conclusion. The
+d'Alembert route routes through a published rigidity
+result~\cite{WashburnZlatanovicAllahyarov2026} that handles a wider
+class of related functional equations and locates the present case as
+one instance. The direct route uses only polynomial unique continuation
+on a nondegenerate interval. We retain both because the d'Alembert
+route gives broader context and the direct route gives self-containment.
+\end{remark}
+
+\subsection{Necessity of finite pairwise polynomial closure}
+
+The hypothesis of finite pairwise polynomial closure
+(Definition~\ref{def:finite-pairwise-closure}) is essential. We
+demonstrate this by exhibiting a comparison operator that satisfies the
+operative positive-ratio conditions and admits a continuous combiner,
+but whose combiner is not polynomial of degree two and produces a cost
+function that does not satisfy the Recognition Composition Law.
+
+\begin{proposition}[Necessity of finite pairwise polynomial closure]
+\label{prop:finite-closure-necessary}
+The conclusion of Theorem~\ref{thm:rcl-direct} fails if finite pairwise
+polynomial closure is replaced by arbitrary continuous compositionality.
+\end{proposition}
+
+\begin{proof}
+Define the comparison operator
+\[
+C(x, y) := \bigl(\ln(x/y)\bigr)^4,
+\qquad F(x) := C(x, 1) = (\ln x)^4.
+\]
+The operator is continuous on $\mathbb{R}_{>0}^2$, is total on the
+positive quadrant, satisfies Identity ($C(x, x) = 0$), is symmetric
+($C(x, y) = (\ln(x/y))^4 = (\ln(y/x))^4 = C(y, x)$), and is scale
+invariant ($C(\lambda x, \lambda y) = (\ln(\lambda x / \lambda y))^4 =
+(\ln(x/y))^4 = C(x, y)$). Hence $C$ is an operative positive-ratio
+comparison in the sense of Definition~\ref{def:operative-comparison}.
+
+Set $t = \ln x$ and $u = \ln y$. Then
+\[
+F(xy) + F(x/y) = (t + u)^4 + (t - u)^4 = 2 t^4 + 12 t^2 u^2 + 2 u^4.
+\]
+Since $F(x) = t^4$ and $F(y) = u^4$, we have $t^2 u^2 = \sqrt{F(x) F(y)}$,
+so
+\[
+F(xy) + F(x/y) = 2 F(x) + 2 F(y) + 12 \sqrt{F(x) F(y)}.
+\]
+The combining rule
+\[
+\Phi(a, b) = 2 a + 2 b + 12 \sqrt{a b}
+\]
+is a continuous symmetric function on the range
+$\mathrm{Range}(F) \times \mathrm{Range}(F) = [0, \infty)^2$, and the
+operator $C$ satisfies the d'Alembert form $F(xy) + F(x/y) = \Phi(F(x), F(y))$.
+
+If the Recognition Composition Law held for $F$, there would exist a
+constant $c \in \mathbb{R}$ such that
+\[
+12 \sqrt{a b} = c \, a b
+\quad \text{for all } a, b > 0.
+\]
+Setting $a = b = 1$ gives $c = 12$. Setting $a = b = 4$ then gives
+$c = 12 \cdot 2 / 16 = 3 / 2$, contradicting $c = 12$. Hence no constant
+$c$ works, and the Recognition Composition Law fails for $F$.
+
+The combining rule $\Phi(a, b) = 2 a + 2 b + 12 \sqrt{a b}$ is not a
+polynomial of total degree at most two on $\mathbb{R}^2$ (the $\sqrt{a b}$
+term is not even smooth at the origin). The example therefore shows
+that an operative positive-ratio comparison can admit a continuous
+combiner without the combiner being polynomial of degree at most two,
+and that in such a case the Recognition Composition Law is not
+satisfied. The finite pairwise polynomial closure hypothesis is
+therefore essential, not redundant; it is the precise structural
+condition that distinguishes the Recognition Composition Law family
+from broader continuous-combiner alternatives.
+\end{proof}
+
+\begin{remark}[The status of finite pairwise polynomial closure]
+\label{rem:r2-status-update}
+Proposition~\ref{prop:finite-closure-necessary} reframes the role of
+the polynomial-degree-two restriction (R2). It is not a regularity
+hypothesis carried alongside the four classical conditions for technical
+convenience and hopefully removable. It is the structural content that
+distinguishes the Recognition Composition Law family from broader
+algebras of continuous positive-ratio comparison such as the
+$(\ln(x/y))^4$ family. Removing (R2) does not produce a more general
+form of RCL; it produces a strictly larger class of compositional
+algebras that includes structures (such as the quartic-log example) not
+governed by the Recognition Composition Law. The polynomial restriction
+is therefore part of the structural meaning of \emph{finite pairwise
+algebra} in the present setting. Section~\ref{subsec:conjecture} records
+why two attempted weakenings, closure under iteration and analyticity at
+the origin, both fail to recover the polynomial restriction.
+\end{remark}
+
+\section{Calibrated Costs on the Bilinear and Additive Branches}\label{sec:cost}
+
+Theorem~\ref{thm:main} fixes the polynomial form of the route-independence
+combiner up to one real parameter $c$. To pin down $c$, we add the
+non-negativity, convexity, and curvature conditions standard in the
+characterization of the canonical reciprocal cost. Both the bilinear
+($c \neq 0$) and additive ($c = 0$) branches survive these additional
+conditions, each with its own canonical calibrated form.
+
+\begin{definition}[Convex non-negative comparison operator]
+\label{def:convex-nonnegative}
+A comparison operator $C$ is \emph{convex non-negative} if its derived cost
+$F$ is non-negative and convex on $\mathbb{R}_{>0}$.
+\end{definition}
+
+\begin{remark}
+Non-negativity is the natural condition for a cost interpretation: a
+comparison's cost is a real-valued penalty for deviation from equilibrium,
+not a signed quantity. Convexity is the natural regularity demand of
+penalty functions: the cost of intermediate ratios is bounded by an average
+of the costs at the endpoints. Both conditions are standard in the
+information-geometric literature on ratio-based costs and are part of the
+hypotheses of the Canonical Reciprocal Cost Uniqueness
+Theorem~\cite{WashburnZlatanovic2026}.
+\end{remark}
+
+\begin{definition}[Log-curvature calibration]
+\label{def:calibration}
+The \emph{log-curvature} of a function $F : \mathbb{R}_{>0} \to \mathbb{R}$
+at the multiplicative identity is
+\[
+\kappa(F) := \lim_{t \to 0} \frac{2F(e^t)}{t^2},
+\]
+provided the limit exists. We say $F$ satisfies the \emph{unit log-curvature
+calibration} if $\kappa(F) = 1$.
+\end{definition}
+
+\begin{remark}
+The log-curvature condition fixes the second-order behaviour of $F$ at the
+identity in logarithmic coordinates. It is the minimal regularity that
+isolates a single member of the bilinear family
+$P(u, v) = 2u + 2v + c\,uv$. See
+\cite[Section~5]{WashburnZlatanovicAllahyarov2026} and
+\cite[Section~2]{WashburnZlatanovic2026} for the role of this calibration in
+canonical-coefficient selection.
+\end{remark}
+
+\begin{theorem}[Calibrated cost on the bilinear branch: the $\alpha$-family
+and its canonical representative]
+\label{thm:cost-corollary}
+Let $C$ be a comparison operator satisfying the encoded conditions
+(Definition~\ref{def:laws-of-logic}), with derived cost $F$ convex,
+non-negative, and satisfying the unit log-curvature calibration
+$\kappa(F) = 1$. Assume in addition that $F$ lies on the bilinear
+branch of Theorem~\ref{thm:main}: the parameter $c$ given by that
+theorem is non-zero. Then there exists $\alpha \geq 1$ such that
+\[
+F(x) = F_\alpha(x)
+     := \frac{1}{\alpha^2}\!\left(\cosh(\alpha \ln x) - 1\right)
+\quad \text{for all } x > 0,
+\qquad \text{with } c = 2\alpha^2.
+\]
+After fixing the multiplicative-coordinate normalization $\alpha = 1$,
+the canonical representative of the $\alpha$-family is the canonical
+reciprocal cost
+\[
+J(x) := F_1(x) = \tfrac{1}{2}\!\left(x + x^{-1}\right) - 1,
+\qquad c = 2.
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:main}, $F$ satisfies the bilinear composition law
+$F(xy) + F(x/y) = 2F(x) + 2F(y) + c\,F(x) F(y)$ for some $c \in \mathbb{R}$,
+and by hypothesis $c \neq 0$. By Theorem~\ref{thm:translation}, $F$ is
+continuous and nonconstant with $F(1) = 0$. By
+Lemma~\ref{lem:reciprocity}, $F(x) = F(x^{-1})$. By hypothesis $F$ is
+convex, non-negative, and satisfies $\kappa(F) = 1$.
+
+By
+\cite[Corollary~8]{WashburnZlatanovicAllahyarov2026}, convexity and
+non-negativity in the bilinear branch $c \neq 0$ force the hyperbolic
+form $F(e^t) = (2/c)(\cosh(\alpha t) - 1)$ for some $\alpha \geq 1$,
+with $c > 0$. By \cite[Theorem~9]{WashburnZlatanovicAllahyarov2026},
+the unit log-curvature calibration $\kappa(F) = 1$ implies
+$c = 2\alpha^2$. Substituting,
+\[
+F(e^t) = \frac{2}{c}\,(\cosh(\alpha t) - 1)
+       = \frac{1}{\alpha^2}\,(\cosh(\alpha t) - 1),
+\]
+which yields the $\alpha$-family $F = F_\alpha$ as stated. After the
+multiplicative-coordinate normalization $\alpha = 1$
+(\cite[Corollary~10]{WashburnZlatanovicAllahyarov2026}), $c = 2$ and
+\[
+F(x) = \cosh(\ln x) - 1
+     = \tfrac{1}{2}(x + x^{-1}) - 1
+     = J(x).
+\]
+Equivalently, the canonical representative ($\alpha = 1$) coincides
+with the unique continuous reciprocal-symmetric solution of the
+canonical $c = 2$ composition law on $\mathbb{R}_{>0}$ with $F(1) = 0$
+and $\kappa(F) = 1$, by the Canonical Reciprocal Cost Uniqueness
+Theorem~\cite[Theorem~1]{WashburnZlatanovic2026}.
+\end{proof}
+
+\begin{remark}[Self-application on the positive-real domain]
+\label{rem:self-application}
+The canonical reciprocal cost $J$, and the $\alpha$-family more
+generally, is a function $\mathbb{R}_{>0} \to [0, \infty)$. On inputs
+$x \neq 1$ the output is strictly positive, and any positive output
+lies in the domain $\mathbb{R}_{>0}$ on which $J$ itself is defined.
+Consequently, for any $x, y > 0$ with $J(x), J(y) > 0$, the ratio
+$J(x)/J(y)$ is a positive real and $J(J(x)/J(y))$ is a well-defined
+element of $[0, \infty)$. The functional form is closed under its own
+composition on non-trivial inputs. The four encoded conditions
+(L1)--(L4) on a comparison operator apply verbatim at this meta-level:
+the cost of comparing two costs satisfies Identity, single-valuedness
+under reordering, totality on the open positive quadrant, and
+composition consistency by the same functional form as at the base
+level. The self-application is not an additional hypothesis; it is a
+direct consequence of $\mathbb{R}_{>0}$ being both the domain and the
+positive part of the codomain. On the restricted domain, the
+derived-cost operator is its own comparison operator: the structural
+conditions that characterise it at any level characterise it at every
+level.
+\end{remark}
+
+\begin{remark}[Why $J$ is not directly forced]\label{rem:why-J-not-forced}
+The unit log-curvature calibration alone does not force $c = 2$ on
+the bilinear branch. It forces $c = 2\alpha^2$ for some $\alpha \geq 1$.
+The canonical reciprocal cost $J$ is the $\alpha = 1$ member of the
+family: the multiplicative-coordinate scale at which the cost rises
+quadratically in $\ln x$ at unit rate near the identity. Different
+$\alpha$ correspond to rescaling $x \mapsto x^\alpha$; the family
+$F_\alpha$ is the orbit of $J$ under this rescaling. The choice
+$\alpha = 1$ is a coordinate normalisation, not a consequence of the
+four classical laws plus the regularity hypotheses. Treating it as one
+would conflate the classical laws with a coordinate convention. The
+theorem above states the $\alpha$-family explicitly and identifies $J$
+only as the normalised representative.
+\end{remark}
+
+\begin{remark}[The additive branch and the choice between branches]
+\label{rem:additive-branch}
+If instead $c = 0$ in the conclusion of Theorem~\ref{thm:main}, the
+composition law reduces to $F(xy) + F(x/y) = 2F(x) + 2F(y)$. Continuous
+solutions with $F(1) = 0$ have the form $F(x) = k(\ln x)^2$ for some
+$k \in \mathbb{R}$
+\cite[Theorem~5(ii)]{WashburnZlatanovicAllahyarov2026}. The unit
+log-curvature calibration $\kappa(F) = 1$ forces $k = 1/2$, giving
+\[
+F(x) = \tfrac{1}{2}(\ln x)^2,
+\]
+which is convex, non-negative, and reciprocal-symmetric. This is the
+parallel canonical form on the additive branch, distinct from $J$ but also
+unique within its branch under the same calibration. The two canonical
+forms correspond to the two branches of the d'Alembert classification on
+$\mathbb{R}_{>0}$ (see
+\cite[Remark~9]{WashburnZlatanovicAllahyarov2026} and
+\cite[Section~3]{WashburnRahnamai2026}). The four Aristotelian conditions,
+together with scale invariance, non-triviality, convexity, non-negativity,
+and the calibration $\kappa(F) = 1$, do not by themselves distinguish the
+two branches: each produces a unique canonical form. What further
+structural condition selects the bilinear branch $c \neq 0$ over the
+additive branch $c = 0$ is an open question; we return to it in
+Section~\ref{subsec:additive-branch}.
+\end{remark}
+
+\begin{remark}[The Reciprocal Convex Cost characterization]
+A complementary characterization of $J$ in the optimization-theoretic
+setting was established by~\cite{WashburnRahnamai2026}, where ratio-induced
+cost functions of the form $c(s, o) = J(\iota_S(s)/\iota_O(o))$ are shown,
+under inversion symmetry, strict convexity, coercivity, normalization at
+the identity, and a multiplicative d'Alembert identity, to admit the
+hyperbolic family $J(x) = \tfrac{1}{2}(x^a + x^{-a}) - 1$ as the unique
+admissible mismatch penalty, with $a > 0$. The present cost theorem and
+the optimization-theoretic characterization land in the same place
+because they invoke compatible regularity hypotheses (continuity, convexity,
+multiplicative d'Alembert composition with appropriate calibration). We
+therefore characterize this not as three independent derivations
+converging on the same object, but as three readings of the same
+hypothesis class; we discuss the encoding-dependence of this convergence
+in Section~\ref{sec:wigner}.
+\end{remark}
+
+\section{The Operative Domain: Reality, Logic, and the Recognition Composition Law}\label{sec:operative}
+
+The translation theorem (Section~\ref{sec:translation}), the main
+theorem (Section~\ref{sec:main}), and the calibrated cost theorem
+(Section~\ref{sec:cost}) together establish the rigidity of the
+recognition composition law and its calibrated solutions on a
+continuous comparison operator satisfying the encoded conditions. The
+canonicality theorem (Section~\ref{sec:canonicality}) shows that the
+encoding is the unique reading of the four classical Aristotelian
+conditions under the magnitude-of-mismatch interpretation. We now
+identify the scope on which these results land as a single structural
+identification, and we show that the scope is the operative domain of
+physics and continuous mathematics on positive quantities.
+
+\subsection{Reality structures}
+
+\begin{definition}[Reality structure]\label{def:reality-structure}
+A \emph{reality structure} is a triple $(\mathcal{S}, C, \mathcal{R})$
+where $\mathcal{S}$ is a non-empty set of states,
+$C : \mathcal{S} \times \mathcal{S} \to \mathbb{R}$ is a comparison
+operator returning real-valued mismatches between states, and
+$\mathcal{R}$ is a relation of compositional inference on
+$(\mathcal{S}, C)$. The triple is a reality structure if the four
+following structural conditions hold.
+\begin{enumerate}[label=(R\arabic*'),leftmargin=*]
+\item \emph{Definite states.} For every $s \in \mathcal{S}$, the state
+$s$ is a single, well-defined element. Equivalently, $\mathcal{S}$ is
+a set in the standard sense of mathematics.
+\item \emph{Single-valued comparison.} $C(s_1, s_2)$ returns a single
+real value for every pair $(s_1, s_2) \in \mathcal{S} \times
+\mathcal{S}$, and the value does not depend on the side from which the
+comparison is read.
+\item \emph{Decidability.} For every pair $(s_1, s_2) \in \mathcal{S}
+\times \mathcal{S}$, $C(s_1, s_2)$ is defined: there is no input pair
+on which the comparison returns ``undefined'' or some third value
+outside $\mathbb{R}$.
+\item \emph{Compositional inference.} For composite comparisons
+assembled by the relation $\mathcal{R}$, the mismatch of the composite
+is determinable from the mismatches of its constituents.
+\end{enumerate}
+\end{definition}
+
+The four conditions (R1$'$)--(R4$'$) are the structural minimum any
+object can satisfy and still be called ``a reality'' in the standard
+usage of the word. They are weaker than the conditions of an ordinary
+structure in mathematical logic. A Boolean algebra is a reality
+structure (with $C$ a discrete-valued mismatch indicator); a metric
+space is a reality structure (with $C$ the metric); the standard
+ZFC universe is a reality structure (with $C$ any decidable
+comparison operator); physical reality, modelled as the structure of
+states accessible to measurement, is a reality structure under the
+standard reading of measurement as a comparison of one state to
+another with a real-valued mismatch.
+
+\begin{theorem}[Reality satisfies the four classical conditions]
+\label{thm:reality-satisfies-logic}
+Any reality structure $(\mathcal{S}, C, \mathcal{R})$ satisfies the
+four classical Aristotelian conditions on its comparison operator: $C$
+satisfies Identity, Non-contradiction, Totality, and Composition
+consistency.
+\end{theorem}
+
+\begin{proof}
+By definition unfolding.
+\begin{itemize}[leftmargin=*]
+\item (R1$'$) implies (L1): a single, well-defined state is the same
+as itself; the mismatch of a state with itself is the trivial value of
+the codomain, namely $0$. Thus $C(s, s) = 0$ for every
+$s \in \mathcal{S}$.
+\item (R2$'$) implies (L2): single-valued comparison forbids two
+distinct values for the same comparison; the value does not depend on
+the side from which the comparison is read, so $C(s_1, s_2) = C(s_2,
+s_1)$.
+\item (R3$'$) implies (L3): decidability is exactly totality on
+$\mathcal{S} \times \mathcal{S}$.
+\item (R4$'$) implies (L4): determinability of composite mismatches
+from constituents is exactly the existence of a combining rule for
+composite costs.
+\end{itemize}
+The four logical-content conditions hold on any reality structure.
+\end{proof}
+
+\subsection{The operative domain}
+
+\begin{definition}[Operative domain]
+\label{def:operative-domain}
+A reality structure $(\mathcal{S}, C, \mathcal{R})$ is
+\emph{operative} if $\mathcal{S} \subseteq \mathbb{R}_{>0}$ (states
+are encoded as positive reals), $C$ is jointly continuous on
+$\mathcal{S} \times \mathcal{S}$ (regularity hypothesis (R1) holds),
+and the combining rule $\Phi$ given by (R4$'$) is polynomial of
+degree at most two on $\mathbb{R}^2$ (regularity hypothesis (R2)
+holds).
+
+The \emph{operative domain} is the class of operative reality
+structures.
+\end{definition}
+
+The operative domain is broad. Every physical measurement is a
+comparison of two positive quantities (the magnitudes of two states,
+or a state and a calibrated reference), with a continuous real-valued
+cost capturing the discrepancy. Every continuous likelihood ratio
+between two probability distributions is a comparison on the
+operative domain. Every continuous distance or divergence between two
+states in a continuous state space is a comparison on the operative
+domain. The mathematical structure of the natural sciences in their
+pairwise-comparison setting lives in the operative domain.
+
+\begin{theorem}[The operative-domain identification]
+\label{thm:operative-identification}
+On the operative domain, the recognition composition law
+$F(xy) + F(x/y) = 2F(x) + 2F(y) + cF(x)F(y)$ is the law of logic.
+More precisely:
+\begin{enumerate}[label=(\alph*),leftmargin=*]
+\item Any operative reality structure has its derived cost $F$
+satisfying the recognition composition law for some
+$c \in \mathbb{R}$.
+\item Under convexity, non-negativity, and the unit log-curvature
+calibration, the bilinear branch ($c \neq 0$) admits the calibrated
+representative $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, and the additive
+branch ($c = 0$) admits the calibrated representative
+$\tfrac{1}{2}(\ln x)^2$.
+\item The encoding from the structural conditions (R1$'$)--(R4$'$) of
+a reality structure to the four logical-content conditions
+(L1)--(L4) is canonical under the magnitude-of-mismatch
+interpretation of the comparison operator.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) Any operative reality structure satisfies (R1$'$)--(R4$'$) by
+Definition~\ref{def:reality-structure}; thus by
+Theorem~\ref{thm:reality-satisfies-logic} the comparison operator
+satisfies (L1)--(L4); the operative-domain definition supplies the
+regularity hypotheses (R1) and (R2); the bridge condition (B1) is
+imposed structurally on $\mathcal{S} \subseteq \mathbb{R}_{>0}$ in
+the operative-domain definition (states differing by a multiplicative
+constant are identified at the comparison level under the standard
+cost reading); thus by Theorem~\ref{thm:main} the derived cost
+satisfies the recognition composition law for some
+$c \in \mathbb{R}$.
+
+(b) is Theorem~\ref{thm:cost-corollary} and
+Remark~\ref{rem:additive-branch}.
+
+(c) is Theorem~\ref{thm:canonicality}.
+\end{proof}
+
+\subsection{The chain on the operative domain}
+
+The three theorems together identify, on the operative domain, three
+distinct objects as a single mathematical entity. We state the
+identification.
+
+\begin{corollary}[Recognition composition law $=$ law of logic $=$ structural form of reality, on the operative domain]
+\label{cor:rcl-logic-reality}
+On the operative domain:
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+\item The structural form of a reality
+(Definition~\ref{def:reality-structure}, restricted to the operative
+domain) is the four classical Aristotelian conditions on the
+comparison operator (Theorem~\ref{thm:reality-satisfies-logic}).
+\item The unique mathematical object compatible with the four
+classical Aristotelian conditions, under the canonical encoding, is
+the recognition composition law and its calibrated solutions
+(Theorems~\ref{thm:canonicality}, \ref{thm:translation},
+\ref{thm:main}, \ref{thm:cost-corollary}).
+\item Therefore the structural form of a reality on the operative
+domain is the recognition composition law: any reality structure on
+the operative domain has its comparison operator's derived cost
+satisfying RCL, with the calibrated representatives $J$ on the
+bilinear branch and $\tfrac{1}{2}(\ln x)^2$ on the additive branch.
+\end{enumerate}
+\end{corollary}
+
+The chain ``recognition composition law $=$ law of logic $=$
+structural form of reality'' is therefore a theorem on the operative
+domain. The identification is not a structural correspondence under
+one encoding among many; it is the unique consequence of (i) the
+canonical reading of the classical Aristotelian conditions on a
+continuous comparison operator (Theorem~\ref{thm:canonicality}),
+(ii) the structural definition of a reality as a single-valued,
+decidable, compositionally consistent comparison structure
+(Definition~\ref{def:reality-structure}), and (iii) the rigidity of
+the d'Alembert combiner under the regularity hypotheses (R1) and (R2)
+(Theorem~\ref{thm:main}).
+
+\subsection{Scope and remaining open questions}
+
+The corollary establishes the identification on the operative domain.
+Three classes of questions remain open.
+
+\paragraph{The discrete propositional case.} A discrete reality
+structure (one in which $\mathcal{S}$ is finite or countable, and $C$
+is a discrete-valued comparison) does not directly fall under the
+operative domain. However, a standard route via Stone's representation
+theorem~\cite{Stone1936} embeds any Boolean algebra into the algebra
+of clopen subsets of a totally disconnected compact Hausdorff space,
+and measure-theoretic completion lifts the discrete-valued comparison
+to a continuous-valued likelihood ratio between probability
+distributions on the resulting space. Under this lifting, the discrete
+propositional case is a continuous limit of the operative domain.
+Whether the recognition composition law applies in its native form to
+the discrete case, or whether it admits a discrete cousin (a
+polynomial of degree at most two on a discrete subset of
+$\mathbb{R}$), is the natural extension of the present paper. We do
+not settle it here.
+
+\paragraph{Modal, intuitionistic, and higher-order logics.} The
+encoding (L1)--(L4) presented in this paper is for classical
+Aristotelian logic on a continuous comparison operator. Modal logics,
+intuitionistic logic, and higher-order logics may admit different
+encodings of their structural conditions, with potentially different
+rigidity results. We do not address them here.
+
+\paragraph{The metaphysical reading of ``reality structure.''}
+Definition~\ref{def:reality-structure} of a reality structure is
+structural: it abstracts the four properties (definite states,
+single-valued comparison, decidability, compositional inference) as
+the structural minimum any object can satisfy and still be called ``a
+reality'' in the standard usage. The metaphysical reading of
+``reality'' --- what counts as a reality in the world, in some
+metaphysical sense beyond the structural minimum --- is a separate
+question that we leave outside the scope of the present paper. The
+present result is structural: on any structure satisfying the four
+properties, in the operative-domain regularity setting, the
+recognition composition law is the law of the comparison operator.
+
+\section{Interpretation: The Encoding, Wigner's Question, and the Historical Separation}\label{sec:wigner}
+
+This section is interpretive. The mathematical content of the paper is
+the Translation Theorem and the rigidity invocations of
+Sections~\ref{sec:translation}--\ref{sec:cost}. What follows is the
+discussion of what those theorems do and do not establish about the
+relationship between logical principles and mathematical objects. We
+keep the philosophical claims modest and explicitly tied to the
+encoding.
+
+\subsection{What the prior formalizations did}
+
+The formalizations of logic listed in the introduction, from
+Aristotle's syllogistic to univalent foundations, are formal systems
+within which valid reasoning is described. Each provides a calculus, a
+notation, an algebra, or a semantic framework. Each makes precise the
+behaviour of logic under specified operational interpretations.
+
+These articulations are not displaced by the present result. Each
+remains correct as an account of how the laws of logic behave under the
+chosen interpretation. What the present paper adds, on a restricted
+domain, is a structural correspondence: under the encoding
+(L1)--(L4) of Section~\ref{sec:conditions}, augmented by the named
+regularity hypotheses (R1) and (R2), the four classical conditions and
+the Recognition Composition Law are co-extensive. They constrain the
+same comparison operators.
+
+The Feynman ``name versus thing'' analogy~\cite{Feynman1964} is useful
+here, but cuts both ways. The prior formalizations give the laws of
+logic increasingly precise names, in increasingly expressive notations,
+without exhibiting the laws as a forced functional-equation structure
+on continuous comparisons. The present result, on its restricted
+domain, identifies such a structure: a single forced combiner family
+with which the encoded conditions are co-extensive, with two
+calibrated branch representatives.
+Whether this identification \emph{is} the bird's anatomy, or whether it
+is itself another name (the encoding being a labeling of mathematical
+conditions with Aristotelian-style vocabulary), is a substantive
+question that the encoding-defenses of
+Section~\ref{subsec:encoding-defenses} address but do not foreclose. We
+discuss this directly below.
+
+\subsection{Wigner on the unreasonable effectiveness of mathematics}
+
+In 1960, Eugene Wigner posed the puzzle of ``the unreasonable
+effectiveness of mathematics in the natural sciences''~\cite{Wigner1960}.
+Mathematics, conducted historically in pursuit of internal coherence,
+gives quantitative descriptions of physical phenomena that exceed the
+precision of the experiments testing them. The puzzle is why such an
+agreement should hold at all.
+
+Standard responses reframe the puzzle without dissolving it.
+\emph{Mathematics is a language of patterns}: this restates the
+agreement; it does not explain it. \emph{The universe is lawful and
+lawfulness is what mathematics describes}: this assumes that lawfulness
+takes the form of the mathematical language we use, without independent
+reason. \emph{We evolved to recognise the patterns the universe
+presents}: this addresses our ability to recognise the agreement, not
+why the agreement is there.
+
+\subsection{What the present result does and does not do for Wigner's
+question}\label{subsec:wigner-honest}
+
+We address the question carefully. The result of the present paper is
+that, under the proposed encoding, the same continuous functional
+equation governs (a) the rigidity of polynomial composition combiners
+for continuous ratio costs (the d'Alembert Inevitability Theorem
+\cite{WashburnZlatanovicAllahyarov2026}) and (b) the encoded conditions
+(L1)--(L4) plus regularity hypotheses (R1), (R2) on a comparison
+operator. Both characterizations land on the Recognition Composition
+Law family, and on the canonical reciprocal cost $J$ after branch
+selection and coordinate normalization.
+
+The skeptic's objection is direct. Are these two characterizations
+independent, or is the convergence built into the encoding? Expanded,
+the encoded conditions are: $C(x, x) = 0$ (which gives $F(1) = 0$),
+$C(x, y) = C(y, x)$ (which gives reciprocity given scale invariance),
+joint continuity of $C$ (which gives continuity of $F$), the polynomial
+composition law on $F$, and non-triviality of $F$. These are the
+hypotheses of the d'Alembert Inevitability Theorem with
+Aristotelian-style labels attached. The convergence is between two
+readings of the same hypotheses, not between two derivations from
+disjoint first principles.
+
+The skeptic is right. The paper does not establish that two
+mathematically independent derivations converge on $J$. What it
+establishes is narrower: one natural Aristotelian-style reading of the
+hypotheses required by the d'Alembert Inevitability Theorem on a
+continuous comparison operator exists, and can be written down
+precisely. That is structural information about the domain. It does
+not dissolve Wigner's puzzle. It gives one case where the same
+hypotheses admit two readings, one of which is classical-logical.
+
+Whether relabelings of this kind exist on other domains (discrete
+logic, modal logic, propositional calculus on Boolean algebras) is
+the natural extension of the project. The present paper identifies the
+phenomenon on one domain and does not claim to answer Wigner's
+question.
+
+\subsection{The historical separation}
+
+Philosophers and mathematical logicians developed the laws of logic
+for analysing valid reasoning. Physicists and information theorists
+developed ratio-based cost functions for modelling penalties for
+deviation from equilibrium. The two traditions used different
+vocabularies. The present result exhibits, on a restricted domain, a
+single forced combiner family with which both vocabularies engage.
+
+This is not a foundational reduction. It does not show classical logic
+is reducible to cost-physics or cost-physics to classical logic. It
+shows that on a continuous comparison operator on positive ratios,
+both traditions describe the same mathematical conditions, and those
+conditions admit a unique combiner family with two unique calibrated
+solutions, one per branch. The identification is conditional on the
+encoding of Section~\ref{sec:conditions}; alternative encodings might
+land elsewhere or fail to converge on a single object.
+
+Russell and Whitehead's
+\emph{Principia Mathematica}~\cite{RussellWhitehead1913} sought a
+foundational reduction; G\"odel's incompleteness
+theorems~\cite{Goedel1931} circumscribed any such reduction. The
+present paper is not such a reduction. It is one instance, at the
+level of a single continuous functional equation, of the connection
+between the mathematical and the logical on a specific domain.
+
+\subsection{Implications for long-standing open questions}\label{subsec:implications}
+
+Conditional on the encoding being judged adequate, the rigidity result
+has bearing on three long-standing open questions in the philosophy of
+mathematics and logic. Each implication below is discussion, not
+theorem. Each weakens if the encoding is judged inadequate.
+
+\paragraph{The mathematical-Platonism debate.}
+The philosophy of mathematics has carried an unsettled debate for
+roughly twenty-four centuries about whether mathematical objects are
+discovered (Platonism, Pythagoreanism, mathematical realism) or
+invented (formalism, conventionalism, fictionalism). The present
+result is relevant in one narrow sense: on the continuous-ratio
+comparison domain, the mathematical object characterized by the four
+encoded conditions is the same object characterized by
+ratio-based-cost rigidity considerations independent of formalisation.
+The mathematician's freedom to choose a different object on this
+domain is constrained. Under the named hypotheses, no other continuous
+object is admissible. Whether this counts as a partial vindication of
+mathematical realism or as a structural observation about which
+objects are admissible depends on the philosophical framework brought
+to it. The rigidity result furnishes one example, on a restricted
+domain, of a mathematical object whose form is forced rather than
+chosen.
+
+\paragraph{Mathematical intuition and physical reality.}
+Wigner's puzzle, addressed in Section~\ref{subsec:wigner-honest}, is a
+particular instance of a broader question: why does the mathematician's
+intuition about which mathematical objects are natural agree, with such
+accuracy, with the experimental physicist's findings about which
+objects describe physical reality? The present result provides one
+structural account of the agreement, on the continuous-ratio comparison
+domain. The object physical-cost rigidity selects is the same object the
+encoded Aristotelian conditions admit on a continuous comparison
+operator. The mathematician's intuition that $J$ is a natural object on
+positive ratios, and the experimental physicist's identification of $J$
+as the object physical-cost rigidity selects, are not two independent
+confirmations of the same conclusion: they are two readings of the same
+hypothesis class. On this domain, mathematical intuition tracks physical
+reality because both are reading the same set of structural conditions.
+The relationship is structural, not metaphysical. It does not establish
+that mathematical intuition tracks physical reality on every domain; it
+shows that one mechanism by which the agreement could obtain (the same
+hypotheses governing both) does in fact obtain on this restricted
+domain.
+
+\paragraph{The foundations of mathematics.}
+The foundational programmes of the late nineteenth and early twentieth
+centuries, namely logicism (Frege, Russell--Whitehead), formalism
+(Hilbert), and intuitionism (Brouwer, Heyting), each sought a unique
+foundation for mathematics in either logic, formal axioms, or
+constructive proof. G\"odel's incompleteness
+theorems~\cite{Goedel1931} circumscribed any such reduction.
+Tarski~\cite{Tarski1933}, Gentzen~\cite{Gentzen1935}, the Curry--Howard
+correspondence~\cite{Curry1934, Howard1969}, Lawvere's
+categorical logic~\cite{Lawvere1964}, Girard's linear
+logic~\cite{Girard1987}, and the univalent foundations
+program~\cite{HoTT2013} have each provided foundational frameworks of
+different syntactic and semantic content. Each is correct as far as it
+reaches; none is universally accepted as the foundation. The present
+result does not settle the foundations question. It observes, on the
+continuous-ratio comparison domain, that all the foundational
+frameworks listed agree, by their treatment of continuous comparisons
+of positive ratios, on a single forced combiner family with the same
+two calibrated branch representatives: $J$ on the bilinear branch,
+$\tfrac{1}{2}(\ln x)^2$ on the additive branch. The
+frameworks differ in syntactic conventions, in extensions beyond the
+continuous-ratio domain, and in the choices of which axioms are
+fundamental; on the continuous-ratio domain itself they agree on the
+object characterized by the four Aristotelian conditions plus the
+regularity hypotheses. This is structural information about the
+restricted domain. It is consistent with multiple foundational
+frameworks being adequate as long as they agree on the restricted-domain
+rigidity. It does not select a preferred foundation, and it does not
+violate G\"odel's incompleteness, since the result is conditional on
+hypotheses (the encoding plus regularity) that are themselves stated in
+classical mathematics with its incompleteness intact.
+
+\paragraph{Physical laws as conventions versus features.} The
+philosophy of physics has carried, for roughly three centuries, a
+debate over whether physical laws are human conventions adopted for
+descriptive convenience or features of the world discovered rather
+than stipulated. The conventionalist tradition traces through
+Poincar\'e and receives twentieth-century articulation in Reichenbach;
+the realist tradition carries into contemporary mathematical physics.
+The present result is one data point on the restricted domain where
+physical laws admit expression as pairwise comparisons on positive
+ratios. On that domain, under the encoding, the combiner family
+$P(u, v) = 2u + 2v + c\,uv$ is not chosen but forced: no other
+combiner family is admissible. This is a structural fact about the
+form of the admissible laws on the restricted domain, not a convention
+for describing them. The result neither settles the debate nor claims
+to address its broader scope. It gives one case where, on a specific
+domain, the conventionalist option is mathematically eliminated.
+
+\paragraph{Comparison operators across substrates.} A comparison
+operator is an abstract structure whose instantiations can be physical
+(a measurement apparatus comparing two quantities), computational (an
+algorithm returning a distance between two inputs), or cognitive (a
+judgment of similarity between two perceptions). The rigidity result
+on the continuous positive-ratio domain applies to any such
+instantiation under the encoding and regularity hypotheses stated. We
+do not extend this into a metaphysical claim about the relationship
+between physical substrate and cognitive substrate. The observation is
+structural: on the restricted domain, the conditions governing
+comparison admit a unique functional form regardless of the substrate
+in which the comparison is realised. To the extent that cognitive
+operations can be modelled as continuous positive-ratio comparisons,
+an active question in cognitive science and information geometry, the
+same canonical calibrated forms govern both physical and cognitive
+realisations. Whether this structural agreement bears on the broader
+mind-matter question, which has been carried by philosophical
+literature from Descartes onward, is beyond the scope of the present
+paper.
+
+\paragraph{Boundary behaviour and the existence-consistency question.}
+On the continuous-ratio comparison domain, the canonical
+bilinear-branch representative $J$ satisfies $J(x) \to \infty$ as
+$x \to 0^+$ and as $x \to \infty$, with $J(1) = 0$ as the global
+minimum; the additive-branch representative $\tfrac{1}{2}(\ln x)^2$
+has the same boundary divergence. The divergence is the structural
+reason that limiting configurations are unreachable by cost
+minimisation on the positive-ratio domain.
+
+The philosophical question of why there is something rather than
+nothing, posed by Leibniz, has at times been addressed by identifying
+existence with logical consistency: what is possible is what is
+consistent, and the consistent configurations are those that satisfy
+the appropriate structural conditions. The present result bears on
+this question narrowly. Under the encoding on continuous positive-ratio
+comparisons, the boundary points $x = 0$ and $x = \infty$ are
+unreachable by finite-cost configurations on either branch; totality
+(L3) on the open quadrant $\mathbb{R}_{>0} \times \mathbb{R}_{>0}$
+together with the boundary divergence of the calibrated solutions
+produces this directly. We mention this to indicate a structural
+connection on the restricted domain between the boundary behaviour of
+the calibrated cost and the classical identification of existence with
+consistency. We do not extend the observation into a derivation of
+any metaphysical principle, and we leave the broader philosophical
+literature on existence and consistency outside the scope of the
+present paper.
+
+\paragraph{Self-application of the cost operator.} A further
+implication, noted as Remark~\ref{rem:self-application} in the cost
+section, is that on the positive-real domain the derived cost operator
+is closed under its own application. The non-zero outputs of $J$ lie
+in the domain on which $J$ itself is defined, and the four encoded
+conditions (L1)--(L4) apply verbatim at the level of costs-of-costs.
+This supplies, on the restricted domain, a structural answer to a
+version of Wigner's puzzle at the level of the operator itself: the
+cost function does not require an external structure to govern its
+outputs, because the outputs fall within its own input domain. The
+conditions that characterise it at level zero characterise it at every
+higher level. We note this as a structural fact about the operator,
+not as a derivation of any broader foundational claim.
+
+\paragraph{A scope reminder.} All of the above is conditional on the
+encoding (L1)--(L4) being a faithful operationalization of the four
+classical conditions on a continuous comparison operator on positive
+ratios. Theorem~\ref{thm:canonicality} establishes that the encoding
+is canonical under the magnitude-of-mismatch interpretation of the
+comparison operator. Section~\ref{subsec:encoding-defenses} defends
+the operator-level conditions; Section~\ref{sec:canonicality} then
+shows the encoding is the unique reading of the four classical laws
+under the standard cost-based interpretation;
+Section~\ref{subsec:wigner-honest} addresses the residual concern
+that the canonicality holds under one named interpretation rather
+than as a metaphysical universal.
+
+\section{Scope and Open Questions}\label{sec:scope}
+
+The present paper establishes a rigidity theorem on a specific structural
+domain. We collect here the explicit limits of the result, the natural
+extensions, and the remaining open questions.
+
+\subsection{The polynomial regularity assumption (R2)}
+
+The d'Alembert Inevitability Theorem on which Theorem~\ref{thm:main} is
+built~\cite[Theorem~3]{WashburnZlatanovicAllahyarov2026} is stated for
+\emph{polynomial} combiners $P$ of total degree at most two. The
+polynomiality is a regularity assumption. It is not a direct consequence
+of any of the four Aristotelian conditions individually; we have
+therefore named it explicitly as the regularity hypothesis (R2)
+(Definition~\ref{def:route-independence}) and carried it as a separate
+ingredient in the main theorem.
+
+The classical theory of d'Alembert's functional equation does not require
+polynomiality. The continuous-combiner classification due to
+Acz\'el~\cite{Aczel1966}, Kannappan~\cite{Kannappan2009}, and
+Stetk{\ae}r~\cite{Stetkaer2013} shows that the only continuous solutions
+of $H(t + u) + H(t - u) = 2H(t) H(u)$ on $\mathbb{R}$ with $H(0) = 1$ are
+$H(t) = \cosh(\alpha t)$ or $H(t) = \cos(\alpha t)$ for some $\alpha$.
+Under suitable additional hypotheses (convexity and non-negativity for the
+hyperbolic branch versus the trigonometric branch, branch selection for
+$c \neq 0$ versus $c = 0$, calibration for the multiplicative-coordinate
+scale), the conclusion of the bilinear branch is the same as in the
+polynomial setting.
+
+The generalized result is stated below as a proposition. The same
+branch-and-normalization caveats apply: a calibrated continuous
+combiner does not isolate $J$ without bilinear-branch selection and
+multiplicative-coordinate normalization.
+
+The continuous-combiner extension has been formalised in the canonical
+Lean library as the module
+\texttt{Foundation.GeneralizedDAlembert}. The module
+introduces a continuous-consistency predicate
+\texttt{HasContinuousConsistency} (the analogue of
+\texttt{HasMultiplicativeConsistency} from \texttt{Inevitability}
+without the polynomial restriction), proves a sequence of boundary
+identities and structural lemmas, and reduces the bilinear-family
+conclusion to a single named smoothness assumption. The fully proved
+content of the module is summarised below; the precise sorry-count and
+status of each remaining step appears in
+Section~\ref{sec:lean-status}.
+
+\begin{itemize}[leftmargin=*]
+\item \emph{Boundary identity at $v = 0$.} Under reciprocal symmetry of
+$F$ and the normalisation $F(1) = 0$, the combiner satisfies $\Phi(0,
+F(y)) = 2 F(y)$ for every $y > 0$. (Lean theorem
+\texttt{Phi\_at\_zero\_left}, fully proved.)
+\item \emph{Symmetry of $\Phi$ on the range.} Under reciprocal symmetry
+of $F$, the combiner is symmetric on
+$\operatorname{Range}(F) \times \operatorname{Range}(F)$. (Lean
+theorem \texttt{Phi\_symmetric\_on\_range}, fully proved.)
+\item \emph{Symmetry of $\Phi$ on the closure.} If
+$\operatorname{Range}(F)$ is dense in some interval and $\Phi$ is
+continuous, the symmetry on the range extends by continuity to all of
+$\mathbb{R}^2$. (Lean theorem \texttt{Phi\_symmetric\_on\_closure},
+fully proved, via a closed-set-on-dense-set argument.)
+\item \emph{Iteration substitution.} The Acz\'el iteration identity
+$H(2t) = \Phi(H(t), H(t))$ holds whenever $H(0) = 0$ and $H$ satisfies
+the generalized d'Alembert equation. (Lean theorem \texttt{H\_two\_t},
+fully proved.)
+\item \emph{Range contains an interval.} A continuous nonconstant $H$
+on $\mathbb{R}$ has range containing a nondegenerate interval. (Lean
+theorem \texttt{H\_range\_contains\_interval}, fully proved using the
+preconnected-image-implies-order-connected route.)
+\end{itemize}
+
+The remaining gap is the analytic content of the Acz\'el--Kannappan--Stetk{\ae}r
+classification on the combiner side. The Lean module isolates the gap
+as the explicit hypothesis package
+\texttt{ContinuousCombinerAnalysisInputs}, with three named components:
+finite-order mollifier smoothness on the log-coordinate cost, the
+second-derivative identity
+$2 G''(t) = \psi(G(t)) \cdot G''(0)$, and the $\psi$-affine completion
+$\psi(u) = 2 + c \cdot u$ on the image of the log-cost. The package is
+deliberately not derived from continuity alone: the same module
+formalises the quartic log-cost $C(x, y) = (\ln(x/y))^4$ as an
+explicit refutation of the second-derivative identity. When the
+package is supplied, the H-side classification (now the discharged
+theorem \texttt{aczel\_kannappan\_continuous\_dAlembert}) and the
+positive-ratio bilinear assembly close the conclusion mechanically.
+
+\begin{proposition}[Conditional continuous-combiner extension,
+branch-aware version]
+\label{prop:continuous-combiner-extension}
+\emph{Assuming the explicit hypothesis package
+\texttt{ContinuousCombinerAnalysisInputs}
+(stated in Appendix~\ref{app:lean}, with the quartic log-cost
+counterexample showing that the package is not automatic from
+continuity alone).}
+Let $C$ be a comparison operator on $\mathbb{R}_{>0} \times
+\mathbb{R}_{>0}$ satisfying the four logical-content conditions
+(L1)--(L4), Continuity (R1), Scale invariance (B1), and Non-triviality
+(B2), but with the polynomial regularity (R2) replaced by the weaker
+continuous-combiner condition: there exists a continuous symmetric
+function $\Phi : \operatorname{Range}(F)^2 \to \mathbb{R}$ for which
+\[
+F(xy) + F\!\left(\tfrac{x}{y}\right) = \Phi(F(x), F(y))
+\quad \text{for all } x, y > 0,
+\]
+with $\operatorname{Range}(F)$ containing an open interval. Assume
+further that $F$ is convex, non-negative, and satisfies the unit
+log-curvature calibration $\kappa(F) = 1$. Then exactly one of the
+following holds.
+\begin{enumerate}[label=(\arabic*), leftmargin=*]
+\item \emph{Bilinear branch.} $\Phi(u, v) = 2u + 2v + c\,uv$ on
+$\operatorname{Range}(F)^2$ for some $c \neq 0$, $F$ has the form
+$F(x) = (1/\alpha^2)(\cosh(\alpha \ln x) - 1)$ for some $\alpha \geq 1$
+with $c = 2\alpha^2$, and after fixing the multiplicative-coordinate
+normalization $\alpha = 1$ we obtain $c = 2$ and $F = J$.
+\item \emph{Additive branch.} $\Phi(u, v) = 2u + 2v$ (the case $c = 0$),
+and $F(x) = \tfrac{1}{2}(\ln x)^2$.
+\end{enumerate}
+\end{proposition}
+
+The proof reduces to the classical Acz\'el--Kannappan--Stetk{\ae}r
+classification by passing to logarithmic coordinates. The dichotomy
+between the two branches matches Theorem~\ref{thm:cost-corollary} and
+Remark~\ref{rem:additive-branch}; the calibration $\kappa(F) = 1$ does
+not isolate $J$ without (i) branch selection ($c \neq 0$) and (ii)
+coordinate normalization ($\alpha = 1$), both of which are choices
+outside the four logical-content conditions.
+
+The Lean formalisation of the proposition is
+\texttt{continuous\_combiner\_bilinear\_classification} in
+\texttt{Foundation.GeneralizedDAlembert}, conditional on the
+\texttt{ContinuousCombinerAnalysisInputs} hypothesis package. The
+strengthened Level-1 corollary,
+\texttt{RCL\_form\_under\_continuous\_combiner}, is the form the
+present paper revises into when the smoothness hypothesis is supplied;
+under the assumption the polynomial caveat in the Level-1
+\texttt{LogicAsFunctionalEquation} module drops automatically.
+
+\begin{remark}[On the relation between the polynomial and continuous
+versions]
+The polynomial version of the main theorem (Theorem~\ref{thm:main}) and
+the continuous-combiner version
+(Proposition~\ref{prop:continuous-combiner-extension}) reach the same
+combiner family on $\operatorname{Range}(F)^2$. The polynomial form has
+the advantage of producing the bilinear family
+$P(u, v) = 2u + 2v + c\,uv$ as an explicit polynomial on
+$\mathbb{R}^2$; the continuous form has the advantage of dropping the
+polynomial regularity. We use the polynomial version throughout the
+body of the paper because it is the form proved in the recently
+established and peer-reviewed Inevitability
+Theorem~\cite{WashburnZlatanovicAllahyarov2026}.
+\end{remark}
+
+\subsection{The status of finite pairwise polynomial closure}
+\label{subsec:conjecture}
+
+\paragraph{The headline.} Finite pairwise polynomial closure is part
+of the theorem's hypothesis. \emph{Without it, the theorem is false.}
+The role of this subsection is to make that point sharply, exhibit the
+witnesses, and explain why the resulting scope is the correct scope
+for the identification.
+
+\paragraph{Why it is essential.} The polynomial restriction (R2), now
+named precisely as finite pairwise polynomial closure
+(Definition~\ref{def:finite-pairwise-closure}), is not a redundant
+regularity hypothesis. The counterexample of
+Proposition~\ref{prop:finite-closure-necessary} shows that an operative
+positive-ratio comparison can satisfy all of (L1)--(L4), (R1), (B1),
+(B2), admit a continuous symmetric combining rule $\Phi$ that is closed
+under iteration on $\operatorname{Range}(F)$, and yet $\Phi$ fail to be
+polynomial of degree at most two: the example $C(x, y) = (\ln(x/y))^4$
+produces $\Phi(a, b) = 2a + 2b + 12\sqrt{ab}$ on
+$\operatorname{Range}(F) = [0, \infty)$. Closure under iteration alone
+is therefore not sufficient to force polynomiality, and the
+conclusion of Theorem~\ref{thm:rcl-direct} fails on this witness.
+
+This refutes a stronger conjecture proposed in earlier drafts of this
+paper, that closure under iteration of the combining rule on
+$\operatorname{Range}(F)$ implies real-analyticity of $\Phi$ and hence
+polynomial degree at most two. The quartic-log example is closed under
+iteration on $[0, \infty)$, but its combining rule is not real-analytic
+at the origin (the $\sqrt{ab}$ term has a branch-point character there).
+The earlier conjecture is therefore false, and the paper records this
+correction explicitly.
+
+The right framing is the one given in
+Remark~\ref{rem:r2-status-update}: finite pairwise polynomial closure
+is the structural content that distinguishes the Recognition
+Composition Law family from broader compositional algebras of
+positive-ratio comparison. Without it, the conclusion of
+Theorem~\ref{thm:rcl-direct} fails. The polynomial restriction is
+therefore part of the structural meaning of \emph{finite pairwise
+algebra} on this domain, not a regularity carried alongside the four
+classical conditions for technical convenience.
+
+\paragraph{Analyticity does not suffice.} A second possible repair is
+to replace polynomiality by real-analyticity of the combiner at the
+origin. That repair also fails. The failure is more instructive than a
+technical caveat: the Recognition Composition Law family is not
+invariant under analytic reparameterisation of the cost coordinate.
+
+\begin{proposition}[Analytic reparameterisation counterexample]
+\label{prop:analytic-reparam-counterexample}
+There exists a real-analytic local change of cost coordinate for which
+the induced combiner is real-analytic at the origin and satisfies the
+d'Alembert form, but is not a polynomial of total degree at most two in
+the reparameterised variables.
+\end{proposition}
+
+\begin{proof}
+Let
+\[
+K(t)=\cosh t - 1.
+\]
+Then $K$ satisfies the standard RCL combiner:
+\[
+K(t+u)+K(t-u)=2K(t)+2K(u)+2K(t)K(u).
+\]
+Now change the cost coordinate analytically by
+\[
+f(s)=s+s^2,\qquad H(t)=f(K(t)).
+\]
+The function $f$ is analytic near $0$ and has analytic local inverse
+\[
+g(a)=\frac{-1+\sqrt{1+4a}}{2}.
+\]
+Writing $p=g(a)$ and $q=g(b)$, so that $a=p+p^2$ and $b=q+q^2$, the two
+standard RCL branch values for $K(t+u)$ and $K(t-u)$ have the form
+\[
+A+R,\qquad A-R,
+\]
+where
+\[
+A=p+q+pq,\qquad R^2=p(2+p)q(2+q).
+\]
+The reparameterised combiner is therefore
+\[
+\Phi(a,b)=f(A+R)+f(A-R).
+\]
+For $f(s)=s+s^2$, the odd powers of $R$ cancel:
+\[
+\Phi(a,b)=2A+2A^2+2R^2,
+\]
+with $p=g(a)$ and $q=g(b)$. This is real-analytic near $(0,0)$.
+
+Restrict to the diagonal $a=b$. Then $p=q=s$ and $a=s+s^2$. We compute
+\[
+A=2s+s^2,\qquad R^2=s^2(2+s)^2,
+\]
+and hence
+\[
+\Phi(a,a)=2A+2A^2+2R^2
+         =4s+18s^2+16s^3+4s^4.
+\]
+If $\Phi$ were a degree-two RCL-family combiner with the boundary
+condition $\Phi(a,0)=2a$, then on the diagonal it would have the form
+\[
+\Phi(a,a)=4a+c a^2.
+\]
+Substituting $a=s+s^2$ gives
+\[
+4a+c a^2
+=4s+(4+c)s^2+2c s^3+c s^4.
+\]
+Matching the $s^2$ coefficient forces $c=14$, while the $s^3$ coefficient
+would then be $28$, not the actual value $16$. Contradiction.
+\end{proof}
+
+Thus even real-analyticity at the origin does not force polynomial degree
+at most two. Finite pairwise polynomial closure is not a proxy for
+analytic regularity; it is the actual structural condition selecting the
+RCL family in the chosen cost coordinate.
+
+\paragraph{Closure under iteration as a structural condition.} The
+closure-under-iteration condition is still a useful structural notion;
+it merely does not by itself force analyticity. We retain its
+formal definition for use in the Lean formalisation and in further
+investigations.
+
+\begin{definition}[Closure under iteration]
+\label{def:closure-under-iteration}
+A combining rule $\Phi : \mathbb{R}^2 \to \mathbb{R}$ is \emph{closed
+under iteration on $\operatorname{Range}(F)$} if (a) $\Phi$ is jointly
+continuous on $\operatorname{Range}(F) \times \operatorname{Range}(F)$,
+and (b) for any $u, v \in \operatorname{Range}(F)$,
+$\Phi(u, v) \in \operatorname{Range}(F)$. Equivalently, the dynamical
+system $(u, v) \mapsto \Phi(u, v)$ on $\operatorname{Range}(F)$ is
+well-defined and continuous.
+\end{definition}
+
+\begin{remark}[The Lean status, updated]
+\label{rem:lean-status-update}
+The Level-3 Lean module \texttt{Foundation.PolynomialityFromLogic} is
+written conditionally on a class assumption
+\texttt{IteratedAnalyticityHolds} that asserts closure under iteration
+on $\operatorname{Range}(F)$ implies real-analyticity of $\Phi$ on
+$\operatorname{Range}(F)^2$. The quartic-log counterexample shows that
+the assumption is, in general, false: an instance of the assumption
+fails for the explicit example $C(x, y) = (\ln(x/y))^4$. The Lean
+formalisation therefore records the polynomiality conditional on a
+class assumption that is not universally true. We retain the module as
+a record of the structural consequences of closure under iteration
+that hold without further regularity, but we mark
+\texttt{IteratedAnalyticityHolds} as a hypothesis that is not
+universally satisfied. The analytic reparameterisation counterexample
+in Proposition~\ref{prop:analytic-reparam-counterexample}, formalised in
+the module \texttt{Foundation.LogicAsFunctionalEquation.AnalyticCounterexample},
+shows that even replacing \texttt{IteratedAnalyticityHolds} with
+real-analyticity at the origin would not force polynomial degree at most
+two. The correct Lean status is therefore: finite pairwise polynomial
+closure is the theorem's hypothesis, not a removable regularity condition.
+\end{remark}
+
+\paragraph{Structural consequences of closure under iteration.} The
+closure-under-iteration condition still has useful structural
+consequences that hold without further regularity. The Lean module
+\texttt{Foundation.PolynomialityFromLogic} establishes:
+\begin{itemize}[leftmargin=*]
+\item \emph{Diagonal continuity.} The diagonal map
+$v \mapsto \Phi(v, v)$ is continuous on $\operatorname{Range}(F)$.
+(Lean theorem \texttt{diagonal\_continuous\_on\_range}, fully proved.)
+\item \emph{Iterated continuity.} For every $n \in \mathbb{N}$, there
+exists a continuous map $\varphi_n :
+\operatorname{Range}(F) \to \operatorname{Range}(F)$ representing the
+$n$-fold iterate of $\Phi$ on the diagonal. (Lean theorem
+\texttt{iterate\_continuous\_on\_range}, fully proved.)
+\end{itemize}
+These are direct consequences of joint continuity and closure on the
+range, and they remain valid for the quartic-log counterexample as
+well as for any RCL-family solution. They do not deliver analyticity,
+and analyticity would not be enough anyway. Proposition~\ref{prop:analytic-reparam-counterexample}
+shows that analytic changes of cost coordinate preserve analytic
+compositionality while changing the polynomial degree of the combiner.
+
+\paragraph{Final status of R2.} Finite pairwise polynomial closure
+(R2) is final in this paper. It is the exact coordinate-level
+condition under which the RCL family is forced. Dropping it gives
+broader continuous-combiner algebras with admissible non-RCL
+solutions; replacing it by real-analyticity gives analytically
+reparameterised RCL algebras that are still not polynomial of degree
+at most two. The theorem is sharp as stated, in both directions: it
+is not the universal claim ``every continuous comparison operator
+satisfying the four classical conditions yields the RCL family,''
+which is false; it is the structurally narrower identification
+``finite pairwise polynomial comparison semantics of classical
+invariance imply the RCL family,'' which is true and is what
+Theorem~\ref{thm:rcl-direct} proves. The two paragraphs of
+\S\ref{subsec:scope-statement} state this scope in its sharpest
+form; the rest of this paper is what is true inside that scope.
+
+\subsection{The discrete and modal cases}
+
+The present result is stated for continuous comparisons of positive ratios.
+The discrete propositional case, where comparisons are between truth
+values and the algebraic structure is Boolean rather than
+multiplicative, is treated as a separate realization in the second
+companion paper~\cite{Washburn2026UniversalForcing}. There the
+universal-property characterisation of the iteration object handles
+the parity collapse from the infinite iteration sequence onto the
+two-element Boolean carrier, so the meta-theorem applies even though
+the carrier image is finite. The classical Stone representation
+theorem~\cite{Stone1936} is suggestive but not directly comparable to
+the present rigidity, which lives at the cost-functional level rather
+than at the algebra level. Modal, intuitionistic, and higher-order
+extensions each have their own formal articulation of the laws of
+logic, and the question of whether each admits a rigidity-style
+identification with a unique mathematical object remains open and is
+not addressed here.
+
+\subsection{Beyond the bilinear branch}\label{subsec:additive-branch}
+
+The case $c = 0$ in $(\mathrm{RCL})$ corresponds, after passage to
+logarithmic coordinates, to a quadratic-logarithm cost
+$F(x) = \tfrac{1}{2}(\ln x)^2$ under the unit log-curvature calibration.
+This is also a canonical cost, distinct from $J$, parametrized by $c = 0$.
+Whether the additive branch admits a separate logical interpretation, or
+whether the Aristotelian conditions (perhaps together with an additional
+structural condition) select the bilinear $c \neq 0$ branch over the
+additive $c = 0$ branch, is a question we do not resolve here. See
+\cite[Section~3]{WashburnRahnamai2026} for the optimization-theoretic
+analysis of the relationship between the two branches.
+
+\subsection{Numerical scope and dimension}
+
+The present result is one-dimensional in the sense that the comparison
+operator is defined on $\mathbb{R}_{>0} \times \mathbb{R}_{>0}$. The
+multidimensional extension, comparisons of $n$-tuples of positive
+quantities, is treated in
+\cite[Section~4]{WashburnZlatanovicAllahyarov2026}, where it is shown that
+for $c \neq 0$, every solution depends only on a single linear
+combination of coordinate logarithms. Thus the present rigidity is
+genuinely one-dimensional in its admissible solutions even when stated on
+$\mathbb{R}_{>0}^n$. The dimensional rigidity of physical space, derived
+in the parallel program~\cite{PardoGuerraThapaWashburnAllahyarov2026},
+provides the operational interpretation of why three-dimensional
+recognition geometry is the natural setting for physical applications;
+the connection to the present result, on the level of laws of logic, is a
+direction for future work.
+
+\section{Lean Formalisation: Summary}\label{sec:lean-status}
+
+The Translation Theorem (Theorem~\ref{thm:translation}) is formalised
+in the canonical Lean~4 Recognition Science
+library~\cite{LeanLibrary2026} as the module
+\texttt{Foundation.LogicAsFunctionalEquation}, with no residual
+\texttt{sorry}s, building against the
+peer-reviewed~\cite{WashburnZlatanovicAllahyarov2026,
+WashburnZlatanovic2026} modules. The continuous-combiner extension
+(Proposition~\ref{prop:continuous-combiner-extension}) is formalised
+in \texttt{Foundation.GeneralizedDAlembert} with no residual
+\texttt{sorry}s and no top-level axioms. Two structural inputs that
+were previously named axioms in this module have changed status. The
+H-side classification (the case $\Phi(u, v) = 2 u v$ of the
+generalised d'Alembert equation) is now a discharged theorem,
+\texttt{aczel\_kannappan\_continuous\_dAlembert}, proved by reduction
+to \texttt{Cost.FunctionalEquation.dAlembert\_classification}. The
+combiner-side classification has been split: an explicit hypothesis
+package, \texttt{ContinuousCombinerAnalysisInputs}, with three named
+analytical components (mollifier finite-order smoothness, second
+derivative identity, $\psi$-affine completion), now stands in for the
+old monolithic \texttt{GeneralizedAczelSmoothnessPackage}. The
+quartic-log counterexample is formalised in the same module and shows
+that this hypothesis package is \emph{not} automatic from continuity:
+the second-derivative identity fails for the operator
+$C(x, y) = (\ln(x/y))^4$. The bilinear conclusion is therefore exposed
+behind the explicit hypothesis package rather than as a continuity-only
+consequence. The former \texttt{IteratedAnalyticityHolds} assumption has
+been removed from \texttt{Foundation.PolynomialityFromLogic}, which
+also has no residual \texttt{sorry}s. The Lean formalisation verifies
+the mathematics of the translation given the encoded conditions; it
+does not and cannot verify the faithfulness of the Aristotelian
+labelling, which is a definitional choice defended in
+Section~\ref{subsec:encoding-defenses}. Module-level details, the
+discharge of \texttt{aczel\_kannappan\_continuous\_dAlembert}, the
+contents of the \texttt{ContinuousCombinerAnalysisInputs} package, and
+the build verification appear in Appendix~\ref{app:lean}.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The paper proposes an operational encoding of the four
+Aristotelian-style conditions on a continuous comparison operator on
+positive ratios and carries two named regularity hypotheses (continuity
+of the operator, polynomial degree-two closure of the combiner)
+alongside them. The Translation Theorem (Theorem~\ref{thm:translation})
+reduces the encoded conditions to the hypotheses of the d'Alembert
+Inevitability Theorem~\cite{WashburnZlatanovicAllahyarov2026}, the
+derived cost satisfies the Recognition Composition Law $F(xy) +
+F(x/y) = 2F(x) + 2F(y) + c\,F(x)F(y)$, and under convexity,
+non-negativity, and unit log-curvature calibration the family splits
+into a bilinear branch with calibrated representative
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$ and an additive branch with
+calibrated representative $\tfrac{1}{2}(\ln x)^2$.
+
+Three further results upgrade the rigidity into an identification.
+The canonicality theorem (Theorem~\ref{thm:canonicality}) shows that
+under the magnitude-of-mismatch interpretation, the encoding
+(L1)--(L4) is the unique operator-level reading of the four classical
+Aristotelian conditions. The reality theorem
+(Theorem~\ref{thm:reality-satisfies-logic}) shows that any structure
+with definite states, single-valued comparison, decidability, and
+compositional inference automatically satisfies (L1)--(L4) on its
+comparison operator. Combined with the rigidity machinery, these
+two theorems yield Corollary~\ref{cor:rcl-logic-reality}: on the
+operative domain, the recognition composition law, the law of logic,
+and the structural form of any reality on this domain are the same
+mathematical object, with calibrated representatives $J$ and
+$\tfrac{1}{2}(\ln x)^2$. The operative domain is broad: every pairwise
+physical measurement, every continuous likelihood ratio, every
+continuous distance or divergence on a positive-quantity state space.
+
+The most substantive boundary result is negative, and is the source
+of the theorem's exact scope. Finite pairwise polynomial closure of
+the combiner is not removable. The quartic-log counterexample of
+Proposition~\ref{prop:finite-closure-necessary} exhibits an operative
+comparison $C(x, y) = (\ln(x/y))^4$ whose continuous combiner
+$\Phi(a, b) = 2a + 2b + 12\sqrt{ab}$ is closed under iteration on
+$[0, \infty)$ but is not polynomial; the analytic-reparameterisation
+counterexample of Proposition~\ref{prop:analytic-reparam-counterexample}
+further shows that even real-analyticity at the origin is not enough.
+Without finite pairwise polynomial closure the theorem is false. Read
+correctly, this is not a weakness but a precise scope statement: the
+identification proved here is not ``every comparison operator
+satisfying the four classical conditions yields the Recognition
+Composition Law,'' but the structurally narrower
+\emph{finite pairwise polynomial comparison semantics of classical
+invariance imply the Recognition Composition Law}. Polynomial
+closure is what names the compositional class for which the
+identification holds; outside that class, broader continuous-combiner
+algebras are perfectly admissible alternatives, and they are exhibited
+in the same paper. Whether other compositional classes admit their
+own rigidity theorems is a separate open question.
+
+Twenty-four centuries separate Aristotle's three laws of thought from
+the present paper. In the interval, the laws have been formalised in
+many vocabularies: Boole's algebra, Frege's calculus, Russell and
+Whitehead's logicism, Hilbert's metalanguage, Tarski's semantics,
+Gentzen's natural deduction, Curry-Howard, Lawvere's categorical
+logic, Girard's linear logic, the univalent foundations program. Each
+was a name for the laws in a chosen syntactic vocabulary. None
+exhibited the laws as a single mathematical object whose form was
+forced by their structural content. The present paper does so on the
+operative domain.
+
+\paragraph{Companion installments and remaining open questions.} The
+arithmetic content of the encoding is recovered in the first
+companion paper~\cite{Washburn2026Arithmetic} as the canonical orbit
+of any non-trivial generator inside $(\mathbb{R}_{>0}, \cdot)$,
+extended through the integers, rationals, reals, and complex carrier.
+The realization-invariance of that arithmetic is the meta-theorem of
+the second companion paper~\cite{Washburn2026UniversalForcing}. What
+remains open are: the modal, intuitionistic, and higher-order
+extensions of the encoding; whether a further structural condition
+distinguishes $J$ from $\tfrac{1}{2}(\ln x)^2$ within the joint set
+of (L1)--(L4) and (R1)--(R2); and the discharge of the explicit
+hypothesis package \texttt{ContinuousCombinerAnalysisInputs} that
+witnesses the obstruction recorded in
+Section~\ref{sec:lean-status}.
+
+Section~\ref{subsec:implications} discusses the specific bearings of
+the result on the invented-versus-discovered debate, on the
+mathematical-intuition / physical-reality question, on the
+foundations of mathematics, on the physical-laws-as-conventions
+question, on comparison operators across physical and cognitive
+substrates, and on the classical identification of existence with
+logical consistency.
+
+\bigskip
+
+\noindent\textbf{Funding.} This research received no external funding.
+
+\noindent\textbf{Conflicts of interest.} The author declares no conflict of
+interest.
+
+\noindent\textbf{Data availability.} No new data were created or analysed
+in this study.
+
+\appendix
+
+\section{Lean Formalisation: Detailed Status}\label{app:lean}
+
+The contents of the present paper are formalised in the canonical
+Lean~4 Recognition Science library~\cite{LeanLibrary2026}. This
+appendix records the status of each new module, the precise residual
+\texttt{sorry} count, the build verification, and the documented
+proof strategies for the two named class assumptions on which the
+conditional results depend.
+
+\subsection{The three modules and their residuals}\label{app:modules}
+
+\paragraph{Level~1: \texttt{Foundation.LogicAsFunctionalEquation}.}
+The module formalises the encoding of the four Aristotelian conditions
+(L1)--(L4), the bridge condition (B1), the non-triviality clause (B2),
+the named regularity hypotheses (R1) and (R2), and the four short
+translation lemmas connecting the encoded conditions to the
+hypotheses of the d'Alembert Inevitability
+Theorem~\cite{WashburnZlatanovicAllahyarov2026}. The main theorem
+(\texttt{laws\_of\_logic\_imply\_dalembert\_hypotheses}) and the
+Recognition Composition Law conclusion
+(\texttt{RCL\_is\_unique\_functional\_form\_of\_logic}) are stated and
+proved in full. The cost corollary
+(\texttt{J\_is\_unique\_cost\_under\_logic}) invokes the
+already-formalised \texttt{washburn\_uniqueness\_aczel} from
+\texttt{Cost.FunctionalEquation} as a black box. The module contains
+\textbf{0 \texttt{sorry}} and builds against the existing
+peer-reviewed~\cite{WashburnZlatanovicAllahyarov2026,
+WashburnZlatanovic2026} modules.
+
+\paragraph{Level~2: \texttt{Foundation.GeneralizedDAlembert}.}
+The module weakens the polynomial-degree-two regularity hypothesis
+(R2) to continuity of the combiner alone. The structural results that
+were already in place (boundary identities, symmetry transfer to the
+closure of the range by density, the Acz\'el iteration substitution,
+and the preconnected-image-implies-order-connected route to the
+range-contains-an-interval property) are preserved. Two further
+upgrades are now in place.
+
+First, the H-side d'Alembert classification — the single deepest
+classical input on which the original Level-2 conditional theorem was
+keyed — is now a discharged theorem,
+\texttt{aczel\_kannappan\_continuous\_dAlembert}. It states that any
+continuous $H : \mathbb{R} \to \mathbb{R}$ with $H(0) = 1$ satisfying
+$H(t + u) + H(t - u) = 2 H(t) H(u)$ is one of $1$, $\cosh(\alpha\,\cdot)$,
+or $\cos(\alpha\,\cdot)$. The proof reduces to
+\texttt{Cost.FunctionalEquation.dAlembert\_classification}, which is
+itself built from the integration bootstrap, the universal
+d'Alembert-to-ODE derivation, and the three ODE uniqueness lemmas
+proved in \texttt{Cost/FunctionalEquation.lean}. No external classical
+axiom enters the chain.
+
+Second, the combiner-side classification has been refined. The old
+monolithic class assumption \texttt{GeneralizedAczelSmoothnessPackage}
+is replaced by an explicit three-part hypothesis package,
+\texttt{ContinuousCombinerAnalysisInputs}, with named components
+\texttt{finite\_smoothness} (mollifier-driven finite-order derivative
+control on the log-coordinate cost),
+\texttt{second\_derivative} (the
+$2 G''(t) = \psi(G(t)) \cdot G''(0)$ identity), and
+\texttt{psi\_affine} (Stetk{\ae}r-style affineness of $\psi$ on the
+image of the log-cost). The bilinear classification
+\texttt{continuous\_combiner\_bilinear\_classification} consumes this
+package and assembles the bilinear conclusion through the discharged
+H-side classification, the explicit log-bilinear lift
+\texttt{log\_bilinear\_affine\_lift\_dAlembert}, and the
+positive-ratio bilinear assembly
+\texttt{log\_bilinear\_positive\_cost\_bilinear}. The same module now
+formally records the obstruction: the quartic log-cost
+$C(x, y) = (\ln(x/y))^4$ refutes any attempt to derive
+\texttt{second\_derivative} from continuity alone. The package is
+therefore exposed as a hypothesis surface, not as an automatic
+consequence.
+
+The module contains \textbf{0 \texttt{sorry}} and uses no top-level
+\texttt{axiom}.
+
+\paragraph{Level~3: \texttt{Foundation.PolynomialityFromLogic}.}
+The module formalises the closure-under-iteration framing of the
+strengthened (L4), proves that the algebraic and topological
+consequences of closure-under-iteration follow without further
+assumption (\texttt{diagonal\_continuous\_on\_range},
+\texttt{iterate\_continuous\_on\_range}), and no longer states a
+Level-3 main theorem. The former class assumption
+\texttt{IteratedAnalyticityHolds} has been removed because it is false
+in general, as shown by the quartic-log counterexample. The stronger
+repair (assuming analyticity at the origin directly) is also false, as
+shown by the analytic reparameterisation counterexample formalised in
+\texttt{Foundation.LogicAsFunctionalEquation.AnalyticCounterexample}.
+The module contains \textbf{0 \texttt{sorry}} after the cleanup.
+
+\subsection{Build verification}\label{app:build}
+
+The relevant modules build cleanly against the existing canonical
+library. The build is verified by the standard \texttt{lake} commands
+\texttt{lake build IndisputableMonolith.Foundation.LogicAsFunctionalEquation},
+\texttt{lake build IndisputableMonolith.Foundation.GeneralizedDAlembert},
+\texttt{lake build IndisputableMonolith.Foundation.PolynomialityFromLogic},
+and the counterexample module
+\texttt{lake build IndisputableMonolith.Foundation.LogicAsFunctionalEquation.AnalyticCounterexample}.
+The whole-library build is reported in the current audit notes.
+
+\subsection{Total residual sorry count}\label{app:sorry}
+
+All four cited modules now contain \textbf{0 \texttt{sorry}}. The two
+sorries previously present in \texttt{Foundation.GeneralizedDAlembert},
+both keyed on the old \texttt{GeneralizedAczelSmoothnessPackage}, are
+discharged: the H-side step is now the theorem
+\texttt{aczel\_kannappan\_continuous\_dAlembert}, and the combiner-side
+step is exposed as the explicit hypothesis package
+\texttt{ContinuousCombinerAnalysisInputs} consumed by the bilinear
+classification. The former \texttt{IteratedAnalyticityHolds} sorry was
+removed along with the false class assumption. The main finite-pairwise
+polynomial theorem and both counterexamples do not depend on the
+hypothesis package.
+
+\subsection{What the formalisation does and does not establish}\label{app:scope}
+
+The formalisation establishes, to the standard of a Lean~4 proof
+checked by the \texttt{lake} build, that the derivation chain from
+the encoded Aristotelian-style conditions, through the d'Alembert
+Inevitability Theorem, to the canonical reciprocal cost $J$ on the
+bilinear branch is mathematically correct \emph{conditional on the
+polynomial-degree-two regularity hypothesis}. The main translation
+theorem of Level~1
+(\texttt{laws\_of\_logic\_imply\_dalembert\_hypotheses}) and the
+Recognition Composition Law conclusion
+(\texttt{RCL\_is\_unique\_functional\_form\_of\_logic}) are
+unconditional theorems in the Lean library, with zero \texttt{sorry}s
+in the chain that produces them. Under the additional explicit
+hypothesis package \texttt{ContinuousCombinerAnalysisInputs}, the
+polynomial regularity is replaceable by continuity of the combiner
+alone (Level~2); the same module records the quartic-log obstruction
+that prevents the package from being derived from continuity alone.
+There is no Level~3 replacement by closure under iteration: that route
+is refuted by the counterexamples above.
+
+A distinction worth flagging. The Lean formalisation verifies the
+\emph{mathematics} of the translation: given the encoded conditions
+as Lean definitions, the named conclusions follow by proofs the
+machine has checked. The formalisation does \emph{not} verify the
+\emph{faithfulness of the Aristotelian labelling} of those Lean
+definitions, and cannot. The identification of $C(x, x) = 0$ with
+identity, of $C(x, y) = C(y, x)$ with non-contradiction, of totality
+with excluded middle, and of route-independence with composition
+consistency is a definitional choice, defended in
+Section~\ref{subsec:encoding-defenses}. A machine verifies theorems,
+not definitions. A reader who rejects the encoding, or proposes an
+alternative, derives different conclusions on the continuous-ratio
+domain, which would have to be formalised separately. The Lean
+library reports what the present encoding yields.
+
+The formalisation does not establish that classical logic is
+reducible to cost-physics or cost-physics to classical logic. It
+establishes that on the continuous-ratio comparison domain, under
+the encoding adopted here and finite pairwise polynomial closure, the
+hypotheses required by both readings are the same hypotheses, with the
+same family of canonical calibrated solutions (the $\alpha$-family on
+the bilinear branch, with $J$ as its normalised representative; the
+quadratic-logarithm form on the additive branch). The counterexamples
+show that neither arbitrary continuous composition nor analytic
+composition alone is enough to recover the polynomial closure.
+
+\begin{thebibliography}{99}
+
+\bibitem{Aristotle}
+Aristotle.
+\textit{Prior Analytics}.
+Trans. R.~Smith, Hackett, Indianapolis, 1989. Original work c.~350~BCE.
+
+\bibitem{LeanLibrary2026}
+J.~Washburn et al.
+\textit{The Recognition Science Lean~4 library.}
+Canonical repository, 2026. Modules
+\texttt{RecognitionScience.Foundation.LogicAsFunctionalEquation},
+\texttt{RecognitionScience.Foundation.GeneralizedDAlembert},
+\texttt{RecognitionScience.Foundation.PolynomialityFromLogic}, and
+\texttt{RecognitionScience.Foundation.LogicAsFunctionalEquation.AnalyticCounterexample}
+formalise the contents of the present paper.
+The four modules build cleanly together
+(\texttt{lake build IndisputableMonolith.Foundation.LogicAsFunctionalEquation
+IndisputableMonolith.Foundation.GeneralizedDAlembert
+IndisputableMonolith.Foundation.PolynomialityFromLogic
+IndisputableMonolith.Foundation.LogicAsFunctionalEquation.AnalyticCounterexample},
+7822 jobs, exit~0).
+
+\bibitem{Aczel1966}
+J.~Acz\'el.
+\textit{Lectures on Functional Equations and Their Applications.}
+Academic Press, New York, 1966.
+
+\bibitem{Boole1854}
+G.~Boole.
+\textit{An Investigation of the Laws of Thought, on which are Founded the
+Mathematical Theories of Logic and Probabilities.}
+Walton and Maberly, London, 1854.
+
+\bibitem{Curry1934}
+H.~B.~Curry.
+Functionality in combinatory logic.
+\textit{Proc. Natl. Acad. Sci. USA} \textbf{20} (1934), 584--590.
+
+\bibitem{Feynman1964}
+R.~P.~Feynman.
+\textit{The Character of Physical Law.}
+Messenger Lectures, Cornell University, 1964; published MIT Press, 1965.
+
+\bibitem{Frege1879}
+G.~Frege.
+\textit{Begriffsschrift, eine der arithmetischen nachgebildete Formelsprache
+des reinen Denkens.}
+Halle, 1879.
+
+\bibitem{Gentzen1935}
+G.~Gentzen.
+Untersuchungen \"uber das logische Schliessen, I~\&~II.
+\textit{Mathematische Zeitschrift} \textbf{39} (1935), 176--210, 405--431.
+
+\bibitem{Girard1987}
+J.-Y.~Girard.
+Linear logic.
+\textit{Theoretical Computer Science} \textbf{50} (1987), 1--101.
+
+\bibitem{Goedel1931}
+K.~G\"odel.
+\"Uber formal unentscheidbare S\"atze der Principia Mathematica und
+verwandter Systeme, I.
+\textit{Monatshefte f\"ur Mathematik und Physik} \textbf{38} (1931), 173--198.
+
+\bibitem{Hilbert1925}
+D.~Hilbert.
+\"Uber das Unendliche.
+\textit{Mathematische Annalen} \textbf{95} (1926), 161--190.
+
+\bibitem{HoTT2013}
+The Univalent Foundations Program.
+\textit{Homotopy Type Theory: Univalent Foundations of Mathematics.}
+Institute for Advanced Study, Princeton, 2013.
+
+\bibitem{Howard1969}
+W.~A.~Howard.
+The formulae-as-types notion of construction.
+Manuscript 1969; published in
+\textit{To H.~B.~Curry: Essays on Combinatory Logic, Lambda Calculus and
+Formalism},
+ed.~J.~P.~Seldin and J.~R.~Hindley, Academic Press, 1980, 479--490.
+
+\bibitem{Kannappan2009}
+P.~Kannappan.
+\textit{Functional Equations and Inequalities with Applications.}
+Springer, 2009.
+
+\bibitem{Kuczma2009}
+M.~Kuczma.
+\textit{An Introduction to the Theory of Functional Equations and
+Inequalities,} 2nd ed.
+Birkh\"auser, 2009.
+
+\bibitem{Lawvere1964}
+F.~W.~Lawvere.
+An elementary theory of the category of sets.
+\textit{Proc. Natl. Acad. Sci. USA} \textbf{52} (1964), 1506--1511.
+
+\bibitem{PardoGuerraThapaWashburnAllahyarov2026}
+S.~Pardo-Guerra, A.~Thapa, J.~Washburn, and E.~Allahyarov.
+On dimensional constraints in recognition geometry.
+\textit{Mathematics} (MDPI), 2026, accepted.
+
+\bibitem{RussellWhitehead1913}
+B.~Russell and A.~N.~Whitehead.
+\textit{Principia Mathematica,} vols.~I--III.
+Cambridge University Press, 1910--1913.
+
+\bibitem{Stetkaer2013}
+H.~Stetk{\ae}r.
+\textit{Functional Equations on Groups.}
+World Scientific, 2013.
+
+\bibitem{Stone1936}
+M.~H.~Stone.
+The theory of representations of Boolean algebras.
+\textit{Trans. Amer. Math. Soc.} \textbf{40} (1936), 37--111.
+
+\bibitem{Tarski1933}
+A.~Tarski.
+The concept of truth in formalized languages.
+Original Polish 1933; English translation in
+\textit{Logic, Semantics, Metamathematics,} Oxford, 1956.
+
+\bibitem{WashburnRahnamai2026}
+J.~Washburn and A.~Rahnamai Barghi.
+Reciprocal convex costs for ratio matching: Axiomatic characterization.
+\textit{Axioms} \textbf{15} (2026), 151.
+\url{https://doi.org/10.3390/axioms15020151}.
+
+\bibitem{WashburnZlatanovic2026}
+J.~Washburn and M.~Zlatanovi\'c.
+Uniqueness of the canonical reciprocal cost.
+\textit{Mathematics} \textbf{14} (2026), 935.
+\url{https://doi.org/10.3390/math14060935}.
+
+\bibitem{WashburnZlatanovicAllahyarov2026}
+J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov.
+The d'Alembert Inevitability Theorem.
+\textit{Mathematics} \textbf{14}(8) (2026), 1386.
+Submitted 17 March 2026; revised 13 April 2026; accepted 17 April 2026;
+published 20 April 2026.
+\url{https://doi.org/10.3390/math14081386}.
+
+\bibitem{Washburn2026Arithmetic}
+J.~Washburn.
+\textit{Arithmetic from the Law of Logic, I:
+The Continuous Positive-Ratio Realization,
+with a Universal Forcing Program.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026UniversalForcing}
+J.~Washburn.
+\textit{The Universal Forcing Meta-Theorem:
+One Law of Logic, One Arithmetic, Across All Realizations.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026FloorClosure}
+J.~Washburn.
+\textit{Absolute Floor Closure: Specifiability, Distinguishability, and
+the Last Precondition of Recognition Science.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026Specifiability}
+J.~Washburn.
+\textit{Specifiability Forces Distinguishability.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026SelfBootstrap}
+J.~Washburn.
+\textit{The Self-Bootstrap of Distinguishability.}
+Manuscript, April 2026.
+
+\bibitem{Wigner1960}
+E.~P.~Wigner.
+The unreasonable effectiveness of mathematics in the natural sciences.
+\textit{Comm. Pure Appl. Math.} \textbf{13} (1960), 1--14.
+
+\end{thebibliography}
+
+\end{document}

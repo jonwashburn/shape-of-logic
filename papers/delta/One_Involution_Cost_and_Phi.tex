@@ -1,0 +1,258 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{30,90,156}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=codeblue,
+  citecolor=codeblue,
+  urlcolor=codeblue,
+}
+
+\newcommand{\Jcost}{J}
+
+\title{%
+  One Involution:\\
+  The Recognition Cost and the Golden Ratio\\
+  from a Single Symmetry}
+\author{%
+  Jonathan Washburn\\
+  Recognition Physics Institute, Austin, TX, USA\\
+  \texttt{jon@recognitionphysics.org}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}\sloppy
+The Recognition Science program treats two quantities as fundamental: the
+recognition cost $J(x)=\tfrac12(x+x^{-1})-1$, and the golden ratio $\varphi$ that
+sets the scale of its self-similar hierarchy. These look like two independent
+inputs. They are not. Both are determined by a single object, the reciprocal
+involution $\iota(x)=x^{-1}$ on the positive reals. The cost is exactly the
+$\iota$-symmetric cost, and the fixed point of $\iota$ is precisely the cost's
+unique zero, the unit. The golden ratio is exactly the unique fixed point greater
+than one of the affine shift $1+\iota$, the map obtained by perturbing $\iota$ by
+its own fixed point. So the unit and the scale, the two constants the framework
+is built from, are the two fixed points of one involution family $\{\iota,\,
+1+\iota\}$. We state this precisely, prove it, and are explicit about what it does
+and does not claim. Every assertion is machine-checked in Lean~4 against Mathlib,
+with no \texttt{sorry} and no Recognition-Science-specific axiom; the module is
+\texttt{IndisputableMonolith.Foundation.UniversalForcing.ReciprocalGenerator}.
+\end{abstract}
+
+\section{The claim, and why it is not obvious}
+
+A reader who has seen the cost $J$ and the golden ratio $\varphi$ derived
+separately in the Recognition Science literature could reasonably take them to be
+two distinct primitives: one a function pinned by a functional equation, the other
+a number pinned by a self-similarity constraint. The cost-uniqueness theorem fixes
+$J$ from reciprocal symmetry, normalization, a composition law, and calibration.
+The hierarchy theorem fixes $\varphi$ from self-similar scaling and additive
+closure. Two theorems, two hypothesis packages, two constants. Nothing in that
+account forces the two to share an origin.
+
+This note shows they do, in a sharp and checkable sense. The shared origin is the
+reciprocal involution
+\[
+  \iota \colon \mathbb{R}_{>0}\to\mathbb{R}_{>0},\qquad \iota(x)=x^{-1}.
+\]
+This is the duality that exchanges a quantity with its reciprocal: the
+dual-recognition symmetry. It is the only structural ingredient we will use. From
+it, both the cost and the scale fall out as fixed-point data, and the two
+constants turn out to be the two fixed points of a single one-parameter family of
+maps built from $\iota$.
+
+The argument is short because the content is structural rather than
+computational. What makes it worth stating is not difficulty but identification:
+it removes the appearance that $J$ and $\varphi$ are independent posits.
+
+\section{The involution}
+
+\begin{definition}[Reciprocal involution]
+$\iota(x)=x^{-1}$ on the positive reals.
+\end{definition}
+
+\begin{proposition}\label{prop:inv}
+$\iota$ is an involution on $\mathbb{R}_{>0}$: $\iota(\iota(x))=x$ for $x>0$. Its
+unique fixed point is the unit: for $x>0$, $\iota(x)=x$ if and only if $x=1$.
+\end{proposition}
+
+\begin{proof}
+$\iota(\iota(x))=(x^{-1})^{-1}=x$. If $x^{-1}=x$ then $x^2=1$, and the only
+positive root is $x=1$; conversely $1^{-1}=1$.
+\end{proof}
+
+The fixed point of $\iota$ is the unit. Hold onto this. It is the hinge of the
+whole note: the unit is not chosen separately from $\iota$, it is read off $\iota$
+as the one place the reciprocal symmetry leaves invariant.
+
+\section{Cost side: $J$ is the $\iota$-symmetric cost, and its zero is $\iota$'s fixed point}
+
+The recognition cost is built directly on $\iota$. Writing it as
+\[
+  \Jcost(x)=\tfrac12\bigl(x+\iota(x)\bigr)-1
+\]
+makes the dependence explicit: $J$ is the symmetric average of a quantity and its
+reciprocal, recentered so the unit costs nothing.
+
+\begin{proposition}[Cost symmetry]\label{prop:Jsym}
+For $x>0$, $\Jcost(\iota(x))=\Jcost(x)$.
+\end{proposition}
+
+\begin{proof}
+$\Jcost(x^{-1})=\tfrac12(x^{-1}+x)-1=\Jcost(x)$. Equivalently, written as a square,
+$\Jcost(x)=(x-1)^2/(2x)$ is manifestly invariant under $x\mapsto x^{-1}$ after
+clearing denominators.
+\end{proof}
+
+So $J$ is invariant under the reciprocal involution: it is constant on
+$\iota$-orbits $\{x,x^{-1}\}$. This is the first hypothesis of the cost-uniqueness
+theorem, and it is the structural reason $J$ has the shape it has. The sharper
+fact is that $\iota$'s fixed point and $J$'s zero are the same point.
+
+\begin{theorem}[The involution's fixed point is the cost's zero]\label{thm:fixed-zero}
+For $x>0$,
+\[
+  \iota(x)=x \quad\Longleftrightarrow\quad \Jcost(x)=0,
+\]
+both holding exactly at $x=1$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:inv}, $\iota(x)=x$ iff $x=1$. By the squared form
+$\Jcost(x)=(x-1)^2/(2x)$, for $x>0$ the cost vanishes iff $x=1$. The two
+conditions therefore coincide.
+\end{proof}
+
+This is more than ``$J$ is $\iota$-symmetric.'' The symmetry axis of $\iota$, the
+locus it fixes, is identical to the null set of $J$, the locus of zero
+recognition cost. The unit is simultaneously the only self-reciprocal positive
+number and the only costless one. The cost does not introduce a new distinguished
+point; it inherits $\iota$'s.
+
+\section{Scale side: $\varphi$ is the unique fixed point of $1+\iota$}
+
+The golden ratio enters through the same involution, shifted. Consider the map
+\[
+  g(x)=1+\iota(x)=1+x^{-1}.
+\]
+The shift is by $1$, which is exactly $\iota$'s own fixed point
+(Proposition~\ref{prop:inv}). So $g$ is the involution perturbed by the unit it
+already singles out. Its fixed-point equation is the self-similarity constraint.
+
+\begin{theorem}[$\varphi$ is the unique fixed point of $1+\iota$ above one]\label{thm:phi}
+For $x>1$,
+\[
+  g(x)=x \quad\Longleftrightarrow\quad x=\varphi,
+\]
+where $\varphi=(1+\sqrt5)/2$ is the golden ratio.
+\end{theorem}
+
+\begin{proof}
+For $x>0$, $g(x)=x$ reads $1+x^{-1}=x$. Multiplying by $x$ gives $x+1=x^2$, that
+is $x^2=x+1$. The positive roots of $x^2=x+1$ are $\varphi$ and $(1-\sqrt5)/2<0$,
+so among $x>1$ the unique solution is $\varphi$. Conversely $\varphi$ satisfies
+$\varphi^2=\varphi+1$, hence $\varphi=1+\varphi^{-1}=g(\varphi)$.
+\end{proof}
+
+The self-similarity that fixes the scale is not a second principle layered on top
+of the cost. It is the fixed-point condition for the same involution, displaced by
+the unit. Where $\iota$ fixes the unit, $1+\iota$ fixes $\varphi$.
+
+\section{One involution, two constants}
+
+The two constants now sit in a single picture.
+
+\begin{theorem}[The shared generator]\label{thm:main}
+The reciprocal involution $\iota$ determines both fundamental quantities through
+fixed points:
+\begin{enumerate}[label=\textup{(\roman*)}]
+  \item the fixed point of $\iota$ is the unit $1$, which is exactly the unique
+    zero of the recognition cost $J$;
+  \item the fixed point of the shift $1+\iota$ above one is the golden ratio
+    $\varphi$, the scale.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Immediate from Theorems~\ref{thm:fixed-zero} and~\ref{thm:phi}.
+\end{proof}
+
+The unit and the scale, the two numbers the framework is built from, are the two
+fixed points of one involution family $\{\iota,\,1+\iota\}$. The family is not
+arbitrary either: its two members are $\iota$ and $\iota$ shifted by $\iota$'s own
+fixed point, so the whole structure is generated by $\iota$ alone with no second
+input. The cost is the $\iota$-symmetric average; $\varphi$ is the fixed point of
+the minimal shift of $\iota$ by the unit it fixes.
+
+\paragraph{Machine verification.}
+Every statement above is proved in Lean~4 against Mathlib in the module
+\texttt{IndisputableMonolith.Foundation.UniversalForcing.ReciprocalGenerator}.
+Proposition~\ref{prop:inv} is \texttt{recip\_involutive} and
+\texttt{recip\_fixed\_iff}; Proposition~\ref{prop:Jsym} is
+\texttt{jcost\_recip\_symmetric}; Theorem~\ref{thm:fixed-zero} is
+\texttt{recip\_fixed\_iff\_cost\_zero}; Theorem~\ref{thm:phi} is
+\texttt{recipShift\_fixed\_iff} with witness \texttt{phi\_is\_recipShift\_fixed};
+Theorem~\ref{thm:main} is \texttt{recip\_pins\_unit\_and\_scale}. The bundle is
+recorded as \texttt{ReciprocalGeneratorCert} / \texttt{reciprocalGeneratorCert\_holds}.
+A \verb|#print axioms| on these declarations reports no \texttt{sorry} and no
+Recognition-Science-specific axiom; the cost-symmetry and golden-ratio facts the
+proofs invoke (\texttt{Cost.Jcost\_symm}, \texttt{Cost.Jcost\_eq\_zero\_iff},
+\texttt{PhiSupport.phi\_unique\_pos\_root}) are themselves elementary real algebra.
+
+\section{What this does, and does not, claim}
+
+The claim is an identification of origin, and it should be read at exactly that
+strength, no more.
+
+It does claim that $J$ and $\varphi$ are not independent posits. Both are fixed by
+the single involution $\iota$, the cost by symmetry and the scale by the shifted
+fixed point, with the unit serving as the literal hinge between the two: it is
+$\iota$'s fixed point, it is $J$'s zero, and it is the amount by which $\iota$ is
+shifted to produce the map that fixes $\varphi$.
+
+It does not claim that the entire cost-uniqueness theorem is subsumed. Pinning $J$
+to its exact functional form needs more than $\iota$-symmetry: it needs
+normalization, the composition law, calibration, and continuity. $\iota$-symmetry
+is one hypothesis among those, the one that fixes the symmetry axis; the others
+fix the profile along it. This note isolates the shared hypothesis, not the full
+derivation.
+
+It does not claim that the full $\varphi$-forcing chain is subsumed either. Deriving
+$\varphi$ as the scale of a physical hierarchy needs the additive-closure and
+self-similarity content of that hierarchy; what this note shows is that the
+\emph{equation} those principles produce, $x=1+x^{-1}$, is the fixed-point equation
+of $1+\iota$, so the constant they land on is $\iota$-generated. The physics that
+selects this equation is upstream and is not relitigated here.
+
+And it does not claim that physics is reduced to a reciprocal symmetry. The honest
+reading is narrower and, for that reason, defensible: two quantities the framework
+had treated as separate fundamentals are two fixed points of one involution. That
+is a structural unification of inputs, not a theory of everything. It is the kind
+of result that makes a framework smaller, which is the direction a foundational
+program should want to move.
+
+\end{document}

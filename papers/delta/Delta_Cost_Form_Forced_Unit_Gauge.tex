@@ -1,0 +1,744 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{30,90,156}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=codeblue,
+  citecolor=codeblue,
+  urlcolor=codeblue,
+}
+
+\newcommand{\Qpos}{\mathbb{Q}_{>0}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+\newcommand{\costL}[1]{F_{#1}}
+
+\title{%
+  The Cost Form Is Forced, the Unit Is a Gauge:\\
+  How Far Distinction Determines the Recognition Cost}
+\author{%
+  Jonathan Washburn\\
+  Recognition Physics Institute, Austin, TX, USA\\
+  \texttt{jon@recognitionphysics.org}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}\sloppy
+The Recognition Science program rests on a single cost function, the canonical
+reciprocal cost $J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$, and on the claim that this
+cost is forced rather than chosen. We determine exactly how far that claim
+holds. We lead with the negative, because the negative is where the honest
+account begins. On the field of ratios that the primitive act of distinction
+generates, the cost is \emph{not} forced. The multiplicative group of positive
+ratios is free abelian on the primes, the reciprocal-symmetric solutions of the
+recognition composition law on that group are parameterized by its characters,
+and a character is fixed by freely assigning a value to each prime. The space of
+admissible costs is therefore an infinite product, one independent factor per
+prime, and the canonical cost is a single point in it. We exhibit the freedom
+concretely: for every prime there is an admissible cost that agrees with the
+canonical one on all other primes and inverts it on that one. Any uniqueness
+statement that recovers the canonical cost on the ratios must first fix the cost
+on a generating set of primes, which is to assume agreement with the answer, not
+to derive it. We then show what the continuous completion adds. A continuous
+character of the positive reals is a power map, so on the completion the four
+algebraic laws cut the infinite character freedom down to a single one-parameter
+family, $\costL{\lambda}(x) = \tfrac{1}{2}(x^{\lambda} + x^{-\lambda}) - 1$ for
+$\lambda > 0$, and that family is exactly the solution set, not merely contained
+in it. The family is the orbit of the canonical cost under the automorphism
+group of the positive reals under multiplication, and the action is free and
+transitive, so the family is a torsor and the residual freedom is exactly one
+positive real, pinned by agreement at a single ratio. A unit calibration selects
+the canonical cost within the family. The honest conclusion is a stratification:
+distinction and the algebraic laws force the cost \emph{form}, the gauge orbit of
+$J$; one calibration datum fixes the gauge; and the value of that datum is a
+multiplicative-automorphism gauge that distinction does not, by itself, fix. We
+close by naming the one open question that would upgrade the result, namely
+whether the calibration unit is itself derivable from the cost of a single
+distinction act.
+\end{abstract}
+
+\tableofcontents
+
+\section{The joint, and the claim this paper defends}
+
+A program that derives physics from a single primitive has one load-bearing
+joint, and in the Recognition Science program it is the cost function. The
+program assigns to each comparison of two magnitudes a cost, and almost
+everything downstream, the appearance of the golden ratio, the discrete time
+cadence, the spatial dimension, the numerical values of physical constants,
+flows from the precise form of that cost. The cost is the canonical reciprocal
+cost
+\[
+  J(x) = \tfrac{1}{2}\bigl(x + x^{-1}\bigr) - 1 ,
+\]
+and the program's strong claim is that this cost is not one choice among many but
+the forced consequence of a few structural requirements. If that claim is true,
+the cost layer adds nothing arbitrary. If it is false, the cost layer hides a
+choice, and the program owes an account of what the choice is and how large it
+is.
+
+This paper gives that account, and the account is a stratification rather than a
+clean yes or no. We state the conclusion at the outset so that nothing in what
+follows can be mistaken for a stronger claim than we make. On the discrete field
+of ratios that distinction generates, the cost is not forced: the admissible
+costs form an infinite-dimensional family and the canonical cost is one member.
+On the continuous completion of that field, the same algebraic laws, now joined
+by continuity, force a single one-parameter family, and that family is precisely
+the orbit of the canonical cost under a natural group of symmetries. Within the
+family a single calibration datum selects the canonical cost. So distinction
+forces the cost \emph{form}, and one unit of scale, supplied by a single
+measurement, selects the canonical representative. The value of that unit is a
+gauge that distinction does not fix on its own.
+
+We organize the paper negative first, and the ordering is deliberate. The most
+common way a forcing claim of this kind fails is by circularity: the argument
+that appears to force the cost turns out to have assumed the answer on a set rich
+enough to determine it. The cleanest defense against that failure is to confront
+the negative before the positive, to show exactly where and why the cost is
+\emph{not} determined, and only then to identify the minimal extra ingredient
+that determines it. A reader who sees the obstruction first cannot later mistake
+a hidden assumption for a derivation. This paper therefore proves the negative in
+full, names the circularity trap explicitly, and then builds the positive on the
+completion in a way that keeps the one remaining choice in plain view.
+
+\section{The cost and its laws}
+
+We recall the structural requirements that a cost is asked to satisfy. They are
+stated for a function on the positive reals, but the first three are purely
+algebraic and make sense on any field of values, in particular on the rational
+field that distinction produces.
+
+\begin{definition}[The cost laws]\label{def:laws}
+Let $K$ be an ordered field and let $K_{>0}$ be its positive part under
+multiplication. A function $F \colon K_{>0} \to K$ is said to satisfy:
+\begin{enumerate}[leftmargin=2.6em, label=\textup{(L\arabic*)}]
+  \item \textbf{reciprocal symmetry}, if $F(x) = F(x^{-1})$ for all $x$;
+  \item \textbf{normalization}, if $F(1) = 0$;
+  \item \textbf{the composition law}, if for all $u, v$,
+    \[
+      F(uv) + F(u/v) = 2F(u)F(v) + 2F(u) + 2F(v) ;
+    \]
+  \item \textbf{continuity}, when $K = \mathbb{R}$, if $F$ is continuous on
+    $\Rpos$;
+  \item \textbf{unit calibration}, when $K = \mathbb{R}$ and $F$ is twice
+    differentiable in the logarithmic coordinate, if the second derivative of
+    $t \mapsto F(e^{t})$ at $t = 0$ equals $1$.
+\end{enumerate}
+We call $F$ a \emph{cost form} if it satisfies (L1) through (L3), and a
+\emph{calibrated cost} if in addition it satisfies (L4) and (L5).
+\end{definition}
+
+The first three laws are the algebra of comparison. Reciprocal symmetry says
+that comparing $a$ to $b$ costs what comparing $b$ to $a$ costs. Normalization
+says that comparing a thing to itself costs nothing. The composition law is the
+nontrivial one: it is the two-branch identity that a recognition cost must obey
+when comparisons are composed, and it is itself forced, among symmetric
+right-affine combiners with natural boundary conditions, as a separate result
+that we take as given here and cite to the companion functional-equation
+work~\cite{WashburnFE2026}. The canonical cost $J$ satisfies all five laws. The
+question of this paper is whether the laws, in turn, force $J$, and the answer
+depends sharply on whether the domain is the discrete rational field or its
+continuous completion.
+
+It is worth isolating the role of calibration before going further, because it
+is the hinge of the whole analysis. Calibration (L5) is a statement about a
+second derivative at a single point. A second derivative is a local analytic
+quantity: it sees the behavior of the function in an arbitrarily small
+neighborhood of the unit. On a domain riddled with gaps, such as the rationals,
+there is no neighborhood to see, and calibration has no meaning. This is the
+first sign that the discrete and continuous cases will diverge, and it tells us
+in advance where the divergence will come from.
+
+\section{The negative: on the ratios, the cost is not forced}\label{sec:negative}
+
+We prove the negative result first and in its strongest form: not as a list of
+counterexamples but as a structural description of the entire space of admissible
+costs on the rationals. The description shows at once that the space is large,
+that the canonical cost is one unremarkable point in it, and that no argument
+internal to the discrete laws can single the canonical cost out.
+
+\subsection{The positive rationals are free abelian on the primes}
+
+\begin{lemma}[Structure of the rational multiplicative group]\label{lem:free}
+The group $\Qpos$ of positive rationals under multiplication is free abelian on
+the set of primes. Concretely, the map sending a positive rational to its tuple
+of prime exponents,
+\[
+  q \;\longmapsto\; \bigl(v_p(q)\bigr)_{p \text{ prime}} ,
+\]
+is an isomorphism from $\Qpos$ onto the direct sum $\bigoplus_{p} \mathbb{Z}$, the
+tuples of integers that are zero in all but finitely many coordinates.
+\end{lemma}
+
+\begin{proof}
+This is the fundamental theorem of arithmetic in multiplicative form. Every
+positive rational has a unique expression $q = \prod_p p^{v_p(q)}$ with integer
+exponents $v_p(q)$, all but finitely many zero, and the exponent of each prime
+adds under multiplication of rationals. Uniqueness of prime factorization makes
+the exponent map a bijection onto the finitely supported integer tuples, and the
+additivity of exponents makes it a group homomorphism. Hence it is an
+isomorphism, and the primes are a free basis.
+\end{proof}
+
+The content of Lemma~\ref{lem:free} for the cost question is that the primes are
+\emph{independent} coordinates. A function defined on $\Qpos$ that respects the
+multiplicative structure is free to behave on each prime axis without regard to
+the others, because the axes do not interact. This independence is what makes the
+space of admissible costs large.
+
+\subsection{Cost forms are characters}
+
+We now solve the cost laws on the rational group exactly. The solution is the
+classical general solution of the composition law on an abelian group, and it
+identifies cost forms with characters.
+
+\begin{definition}[Character]\label{def:char}
+A \emph{character} of $\Qpos$ into an ordered field $K$ is a group homomorphism
+$\chi \colon \Qpos \to K_{>0}$, that is, a map with $\chi(uv) = \chi(u)\chi(v)$
+and $\chi(1) = 1$.
+\end{definition}
+
+\begin{proposition}[Cost forms are character costs]\label{prop:charcost}
+Let $K$ be an ordered field in which $2$ is invertible. A function
+$F \colon \Qpos \to K$ is a cost form, that is satisfies reciprocal symmetry,
+normalization, and the composition law, if and only if there is a character
+$\chi$ of $\Qpos$ into $K$ with
+\[
+  F(u) = \tfrac{1}{2}\bigl(\chi(u) + \chi(u)^{-1}\bigr) - 1
+  \qquad\text{for all } u \in \Qpos .
+\]
+\end{proposition}
+
+\begin{proof}
+Suppose first that $F$ has the stated form for a character $\chi$. Normalization
+holds because $\chi(1) = 1$ gives $F(1) = \tfrac{1}{2}(1 + 1) - 1 = 0$.
+Reciprocal symmetry holds because $\chi(u^{-1}) = \chi(u)^{-1}$, so the two terms
+$\chi(u)$ and $\chi(u)^{-1}$ simply exchange. For the composition law, write
+$a = \chi(u)$ and $b = \chi(v)$, so $\chi(uv) = ab$ and $\chi(u/v) = a/b$, and
+set $H(w) = F(w) + 1 = \tfrac{1}{2}(\chi(w) + \chi(w)^{-1})$. Then
+\[
+  H(uv) + H(u/v)
+  = \tfrac{1}{2}\Bigl(ab + \tfrac{1}{ab} + \tfrac{a}{b} + \tfrac{b}{a}\Bigr)
+  = \tfrac{1}{2}\Bigl(a + \tfrac{1}{a}\Bigr)\Bigl(b + \tfrac{1}{b}\Bigr)
+  = 2 H(u) H(v) ,
+\]
+and substituting $H = F + 1$ and expanding gives exactly the composition law for
+$F$.
+
+Conversely, suppose $F$ is a cost form, and set $H = F + 1$, so $H(1) = 1$,
+$H(u) = H(u^{-1})$, and $H(uv) + H(u/v) = 2H(u)H(v)$. This last is d'Alembert's
+functional equation on the abelian group $\Qpos$. Its general solution on an
+abelian group, into a field where $2$ is invertible, is
+$H(u) = \tfrac{1}{2}(\chi(u) + \chi(u)^{-1})$ for a homomorphism $\chi$ into the
+multiplicative group, a classical fact about d'Alembert's equation
+\cite{Aczel1966}. Concretely, one recovers the character by solving the quadratic
+$\chi(u)^2 - 2H(u)\chi(u) + 1 = 0$ consistently across the group; the two roots
+are $\chi(u)$ and $\chi(u)^{-1}$, and the composition law is exactly the
+condition that a consistent multiplicative choice of root exists. Setting
+$F = H - 1$ returns the stated form.
+\end{proof}
+
+Proposition~\ref{prop:charcost} reduces the entire cost question on the rationals
+to a question about characters, and the canonical cost is the character cost of
+the simplest possible character.
+
+\begin{corollary}[The canonical cost is the identity character]\label{cor:Jchar}
+The canonical reciprocal cost $J$ on $\Qpos$ is the character cost of the
+inclusion character $\iota(u) = u$. That is, $J(u) = \tfrac{1}{2}(u + u^{-1}) - 1$
+is $F$ with $\chi = \iota$.
+\end{corollary}
+
+\subsection{The freedom, and the canonical cost as one point in it}
+
+We can now read off the size of the admissible family. A character of $\Qpos$ is,
+by Lemma~\ref{lem:free}, a homomorphism out of a free abelian group, and such a
+homomorphism is determined by, and may be freely prescribed by, its values on the
+free generators, the primes.
+
+\begin{theorem}[The cost is not forced on the rationals]\label{thm:negative}
+The cost forms on $\Qpos$ with values in $\Qpos$ are in bijection with the
+characters of $\Qpos$, and the characters are in bijection with the choices of an
+image $\chi(p) \in \Qpos$ for each prime $p$, freely and independently. The space
+of cost forms is therefore the infinite product $\prod_{p} \Qpos$, one
+independent factor per prime. The canonical cost $J$ is the single point given by
+$\chi(p) = p$ for every prime. No subset of the cost laws (L1) through (L3)
+singles out that point.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:charcost} the cost forms correspond to characters, and by
+Lemma~\ref{lem:free} a character is a homomorphism from the free abelian group
+$\bigoplus_p \mathbb{Z}$ to $\Qpos$. A homomorphism out of a free abelian group is
+determined by its values on a basis, and any assignment of basis values extends
+to a unique homomorphism. The basis is the set of primes, so a character is
+exactly a free choice of $\chi(p) \in \Qpos$ for each prime, and distinct choices
+give distinct characters, hence distinct cost forms. The canonical cost is the
+character $\chi = \iota$, that is $\chi(p) = p$. Since the laws (L1) through (L3)
+are precisely the conditions that make $F$ a character cost, and every character
+yields one, the laws hold for the entire product and cannot distinguish one point
+from another.
+\end{proof}
+
+The abstract statement becomes vivid in a single explicit family of
+counterexamples, one for each prime, each of which satisfies every discrete law
+and differs from the canonical cost.
+
+\begin{proposition}[Per-prime orientation is free]\label{prop:twist}
+Fix a prime $p_0$. Define $\chi_{p_0}$ on generators by $\chi_{p_0}(p_0) = p_0^{-1}$
+and $\chi_{p_0}(p) = p$ for every prime $p \neq p_0$, and extend multiplicatively.
+Then $\chi_{p_0}$ is a character, the associated cost form $F_{\chi_{p_0}}$
+satisfies reciprocal symmetry, normalization, and the composition law, and it
+differs from the canonical cost $J$. Explicitly $\chi_{p_0}(q) = q \cdot p_0^{-2 v_{p_0}(q)}$,
+so $F_{\chi_{p_0}}$ inverts the orientation of the $p_0$ axis and leaves every
+other axis exactly as in $J$.
+\end{proposition}
+
+\begin{proof}
+The prescription assigns a value in $\Qpos$ to each free generator, so it extends
+to a unique character by Lemma~\ref{lem:free}, and
+Proposition~\ref{prop:charcost} makes the associated cost form satisfy the three
+laws. The closed form follows by evaluating on $q = \prod_p p^{v_p(q)}$:
+$\chi_{p_0}(q) = p_0^{-v_{p_0}(q)} \prod_{p \neq p_0} p^{v_p(q)}
+= q \cdot p_0^{-2 v_{p_0}(q)}$. It differs from $J$ already at $q = p_0$, where
+$\chi_{p_0}(p_0) = p_0^{-1} \neq p_0 = \iota(p_0)$, so the two character costs
+disagree at $p_0$ unless $p_0 = p_0^{-1}$, which never holds for a prime.
+\end{proof}
+
+\subsection{Why a discrete uniqueness theorem would be circular}
+
+The space of cost forms on the rationals being an infinite product, one can still
+prove a uniqueness statement of the following shape: if a cost form agrees with
+$J$ on enough primes, then it equals $J$ everywhere. This is true, and it is
+worth being completely clear that it is not a forcing result.
+
+\begin{proposition}[Conditional, and circular as a forcing claim]\label{prop:circular}
+A cost form $F$ on $\Qpos$ equals $J$ if and only if its character $\chi$ agrees
+with the inclusion on every prime, that is $\chi(p) = p$ for all $p$. In
+particular, fixing the cost on the full generating set of primes determines it
+everywhere.
+\end{proposition}
+
+\begin{proof}
+A homomorphism out of a free abelian group is determined by its values on the
+basis, so two characters agree everywhere if and only if they agree on every
+prime. Apply this to $\chi$ and $\iota$.
+\end{proof}
+
+Proposition~\ref{prop:circular} says exactly what it says and no more. It tells
+us that the primes generate, so agreement on the primes propagates. It does not
+tell us that distinction selects the inclusion character rather than any of the
+infinitely many others. A uniqueness theorem whose hypothesis is ``the cost
+already equals $J$ on a generating set'' has assumed the answer on a set large
+enough to pin it down, and then observed that the answer propagates. That is a
+fact about generation, not a derivation of $J$ from distinction. We state this
+plainly because the temptation to present such a conditional as evidence of
+forcing is real, and a careful reader sees through it at once. The honest reading
+of the discrete layer is the one given by Theorem~\ref{thm:negative}: the cost is
+not forced, and the freedom is an entire character group.
+
+\section{Why the discrete carrier cannot do better}\label{sec:obstruction}
+
+Before turning to the completion, we record why the negative of
+Section~\ref{sec:negative} is structural rather than a temporary gap. One might
+hope that some further discrete condition, short of completing the field, could
+cut the character freedom down. It cannot, and the reason is the same reason the
+calibration law had no meaning on the rationals.
+
+The character freedom is killed only by continuity. A character of $\Qpos$ is an
+arbitrary assignment of values on the primes; to constrain it one needs a
+condition that links the value at one rational to the values at nearby rationals.
+But on the rationals there is no useful notion of ``nearby'' in the order
+topology that the cost laws can exploit, because the rationals are totally
+disconnected: between any two of them lie gaps, and a constraint imposed near one
+point does not propagate across a gap to a distant point. The per-prime
+independence of Lemma~\ref{lem:free} is the algebraic face of the same fact. The
+prime axes are not merely independent as coordinates; they cannot be coupled by
+any order- or limit-based condition available on the discrete field, because such
+conditions require a connected domain to have force.
+
+This is the precise sense in which the cost question and the continuum question
+are the same question seen twice. The cost is underdetermined on the rationals
+for exactly the reason the rationals are not complete: the domain is full of
+gaps, and gaps insulate constraints. To force the cost one must first remove the
+gaps, and removing the gaps is completing the field to the continuum. As shown in
+the companion analysis of the continuum~\cite{WashburnContinuum2026}, that
+completion is not itself a consequence of distinction but a separate posit. So the
+cost can be forced only on a domain that is itself an addition to distinction, and
+the logical order is fixed: domain first, then the cost on it.
+
+\section{The completion: continuity collapses the freedom}\label{sec:completion}
+
+On the continuous completion of the rationals, the positive real line, the cost
+laws acquire the two analytic conditions, continuity and calibration, that have
+no meaning on the gapped field. We now show that continuity alone collapses the
+infinite character freedom to a single one-parameter family, and that calibration
+then selects the canonical cost within it.
+
+The mechanism is that continuity restricts characters drastically. On the
+rationals a character could send each prime anywhere; on the reals a continuous
+character is forced to be a power map.
+
+\begin{lemma}[Continuous characters of the reals are power maps]\label{lem:power}
+A continuous homomorphism $\chi \colon \Rpos \to \Rpos$ is of the form
+$\chi(x) = x^{\lambda}$ for a unique real $\lambda$.
+\end{lemma}
+
+\begin{proof}
+Transport to logarithmic coordinates by $g(t) = \ln \chi(e^{t})$. Then $g$ is
+continuous and additive, $g(s + t) = g(s) + g(t)$, since $\chi$ is multiplicative.
+The continuous solutions of Cauchy's additive equation are the linear maps
+$g(t) = \lambda t$ for a unique real $\lambda$. Hence
+$\ln \chi(e^{t}) = \lambda t$, that is $\chi(x) = x^{\lambda}$, and $\lambda$ is
+unique because distinct slopes give distinct maps.
+\end{proof}
+
+\begin{theorem}[The four laws admit exactly the one-parameter family]\label{thm:family}
+Define, for $\lambda > 0$,
+\[
+  \costL{\lambda}(x) = \tfrac{1}{2}\bigl(x^{\lambda} + x^{-\lambda}\bigr) - 1 ,
+  \qquad x \in \Rpos .
+\]
+Each $\costL{\lambda}$ is a continuous cost form, that is satisfies (L1) through
+(L4). Conversely, every continuous cost form on $\Rpos$ whose logarithmic profile
+has positive curvature at the unit equals $\costL{\lambda}$ for exactly one
+$\lambda > 0$. The continuous cost forms are therefore precisely the family
+$\{\costL{\lambda} : \lambda > 0\}$, together with the constant zero cost in the
+degenerate flat case.
+\end{theorem}
+
+\begin{proof}
+That each $\costL{\lambda}$ is a cost form is the character-cost computation of
+Proposition~\ref{prop:charcost} applied to the continuous character
+$\chi(x) = x^{\lambda}$, and continuity is clear. For the converse, let $F$ be a
+continuous cost form. By the same proposition, applied now over the reals, $F$ is
+the character cost of a continuous character $\chi$, and by Lemma~\ref{lem:power}
+that character is $\chi(x) = x^{\lambda}$ for a unique real $\lambda$. Then
+$F = \costL{\lambda}$. Reciprocal symmetry identifies $\lambda$ with $-\lambda$,
+since $\costL{\lambda} = \costL{-\lambda}$, so we may take $\lambda \geq 0$; the
+value $\lambda = 0$ gives the flat cost $F \equiv 0$, which has zero curvature,
+and every $\lambda > 0$ gives a profile $t \mapsto \cosh(\lambda t) - 1$ with
+positive curvature at the unit. Hence the nondegenerate continuous cost forms are
+exactly $\{\costL{\lambda} : \lambda > 0\}$, parameterized injectively by
+$\lambda > 0$.
+\end{proof}
+
+The classification of Theorem~\ref{thm:family} is the point at which the program's
+continuous uniqueness result enters, and we have stated it so as to make explicit
+what that result does and does not deliver. It delivers a one-parameter family. It
+does not deliver a single cost, because calibration has not yet been imposed. The
+single calibrated cost is recovered in Section~\ref{sec:gauge}, but only after we
+understand the family as a whole, which is itself the structurally important
+object.
+
+\section{Monotonicity replaces continuity: the cost side needs no continuum}\label{sec:monotone}
+
+The classification of Theorem~\ref{thm:family} was stated with continuity because
+continuity is the hypothesis under which Cauchy's additive equation has only
+linear solutions. Continuity is more than the argument needs. The additive
+solutions can be pinned by an order condition instead, and the order condition is
+available on fields far smaller than the continuum.
+
+\begin{lemma}[Monotone additive maps are linear]\label{lem:monotone-additive}
+Let $g \colon \mathbb{R} \to \mathbb{R}$ satisfy $g(s+t) = g(s) + g(t)$ for all
+$s, t$, and suppose $g$ is monotone on some interval. Then $g(s) = c\,s$ for a
+constant $c$.
+\end{lemma}
+
+This is classical (Darboux; see also Acz\'el). A monotone additive function is
+bounded on an interval, and a bounded additive function is linear. Monotonicity
+supplies the boundedness that continuity also supplies, but it is the weaker
+requirement: every continuous additive map is monotone on the relevant rays,
+while a monotone additive map need not be assumed continuous in advance.
+
+Replacing continuity by monotonicity in Lemma~\ref{lem:power} leaves its
+conclusion intact. A monotone multiplicative endomorphism of $\Rpos$ is a power
+map. Theorem~\ref{thm:family} then holds verbatim with ``continuous'' replaced by
+``order preserving'': the nondegenerate \emph{monotone} cost forms are exactly the
+gauge orbit $\{\costL{\lambda} : \lambda > 0\}$.
+
+The gain is not cosmetic. Continuity is a statement about limits, and limits
+require the gaps of the rational line to be filled, which is exactly the move to
+the uncountable continuum. Monotonicity is a statement about order, and order is
+already present on the real-algebraic closure of the distinction-native rationals.
+That closure is the field in which every distinction-posable polynomial comparison
+resolves. It contains $\sqrt{2}$ and $\sqrt{5}$, hence the golden ratio
+$\varphi = (1 + \sqrt{5})/2$, and it is countable. On that countable, real-closed,
+ordered field the monotone cost forms are already exactly the gauge orbit. The
+cost form is forced without ever invoking the continuum.
+
+This sharpens the division of labor between the negative and positive results. The
+companion analysis of the continuum~\cite{WashburnContinuum2026} argued that
+completing the rationals to the real line is a separate posit, not a consequence
+of distinction. The present result removes the only place where the cost argument
+seemed to need that posit. Continuity was the apparent dependency; monotonicity
+discharges it. Nothing of the continuum survives on the cost side. The genuinely
+transcendental physical constants that the downstream theory eventually names,
+which use $\pi$ and the exponential, are not algebraic and so do not lie in the
+algebraic closure; but they too live in a countable field, obtained by adjoining
+those specific constant values to the rationals, and that field is again a proper
+subset of the continuum. The continuum is at most a scaffold for defining the
+transcendental functions, never the home of the answers.
+
+The residual freedom is visible as a single analytic invariant. In logarithmic
+coordinates each member of the orbit is $t \mapsto \cosh(\lambda t) - 1$, whose
+curvature at the unit, the second derivative at $t = 0$, equals $\lambda^{2}$.
+Distinct members have distinct curvature, and the canonical cost $J$ is the unique
+member of curvature one. Fixing the gauge is fixing that curvature, and nothing in
+the discrete distinction data, which lives before any second derivative exists,
+selects the value one. The unit is a calibration, not a forced constant.
+
+\section{The family is the gauge orbit of the canonical cost}\label{sec:gauge}
+
+The one-parameter family of Theorem~\ref{thm:family} is not an unstructured set
+of solutions. It is a single orbit of the canonical cost under a natural group
+action, and recognizing it as an orbit is what turns ``the cost is forced up to
+one parameter'' into a precise statement about the kind of freedom that remains.
+
+\begin{definition}[The gauge group]\label{def:gauge}
+The \emph{gauge group} is the group $G$ of continuous automorphisms of $\Rpos$
+under multiplication. By Lemma~\ref{lem:power} an element of $G$ is a power map
+$\sigma_{\mu} \colon x \mapsto x^{\mu}$ with $\mu \neq 0$, and composition
+multiplies exponents, $\sigma_{\mu} \circ \sigma_{\nu} = \sigma_{\mu\nu}$. The
+positive part $G_{+} = \{\sigma_{\mu} : \mu > 0\}$ is the connected component of
+the identity, isomorphic to $(\Rpos, \cdot)$ and to $(\mathbb{R}, +)$ through the
+exponent.
+\end{definition}
+
+\begin{theorem}[The family is a torsor under the gauge group]\label{thm:torsor}
+The gauge group acts on cost forms by precomposition,
+$(\sigma_{\mu} \cdot F)(x) = F(x^{\mu})$. Under this action:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item the canonical cost is carried to the family, $\sigma_{\lambda} \cdot J = \costL{\lambda}$,
+    so every member of the family is a gauge image of $J$;
+  \item the action of $G_{+}$ on the family is transitive: any member reaches any
+    other, since $\costL{\lambda} = \sigma_{\lambda/\nu} \cdot \costL{\nu}$;
+  \item the action is free: $\sigma_{\mu} \cdot \costL{\nu} = \costL{\nu}$ with
+    $\mu, \nu > 0$ forces $\mu = 1$, equivalently distinct exponents give distinct
+    costs.
+\end{enumerate}
+Consequently the family $\{\costL{\lambda} : \lambda > 0\}$ is a principal
+homogeneous space, a torsor, under $G_{+} \cong (\mathbb{R}, +)$. The residual
+freedom in the cost is exactly one real degree of freedom, the gauge coordinate.
+\end{theorem}
+
+\begin{proof}
+For (a), precomposing $J$ with $\sigma_{\lambda}$ gives
+$J(x^{\lambda}) = \tfrac{1}{2}(x^{\lambda} + x^{-\lambda}) - 1 = \costL{\lambda}(x)$.
+For (b), $\sigma_{\lambda/\nu} \cdot \costL{\nu}(x) = \costL{\nu}(x^{\lambda/\nu})
+= \tfrac{1}{2}(x^{\lambda} + x^{-\lambda}) - 1 = \costL{\lambda}(x)$, so any
+$\costL{\nu}$ reaches any $\costL{\lambda}$. For (c), suppose
+$\costL{\mu\nu} = \sigma_{\mu} \cdot \costL{\nu} = \costL{\nu}$ with $\mu, \nu > 0$.
+Evaluating at any $x \neq 1$, the function $\lambda \mapsto \costL{\lambda}(x)
+= \cosh(\lambda \ln x) - 1$ is strictly increasing in $\lambda > 0$ for fixed
+$x \neq 1$, since $\cosh$ is strictly increasing on the positive axis and
+$|\ln x| > 0$. Hence $\costL{\mu\nu}(x) = \costL{\nu}(x)$ forces $\mu\nu = \nu$,
+that is $\mu = 1$. A free transitive action of $G_{+}$ exhibits the family as a
+torsor under $G_{+}$, which the exponent identifies with $(\mathbb{R}, +)$.
+\end{proof}
+
+Theorem~\ref{thm:torsor} is the structural heart of the paper. It says the
+remaining freedom in the cost is not a vague ``one parameter'' but a gauge: the
+admissible costs form a single orbit, all equivalent under the symmetry group of
+the domain, with no member algebraically preferred over any other. This is the
+exact sense in which the cost \emph{form} is forced. The form is the orbit. What
+is not forced is the choice of representative within the orbit, and that choice is
+one real number.
+
+\section{One datum fixes the gauge; calibration selects the canonical cost}
+
+A torsor has no distinguished point until one is named. Naming one point requires
+exactly one piece of data, and we now show that a single comparison value
+suffices, after which calibration identifies the named point with the canonical
+cost.
+
+\begin{theorem}[A single datum pins the gauge]\label{thm:single}
+Let $\costL{\lambda}$ and $\costL{\nu}$ be two members of the family, and suppose
+they agree at a single ratio $x_0 > 1$, that is $\costL{\lambda}(x_0) = \costL{\nu}(x_0)$.
+Then $\lambda = \nu$, so the two costs coincide everywhere. Equivalently, the
+value of the cost at any one ratio different from the unit determines the gauge
+coordinate.
+\end{theorem}
+
+\begin{proof}
+Fix $x_0 > 1$, so $\ln x_0 > 0$. The map $\lambda \mapsto \costL{\lambda}(x_0)
+= \cosh(\lambda \ln x_0) - 1$ is strictly increasing for $\lambda > 0$, because
+$\cosh$ is strictly increasing on $(0, \infty)$ and the argument $\lambda \ln x_0$
+is strictly increasing in $\lambda$. A strictly increasing function is injective,
+so equal values at $x_0$ force $\lambda = \nu$.
+\end{proof}
+
+\begin{theorem}[Calibration selects the canonical cost]\label{thm:calib}
+Among the family $\{\costL{\lambda} : \lambda > 0\}$, the unit calibration (L5)
+holds if and only if $\lambda = 1$, and the calibrated member is the canonical
+cost: $\costL{1} = J$.
+\end{theorem}
+
+\begin{proof}
+In logarithmic coordinates the profile of $\costL{\lambda}$ is
+$t \mapsto \cosh(\lambda t) - 1$, whose second derivative at $t = 0$ is
+$\lambda^{2}$. Calibration requires this to equal $1$, that is $\lambda^{2} = 1$,
+and for $\lambda > 0$ this holds exactly when $\lambda = 1$. At $\lambda = 1$,
+$\costL{1}(x) = \tfrac{1}{2}(x + x^{-1}) - 1 = J(x)$.
+\end{proof}
+
+Putting the two together, the gauge is fixed by one datum, and the particular
+datum ``the logarithmic curvature at the unit equals one'' is the choice that
+names the canonical cost. The calibration is the unit speed of the gauge group:
+in the exponent coordinate the curvature reads off as $\lambda^{2}$, so demanding
+unit curvature is demanding $\lambda = 1$, the identity of the gauge group, which
+is the canonical cost.
+
+\section{The honest stratification}\label{sec:stratification}
+
+We now assemble the discrete negative and the continuous positive into the single
+stratified statement that is the conclusion of the paper.
+
+\begin{theorem}[Cost stratification]\label{thm:strat}
+The status of the canonical reciprocal cost $J$ under the cost laws is as follows.
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item \textbf{Discrete underdetermination.} On the rational field that
+    distinction generates, the laws (L1) through (L3) do not force $J$. The
+    admissible cost forms are the character costs, an infinite product with one
+    free factor per prime, and $J$ is one point of it
+    \textup{(Theorem~\ref{thm:negative})}.
+  \item \textbf{Continuous form forcing.} On the continuous completion, the laws
+    (L1) through (L4) force the cost form to lie in the one-parameter family
+    $\{\costL{\lambda} : \lambda > 0\}$, and this family is exactly the solution
+    set \textup{(Theorem~\ref{thm:family})}.
+  \item \textbf{The form is a gauge orbit.} That family is the orbit of $J$ under
+    the gauge group of multiplicative automorphisms of the positive reals, acted
+    on freely and transitively, hence a torsor; the residual freedom is exactly
+    one real degree \textup{(Theorem~\ref{thm:torsor})}.
+  \item \textbf{One datum, then calibration.} A single comparison value fixes the
+    gauge \textup{(Theorem~\ref{thm:single})}, and the unit calibration (L5)
+    fixes it to $J$ \textup{(Theorem~\ref{thm:calib})}.
+\end{enumerate}
+The honest reading is therefore: distinction and the algebraic laws force the cost
+\emph{form}, the gauge orbit of $J$; a single unit of scale, supplied by one
+calibration datum, selects $J$ within the form; and the value of that unit is a
+multiplicative-automorphism gauge that distinction does not, by itself, fix.
+\end{theorem}
+
+This is weaker than ``distinction forces $J$,'' and it is true, where the stronger
+claim is false. It is also more informative. It says precisely what is forced, the
+form; precisely what remains free, one real gauge coordinate; and precisely what
+fixes the freedom, one datum. The total arbitrary content of the cost layer is
+exactly one positive real number. Everything else about the cost, its reciprocal
+symmetry, its composition behavior, the cosh shape of its profile, the fact that
+it is the orbit of a single canonical representative, is forced.
+
+\section{The one open question that would upgrade the result}\label{sec:open}
+
+There is a single question whose answer would change the stratification of
+Theorem~\ref{thm:strat} into a clean forcing, and we name it precisely so that it
+is not mistaken for something already settled.
+
+The one free datum is the unit calibration, the demand that the logarithmic
+curvature of the cost at the unit equals one. In the present account this is
+supplied from outside, as a choice of scale. The open question is whether that
+curvature is itself derivable from distinction, specifically from the cost of a
+single distinction act. The natural conjecture is that the minimal recognition
+cost of telling apart two states that differ by one act, carried from the
+discrete layer to the completion, fixes the second-order coefficient of the cost
+profile at the unit to exactly one. If that conjecture is a theorem, then the
+calibration datum is not a free choice but a consequence of the primitive, the
+continuous classification runs with no free input, and ``distinction forces $J$ on
+the completion'' becomes true without circularity. If the conjecture is false,
+then the genuine native curvature is some other value, the forced cost is the
+corresponding member of the family rather than $J$, and one has learned the true
+cost of distinction, which is itself a result.
+
+We do not claim either outcome here. The point of stating the question is to mark
+the exact location of the remaining freedom. It is not spread across the cost
+function; it is concentrated in one number, the curvature at the unit, and the
+question of whether distinction fixes that number is a single, sharp, falsifiable
+target. Until it is settled, the honest claim is the stratified one of
+Theorem~\ref{thm:strat}: the form is forced, and the unit is a gauge.
+
+\section{Conclusion}
+
+The load-bearing joint of the program is the cost function, and we have measured
+exactly how far it is forced. On the discrete field of ratios that distinction
+generates, the cost is not forced at all: the admissible costs are the character
+costs of a free abelian group, an infinite product with one independent factor
+per prime, and the canonical cost is one unremarkable point. Any uniqueness on the
+discrete field must assume the cost on a generating set, which is circular as a
+forcing claim. The freedom is removed only by passing to the continuous
+completion, where continuity restricts characters to power maps and collapses the
+infinite family to a single one-parameter family. That family is exactly the orbit
+of the canonical cost under the multiplicative automorphisms of the line, a torsor
+with one real degree of freedom, and a single calibration datum names the
+canonical representative within it.
+
+The result is a stratification, not a forcing, and the stratification is the
+honest and the stronger statement. It localizes the entire arbitrary content of
+the cost layer to one real number, the unit of scale, and proves everything else
+forced. It identifies the single open question, whether that one number is itself
+the cost of a distinction act, that would close the gap entirely. And it does all
+of this without the circularity that a naive forcing claim on the rationals would
+have concealed. The cost form is forced. The unit is a gauge. Naming which is
+which, with proofs on both sides, is what it means to take the joint seriously.
+
+\begin{thebibliography}{99}
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{Aczel1989}
+J.~Acz\'el and J.~Dhombres,
+\emph{Functional Equations in Several Variables},
+Cambridge University Press, 1989.
+
+\bibitem{dAlembert1769}
+J.~le~Rond~d'Alembert,
+\emph{Opuscules math\'ematiques}, vol.~6, 1769.
+
+\bibitem{WashburnFE2026}
+J.~Washburn,
+``A Functional-Equation Encoding of Logical Consistency on Continuous
+Positive-Ratio Comparisons: A Conditional Rigidity Theorem,'' draft, 2026.
+
+\bibitem{WashburnContinuum2026}
+J.~Washburn,
+``Where Necessity Ends: Why Distinction Forces Arithmetic but Not the
+Continuum,'' draft, 2026.
+
+\bibitem{WashburnArithmetic2026}
+J.~Washburn,
+``Arithmetic from Distinction: A Number Tower Forced by a Single Primitive,''
+draft, 2026.
+
+\bibitem{WashburnZlatanovic2026}
+J.~Washburn and Z.~Zlatanovi\'c,
+``Uniqueness of the Canonical Reciprocal Cost,''
+\emph{Axioms}, 2026.
+
+\end{thebibliography}
+
+\end{document}

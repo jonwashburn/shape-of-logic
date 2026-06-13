@@ -1,0 +1,893 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{30,90,156}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=codeblue,
+  citecolor=codeblue,
+  urlcolor=codeblue,
+}
+
+\newcommand{\Nd}{\mathbb{N}_\delta}
+\newcommand{\Zd}{\mathbb{Z}_\delta}
+\newcommand{\Qd}{\mathbb{Q}_\delta}
+\newcommand{\Sd}{S_\delta}
+\newcommand{\zd}{0_\delta}
+\newcommand{\oad}{\oplus}
+\newcommand{\omd}{\otimes}
+
+\title{%
+  Arithmetic from Distinction:\\
+  A Number Tower Forced by a Single Primitive}
+\author{%
+  Jonathan Washburn\\
+  Recognition Physics Institute, Austin, TX, USA\\
+  \texttt{jon@recognitionphysics.org}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}\sloppy
+We construct the natural numbers, the integers, and the rational field from a
+single primitive: the act of distinction. The construction uses no axiom of
+infinity in the set-theoretic sense, no axiom of choice, and no law of excluded
+middle. Each object is a finite record of performed distinctions, and every
+theorem is proved by structural induction over such finite records. From the
+primitive we build finite traces, a sameness relation that certifies the
+absence of a separating distinction, a difference relation that certifies its
+presence, and a quotient discipline under which any admissible predicate must
+respect sameness. Counting is the length of a distinction orbit. Sign is the
+balance of two orbit lengths. Ratio is the cross-comparison of two signed
+orbits against two lengths. On these objects we prove the full slate of
+elementary arithmetic: associativity, commutativity, distributivity,
+cancellation, a decidable total order, absolute value, divisibility, primality,
+Euclidean division with unique quotient and remainder, greatest common divisors,
+coprimality, and the field axioms for the rationals. Each construction carries
+a proof-strength tag, and every result in this paper carries the strongest tag
+available: it is forced by distinction and finite repetition alone. To certify
+that the construction recovers the familiar objects and nothing stranger, we
+exhibit faithful display maps onto the standard naturals, integers, and
+rationals, and we prove these maps are isomorphisms of the relevant algebraic
+structures. The display maps are verification instruments, not ingredients:
+the orbit operations are defined without reference to any prior numeral system.
+The upshot is that the elementary number tower is not a convention chosen on
+top of a foundation but a structure that the single act of distinction permits
+and then forces. We close by marking precisely where this forcing stops. The
+completion of the rational field into the continuum is a separate commitment,
+treated in a companion paper, and it is not a consequence of distinction.
+\end{abstract}
+
+\tableofcontents
+
+%% ===================================================================
+\section{What this paper does}\label{sec:intro}
+
+Foundations of mathematics usually begin with a rich primitive and then encode
+number inside it. Set theory begins with membership and builds the number three
+as a particular nest of braces. Type theory begins with types and terms and
+introduces the natural numbers as a particular inductive type. Both encodings
+work, and both are correct. Both also carry a feature that is easy to overlook
+because it is so familiar: the primitive has nothing to do with counting. A set
+is not a number. A type is not a number. The number arrives only after a chain
+of definitions that translate the foreign primitive into arithmetic behavior.
+
+This paper takes a different primitive. We begin with the act of distinction,
+the operation of marking that one thing is not another, and we show that the
+elementary number tower follows from it directly. Counting is the most natural
+reading of repeated distinction: to count is to perform the same act of marking
+again and again and to keep a record of how many times. Sign is the most
+natural reading of two opposed directions of counting. Ratio is the most natural
+reading of comparing two counts. None of these is imposed as a definitional
+convention. Each is the structure that the primitive already contains once you
+take it seriously.
+
+The reason to care is not that we obtain a new arithmetic. The integers built
+here are isomorphic to the usual integers, and the rationals to the usual
+rationals; we prove exactly that. The reason to care is the audit. Every result
+in this paper is established with a single, fixed, minimal proof budget, and we
+keep an explicit ledger of that budget. We use no axiom of infinity in the
+set-theoretic sense, meaning we never posit a completed infinite set; we work
+only with finite records and the two rules that generate them. We use no axiom
+of choice, because every object we need is constructed explicitly rather than
+selected from a family. We use no law of excluded middle, because every
+predicate we rely on is decidable by a terminating procedure on finite data. A
+foundation that announces a single primitive owes the reader a precise account
+of what that primitive can and cannot reach without help. This paper is that
+account for the arithmetic layer.
+
+\subsection{Contributions}
+
+The paper makes four contributions.
+
+\begin{enumerate}[leftmargin=2em]
+  \item It defines a finite kernel from the primitive act of distinction:
+    traces, trace concatenation with its associativity law, the sameness and
+    difference relations with their consistency condition, and the quotient
+    discipline that any admissible predicate must obey.
+  \item It constructs the natural numbers as distinction orbits and proves the
+    full arithmetic slate for them, including a decidable total order and a
+    cancellation law, by structural induction alone.
+  \item It constructs the integers as balanced pairs of orbit lengths and the
+    rationals as cross-compared ratios, and it proves that these carry a
+    commutative ring structure and an ordered field structure respectively,
+    each isomorphic to the standard object under a faithful display map.
+  \item It derives the elementary number-theoretic surface, divisibility,
+    primality, Euclidean division, greatest common divisors, and coprimality,
+    with the same minimal proof budget, and it states exactly where the budget
+    would have to grow, namely at the completion into the continuum, which is
+    deferred to a companion paper.
+\end{enumerate}
+
+\subsection{Status discipline}
+
+A paper that claims to derive arithmetic from one act, rather than to encode it
+inside a richer theory, must be careful about what counts as derivation and what
+smuggles in a hidden assumption. We adopt a per-theorem discipline. Every
+construction is labeled with a proof-strength tag, defined in
+Section~\ref{sec:strength}, and every result in this paper carries the same tag:
+it is forced by distinction and finite repetition alone, with constructive logic
+and no further commitments. When we use a display map into a standard object, we
+say so explicitly and we explain that the map is used to certify faithfulness
+after the fact, not to define the construction. The reader should be able to
+check at every step that nothing has entered the argument except the primitive
+and induction over finite records.
+
+%% ===================================================================
+\section{The primitive: distinction acts and traces}\label{sec:kernel}
+
+The primitive is an act, not an object. It is the operation of marking a
+difference, taken in its most contentless form.
+
+\begin{definition}[Distinction act]\label{def:act}
+A \emph{distinction act} is a single, atomic operation of marking a difference.
+It carries no parameters, no payload, and no internal structure. It is pure
+separation: the minimal operation that takes an undifferentiated situation to a
+differentiated one. We write $\delta$ for this act.
+\end{definition}
+
+A distinction act on its own is too thin to support mathematics. What supports
+mathematics is the record of having performed distinction acts, possibly many
+times. That record is a trace.
+
+\begin{definition}[Trace]\label{def:trace}
+A \emph{trace} is a finite sequence of distinction acts, defined by two
+formation rules:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\roman*)}]
+  \item the \emph{empty trace} $\varepsilon$ is a trace, recording that no
+    distinction has been performed;
+  \item if $\tau$ is a trace, then $\tau \cdot \delta$, the result of extending
+    $\tau$ by one further distinction act, is a trace.
+\end{enumerate}
+The \emph{length} of a trace is the number of extension steps used to build it:
+$|\varepsilon| = 0$ and $|\tau \cdot \delta| = |\tau| + 1$. The
+\emph{concatenation} $\tau_1 \mathbin{\|} \tau_2$ of two traces is defined by
+recursion on the second argument:
+\[
+  \tau_1 \mathbin{\|} \varepsilon = \tau_1,
+  \qquad
+  \tau_1 \mathbin{\|} (\tau_2 \cdot \delta) = (\tau_1 \mathbin{\|} \tau_2) \cdot \delta .
+\]
+\end{definition}
+
+Two features of this definition deserve emphasis, because they carry the whole
+budget claim of the paper. First, every trace is finite. There is no rule that
+produces an infinite trace, and the two rules above generate only objects built
+from finitely many extension steps. When we later quantify over all traces, we
+quantify over a collection generated by these rules, exactly as one quantifies
+over the natural numbers generated by zero and successor. We never posit a
+completed infinite totality as a new object with its own axiom. Second, the
+primitive is an act, not a set, a type, a proposition, or a field. Set theory
+tells you what a set is; type theory tells you what a type is; the present
+theory tells you what distinguishing is, and lets sets, types, and numbers
+appear later as constructions rather than as starting assumptions.
+
+\begin{lemma}[Concatenation is associative]\label{lem:concat}
+For all traces $\tau_1, \tau_2, \tau_3$,
+\[
+  (\tau_1 \mathbin{\|} \tau_2) \mathbin{\|} \tau_3
+  = \tau_1 \mathbin{\|} (\tau_2 \mathbin{\|} \tau_3).
+\]
+\end{lemma}
+
+\begin{proof}
+By structural induction on $\tau_3$. If $\tau_3 = \varepsilon$, both sides equal
+$\tau_1 \mathbin{\|} \tau_2$, using the base clause of concatenation twice. For
+the inductive step, suppose the identity holds for $\tau_3$ and consider
+$\tau_3 \cdot \delta$. Using the recursive clause of concatenation on each side
+and the induction hypothesis,
+\begin{align*}
+  (\tau_1 \mathbin{\|} \tau_2) \mathbin{\|} (\tau_3 \cdot \delta)
+   &= \bigl( (\tau_1 \mathbin{\|} \tau_2) \mathbin{\|} \tau_3 \bigr) \cdot \delta
+    = \bigl( \tau_1 \mathbin{\|} (\tau_2 \mathbin{\|} \tau_3) \bigr) \cdot \delta \\
+   &= \tau_1 \mathbin{\|} \bigl( (\tau_2 \mathbin{\|} \tau_3) \cdot \delta \bigr)
+    = \tau_1 \mathbin{\|} \bigl( \tau_2 \mathbin{\|} (\tau_3 \cdot \delta) \bigr).
+\end{align*}
+This is the claim for $\tau_3 \cdot \delta$, completing the induction.
+\end{proof}
+
+%% ===================================================================
+\section{Sameness, difference, and the quotient discipline}\label{sec:samediff}
+
+Traces let us record distinctions, but mathematics also needs the converse: a
+way to certify that two things have not been distinguished. In set theory,
+equality is a logical primitive fixed by extensionality. In type theory, it is
+the identity type. In a theory built on acts of distinction, the natural
+primitive is a certification relative to a trace: two endpoints are the same
+when no distinction in the current trace separates them, and different when one
+does.
+
+\begin{definition}[Sameness and difference]\label{def:samediff}
+Let $A$ be a collection of trace endpoints. We introduce two relations on $A$.
+The \emph{sameness} relation $a \sim b$ asserts that no distinction in the
+current trace separates $a$ from $b$. The \emph{difference} relation
+$a \mathbin{\#} b$ asserts that some distinction in the trace does separate them.
+We require $\sim$ to be an equivalence relation: reflexive, symmetric, and
+transitive. We require the \emph{consistency condition}, that for any pair
+$(a,b)$ and any fixed respect, sameness and difference cannot both hold,
+\[
+  a \sim b \;\wedge\; a \mathbin{\#} b \;\Longrightarrow\; \bot .
+\]
+\end{definition}
+
+The relation $\sim$ is weaker than logical equality, and this is the point. Two
+endpoints can be the same relative to a coarse trace and different relative to a
+finer one. Sameness is a statement about what the present record can resolve,
+not a metaphysical claim about identity. This is the right primitive for a
+theory whose only generator is the act of distinction: you are entitled to treat
+two things as the same exactly when you have performed no act that tells them
+apart.
+
+Once endpoints are identified under sameness, every construction built on top
+must respect that identification. Otherwise the construction would distinguish
+what the trace cannot, which violates the spirit of the primitive.
+
+\begin{definition}[Admissible predicate and quotient descent]\label{def:subst}
+A predicate $P$ on endpoints is \emph{admissible} if it respects sameness:
+whenever $a \sim b$, we have $P(a)$ if and only if $P(b)$. An admissible
+predicate descends to a well-defined predicate on the quotient
+$A / {\sim}$. More generally, a function $f$ on representatives descends to a
+function on $A / {\sim}$ whenever $a \sim b$ implies $f(a)$ and $f(b)$ agree in
+the relevant sense. This descent principle is the only tool we use to move from
+representatives to quotient objects, and it is available because $\sim$ is an
+equivalence relation.
+\end{definition}
+
+The kernel is now complete. It consists of finite traces with their
+concatenation and associativity law, the sameness and difference relations with
+their consistency condition, and the descent principle for admissible predicates
+and functions. Everything in the rest of the paper is built from this kernel by
+finite construction and structural induction.
+
+%% ===================================================================
+\section{The proof-strength ledger}\label{sec:strength}
+
+Conventional mathematics answers the question ``what are your assumptions?''
+once, globally, and usually with a large answer such as set theory together with
+choice and classical logic. We answer it per theorem, with a tag attached to
+each result. The tags form a lattice ordered by how much machinery each level
+adds beyond the bare kernel.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Tag} & \textbf{Meaning} \\
+\midrule
+distinction-only &
+  Uses only the finite kernel and constructive logic. No infinity, choice, or excluded middle. \\
+distinction $+$ closure &
+  Adds completed infinite streams or limiting boundary commitments. \\
+distinction $+$ choice &
+  Uses a choice principle to select representatives or witnesses. \\
+classical extension &
+  Uses classical logic or an imported classical carrier such as the real line. \\
+\bottomrule
+\end{tabular}
+\caption{The proof-strength ledger. Each level includes the machinery of all
+levels below it. Every theorem in this paper carries the lowest tag,
+distinction-only.}
+\label{tab:strength}
+\end{table}
+
+The discipline costs the author bookkeeping and gives the reader something most
+foundations do not provide: granular proof-strength information at the level of
+the individual theorem. A reader who cares only about constructive content can
+read the distinction-only results and stop. A reader who wants to know exactly
+where a completed infinity or a choice principle would first be required can
+find that boundary marked. In this paper the boundary is never crossed: the
+arithmetic tower through the rational field lives entirely at the
+distinction-only level. The first genuine crossing, into the continuum, is the
+subject of the companion paper and is not attempted here.
+
+%% ===================================================================
+\section{Base-neutral number}\label{sec:number}
+
+Number is the length of a record of repeated distinction. We call such a record
+a distinction orbit, and we treat the orbit itself as the number, prior to any
+numeral system used to display it.
+
+\begin{definition}[Distinction orbit, $\Nd$]\label{def:orbit}
+The collection $\Nd$ of \emph{distinction orbits} is generated by two rules:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\roman*)}]
+  \item the \emph{zero orbit} $\zd$ is an orbit, recording that no distinction
+    has been performed;
+  \item if $n$ is an orbit, then its \emph{successor} $\Sd(n)$, recording one
+    further distinction, is an orbit.
+\end{enumerate}
+The \emph{display map} $\varphi \colon \Nd \to \mathbb{N}$ onto the standard
+naturals is fixed by $\varphi(\zd) = 0$ and $\varphi(\Sd(n)) = \varphi(n) + 1$.
+\end{definition}
+
+The phrase \emph{base-neutral} records that the orbit precedes every numeral
+system. The decimal symbol $3$, the binary symbol $11$, the Roman symbol
+$\mathrm{III}$, and the successor expression $\Sd(\Sd(\Sd(\zd)))$ are four
+display surfaces for one object: three performed distinctions. None of those
+symbols is the number; each is a way of writing it. The orbit is the number, and
+the display map converts it into whichever numeral system a given application
+finds convenient. Tally marks on a wall are closer to the orbit than the
+positional decimal system is, because tally marks are direct records of
+performed acts and carry no positional weighting, no carry rule, and no
+zero-padding. Those features belong to the numeral system, not to the number.
+
+We define arithmetic by recursion on orbit structure, never referring to any
+numeral system.
+
+\begin{definition}[Orbit addition and multiplication]\label{def:orbitops}
+Addition $\oad$ and multiplication $\omd$ on $\Nd$ are defined by recursion on
+the second argument:
+\begin{align}
+  n \oad \zd &= n, &
+  n \oad \Sd(m) &= \Sd(n \oad m); \label{eq:add}\\
+  n \omd \zd &= \zd, &
+  n \omd \Sd(m) &= (n \omd m) \oad n. \label{eq:mul}
+\end{align}
+\end{definition}
+
+Addition is concatenation of orbits: appending $m$ further distinctions after
+$n$. Multiplication is repeated addition: $n \omd m$ adds $n$ to itself $m$
+times. Both are defined by the two formation rules alone and are therefore
+distinction-only.
+
+\begin{theorem}[Orbit arithmetic]\label{thm:orbit}
+The structure $(\Nd, \zd, \Sd, \oad, \omd)$ satisfies, with distinction-only
+strength:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item additive and multiplicative associativity,
+    $(a \oad b) \oad c = a \oad (b \oad c)$ and
+    $(a \omd b) \omd c = a \omd (b \omd c)$;
+  \item additive and multiplicative commutativity,
+    $a \oad b = b \oad a$ and $a \omd b = b \omd a$;
+  \item distributivity, $a \omd (b \oad c) = (a \omd b) \oad (a \omd c)$;
+  \item identities, $a \oad \zd = a$ and $a \omd \Sd(\zd) = a$;
+  \item additive cancellation, $a \oad c = b \oad c \Rightarrow a = b$;
+  \item display faithfulness, $\varphi(a \oad b) = \varphi(a) + \varphi(b)$ and
+    $\varphi(a \omd b) = \varphi(a) \cdot \varphi(b)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Each item is proved by structural induction on $\Nd$, using only the recursive
+clauses~\eqref{eq:add} and~\eqref{eq:mul}. We give the additive arguments in
+full and indicate the rest, since all follow the same pattern.
+
+First, a base lemma: $\zd \oad n = n$ for all $n$. Induct on $n$. The case
+$n = \zd$ is the base clause of addition. If $\zd \oad m = m$, then
+$\zd \oad \Sd(m) = \Sd(\zd \oad m) = \Sd(m)$. Next, a sliding lemma:
+$\Sd(a) \oad m = \Sd(a \oad m)$. Induct on $m$. For $m = \zd$, both sides are
+$\Sd(a)$. If $\Sd(a) \oad m = \Sd(a \oad m)$, then
+$\Sd(a) \oad \Sd(m) = \Sd(\Sd(a) \oad m) = \Sd(\Sd(a \oad m)) = \Sd(a \oad \Sd(m))$.
+
+Additive associativity follows by induction on $c$. For $c = \zd$, both sides
+are $a \oad b$. The inductive step uses the recursive clause three times and the
+hypothesis once. Additive commutativity follows by induction on $b$, using the
+base lemma for $b = \zd$ and the sliding lemma in the step:
+$a \oad \Sd(m) = \Sd(a \oad m) = \Sd(m \oad a) = \Sd(m) \oad a$. Additive
+cancellation follows by induction on $c$: the case $c = \zd$ is immediate, and
+the step uses the injectivity of $\Sd$, which holds because $\Sd$ is a formation
+rule with no identifications. Multiplicative associativity, multiplicative
+commutativity, and distributivity follow by the same method, each reducing to
+the additive laws already established. Display faithfulness is immediate from
+the recursive clauses and the recursive definition of $\varphi$.
+\end{proof}
+
+We also fix the order on orbits, which we use throughout the sign and ratio
+constructions.
+
+\begin{definition}[Order and truncated subtraction on $\Nd$]\label{def:order}
+The relation $\leq_\delta$ on $\Nd$ is generated by $\zd \leq_\delta n$ for all
+$n$, and $\Sd(m) \leq_\delta \Sd(n)$ if and only if $m \leq_\delta n$. Truncated
+subtraction $\ominus$ is defined by $n \ominus \zd = n$,
+$\zd \ominus \Sd(m) = \zd$, and $\Sd(n) \ominus \Sd(m) = n \ominus m$.
+\end{definition}
+
+\begin{proposition}[The order is a decidable total order]\label{prop:order}
+The relation $\leq_\delta$ is reflexive, antisymmetric, transitive, and total,
+and for any two orbits $m, n$ the question whether $m \leq_\delta n$ is decided
+by a terminating recursion. Moreover $\leq_\delta$ is compatible with addition:
+$m \leq_\delta n$ if and only if $m \oad c \leq_\delta n \oad c$.
+\end{proposition}
+
+\begin{proof}
+Each property is proved by induction following the recursive clauses of
+Definition~\ref{def:order}. The comparison recursion strips one successor from
+each argument at each step and halts when one argument reaches $\zd$, so it
+terminates after a number of steps equal to the smaller length. Because the
+recursion returns a definite yes or no for every input, the order is decidable
+without any appeal to excluded middle. Compatibility with addition follows by
+induction on $c$.
+\end{proof}
+
+The decidability claim in Proposition~\ref{prop:order} is the first concrete
+payoff of the budget discipline. In a classical setting one would assert that
+$m \leq_\delta n$ or $n <_\delta m$ by the law of excluded middle and move on.
+Here the disjunction is not asserted; it is computed. The comparison is a finite
+procedure on finite records, so the trichotomy holds constructively.
+
+%% ===================================================================
+\section{Sign as balance: the integers}\label{sec:sign}
+
+The natural numbers have no sign. To subtract, one needs a direction. The usual
+construction defines an integer as an equivalence class of pairs of naturals
+under the relation $(a,b) \sim (c,d)$ exactly when $a + d = b + c$. The
+construction is correct, but the reason an integer points in a direction is
+invisible in it; one must know the convention that the first coordinate is the
+positive part. In the present setting, sign is balance, and the direction is
+visible in the object.
+
+\begin{definition}[Signed orbit and balanced equality]\label{def:signedorbit}
+A \emph{signed orbit} is an ordered pair $(p, n) \in \Nd \times \Nd$, where $p$
+is the positive part and $n$ the negative part. Two signed orbits $(a_+, a_-)$
+and $(b_+, b_-)$ are \emph{balanced-equal}, written
+$(a_+, a_-) \approx (b_+, b_-)$, when
+\[
+  a_+ \oad b_- \;=\; b_+ \oad a_-
+\]
+holds in $\Nd$. The \emph{display} of a signed orbit is
+$\psi(p, n) = \varphi(p) - \varphi(n) \in \mathbb{Z}$.
+\end{definition}
+
+The balance condition is the cross-addition condition, written entirely inside
+orbit arithmetic. It compares the two pairs without ever subtracting and without
+ever mentioning a negative number, which is exactly what one wants at the level
+where negative numbers are being constructed rather than assumed. For example,
+the integer $-1$ is any signed orbit $(p, n)$ whose negative part exceeds its
+positive part by one performed distinction, such as $(\zd, \Sd(\zd))$ or
+$(\Sd(\zd), \Sd(\Sd(\zd)))$, and balance identifies all of them.
+
+\begin{definition}[The integers $\Zd$]\label{def:prcint}
+Set $\Zd = (\Nd \times \Nd) / {\approx}$, the quotient of signed orbits by
+balanced equality. Operations descend from representatives:
+\begin{align}
+  [(a_+, a_-)] + [(b_+, b_-)] &= [(a_+ \oad b_+,\; a_- \oad b_-)],
+    \label{eq:intadd}\\
+  -[(a_+, a_-)] &= [(a_-, a_+)], \label{eq:intneg}\\
+  [(a_+, a_-)] \cdot [(b_+, b_-)] &=
+    [(\,a_+ \omd b_+ \oad a_- \omd b_-,\;\; a_+ \omd b_- \oad a_- \omd b_+\,)].
+    \label{eq:intmul}
+\end{align}
+\end{definition}
+
+Negation swaps the positive and negative parts: it reverses direction, which is
+exactly what a sign change should mean for a balance. Addition adds the two
+positive parts and the two negative parts separately. Multiplication follows the
+familiar sign rule, written so that the positive part of a product collects the
+two like-signed cross terms and the negative part collects the two opposite-signed
+cross terms.
+
+\begin{theorem}[The integers form a ring isomorphic to $\mathbb{Z}$]\label{thm:int}
+With distinction-only strength: the relation $\approx$ is an equivalence
+relation; the operations \eqref{eq:intadd} through \eqref{eq:intmul} are
+well-defined on the quotient; $\Zd$ with these operations is a commutative ring
+with additive identity $[(\zd, \zd)]$ and multiplicative identity
+$[(\Sd(\zd), \zd)]$; and the display map $\Psi \colon \Zd \to \mathbb{Z}$,
+$\Psi([(p, n)]) = \varphi(p) - \varphi(n)$, is a ring isomorphism.
+\end{theorem}
+
+\begin{proof}
+That $\approx$ is an equivalence relation follows from the additive laws of
+Theorem~\ref{thm:orbit}. Reflexivity is $a_+ \oad a_- = a_+ \oad a_-$. Symmetry
+is immediate. For transitivity, suppose $a_+ \oad b_- = b_+ \oad a_-$ and
+$b_+ \oad c_- = c_+ \oad b_-$. Adding the two equalities and using
+commutativity and associativity gives
+$(a_+ \oad c_-) \oad (b_+ \oad b_-) = (c_+ \oad a_-) \oad (b_+ \oad b_-)$, and
+additive cancellation, Theorem~\ref{thm:orbit}(e), removes the common term
+$b_+ \oad b_-$ to yield $a_+ \oad c_- = c_+ \oad a_-$.
+
+Well-definedness of the operations is the standard cross-addition computation.
+For addition, if $(a_+, a_-) \approx (a_+', a_-')$ and
+$(b_+, b_-) \approx (b_+', b_-')$, adding the two balance equalities and
+rearranging gives the balance equality for the sums. For negation, swapping
+parts turns one balance equality into the other. For multiplication, one expands
+both sides using distributivity and the balance hypotheses; the computation is
+finite and uses only Theorem~\ref{thm:orbit}. The ring axioms transfer from
+$\Nd$ in the same way: each is verified on representatives and respects balance.
+
+The display map $\Psi$ is well-defined because balanced orbits have equal
+display: $a_+ \oad b_- = b_+ \oad a_-$ implies, under display faithfulness,
+$\varphi(a_+) - \varphi(a_-) = \varphi(b_+) - \varphi(b_-)$. It is injective
+because equal display forces balance, again by faithfulness. It is surjective
+because each integer $k \geq 0$ is $\Psi([(\,\varphi^{-1}(k),\, \zd\,)])$ and
+each $k < 0$ is $\Psi([(\,\zd,\, \varphi^{-1}(-k)\,)])$, where $\varphi^{-1}(k)$
+is the orbit of length $k$. It preserves the operations by direct computation.
+Hence $\Psi$ is a ring isomorphism.
+\end{proof}
+
+The integers also carry order, comparison, and absolute value, all native to
+the signed-orbit representation.
+
+\begin{theorem}[Order, comparison, and absolute value on $\Zd$]\label{thm:signedorder}
+With distinction-only strength, $\Zd$ carries:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item a total order, $[(a_+, a_-)] \leq [(b_+, b_-)]$ if and only if
+    $a_+ \oad b_- \leq_\delta b_+ \oad a_-$, well-defined on the quotient and
+    compatible with addition on either side;
+  \item a three-way comparison selector whose outputs are equivalent to strict
+    less-than, balanced equality, and strict greater-than, computed by a
+    terminating recursion;
+  \item an absolute value $|[(a_+, a_-)]| = (a_+ \ominus a_-) \oad (a_- \ominus a_+)$,
+    invariant under balanced equality and under negation.
+\end{enumerate}
+The comparison selector and absolute value are defined inside the signed-orbit
+representation; the display map is used only to certify them, not to define them.
+\end{theorem}
+
+\begin{proof}
+For (a), well-definedness on the quotient follows by the same cross-addition
+argument as in Theorem~\ref{thm:int}, replacing equalities with the order
+$\leq_\delta$ of Proposition~\ref{prop:order}, which is compatible with
+addition. Totality and transitivity transfer from $\leq_\delta$. Compatibility
+with integer addition follows from compatibility of $\leq_\delta$ with orbit
+addition. For (b), the selector compares $a_+ \oad b_-$ with $b_+ \oad a_-$
+using the terminating comparison of Proposition~\ref{prop:order} and returns one
+of three outcomes; the equivalence of those outcomes with strict order and
+balance is read off from the definition of $\leq_\delta$. For (c), the
+expression $(a_+ \ominus a_-) \oad (a_- \ominus a_+)$ equals the larger part
+minus the smaller in orbit terms, since one of the two truncated differences is
+$\zd$; invariance under balance and under the swap that defines negation is a
+finite check using Theorem~\ref{thm:orbit}. The transport identities
+$\operatorname{cmp}(c + a, c + b) = \operatorname{cmp}(a, b)$ and
+$\operatorname{cmp}(-b, -a) = \operatorname{cmp}(a, b)$ follow from the additive
+compatibility and the swap symmetry.
+\end{proof}
+
+%% ===================================================================
+\section{Ratio as cross-comparison: the rational field}\label{sec:ratio}
+
+A ratio compares two integer counts. The usual construction defines a rational
+as an equivalence class of pairs under cross-multiplication. We use the same
+relation, expressed entirely in the integer and orbit arithmetic already built.
+
+\begin{definition}[Ratio orbit and $\Qd$]\label{def:ratioorbit}
+A \emph{ratio orbit} is a pair $(a, b)$ in which $a \in \Zd$ is the numerator
+and $b \in \Nd \setminus \{\zd\}$ is a nonzero denominator length. Write
+$\widehat{b} = [(b, \zd)] \in \Zd$ for the integer that lifts the denominator.
+Two ratio orbits are \emph{cross-equal}, written $(a, b) \sim_\times (c, d)$,
+when
+\[
+  a \cdot \widehat{d} \;=\; c \cdot \widehat{b}
+\]
+holds in $\Zd$. Set $\Qd = \{\text{ratio orbits}\} / {\sim_\times}$.
+\end{definition}
+
+For instance, the fractions $\tfrac{2}{3}$ and $\tfrac{4}{6}$ are ratio orbits
+with numerators $[(2_\delta, \zd)]$ and $[(4_\delta, \zd)]$ and denominators
+$3_\delta$ and $6_\delta$, where $k_\delta$ denotes the orbit of length $k$.
+Cross-equality checks $2_\delta \omd 6_\delta = 4_\delta \omd 3_\delta$, that is
+$12_\delta = 12_\delta$, using orbit multiplication alone. No prior notion of
+fraction enters.
+
+\begin{theorem}[The rationals form an ordered field isomorphic to $\mathbb{Q}$]\label{thm:rat}
+With distinction-only strength: $\sim_\times$ is an equivalence relation; the
+operations
+\begin{align}
+  [(a, b)] + [(c, d)] &= [(\,a \cdot \widehat{d} + c \cdot \widehat{b},\;\; b \omd d\,)],
+    \label{eq:ratadd}\\
+  [(a, b)] \cdot [(c, d)] &= [(\,a \cdot c,\;\; b \omd d\,)],
+    \label{eq:ratmul}\\
+  [(a, b)]^{-1} &= [(\,\varepsilon_\delta(a)\,\widehat{b},\;\; |a|\,)]
+    \quad (a \neq 0) \label{eq:ratinv}
+\end{align}
+are well-defined on the quotient, where $\varepsilon_\delta(a)$ is the internal
+orientation of $a$, equal to $[(\Sd(\zd), \zd)]$ when the signed-orbit
+nonnegative test of Theorem~\ref{thm:signedorder} succeeds and
+$[(\zd, \Sd(\zd))]$ otherwise, and $|a| \in \Nd$ is the orbit length underlying
+the absolute value; under these operations $\Qd$ is an ordered field; and the
+display map $\Phi \colon \Qd \to \mathbb{Q}$, $\Phi([(a, b)]) = \psi(a) / \varphi(b)$,
+is an isomorphism of ordered fields.
+\end{theorem}
+
+\begin{proof}
+That $\sim_\times$ is an equivalence relation follows from the commutativity and
+associativity of integer multiplication, Theorem~\ref{thm:int}, together with
+the fact that the lifted denominator $\widehat{b}$ is never a zero divisor
+because $b \neq \zd$. Reflexivity and symmetry are immediate; transitivity uses
+cancellation of the nonzero common denominator factor, which is available in
+$\Zd$ since $\Zd$ is an integral domain by Theorem~\ref{thm:int}.
+
+Well-definedness of \eqref{eq:ratadd} through \eqref{eq:ratinv} is the standard
+cross-multiplication computation, carried out in $\Zd$. If $(a, b) \sim_\times (a', b')$,
+then $a \cdot \widehat{b'} = a' \cdot \widehat{b}$, and substituting into each
+operation and expanding with the ring laws preserves cross-equality of the
+results. The reciprocal deserves a word: its denominator is the internal
+absolute value $|a|$, a genuine orbit length and hence a legal denominator
+because $a \neq 0$ forces $|a| \neq \zd$, and its numerator is the orientation
+of $a$ times the lifted old denominator. The orientation is selected by the
+internal comparison of Theorem~\ref{thm:signedorder}, not by any external sign
+function, so the reciprocal is defined inside the construction. One checks
+directly that $[(a, b)] \cdot [(a, b)]^{-1}$ cross-equals the unit ratio
+$[(\,[(\Sd(\zd), \zd)],\, \Sd(\zd)\,)]$.
+
+The field axioms transfer from the ring laws of $\Zd$ by computation on
+representatives. The order on $\Qd$ is induced from the integer order by the rule
+that $[(a, b)] \leq [(c, d)]$ when $a \cdot \widehat{d} \leq c \cdot \widehat{b}$
+after normalizing denominators to be positive, which is legitimate because every
+ratio orbit has a representative with positive denominator length. Finally
+$\Phi$ is well-defined and injective because cross-equality matches the standard
+cross-multiplication criterion for equality of fractions under display
+faithfulness, surjective because every fraction $p/q$ in lowest terms is the
+display of $[(\Psi^{-1}(p), \varphi^{-1}(q))]$, and operation- and
+order-preserving by direct computation. Hence $\Phi$ is an isomorphism of
+ordered fields.
+\end{proof}
+
+%% ===================================================================
+\section{The permission surface: divisibility to greatest common divisor}\label{sec:permission}
+
+With the number tower in place, the elementary number-theoretic surface follows
+without any increase in proof budget. We collect the constructions in one
+statement and then comment on what each one requires.
+
+\begin{theorem}[Elementary permission surface]\label{thm:permission}
+The following are constructed with distinction-only strength, each decidable by
+a terminating procedure on finite orbit data.
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item \textbf{Divisibility.} For $a, b \in \Nd$, write $a \mid b$ when there
+    is $c \in \Nd$ with $b = a \omd c$. Divisibility is decidable.
+  \item \textbf{Units and primality.} The only multiplicative unit of $\Nd$ is
+    $\Sd(\zd)$. An orbit $p$ is \emph{prime} when $p \neq \zd$,
+    $p \neq \Sd(\zd)$, and every factorization $p = a \omd b$ has
+    $a = \Sd(\zd)$ or $b = \Sd(\zd)$. Primality is decidable.
+  \item \textbf{Euclidean division.} For $a \in \Nd$ and $b \neq \zd$, there
+    exist unique $q, r \in \Nd$ with $a = (b \omd q) \oad r$ and
+    $r <_\delta b$.
+  \item \textbf{Greatest common divisor.} The Euclidean algorithm on orbits
+    produces $\gcd_\delta(a, b)$, the largest orbit dividing both. Two orbits
+    are \emph{coprime} when $\gcd_\delta(a, b) = \Sd(\zd)$.
+\end{enumerate}
+Each structure has a faithful display: $\varphi$ carries divisibility,
+primality, Euclidean quotient and remainder, and greatest common divisor on
+$\Nd$ to the corresponding facts on $\mathbb{N}$.
+\end{theorem}
+
+\begin{proof}
+For (a), the search for a witness $c$ with $b = a \omd c$ may be bounded: if
+$a \neq \zd$, any witness has length at most $\varphi(b)$, so the search is
+finite; if $a = \zd$, then $a \mid b$ exactly when $b = \zd$. Either way the
+question is decided in finitely many steps. For (b), that $\Sd(\zd)$ is the only
+unit follows because $a \omd b = \Sd(\zd)$ forces both factors to have length
+one by display faithfulness; primality is then a finite search over the
+candidate factors of $p$, all of which have length at most $\varphi(p)$.
+
+For (c), existence is by induction on $a$ using repeated subtraction: if
+$a <_\delta b$ then $(q, r) = (\zd, a)$; otherwise apply the hypothesis to
+$a \ominus b$, which is strictly smaller, and increment the quotient. The
+recursion terminates because the first argument strictly decreases at each step
+and $\Nd$ is well-founded under $<_\delta$, a fact that itself follows by
+induction without any appeal to a least-number principle phrased classically.
+Uniqueness follows from cancellation, Theorem~\ref{thm:orbit}(e): if
+$(b \omd q) \oad r = (b \omd q') \oad r'$ with $r, r' <_\delta b$, then
+$q = q'$ and $r = r'$, since a difference of one in the quotient would force a
+remainder of size at least $b$.
+
+For (d), the Euclidean algorithm replaces the pair $(a, b)$ by $(b, a \bmod b)$
+until the second entry is $\zd$; termination is guaranteed because the second
+entry strictly decreases under $<_\delta$. The output divides both inputs and is
+divisible by every common divisor, which gives the greatest-common-divisor
+property. Coprimality is then the decidable condition that the output is
+$\Sd(\zd)$. Display faithfulness in each case is inherited from
+Theorem~\ref{thm:orbit}: $\varphi$ preserves products, hence divisibility, hence
+the derived notions.
+\end{proof}
+
+It is worth pausing on what these proofs did not need. The proof of primality in
+Theorem~\ref{thm:permission}(b) used orbit multiplication and the unit, and
+nothing else: no set membership, no equivalence-class encoding, and no completed
+infinity. The prime orbits are exactly the orbits that cannot be written as a
+product of two non-unit orbits, and that property is visible in the object at
+the point of construction. The same holds down the list. Order on the integers
+is balance comparison. Euclidean division is repeated subtraction that
+terminates because orbits are finite records. The greatest common divisor is the
+ordinary Euclidean algorithm running on orbit arithmetic rather than on an
+encoding of arithmetic inside a foreign primitive. In each case the structural
+reason for the result is present in the construction, not recovered afterward by
+decoding.
+
+%% ===================================================================
+\section{What the budget buys}\label{sec:discussion}
+
+The constructions above are isomorphic to the familiar number systems, so the
+contribution is not a new arithmetic. It is the account of what produced the
+arithmetic. Three points make the account precise.
+
+\subsection{No completed infinity}
+
+We never posited an infinite set. Each orbit is a finite record, generated by
+zero and successor, and each theorem is proved by structural induction over such
+records. When we wrote $\Nd$, $\Zd$, or $\Qd$ and quantified over their elements,
+we quantified over collections generated by formation rules, in the same way one
+quantifies over the natural numbers themselves. A reader trained in set theory
+may ask whether the inductive collection $\Nd$ is not itself an instance of the
+axiom of infinity in disguise. The honest answer is that the inductive
+generation of $\Nd$ is exactly as strong as accepting the natural numbers as a
+generated collection, and no stronger; what we avoid is the separate
+set-theoretic axiom that asserts a completed infinite set as a new object with
+its own existence postulate, and the constructions never require treating $\Nd$
+as a completed totality rather than as a rule for generating its members. The
+distinction matters at the next layer. Completing $\Qd$ to the continuum does
+require a genuinely new commitment, and that is precisely the boundary marked in
+Section~\ref{sec:boundary}.
+
+\subsection{No choice}
+
+Every object the constructions need is produced explicitly. Representatives are
+not selected from equivalence classes by a choice function; instead, all
+constructions are defined on representatives and shown to respect the
+equivalence, so they descend to the quotient by the principle of
+Definition~\ref{def:subst}. Witnesses for divisibility, quotients and
+remainders for Euclidean division, and the output of the Euclidean algorithm are
+all produced by terminating procedures, not chosen from a family of candidates.
+There is therefore no point at which the axiom of choice could enter.
+
+\subsection{No excluded middle}
+
+Every predicate the constructions rely on is decidable. Order on orbits,
+equality of orbits, divisibility, primality, and coprimality are each computed
+by a recursion that halts and returns a definite answer on finite data. We never
+needed to assert a disjunction without being able to compute which disjunct
+holds. The order trichotomy, in particular, is a computed comparison rather than
+a classical case split. This is why every result carries the distinction-only
+tag rather than a tag that admits classical logic.
+
+\subsection{The display maps are instruments, not ingredients}
+
+The maps $\varphi$, $\psi$, $\Psi$, and $\Phi$ translate the
+distinction-native objects into the standard naturals, integers, and rationals,
+and we proved that the relevant ones are isomorphisms. Their role is
+conservativity: they certify that the construction recovers exactly the familiar
+objects and produces nothing stranger. They are not used to define the native
+operations. Orbit addition, signed-orbit balance, ratio cross-equality, and the
+internal orientation that defines the reciprocal are all given by rules on the
+native representation, and the display maps are applied afterward to verify that
+those rules behave as the standard objects do. A reader who deleted the display
+maps entirely would still have a complete, self-contained number tower; the maps
+are there so that the reader can check the tower against the arithmetic already
+known.
+
+%% ===================================================================
+\section{Where the forcing stops}\label{sec:boundary}
+
+The constructions of this paper end at the rational field, and that endpoint is
+deliberate. Everything up to and including $\Qd$ is forced by distinction and
+finite repetition, with the budget held fixed at the distinction-only level. The
+next natural step, completing $\Qd$ into the continuum so that limits and
+suprema exist, is not forced by distinction, and the reason is structural rather
+than a matter of effort. Distinction is a generative act that proceeds one step
+at a time, so everything it can produce is reachable by a finite or
+step-indexed generation, and the collection of all such products is countable.
+The continuum is uncountable. A countable generative process cannot produce an
+uncountable object, so the real line, and the completeness principle that
+singles it out among ordered fields, is an addition to distinction rather than a
+consequence of it.
+
+We do not prove that claim here; it is the subject of the companion paper, which
+establishes the non-forcing of the continuum with two independent arguments and
+draws the consequences for the wider program. The point relevant to the present
+paper is only this: the arithmetic tower is self-contained and complete at the
+distinction-only level, and it is honest about its own ceiling. The boundary
+between what distinction forces and what it merely permits as a further
+commitment falls exactly between the rational field and its completion. Naming
+that boundary precisely is part of what it means to take a single primitive
+seriously, and it is the reason the arithmetic layer can be presented on its own,
+as a finished result, without overstating what the primitive reaches.
+
+%% ===================================================================
+\section{Conclusion}\label{sec:conclusion}
+
+From one act, the act of distinction, we built finite traces, a sameness
+relation and its consistent companion difference relation, and a quotient
+discipline. On that kernel we constructed the natural numbers as distinction
+orbits, the integers as balanced pairs of orbit lengths, and the rationals as
+cross-compared ratios, and we proved the complete elementary arithmetic of each:
+the algebraic laws, a decidable total order, absolute value, divisibility,
+primality, Euclidean division with unique quotient and remainder, greatest
+common divisors, and the ordered-field axioms. Every result was established with
+the same minimal proof budget, using no completed infinity, no choice, and no
+classical case analysis, and we kept an explicit ledger of that budget so the
+claim could be checked at each step. The integers and rationals so constructed
+are isomorphic to the standard ones under faithful display maps, which we use to
+certify the construction rather than to power it.
+
+The value of the result is the audit, not a new arithmetic. It shows that the
+elementary number tower is not a convention layered on top of a foundation but a
+structure that the single act of distinction permits and then forces. It also
+shows, by stopping where it does, exactly how far that forcing reaches: up to
+the rational field and no further without a new commitment. Mathematics, at this
+layer, is what distinction permits. The next paper takes up what happens when
+one asks for more, and shows that the continuum is the first thing distinction
+cannot supply on its own.
+
+%% ===================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Peano1889}
+G.~Peano,
+\emph{Arithmetices Principia, Nova Methodo Exposita},
+Bocca, 1889.
+
+\bibitem{Dedekind1888}
+R.~Dedekind,
+\emph{Was sind und was sollen die Zahlen?},
+Vieweg, 1888.
+
+\bibitem{Zermelo1908}
+E.~Zermelo,
+``Untersuchungen \"uber die Grundlagen der Mengenlehre I,''
+\emph{Mathematische Annalen}, 65 (1908), 261--281.
+
+\bibitem{MartinLof1984}
+P.~Martin-L\"of,
+\emph{Intuitionistic Type Theory},
+Bibliopolis, 1984.
+
+\bibitem{Bishop1967}
+E.~Bishop,
+\emph{Foundations of Constructive Analysis},
+McGraw-Hill, 1967.
+
+\bibitem{SpencerBrown1969}
+G.~Spencer-Brown,
+\emph{Laws of Form},
+George Allen and Unwin, 1969.
+
+\bibitem{Conway1976}
+J.~H.~Conway,
+\emph{On Numbers and Games},
+Academic Press, 1976.
+
+\bibitem{WashburnContinuum2026}
+J.~Washburn,
+``Where Necessity Ends: Why Distinction Forces Arithmetic but Not the
+Continuum,'' draft, 2026.
+
+\bibitem{WashburnFE2026}
+J.~Washburn,
+``A Functional-Equation Encoding of Logical Consistency on Continuous
+Positive-Ratio Comparisons,'' draft, 2026.
+
+\end{thebibliography}
+
+\end{document}

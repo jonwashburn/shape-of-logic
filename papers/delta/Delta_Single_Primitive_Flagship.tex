@@ -1,0 +1,677 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{30,90,156}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{claim}[theorem]{Claim}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{boundary}{Boundary}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=codeblue,
+  citecolor=codeblue,
+  urlcolor=codeblue,
+}
+
+\newcommand{\Ndelta}{\mathbb{N}_{\delta}}
+\newcommand{\Zdelta}{\mathbb{Z}_{\delta}}
+\newcommand{\Qdelta}{\mathbb{Q}_{\delta}}
+\newcommand{\Qpos}{\mathbb{Q}_{>0}}
+\newcommand{\Rpos}{\mathbb{R}_{>0}}
+
+\title{%
+  A Single Primitive for Mathematics and Physics:\\
+  What Distinction Forces, What It Posits, and Where the Boundary Lies}
+\author{%
+  Jonathan Washburn\\
+  Recognition Physics Institute, Austin, TX, USA\\
+  \texttt{jon@recognitionphysics.org}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}\sloppy
+This paper is the synthesis of a program that takes a single primitive, the act
+of distinction, and asks how far it determines the structures of mathematics and
+physics. We give the honest map. From one act of distinction, with no axiom of
+choice, no principle of excluded middle, and no axiom of infinity, the natural
+numbers, the integers, and a field of ratios are constructed, each with its
+arithmetic laws proved and the strength of each proof recorded. The canonical
+reciprocal cost that the physical program rests on is \emph{not} determined by
+that field of ratios alone: the space of admissible costs is classified and the
+obstruction is exhibited exactly, as a free choice of orientation on each prime.
+The continuous completion of the ratio field, the one structure on which the cost
+becomes forced, is itself \emph{not} a consequence of distinction; it is a
+separate, named commitment, and the gap is a gap in cardinality, the countable
+reach of distinction against the uncountable continuum. On that completion, and
+only there, four algebraic laws force the cost into a single one-parameter family
+that is exactly the gauge orbit of the canonical cost, and one calibration datum
+selects the canonical representative uniquely within the orbit. The value of that
+datum is, at present, a posit rather than a consequence. The resulting picture is
+stratified, not seamless: mathematics is what distinction permits, physics is
+what the completion of distinction costs, and the two meet at one named boundary,
+the passage from the countable ratio field to its uncountable completion. We state
+the claim at exactly this strength, mark each link as forced, posited, or open,
+and name the single research result, deriving the calibration unit from the cost
+of one distinction act, that would convert the cost half of the program from a
+gauge classification into an unconditional forcing.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction: one primitive, an honest map}
+
+A foundational program that proposes to derive both mathematics and physics from a
+single primitive owes two things to its reader. It owes a precise statement of the
+primitive, and it owes an honest accounting of how far the primitive actually
+reaches: what it forces, what it merely permits, what it must posit, and where it
+runs out. The temptation, in a program of this ambition, is to present an
+unbroken chain from the primitive to the constants of physics and to call the
+chain a derivation. We resist that presentation here, because it is not true, and
+because the truth is both more defensible and more interesting.
+
+The primitive is the act of distinction: the drawing of a difference, the marking
+of one thing as not another. We write it $\delta$. The claim of the program is not
+that $\delta$ forces everything downstream in one seamless sweep. The claim, stated
+at the strength we can defend, is a stratification in three layers with one
+boundary between them.
+
+\begin{quote}
+\emph{From a single act of distinction, with no axiom of choice, no excluded
+middle, and no axiom of infinity, the natural numbers, the integers, and a
+rational field are constructed, each with its arithmetic laws proved and its
+proof strength audited. The canonical reciprocal cost $J$ is not determined by
+this rational carrier alone; the space of admissible costs is classified, and the
+obstruction is exhibited exactly. On the continuous completion, a named
+commitment that is itself not forced by distinction, shown by a cardinality
+argument, the four algebraic laws force exactly the one-parameter gauge orbit of
+$J$, and a single calibration datum selects $J$ uniquely within it. Mathematics
+is what distinction permits; physics is what the completion of distinction costs;
+the two meet at one named boundary.}
+\end{quote}
+
+Everything in this paper is in service of that paragraph, and nothing in this
+paper exceeds it. The three technical results it summarizes are developed in full
+in three companion papers: the construction of the number tower from
+distinction~\cite{DeltaArithmetic}, the proof that distinction does not force the
+continuum~\cite{DeltaContinuum}, and the classification of the cost as a forced
+form with a gauge unit~\cite{DeltaCost}. This synthesis states the terminal claim,
+assembles the three results into a single map, makes the strength of each link
+explicit, treats the question of inevitability honestly and conditionally, and
+names the one open frontier whose resolution would strengthen the whole.
+
+\subsection{Why stratified, not seamless}
+
+The honest map has a shape, and the shape matters. The first layer, arithmetic, is
+forced: distinction alone, with the weakest possible logical commitments,
+produces the whole number tower. The second layer, the continuum, is \emph{not}
+forced: distinction reaches only countably far, and the continuous line that
+physics requires is a strictly larger object that must be adopted as a separate
+commitment. The third layer, cost, is forced \emph{only on the completion} and
+\emph{only up to a gauge}: on the countable ratio field the cost is wide open, on
+the completion the algebraic laws cut it to a single orbit, and one unit of scale
+selects the canonical member.
+
+The boundary between layer one and layer three is therefore not a technicality. It
+is the exact place where the program crosses from mathematics into physics, and it
+coincides with the place where distinction stops forcing and starts positing. That
+the two coincide is the central structural fact of the program, and we will show
+why: the cost is underdetermined on the ratio field for the same reason the ratio
+field is not complete, namely that a gapped domain insulates local constraints
+from global ones. Remove the gaps, complete the field, and the same act that fixes
+the domain also fixes the cost form. The price of removing the gaps is a posit.
+The honest program names that price.
+
+\subsection{What this paper does not claim}
+
+Three claims are deliberately absent, and a reader familiar with the program's
+earlier and more exuberant presentations should note their absence as deliberate.
+
+First, we do not claim that distinction forces the canonical cost $J$. On the
+ratio field it does not, and this is a theorem about the ratio field, not a gap
+waiting to be filled. We claim that distinction forces the cost \emph{form}, the
+gauge orbit, and that one datum fixes the gauge.
+
+Second, we do not claim that distinction forces the continuum. It does not, and
+this too is a theorem. The completion is a posit, and we say so in the abstract,
+in the introduction, and again at the boundary where it is invoked.
+
+Third, we do not claim that the calibration unit, the one datum that selects $J$
+within its orbit, is itself derived from distinction. At present it is a posit, a
+choice of scale. Whether it can be derived is the open frontier of
+Section~\ref{sec:frontier}; until it is, claiming it would be claiming more than is
+proved.
+
+With these absences marked, the positive content is large, and it is exact. We
+turn to it.
+
+\section{The primitive}\label{sec:primitive}
+
+\subsection{Distinction, and the honest question of how many primitives}
+
+The act of distinction is the marking of a difference. To distinguish is to hold
+two things and judge them not the same. From this single act the program builds
+everything that follows, and the first duty of an honest account is to say
+exactly what the act contains.
+
+It contains two moves that we must not blur. There is the act of marking, the
+production of a new token, and there is the judgment that compares two tokens and
+returns same or different. The program's strongest slogan would be that these are
+one primitive, that the comparison is internal to the act. We do not assert that
+here, because the construction as it stands uses both: an operation that produces
+a successor token, and a decidable judgment of sameness on tokens. Whether the
+judgment reduces to the act, so that distinction is genuinely one primitive, or
+whether recognition is irreducibly the pair, mark and compare, is an open
+question that we state plainly in Section~\ref{sec:frontier}. The honest position
+is that recognition is at most two primitives and possibly one, and that nothing
+downstream depends on resolving this, because both the marking and the comparison
+are available from the start.
+
+What matters for the construction is that the judgment is \emph{decidable}: for
+any two tokens, same or different is determined, with no appeal to the law of
+excluded middle as a logical axiom, because the determination is computed, not
+asserted. This is the first of the strength commitments we track.
+
+\subsection{Strength tags}
+
+The single discipline that holds the whole program honest is that every result
+carries a tag recording the strength of commitment its proof requires. We use
+three tags, in increasing order of commitment.
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Distinction-only.} The result follows from the act of
+    distinction and finite repetition alone: marking, comparing, and iterating a
+    finite number of times. No completed infinite totality, no choice principle,
+    no nonconstructive case split. This is the weakest and most valuable tag.
+  \item \textbf{Trace-closure.} The result requires a completed family of traces,
+    an infinite totality treated as a finished object, such as the set of all
+    finite orbits or a limit of a sequence of them. This is a genuine strengthening
+    over distinction-only, and the completion of the ratio field will carry this
+    tag.
+  \item \textbf{Classical extension.} The result requires a classical principle,
+    excluded middle on an undecidable predicate, or a choice principle, used
+    essentially rather than as mere verifier convenience.
+\end{itemize}
+
+The tags are not decoration. They are the content of the honesty claim. When we
+say arithmetic is forced and the continuum is not, what we mean precisely is that
+the number tower carries the distinction-only tag throughout, and the completion
+carries the trace-closure tag and cannot be brought down to distinction-only. The
+boundary between mathematics and physics in this program is, exactly, the boundary
+between the distinction-only tag and the trace-closure tag.
+
+\section{What distinction permits: the number tower}\label{sec:arithmetic}
+
+The first layer of the map is the arithmetic that distinction forces. We summarize
+the construction and its results; the full development with proofs is the subject
+of the companion arithmetic paper~\cite{DeltaArithmetic}.
+
+\subsection{Natural numbers}
+
+Iterating the act of distinction produces a sequence of tokens, each marked off
+from its predecessor. The orbit of a token under repeated marking is a
+distinction-native natural number; we write the type $\Ndelta$. A successor
+operation and a zero are immediate, the decidable sameness judgment gives equality,
+and induction is available because every token is reached from zero by finitely
+many marks. On $\Ndelta$ one defines addition and multiplication by the usual
+primitive recursions, and the semiring laws, commutativity, associativity,
+distributivity, the identities, follow by induction. The order is decidable and
+agrees with the arithmetic.
+
+\begin{claim}[Arithmetic of $\Ndelta$, distinction-only]\label{cl:nat}
+The distinction-native naturals $\Ndelta$ form a commutative semiring with
+decidable equality and a decidable linear order, and the structure is isomorphic
+to the standard naturals. Every law is proved under the distinction-only tag: no
+completed infinity, no choice, no nonconstructive case split.
+\end{claim}
+
+The content of Claim~\ref{cl:nat} is not that $\Ndelta$ is a novel object; it is
+isomorphic to the naturals, as it must be. The content is the \emph{tag}. The
+standard set-theoretic construction of the naturals invokes an axiom of infinity to
+collect them into a completed set. The distinction-native construction does not:
+each natural is a finite object, the type is open-ended rather than a completed
+totality, and no step appeals to a totality of all naturals. That is a strictly
+weaker commitment, and it is the first thing the program can say that ordinary
+foundations cannot.
+
+\subsection{Integers and ratios}
+
+Signed orbits, pairs of natural orbits read as a difference modulo the usual
+cancellation, give the integers $\Zdelta$, with the full commutative ring
+structure and a decidable order extending that of $\Ndelta$, all under the
+distinction-only tag. Ratio orbits, pairs of a signed orbit and a nonzero natural
+orbit read as a quotient modulo cross-multiplication, give a field $\Qdelta$ of
+ratios, with the field operations, the decidable order, the absolute value, and
+the reciprocal, again distinction-only. The field $\Qdelta$ is the
+distinction-native rational field, and it is isomorphic to the rationals.
+
+\begin{claim}[The rational field, distinction-only]\label{cl:rat}
+The distinction-native ratios $\Qdelta$ form an ordered field with decidable
+equality and order, isomorphic to the rational field, and every law is proved
+under the distinction-only tag.
+\end{claim}
+
+On this field the permission structure of arithmetic, divisibility, primality, the
+Euclidean algorithm, greatest common divisors, is available and decidable. We call
+this the \emph{permission} reading of distinction: it tells us what comparisons of
+orbits are allowed, which orbit divides which, which orbit is prime. Permission is
+qualitative. It is the mathematics that distinction permits, and it is forced, all
+of it, under the weakest tag.
+
+\begin{boundary}
+The number tower stops at $\Qdelta$. The next object the physical program needs,
+the golden ratio, is a root of $x^2 = x + 1$, hence involves $\sqrt 5$, which is
+not in $\Qdelta$. So even the first downstream physical quantity already lies
+outside the distinction-native field. This is the first signal that physics does
+not live on the ratio field, and it points directly at the boundary of
+Section~\ref{sec:continuum}.
+\end{boundary}
+
+\section{Where necessity ends: the continuum is not forced}\label{sec:continuum}
+
+The second layer of the map is a negative, and it is the hinge of the whole
+program. We summarize it; the full argument is the companion continuum
+paper~\cite{DeltaContinuum}.
+
+The physical program needs the continuous real line. It needs it because the cost
+becomes forced only there (Section~\ref{sec:cost}), because the golden ratio and
+the other downstream constants live there and not on $\Qdelta$, and because the
+limiting and second-derivative notions that physics uses have no traction on a
+gapped field. The question is whether distinction forces this continuum, the way
+it forces the number tower. It does not, and the reason is a counting argument
+that no amount of cleverness in the construction can evade.
+
+\begin{claim}[The continuum is not forced]\label{cl:cont}
+The objects that distinction generates form a countable collection: the tokens,
+the orbits, the signed orbits, the ratios, and any family of these produced by
+finitely-branching generative rules iterated countably, are all countable. The
+continuous real line is uncountable. Therefore distinction, whose entire output is
+countable, cannot force the continuum. The gap between them is a gap in
+cardinality: the countable reach of distinction against the uncountable line. The
+completion that closes the gap is a separate commitment, carrying the
+trace-closure tag, and it is provably stronger than anything distinction-only can
+reach.
+\end{claim}
+
+The mathematics behind Claim~\ref{cl:cont} is elementary: it is Cantor's theorem
+that the reals are uncountable, together with the observation that a generative
+primitive producing finitely much at each of countably many stages reaches only a
+countable total. The companion paper makes both halves precise and adds a second,
+independent argument from model theory, that a countable first-order description of
+distinction has a countable model, so no such description pins the continuum. The
+contribution is not the diagonal argument. The contribution is the placement of
+the boundary: showing that this specific generative primitive, the one the program
+is built on, cannot reach the continuum, and therefore that the continuum is an
+addition to the program rather than an output of it.
+
+This is where the program crosses from mathematics into physics, and we mark the
+crossing precisely. Up to and including $\Qdelta$, everything is
+distinction-only, and everything is forced. The completion to the real line is
+trace-closure, and it is posited. Physics begins at the posit.
+
+\begin{boundary}[The completion is named, not derived]
+We adopt the continuous completion of $\Qdelta$ as an explicit commitment. We do
+not derive it from distinction, and we do not pretend to. Every result downstream
+of this point that requires the completion inherits the trace-closure tag, and we
+carry that tag forward honestly rather than laundering it into a distinction-only
+claim.
+\end{boundary}
+
+\section{What the completion costs: the cost form forced, the unit a gauge}\label{sec:cost}
+
+The third layer is the cost, and it is the load-bearing joint of the entire
+program, because almost everything in the physical theory downstream flows from
+the precise form of the cost. We summarize the result; the full treatment, negative
+first, is the companion cost paper~\cite{DeltaCost}, which in turn imports the
+continuous uniqueness theorem from the functional-equation
+work~\cite{LogicFE,AxiomsCost}.
+
+The cost is the canonical reciprocal cost
+\[
+  J(x) = \tfrac{1}{2}\bigl(x + x^{-1}\bigr) - 1,
+\]
+the price of comparing two magnitudes whose ratio is $x$. The structural
+requirements a cost is asked to satisfy are reciprocal symmetry, $F(x) = F(x^{-1})$;
+normalization, $F(1) = 0$; a composition law governing how costs combine; and,
+when the domain is continuous, continuity and a unit calibration fixing the local
+curvature at the unit. The question is whether these requirements force $J$. The
+answer splits exactly along the boundary of Section~\ref{sec:continuum}.
+
+\subsection{On the ratio field, the cost is not forced}
+
+\begin{claim}[Discrete underdetermination]\label{cl:costneg}
+On the distinction-native ratio field, the requirements of reciprocal symmetry,
+normalization, and the composition law do not force $J$. The admissible costs are
+exactly the character costs $F_\chi(u) = \tfrac{1}{2}(\chi(u) + \chi(u)^{-1}) - 1$,
+where $\chi$ ranges over the homomorphisms of the multiplicative group of positive
+ratios. Because that group is free abelian on the primes, a character is a free,
+independent choice of value on each prime, and the admissible costs form an
+infinite product with one factor per prime. The canonical cost $J$ is the single
+character given by the inclusion; for every prime there is an admissible cost that
+agrees with $J$ on all other primes and inverts the orientation of that one.
+\end{claim}
+
+Claim~\ref{cl:costneg} is the honest negative, and it is structural rather than
+anecdotal: the obstruction is not a handful of counterexamples but the entire
+character group. A uniqueness statement that recovers $J$ on the ratio field must
+first fix the cost on every prime, which is to assume agreement with $J$ on a
+generating set; that is a fact about generation, not a derivation of $J$ from
+distinction. We never present generator-agreement as forcing.
+
+\subsection{On the completion, the cost form is forced}
+
+\begin{claim}[Continuous form forcing and the gauge orbit]\label{cl:costpos}
+On the continuous completion, continuity restricts characters to power maps, and
+the four laws force the cost into the one-parameter family
+\[
+  F_\lambda(x) = \tfrac{1}{2}\bigl(x^{\lambda} + x^{-\lambda}\bigr) - 1,
+  \qquad \lambda > 0,
+\]
+which is exactly the solution set, not merely a subset of it. This family is the
+orbit of $J$ under the group of multiplicative automorphisms of the positive
+reals, and the action is free and transitive, so the family is a torsor: the
+residual freedom is exactly one positive real, a gauge coordinate. A single
+comparison value pins the gauge, and the unit calibration, log-curvature one at the
+unit, selects the canonical member $F_1 = J$.
+\end{claim}
+
+The two claims together are the precise sense of ``the cost form is forced, the
+unit is a gauge.'' Distinction and the algebraic laws force the form, the gauge
+orbit. One datum fixes the gauge. The value of that datum is a
+multiplicative-automorphism gauge that distinction does not, by itself, fix. The
+entire arbitrary content of the cost layer is exactly one positive real number, and
+everything else about the cost is forced.
+
+\begin{boundary}[The calibration unit is a posit, for now]
+The unit calibration is supplied from outside, as a choice of scale. We do not
+claim it is derived from distinction. Whether it can be is the open frontier of
+Section~\ref{sec:frontier}.
+\end{boundary}
+
+\subsection{Sharpening: the cost form needs only order, not the continuum}\label{sec:cost-monotone}
+
+Claim~\ref{cl:costpos} was stated with continuity, the hypothesis under which a
+multiplicative endomorphism of the positive reals is a power map. Continuity is
+stronger than the argument requires. A monotone additive function is linear
+(Darboux), so a \emph{monotone} multiplicative endomorphism is already a power map,
+and the form forcing of Claim~\ref{cl:costpos} goes through with ``continuous''
+replaced by ``order preserving.''
+
+The consequence reshapes the boundary. Continuity is about limits, and limits need
+the gaps of $\Qdelta$ filled, which is the move to the uncountable line.
+Monotonicity is about order, and order is already present on the real-algebraic
+closure of $\Qdelta$, the countable field in which every distinction-posable
+polynomial comparison resolves. That field contains $\sqrt{2}$ and $\sqrt{5}$,
+hence $\varphi$, and it is countable. On it the monotone cost forms are already
+exactly the gauge orbit of $J$. So the cost form is forced on a countable carrier;
+the cost layer does not require the continuum.
+
+This does not erase the boundary, it relocates it. The number tower is forced. The
+cost form is forced, now on a countable real-closed field rather than on the
+uncountable completion. What still sits on the far side of a non-distinction posit
+is only this: the genuinely transcendental physical constants the downstream theory
+names, which use $\pi$ and the exponential and are therefore not algebraic. Even
+those land in a countable field, obtained by adjoining their specific values to the
+rationals, and that field is again a proper subset of the continuum. The continuum
+is a scaffold for \emph{defining} the transcendental functions, not the home of any
+answer the program returns. The honest residual posit is the existence of those
+transcendental values, not the uncountable line itself.
+
+\section{The meeting point}\label{sec:meeting}
+
+We can now state the unification at exactly the strength the three layers support,
+and not a word stronger.
+
+\begin{theorem}[The stratified unification]\label{thm:unif}
+Let $\delta$ be the act of distinction. Then:
+\begin{enumerate}[leftmargin=2em, label=\textup{(\alph*)}]
+  \item \textup{(Mathematics is what distinction permits.)} The number tower
+    $\Ndelta \subset \Zdelta \subset \Qdelta$ and its permission structure are
+    forced by $\delta$ under the distinction-only tag
+    \textup{(Claims~\ref{cl:nat},~\ref{cl:rat})}.
+  \item \textup{(The boundary.)} The continuous completion of $\Qdelta$ is not
+    forced by $\delta$; it is a trace-closure commitment, separated from the
+    distinction-only layer by a cardinality gap \textup{(Claim~\ref{cl:cont})}.
+  \item \textup{(Physics is what the completion costs.)} On the completion, the
+    cost requirements force the cost into the gauge orbit of $J$, with residual
+    freedom exactly one positive real fixed by one calibration datum
+    \textup{(Claims~\ref{cl:costneg},~\ref{cl:costpos})}.
+\end{enumerate}
+Mathematics and physics meet at one named boundary, the passage from the countable
+ratio field to its uncountable completion, which is exactly the passage from the
+distinction-only tag to the trace-closure tag.
+\end{theorem}
+
+\medskip
+\noindent\textbf{The boundary on the cost side.} Part (c) is stated over the
+completion to match the historical form of the uniqueness theorem, but
+Section~\ref{sec:cost-monotone} shows the cost form is already forced over the
+countable real-algebraic closure of $\Qdelta$, by order alone. The genuine
+non-distinction commitment in part (b) is therefore needed only for naming the
+transcendental constants, not for forcing the cost form. The meeting point is
+sharper than the uncountable completion: it is the adjunction of specific
+transcendental values to a countable field.
+
+The meeting point is the heart of the program, and its character is worth stating
+flatly. The cost is underdetermined on $\Qdelta$ for the same reason $\Qdelta$ is
+incomplete: a gapped domain cannot transmit a local constraint, a curvature at the
+unit, into a global one, a single cost function, because the gaps insulate the
+constraint. The act of completing the field, removing the gaps, is the same act
+that lets the four laws bite and force the cost form. So the boundary where the
+mathematics ends and the physics begins is not two boundaries that happen to
+align; it is one boundary seen from two sides. From the side of structure it is the
+incompleteness of the ratio field. From the side of dynamics it is the
+underdetermination of the cost. Completing the field closes both at once, at the
+price of one posit.
+
+This is why the program is stratified and not seamless, and why that is a strength.
+A seamless chain from $\delta$ to the constants of physics would have to hide the
+posit. The stratified account displays it, localizes it to one place, the
+completion boundary, and one number, the calibration unit, and proves everything on
+either side. The physics that the program develops downstream, the golden ratio and
+the discrete time cadence and the spatial dimension and the numerical constants,
+all live on the completed side of the boundary, and the flagship's task ends at the
+boundary that makes them possible. We do not rehearse the downstream derivations
+here; we locate them, correctly, as living beyond the posit, and we note that even
+the first of them, the golden ratio, already requires the completion because
+$\sqrt 5$ is not a ratio.
+
+\section{Inevitability, stated conditionally}\label{sec:inev}
+
+A natural further question is whether the distinction core is optional: could a
+foundation be built that does not contain it? The program has a partial answer, and
+because the answer is partial we state it as a conditional and resist the
+temptation to inflate it.
+
+\begin{claim}[Conditional inevitability]\label{cl:inev}
+Once an admissible formal foundation is parsed into a common formal-system
+interface, capturing its tokens, its formation rules, and its judgment of
+syntactic identity, that foundation contains an embedding of the distinction core:
+it has marks, it iterates them, and it judges them same or different, which is
+exactly $\delta$ and its decidable comparison. In this sense the distinction core
+is not an optional ingredient of such a foundation; it is presupposed by the act
+of writing the foundation down.
+\end{claim}
+
+The honest qualification is essential. Claim~\ref{cl:inev} is proved for
+foundations \emph{as parsed into the interface}. It is not yet proved that the major
+historical foundations, set theory, type theory, category theory, and their
+variants, each parse faithfully into the interface with their full expressive
+power preserved. Until at least two such foundations are faithfully parsed and
+their expressivity established, the inevitability claim is conditional on the
+parsing, and to present it as unconditional would be to claim inevitability for our
+own interface, which is circular. We therefore carry the inevitability material as
+a conditional section of the synthesis rather than as a standalone theorem, and we
+mark the parsing of real foundations as an open task. The defensible statement is
+the modest one: any foundation, once written in a system of marks with a decidable
+identity, already contains distinction, because writing it down is distinguishing.
+
+\section{The honest accounting}\label{sec:accounting}
+
+We collect the strength of every link in one place, so that the reader can see at a
+glance what is forced, what is posited, and what is open. This table is the
+program's ledger, and the discipline of keeping it is the program's principal
+asset.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Link} & \textbf{Strength} & \textbf{Status} \\
+\midrule
+Natural numbers and their arithmetic & distinction-only & forced \\
+Integers and their ring structure & distinction-only & forced \\
+Rational field and its order & distinction-only & forced \\
+Permission structure (divisibility, primality, gcd) & distinction-only & forced \\
+Cost on the ratio field & distinction-only & not forced (classified) \\
+Continuous completion of the ratio field & trace-closure & posited (not forced) \\
+Cost form on the completion (gauge orbit of $J$) & trace-closure & forced \\
+Selection of $J$ within the orbit & trace-closure & forced by one datum \\
+Value of the calibration datum & trace-closure & posited (open: Section~\ref{sec:frontier}) \\
+Inevitability of the distinction core & interface-conditional & conditional \\
+Distinction as exactly one primitive & meta-level & open (Section~\ref{sec:frontier}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Read down the status column. The arithmetic layer is forced, entirely, under the
+weakest tag. The continuum is posited, and provably so, not forced. The cost form
+is forced, but only on the posited completion, and only up to a gauge. The gauge is
+fixed by one datum, whose value is itself posited. Inevitability is conditional on
+a parsing that is not yet done. And the question of whether distinction is one
+primitive or two is open. Nothing in this ledger is dressed above its station, and
+the two genuine open entries are named in the next section as research targets, not
+hidden as solved.
+
+\section{The open frontier}\label{sec:frontier}
+
+Two questions are open, and one of them, if it closes, upgrades the program's
+central claim. We state both precisely.
+
+\subsection{The move that would force the cost outright}
+
+The only free input standing between the imported continuous classification and an
+unconditional forcing of $J$ is the calibration unit: the requirement that the
+log-curvature of the cost at the unit equals one. On the completion this is
+adopted, not derived. The target is to derive it from distinction directly.
+
+\begin{claim}[Open: calibration from one distinction act]\label{cl:move1}
+Conjecture: the minimal recognition cost of distinguishing one orbit from its
+successor, the cost of a single act of distinction, carried to the completion,
+fixes the second-order coefficient of the cost profile at the unit to exactly one.
+If this is a theorem, the calibration datum is not a free choice but a consequence
+of the primitive, the continuous classification runs with no free input, and
+``distinction forces $J$ on the completion'' becomes true without circularity. If
+it is false, the genuine native curvature is some other value, the forced cost is
+the corresponding member of the gauge orbit rather than $J$, and one has learned
+the true cost of distinction, which is itself a result.
+\end{claim}
+
+We do not claim either outcome. We mark the question as the single
+highest-leverage open problem of the program, with a falsifier built in: the
+one-act cost expansion either has leading curvature one or it does not, and both
+answers are publishable and more fundamental than the present conditional. The
+program is built to ship its current, honest claim without this result and to
+absorb it cleanly if it arrives.
+
+\subsection{One primitive or two}
+
+The second open question is the one raised in Section~\ref{sec:primitive}: whether
+the same-or-different judgment is derivable from the act of marking, in which case
+distinction is genuinely one primitive, or whether recognition is irreducibly the
+pair, mark and compare. Resolving it does not change any downstream result, since
+both moves are available throughout, but it changes what the program may honestly
+boast. Either the judgment reduces to the act, and the ``single primitive'' claim
+is earned, or it does not, and the honest description is that recognition is the
+pair. Both are more fundamental than asserting unity without proof, and we leave
+the question open rather than assert the slogan.
+
+\section{Conclusion}
+
+The program takes one primitive, the act of distinction, and the honest measure of
+its reach is a stratification with one boundary. Distinction forces the number
+tower, all of it, under the weakest logical commitments, with no infinity, no
+choice, and no excluded middle: mathematics is what distinction permits.
+Distinction does not force the continuous line that physics requires; the line is a
+strictly larger object, separated from distinction's countable reach by a gap in
+cardinality, and adopted as a named posit. On that posited completion, and only
+there, the cost is forced into the gauge orbit of the canonical reciprocal cost,
+with exactly one real degree of freedom fixed by one calibration datum: physics is
+what the completion of distinction costs. The two layers meet at one boundary, the
+completion of the ratio field, which is simultaneously the end of the
+distinction-only tag and the beginning of the trace-closure tag, the end of
+mathematics-as-permitted and the beginning of physics-as-costed.
+
+The strength of this account is precisely its refusal to overstate. It localizes
+the program's entire posited content to one boundary and one number, proves
+everything on both sides, treats the inevitability of the core as the conditional
+it currently is, and names the two open questions as research targets rather than
+solved problems. A grand claim that arrives with its boundary in the abstract and
+its open frontier named in the text is a different and sturdier object than a
+seamless chain that hides its joints. The unification is real, and it is
+stratified. Distinction permits mathematics; the completion of distinction costs
+physics; and the single open move that would close the last gap, deriving the unit
+of cost from the cost of one act of distinction, is stated here as the frontier it
+is.
+
+\begin{thebibliography}{99}
+
+\bibitem{DeltaArithmetic}
+J.~Washburn,
+``Arithmetic from Distinction: A Number Tower Forced by a Single Primitive,''
+companion paper, 2026.
+
+\bibitem{DeltaContinuum}
+J.~Washburn,
+``Where Necessity Ends: Why Distinction Forces Arithmetic but Not the
+Continuum,'' companion paper, 2026.
+
+\bibitem{DeltaCost}
+J.~Washburn,
+``The Cost Form Is Forced, the Unit Is a Gauge: How Far Distinction Determines
+the Recognition Cost,'' companion paper, 2026.
+
+\bibitem{LogicFE}
+J.~Washburn,
+``A Functional-Equation Encoding of Logical Consistency on Continuous
+Positive-Ratio Comparisons: A Conditional Rigidity Theorem,'' 2026.
+
+\bibitem{AxiomsCost}
+J.~Washburn and Z.~Zlatanovi\'c,
+``Uniqueness of the Canonical Reciprocal Cost,''
+\emph{Axioms}, 2026.
+
+\bibitem{Aczel1966}
+J.~Acz\'el,
+\emph{Lectures on Functional Equations and Their Applications},
+Academic Press, 1966.
+
+\bibitem{Cantor1891}
+G.~Cantor,
+``\"Uber eine elementare Frage der Mannigfaltigkeitslehre,''
+\emph{Jahresbericht der Deutschen Mathematiker-Vereinigung} \textbf{1} (1891),
+75--78.
+
+\end{thebibliography}
+
+\end{document}

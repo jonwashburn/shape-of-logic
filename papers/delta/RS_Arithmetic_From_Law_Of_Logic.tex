@@ -1,0 +1,849 @@
+% RS_Arithmetic_From_Law_Of_Logic.tex
+%
+% "Arithmetic from the Law of Logic:
+%  The Continuous Positive-Ratio Realization."
+%
+% Companion to:
+%   Washburn, "A Functional-Equation Encoding of Logical Consistency
+%   on Continuous Positive-Ratio Comparisons," April 2026
+%   (Logic_Functional_Equation.tex / Mathematical_Foundation/).
+%
+% Cross-realization invariance is the subject of the meta-theorem
+% companion paper RS_Universal_Forcing.tex; this paper supplies the
+% concrete continuous-ratio realization on which the meta-theorem
+% rests. The original "Part I" framing has been retired because the
+% meta-theorem subsumes subsequent installments and worked examples
+% of other realizations are already in RS_Universal_Forcing.tex.
+%
+% Formalization details are collected in the implementation appendix.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Arithmetic from the Law of Logic:\\
+The Continuous Positive-Ratio Realization}
+
+\author{Jonathan Washburn\thanks{Recognition Physics Institute, Austin, TX 78701, USA.\\
+\texttt{jon@recognitionphysics.org}.}}
+
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The companion paper~\cite{Washburn2026LogicFE} proves a
+\emph{conditional rigidity theorem} on the continuous positive-ratio
+comparison setting: under the four classical Aristotelian conditions
+on a comparison operator, plus continuity and finite pairwise
+polynomial closure of the combiner, the derived cost function
+satisfies the Recognition Composition Law and (under unit
+log-curvature calibration) equals the canonical reciprocal cost
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$. \emph{Conditional on that
+rigidity theorem} (and on the inductive-type, quotient, and
+completion machinery of the ambient meta-language), we exhibit the
+standard Peano structure as the canonical orbit of any non-trivial
+generator inside the multiplicative group $\mathbb{R}_{>0}$, lift the
+construction through the integers, rationals, reals, and the complex
+carrier, and identify each layer up to a transport equivalence with
+the usual number tower. The Peano core carries no domain-specific
+axiomatic content; the upper layers reuse standard algebraic and
+completion machinery through explicit transport equivalences. The
+companion meta-theorem~\cite{Washburn2026UniversalForcing}, the
+\emph{Universal Forcing Theorem}, asserts that in every admissible
+realization of the Law of Logic the same arithmetic structure is
+canonically forced up to unique isomorphism; the present paper
+supplies the concrete continuous-ratio realization on which that
+meta-theorem rests. The downstream consequence is that the
+elementary number tower used by Recognition Science is forced by a
+single law, realised concretely here on continuous positive ratios
+and invariant across all admissible realizations of that law, rather
+than imported as a separate axiomatic commitment, conditional on
+the named hypotheses recorded in Section~\ref{subsec:conditionality}.
+\end{abstract}
+
+\noindent\textbf{Keywords:} laws of logic; functional equation;
+Recognition Composition Law; Peano arithmetic; Grothendieck completion;
+Cauchy completion; formal mathematics.
+
+\medskip
+
+\noindent\textbf{MSC 2020:} 03A05, 03B22, 03F35, 39B22, 68V20.
+
+\section{Introduction}
+
+\paragraph{Setup.} The companion paper \cite{Washburn2026LogicFE}
+identifies, on the continuous-ratio comparison setting, the unique
+cost function compatible with an operational encoding of the four
+classical Aristotelian conditions on a continuous comparison operator
+$C : \mathbb{R}_{>0} \times \mathbb{R}_{>0} \to \mathbb{R}$. Given the
+encoding (Identity, Non-Contradiction, Excluded Middle, Composition
+Consistency) plus continuity and finite pairwise polynomial closure,
+the derived cost $F(r) := C(r, 1)$ satisfies the Recognition
+Composition Law family, and its calibrated representative on the
+bilinear branch is the canonical reciprocal cost
+$J(x) = \tfrac{1}{2}(x + x^{-1}) - 1$.
+
+\paragraph{Question.} The companion paper explicitly does not claim a
+derivation of arithmetic. We close that gap on the same restricted
+domain. The Law of Logic does more than pin down the cost function on
+this setting; it canonically picks out an inductive structure on the
+multiplicative group of positive reals, and that inductive structure is
+the natural-number structure.
+
+\paragraph{The foundational theorem behind the program.} The thesis
+is sharper than what any single setting can prove:
+
+\begin{quote}
+\textbf{Universal Forcing Theorem.} In every admissible realization
+of the Law of Logic, the canonical forced inductive object is unique
+up to unique isomorphism. Equivalently, the arithmetic content of
+the Law of Logic is invariant under choice of realization carrier.
+\end{quote}
+
+The theorem cannot be discharged on a single setting. The present
+paper supplies the continuous positive-ratio realization. The
+companion paper~\cite{Washburn2026UniversalForcing} states and
+proves the meta-theorem and surveys further realizations (discrete
+propositional, modular cyclic, order-theoretic, Lawvere-style
+categorical) as worked examples;
+\S\ref{sec:program} of the present paper records the bridge.
+
+\paragraph{Result of this paper.} Conditional on the
+\cite{Washburn2026LogicFE} rigidity theorem, we recover Peano
+arithmetic from the comparison-operator structure on continuous
+positive ratios. We extend the recovery to the integers via
+Grothendieck completion, to the rationals by field-of-fractions
+construction, to the reals by Cauchy/Bourbaki completion, and to the
+complex carrier by ordered pairs of recovered reals. At every
+discrete stage the Peano axioms, the arithmetic identities, and the
+order-theoretic content are theorems of the inductive structure
+canonically picked out by the comparison operator, not posits. The
+real and complex layers reuse standard completion and analytic
+substrate machinery through explicit transport equivalences.
+
+\subsection{Conditionality, stated up front}
+\label{subsec:conditionality}
+
+The result of this paper is conditional on three named layers,
+listed here so the reader knows the dependency structure before
+reading the body. Each layer is also discussed in its own context
+later in the paper.
+
+\begin{enumerate}[leftmargin=1.6em, label=(\arabic*)]
+\item \textbf{The rigidity theorem of}~\cite{Washburn2026LogicFE}
+for continuous positive-ratio comparisons. This is the only
+setting-specific input. It is itself a \emph{conditional} rigidity
+theorem under continuity and finite pairwise polynomial closure of
+the combiner; the polynomial-degree-two regularity is essential, not
+a removable hypothesis (the quartic-log counterexample
+$C(x, y) = (\ln(x/y))^4$ in the companion paper establishes
+sharpness). Our recovery of arithmetic is therefore doubly
+conditional: it inherits the conditional structure of the rigidity
+theorem and adds the universal-property characterisation of the
+forced orbit.
+
+\item \textbf{The inductive-type, quotient, and completion
+machinery of the ambient meta-language.} The Peano core is
+constructed as an inductive type with two constructors; the integers
+are built by Grothendieck quotient; the rationals by
+field-of-fractions quotient; the reals by Cauchy completion. None
+of these constructions is novel; each is the standard meta-theoretic
+machinery used in type-theoretic foundations and is a reasonable
+baseline for any formal foundational result.
+
+\item \textbf{Mathlib's analytic substrate} where the upper tower
+is transported. The recovered $\mathbb{R}$ and $\mathbb{C}$ inherit
+their analytic structure (limits, derivatives, integrals, holomorphy,
+transcendental functions) by transport equivalence with Mathlib's
+standard $\mathbb{R}$ and $\mathbb{C}$. This is honest reuse, not a
+foundational claim; the recovered objects could in principle be
+developed analytically from scratch, but doing so adds no
+foundational content.
+\end{enumerate}
+
+The summary: the recovery of Peano $\mathbb{N}_{\mathrm{Logic}}$ is
+\emph{doubly conditional} (on (1) the conditional rigidity theorem
+of the companion paper, and on (2) the standard inductive machinery
+of the meta-language). The recovery of $\mathbb{Z}_{\mathrm{Logic}}$
+through $\mathbb{Q}_{\mathrm{Logic}}$ adds standard quotient
+constructions on top of (1) and (2). The recovery of
+$\mathbb{R}_{\mathrm{Logic}}$ and $\mathbb{C}_{\mathrm{Logic}}$ adds
+the analytic transport in (3). All three layers are named
+explicitly; the cover letter and any subsequent presentation of this
+result should foreground the conditional structure honestly.
+
+\paragraph{Distinguishing claim.} The natural numbers are not assumed
+as an extra commitment of this paper. They are not invoked as a
+primitive of set theory. They are picked out canonically as the orbit
+of a single non-trivial element of $(\mathbb{R}_{>0}, \cdot)$, and
+identified with the standard inductive object via a universal-property
+characterization (\S\ref{sec:universal}). The standard textbook
+presentation either takes $\mathbb{N}$ as a primitive (Peano
+postulation) or builds it set-theoretically inside ZFC (von Neumann
+ordinals, Zermelo construction). The present paper does neither.
+
+\section{Background and Notation}
+\label{sec:background}
+
+We recall the encoding of \cite{Washburn2026LogicFE}. A
+\emph{comparison operator} is a map $C : \mathbb{R}_{>0} \times
+\mathbb{R}_{>0} \to \mathbb{R}$. The four classical Aristotelian
+conditions are encoded as:
+
+\begin{itemize}
+\item \textbf{Identity}: $C(x, x) = 0$ for all $x > 0$.
+\item \textbf{Non-Contradiction}: $C(x, y) = C(y, x)$ for all $x, y > 0$.
+\item \textbf{Excluded Middle}: $C$ is jointly continuous and total on
+the open positive quadrant.
+\item \textbf{Composition Consistency}: there exists a polynomial
+combiner $P$ of total degree at most two with
+$F(xy) + F(x/y) = P(F(x), F(y))$, where $F(r) := C(r, 1)$.
+\end{itemize}
+
+We add two structural conditions:
+
+\begin{itemize}
+\item \textbf{Scale Invariance} (bridge): $C(\lambda x, \lambda y) = C(x, y)$
+for all $\lambda, x, y > 0$.
+\item \textbf{Non-Triviality}: there exists $x > 0$ with $F(x) \neq 0$.
+\end{itemize}
+
+A comparison operator satisfying these six conditions is said to
+\emph{satisfy the Law of Logic}, abbreviated $C \in \mathrm{Logic}$.
+The companion paper proves that, given $C \in \mathrm{Logic}$, the
+derived cost $F$ satisfies the Recognition Composition Law and, under
+calibration, equals $J$.
+
+\section{The Inductive Structure Forced by a Non-Trivial Generator}
+\label{sec:inductive}
+
+\paragraph{Claim.} The Law of Logic forces an inductive structure
+isomorphic to $\mathbb{N}$.
+
+\paragraph{Construction.} Non-Triviality together with Identity gives
+an element $\gamma \in \mathbb{R}_{>0}$ with $\gamma \neq 1$. (If
+$F(x) \neq 0$ then $x \neq 1$, since $F(1) = C(1, 1) = 0$ by
+Identity.) The orbit
+\[
+\mathcal{O}(\gamma) := \{1, \gamma, \gamma^2, \gamma^3, \dots\}
+\]
+is the smallest subset of $\mathbb{R}_{>0}$ containing 1 and closed
+under multiplication by $\gamma$. The two-constructor presentation of
+$\mathcal{O}(\gamma)$ matches the Peano signature: ``be at the
+identity'' (constructor 1) or ``take one more step'' (constructor 2).
+
+\begin{definition}
+The recovered natural-number object is the inductive object with two
+constructors: an identity constructor (nullary) and a step constructor
+(unary, taking one recovered natural number to the next).
+\end{definition}
+
+The formal construction identifies this object with the orbit
+structure via the embedding
+\[
+\mathrm{embed}_\gamma : \mathbb{N}_{\mathrm{Logic}} \to \mathbb{R}, \qquad
+\mathrm{embed}_\gamma(0) = 1, \quad
+\mathrm{embed}_\gamma(Sn) = \gamma \cdot \mathrm{embed}_\gamma(n).
+\]
+
+\section{Peano Axioms as Theorems}
+\label{sec:peano}
+
+The Peano axioms are theorems of the inductive type, not posits.
+
+\begin{theorem}[Peano P1]
+$0 \neq S(n)$ for every recovered natural number $n$.
+\end{theorem}
+
+\begin{theorem}[Peano P2]
+The successor map $S$ is injective.
+\end{theorem}
+
+\begin{theorem}[Peano P3, induction]
+For any predicate $P$ on recovered natural numbers, if $P(0)$ and
+$\forall n,\, P(n) \to P(Sn)$, then $\forall n,\, P(n)$.
+\end{theorem}
+
+Each statement follows from inductive disjointness of constructors
+and the recursor of the inductive object. The dependency audit is
+recorded in Appendix~\ref{app:formal}.
+
+\section{Addition, Multiplication, Order}
+\label{sec:operations}
+
+Addition is repeated successor; multiplication is repeated addition.
+Both are defined by recursion on the second argument. The standard
+identities follow by induction:
+
+\begin{theorem}[Arithmetic identities]
+The recovered natural-number object with the operations defined above
+satisfies:
+\[
+0 + n = n, \quad n + 0 = n, \quad
+n + m = m + n, \quad (a + b) + c = a + (b + c),
+\]
+\[
+0 \cdot n = 0, \quad 1 \cdot n = n, \quad
+a \cdot (b + c) = a \cdot b + a \cdot c.
+\]
+\end{theorem}
+
+The \emph{order} on recovered natural numbers is the Peano definition:
+$n \le m$ iff there exists $k$ with $n + k = m$. We prove
+reflexivity, transitivity, antisymmetry, totality, decidability, and
+well-foundedness.
+
+\section{The Recovery Isomorphism}
+\label{sec:recovery}
+
+\begin{theorem}[Recovery]
+There is an isomorphism $\mathbb{N}_{\mathrm{Logic}} \simeq \mathbb{N}$
+under which addition, multiplication, and the strict order on
+$\mathbb{N}_{\mathrm{Logic}}$ correspond to those on $\mathbb{N}$:
+\[
+\mathrm{toNat}(a + b) = \mathrm{toNat}(a) + \mathrm{toNat}(b),
+\quad
+\mathrm{toNat}(a \cdot b) = \mathrm{toNat}(a) \cdot \mathrm{toNat}(b),
+\]
+\[
+a \le b \Leftrightarrow \mathrm{toNat}(a) \le \mathrm{toNat}(b),
+\quad
+a < b \Leftrightarrow \mathrm{toNat}(a) < \mathrm{toNat}(b).
+\]
+\end{theorem}
+
+The isomorphism is established by mutual recursion and is compatible
+with addition, multiplication, non-strict order, and strict order.
+
+The axiom-dependency audit is given in Appendix~\ref{app:formal}.
+
+\section{The Integers via Grothendieck Completion}
+\label{sec:integers}
+
+The integers are recovered as the Grothendieck completion of the
+additive monoid $(\mathbb{N}_{\mathrm{Logic}}, +)$. Equivalence
+\[
+(a, b) \sim (c, d) \iff a + d = c + b
+\]
+on $\mathbb{N}_{\mathrm{Logic}} \times \mathbb{N}_{\mathrm{Logic}}$ has the standard
+properties (reflexivity, symmetry, transitivity by additive
+cancellation in $\mathbb{N}_{\mathrm{Logic}}$). The quotient is the
+recovered integer object.
+
+\begin{theorem}[Integer carrier recovery]
+There is an equivalence $\mathbb{Z}_{\mathrm{Logic}} \simeq \mathbb{Z}$
+under which the operations $+$, $-$, $\cdot$ defined by quotient lift
+on recovered integers correspond, at the carrier level, to those on
+$\mathbb{Z}$.
+\end{theorem}
+
+The construction gives the carrier-level equivalence and the ring
+laws by transport through this equivalence.
+
+\section{Rationals, Reals, and Complex Numbers}
+\label{sec:tower}
+
+The integer layer is not the endpoint. Once $\mathbb{Z}_{\mathrm{Logic}}$
+has been recovered, the rationals are obtained by the standard field of
+fractions construction:
+\[
+(a,b) \sim (c,d) \iff a d = c b,\qquad b,d\neq 0.
+\]
+The quotient is denoted $\mathbb{Q}_{\mathrm{Logic}}$, and the transport
+map to $\mathbb{Q}$ preserves zero, one, negation, addition, and
+multiplication.
+
+\begin{theorem}[Rational recovery]
+There is an equivalence
+\[
+\mathbb{Q}_{\mathrm{Logic}} \simeq \mathbb{Q}
+\]
+under which the field-of-fractions operations on
+$\mathbb{Q}_{\mathrm{Logic}}$ correspond to the usual rational
+operations.
+\end{theorem}
+
+The real layer is then obtained as the completion of the recovered
+rationals. In the formalization this is implemented by transporting
+$\mathbb{Q}_{\mathrm{Logic}}$ to Mathlib's rational line, using the
+Bourbaki completion, and transporting back. Thus the theorem is not that
+there is a new real line, but that the real line used by the analytic
+parts of the theory sits at the end of the recovered number tower.
+
+\begin{theorem}[Real recovery]
+There is an equivalence
+\[
+\mathbb{R}_{\mathrm{Logic}} \simeq \mathbb{R}
+\]
+compatible with the transported algebraic operations and order.
+\end{theorem}
+
+The complex carrier is recovered as pairs of recovered reals:
+\[
+\mathbb{C}_{\mathrm{Logic}} :=
+\mathbb{R}_{\mathrm{Logic}} \times \mathbb{R}_{\mathrm{Logic}}.
+\]
+Transport to Mathlib's $\mathbb{C}$ is coordinatewise, and addition,
+negation, multiplication, inversion, and division are pulled back along
+this equivalence.
+
+\begin{theorem}[Complex carrier recovery]
+There is a carrier equivalence
+\[
+\mathbb{C}_{\mathrm{Logic}} \simeq \mathbb{C}.
+\]
+\end{theorem}
+
+We deliberately call this a carrier recovery. Complex analysis,
+holomorphy, contour integration, and zeta-function arguments are still
+performed in the established analytic substrate and are related back by
+transport theorems. This avoids claiming that the present paper has
+rederived all complex analysis from scratch.
+
+\section{Universal Property of the Recovered Natural Numbers}
+\label{sec:universal}
+
+The reviewer-style objection ``you have just used the proof assistant's
+inductive-type machinery to import $\mathbb{N}$ under a new name'' is
+the right thing to confront here. The objection is partially true, in
+the sense that any formal foundational paper must use the inductive
+machinery of its metatheory; but the substantive content of this
+section is that the comparison-operator structure picks out the
+natural-number object up to unique isomorphism, with no choice in the
+identification beyond the choice of generator.
+
+\begin{theorem}[Generator-orbit initiality]
+\label{thm:initiality}
+Let $C$ satisfy the Law of Logic. For any non-trivial generator
+$\gamma \in \mathbb{R}_{>0}$ extracted from
+$\mathrm{NonTriviality}(C)$, the triple $(\mathcal{O}(\gamma), 1, \cdot
+\gamma)$ is the initial Peano structure inside the comparison-operator
+setting. Concretely, for every triple $(X, x_0, f)$ in the same setting
+there is a unique structure-preserving map
+$\mathcal{O}(\gamma) \to X$ sending $1 \mapsto x_0$ and intertwining
+$\cdot \gamma$ with $f$.
+\end{theorem}
+
+The construction is standard once initiality is invoked. The point is
+that the comparison operator does not provide $\mathbb{N}$
+\emph{additionally}: it provides exactly one Peano-shaped structure up
+to unique isomorphism, namely the orbit. The orbit and the standard
+inductive natural-number object are, up to unique isomorphism, the
+\emph{same} object.
+
+\begin{remark}[Generator independence]
+\label{rem:gen-indep}
+For any two non-trivial generators $\gamma, \gamma'$, the orbits
+$\mathcal{O}(\gamma)$ and $\mathcal{O}(\gamma')$ are canonically
+isomorphic as Peano structures via the unique map sending
+$\gamma \mapsto \gamma'$. The choice of generator does not change the
+arithmetic content; it only relabels the step.
+\end{remark}
+
+\paragraph{What this section earns.} It removes the strongest form of
+the import objection. The recovered natural-number object is not an
+arbitrary copy of $\mathbb{N}$. It is the unique-up-to-unique-isomorphism
+initial Peano structure in the comparison-operator setting. The
+\emph{naming} of this object as a Lean inductive type is implementation
+overhead; the \emph{mathematical} object is determined by the
+comparison-operator structure alone.
+
+\paragraph{What this section does not earn.} It does not yet show that
+the same arithmetic content arises in another realization of the Law
+of Logic. That is the content of the universal forcing program
+(\S\ref{sec:program}).
+
+\section{Bridge to the Universal Forcing Theorem}
+\label{sec:program}
+
+The recovery proved in this paper is one realization of a stronger
+thesis: the arithmetic content of the Law of Logic is invariant
+across all admissible realizations, not only the continuous
+positive-ratio one. The full statement, the abstract framework, and
+the survey of further realizations are the subject of the companion
+paper~\cite{Washburn2026UniversalForcing}. We summarise the bridge
+here so that the present paper stands on its own.
+
+\paragraph{Abstract realization.} A \emph{Law-of-Logic realization} is
+a carrier $K$ together with a composition $\cdot_K$, a symmetry
+action, and a comparison operator $C : K \times K \to \mathrm{Cost}$
+satisfying the operator-form analogues of the six conditions used in
+\S\ref{sec:background}. The continuous positive-ratio realization
+($K = \mathbb{R}_{>0}$, $\cdot_K$ multiplication, $\mathrm{Cost} =
+\mathbb{R}$) is the case treated in this paper.
+
+\paragraph{Forced arithmetic of a realization.} For any realization
+$R$ with non-trivial generator $\gamma$ and identity $e_K$, define
+$\mathrm{Arith}(R)$ to be the smallest $K$-subset containing $e_K$ and
+closed under $\cdot \gamma$, equipped with $e_K$ as base point and
+$\cdot \gamma$ as successor. The construction generalises
+\S\ref{sec:inductive} verbatim. By the same argument as
+Theorem~\ref{thm:initiality}, $\mathrm{Arith}(R)$ is the initial
+pointed-endomap algebra inside $R$, and therefore is a natural-number
+object in the Lawvere sense.
+
+\paragraph{Universal Forcing Theorem.} The companion paper proves: for
+any two Law-of-Logic realizations $R$ and $S$, the forced arithmetic
+objects $\mathrm{Arith}(R)$ and $\mathrm{Arith}(S)$ are canonically
+isomorphic as Peano structures. The proof uses only the universal
+property of $\mathrm{Arith}(R)$ inside $R$ and of $\mathrm{Arith}(S)$
+inside $S$, plus the standard initiality-uniqueness argument: the
+unique structure-preserving maps in each direction compose to identity
+on each side.
+
+\paragraph{Realizations covered.} The companion paper discharges the
+mathematical realizations (continuous positive-ratio, discrete
+propositional, modular cyclic, order-theoretic, Lawvere-style
+categorical) and presents a survey of motivating extra-mathematical
+realizations (music, narrative, ethics, biology, metaphysical
+ground).
+
+\paragraph{Spacetime: time as the canonical iteration object.} The
+recovered $\mathbb{N}_{\mathrm{Logic}}$ of \S\ref{sec:inductive} is
+upstream-essential for the spacetime story in the framework's master
+synthesis paper~\cite{Washburn2026RealityFromOneDistinction}. That
+paper identifies time with the canonical orbit of the recognition
+operator (``time as the forced orbit''). The identification is
+honest only if the orbit is canonical, which requires the forced
+arithmetic of the Law of Logic to be uniquely determined. Without
+the present paper, the time-as-orbit identification would be a
+structural analogy: time happens to look like the iteration object
+that the Law of Logic forces, and the framework asserts the
+identification on those grounds. With the present paper, the
+identification is rigorous: the Law of Logic forces the comparison
+operator (rigidity theorem of \cite{Washburn2026LogicFE}), the
+comparison operator forces the arithmetic orbit
+(\S\ref{sec:inductive}), the orbit IS the canonical iteration
+object up to canonical isomorphism (Universal Forcing Theorem of
+\cite{Washburn2026UniversalForcing}), and time is then identified
+with that iteration object via the universal-property characterisation
+of the natural-number object. The downstream spacetime derivation
+(spatial dimension three from linking, Lorentzian $(1, 3)$ signature,
+the eight-tick ledger kernel, the constants $c, \hbar, G$ as
+$\varphi$-powers) lives in
+\cite{Washburn2026RealityFromOneDistinction} and uses time-as-orbit
+as a load-bearing identification. The present paper supplies the
+algebraic precursor that makes the identification rigorous rather
+than analogical.
+
+\paragraph{What this implies for the present recovery.} The recovered
+$\mathbb{N}_{\mathrm{Logic}}$ of \S\ref{sec:inductive} is not a
+special feature of the continuous positive-ratio carrier; it is the
+natural-number object that any admissible realization of the Law of
+Logic forces, and the recovered Peano structure here is canonically
+isomorphic to the Peano structure forced in any other realization.
+The number tower constructed in
+\S\ref{sec:integers}--\S\ref{sec:tower} is built on top of
+$\mathbb{N}_{\mathrm{Logic}}$ by standard algebraic and completion
+machinery; the upper layers therefore inherit the
+realization-invariance of their Peano core. The analytic substrate
+transports through Mathlib remain a separate honest reuse and do not
+become realization-invariant by this argument.
+
+\section{Current Axiom Audit}
+\label{sec:audit}
+
+The formal audit has improved since the first draft of this paper.
+The Peano core of $\mathbb{N}_{\mathrm{Logic}}$ remains free of
+domain-specific axioms. Quotient and completion layers use the standard
+Lean kernel assumptions needed by the ambient proof assistant
+(\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound})
+where quotients, rationals, completions, and analytic transports are
+used.
+
+The continuous-combiner extension of the companion functional-equation
+paper has also been sharpened. The H-side Aczél--Kannappan classification
+is now theorem-backed. The former opaque continuous-combiner input has
+been split into theorem-backed algebra plus four narrow residual analysis
+inputs:
+\[
+\begin{aligned}
+&\texttt{continuous\_combiner\_mollifier\_finite\_smoothness},\\
+&\texttt{continuous\_combiner\_finite\_smoothness\_to\_top},\\
+&\texttt{continuous\_combiner\_second\_derivative\_identity},\\
+&\texttt{continuous\_combiner\_psi\_affine\_completion}.
+\end{aligned}
+\]
+The first two are the remaining smoothness-bootstrap content for
+$G(t)=F(e^t)$; the latter two are the remaining Stetkær/Aczél-style
+combiner argument. This paper does not need those residuals for the
+Peano-layer recovery, but they matter for the stronger headline that
+continuity alone replaces polynomial closure in the Law-of-Logic
+translation theorem.
+
+\section{Discussion}
+
+\subsection{What is and is not claimed}
+
+\paragraph{Claimed in this installment.} On the continuous positive-ratio
+realization of the Law of Logic, the natural numbers and the integers
+are canonically picked out by the comparison-operator structure, with
+the universal-property characterization of \S\ref{sec:universal}. The
+rationals, reals, and complex carrier are then recovered by standard
+algebraic and completion constructions transported through the lower
+layers. The Peano core has no domain-specific axiomatic content.
+
+\paragraph{Claimed in the broader program.} The same arithmetic
+structure is canonically forced in every admissible realization of
+the Law of Logic. This is the Universal Forcing Theorem, stated and
+proved in the companion paper~\cite{Washburn2026UniversalForcing}.
+The present paper supplies the continuous positive-ratio realization,
+which is the first mathematically dense input to that theorem.
+
+\paragraph{Not claimed.} The recovery does not displace ZFC, ETCS, or
+any other foundation of mathematics. It does not rederive analysis or
+complex analysis without using the existing analytic substrate. The
+proof assistant's inductive-type, quotient, and completion machinery
+is reused as honest metatheoretic baseline, not as a foundational
+claim.
+
+\subsection{Comparison with set-theoretic Peano}
+
+The standard set-theoretic Peano construction (von Neumann ordinals)
+defines $0 := \emptyset$ and $n + 1 := n \cup \{n\}$, then proves
+that the resulting set satisfies the Peano axioms inside ZFC. The
+construction is correct; its content is that ZFC suffices to
+construct $\mathbb{N}$. The construction does not exhibit $\mathbb{N}$
+as a forced consequence of any classical principle outside ZFC. The
+present paper exhibits $\mathbb{N}$ as a forced consequence of one
+classical principle outside set theory: the Law of Logic on continuous
+positive-ratio comparisons.
+
+\subsection{Comparison with categorical Peano}
+
+The Lawvere natural-number object is a universal property in a
+topos: a triple $(N, 0, s)$ initial among triples $(X, x_0, f)$ in the
+topos. The categorical presentation is correct; its content is that
+$\mathbb{N}$ has a universal-property characterization. It does not
+exhibit $\mathbb{N}$ as a forced consequence of any classical principle.
+The present paper does, on the restricted comparison-operator setting.
+
+\subsection{Comparison with the Curry-Howard direct construction}
+
+In intensional type theory, $\mathbb{N}$ is an inductive type with two
+constructors. What is novel here is not the inductive type but
+the identification of its constructors with the orbit structure
+forced by the Law of Logic: the inductive type is not arbitrary; it
+is exactly what the comparison-operator structure forces.
+
+\subsection{Foundational implications}
+
+The recovery answers a question raised in \cite{Washburn2026LogicFE}:
+whether the comparison-operator characterization extends to arithmetic.
+On the present setting, it does. The Law of Logic canonically picks out
+both the unique calibrated cost function and the inductive structure of
+the natural numbers, with no additional axiomatic content. This makes
+precise, on this setting, the philosophical claim that classical logic
+and elementary arithmetic are not independent commitments but two
+consequences of a single forced functional equation. The full
+foundational claim, that the same arithmetic content is forced in
+\emph{every} admissible realization of the Law of Logic, is the target
+of the program in \S\ref{sec:program}; this paper supplies the first
+realization on which the universal theorem will rest.
+
+\section{Outlook}
+
+\subsection{Rationals, reals, and complex analysis}
+
+The Grothendieck completion construction now extends through the field
+of fractions, completion, and complex carrier. The next mathematical
+task is not to define another copy of $\mathbb{C}$, but to make the
+analytic compatibility layer richer: holomorphy, contour integration,
+Mellin transforms, and zeta-function identities should be stated once
+over Mathlib's analytic substrate and transported back to
+$\mathbb{C}_{\mathrm{Logic}}$ only where this adds mathematical content.
+
+\subsection{Recovered analytic constants and J-cost}
+
+The recovered real line now carries transported definitions of
+$\sqrt{\cdot}$, $\exp$, $\log$, real powers, $\pi$, trigonometric and
+hyperbolic functions. The RS constants then lift to recovered reals,
+and the formal transport proves that each lifted constant agrees with
+the previously-used real-valued constant. The canonical reciprocal
+cost also lifts to recovered reals, with normalization, reciprocal
+symmetry, non-negativity, square form, and zero iff identity on the
+positive domain.
+
+\subsection{Discrete propositional logic and other realizations}
+
+The Law of Logic on continuous positive-ratio comparisons is one
+realization; the discrete propositional encoding is another, and the
+recovery takes a different shape there: the carrier collapses to a
+finite image while the iteration object remains the same
+natural-number object. The companion paper~\cite{Washburn2026UniversalForcing}
+treats the discrete propositional, modular cyclic, order-theoretic,
+and Lawvere-style categorical realizations. The translation theorem
+of \cite{Washburn2026LogicFE} on continuous comparisons does not
+generalize automatically to the discrete case; what generalises is the
+universal-property characterisation of the iteration object, which is
+all the Universal Forcing Theorem requires.
+
+\subsection{Number theory and the Erd\H{o}s-Straus chain}
+
+The recovery makes the natural, integer, rational, and real number
+objects available to the existing number-theory pipeline. The
+Erd\H{o}s-Straus phase-budget chain and the conditional Riemann
+Hypothesis line both operate on ordinary arithmetic objects; under
+the recovery, their arithmetic inputs can be re-stated in the
+recovered types. The analytic zeta layer remains a separate analytic
+bridge; only the arithmetic ledger hook is replaced by the recovered
+prime-ledger certificate.
+
+\subsection{Downstream axiom elimination}
+
+Recent formal work has narrowed the downstream mathematical axiom surface.
+An inconsistent legacy bounded-cost axiom in the Riemann-Hypothesis
+Euler route has been replaced by an explicit deprecated proposition
+which, if assumed, contradicts a proved unboundedness theorem. Classical
+inputs such as Bernstein's inequality, Pick-certificate soundness, Chen,
+Helfgott, Zhang--Maynard, and ABC/IUT are now recorded as sharply named
+residual estimates or explicit external packages rather than silent
+global axioms. This downstream cleanup is not part of the arithmetic
+recovery theorem, but it clarifies which mathematical content remains
+external when the recovered number tower is used in later number-theory
+applications.
+
+\appendix
+
+\section{Formal implementation}
+\label{app:formal}
+
+The formal development is maintained at
+\[
+\text{\url{https://github.com/jonwashburn/recognition-science}}.
+\]
+The table below records the theorem surface used for the verification.
+The main text deliberately treats these as implementation details; the
+mathematical claim is the recovery chain itself.
+
+\begingroup
+\small
+\sloppy
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Natural numbers}: \texttt{Foundation.ArithmeticFromLogic};
+      \texttt{equivNat}, \texttt{toNat\_add}, \texttt{toNat\_mul}.
+\item \textbf{Integers}: \texttt{Foundation.IntegersFromLogic};
+      \texttt{equivInt}, \texttt{eq\_iff\_toInt\_eq}.
+\item \textbf{Rationals}: \texttt{Foundation.RationalsFromLogic};
+      \texttt{equivRat}, \texttt{eq\_iff\_toRat\_eq}.
+\item \textbf{Reals}: \texttt{Foundation.RealsFromLogic};
+      \texttt{equivReal}, \texttt{bourbaki\_complete}.
+\item \textbf{Transcendentals}: \texttt{Foundation.LogicRealTranscendentals};
+      transported exponential, logarithmic, trigonometric, and hyperbolic APIs.
+\item \textbf{Constants}: \texttt{Foundation.LogicRealConstants};
+      transported RS constants and bounds.
+\item \textbf{J-cost}: \texttt{Cost.JcostLogic};
+      recovered-real normalization, square form, non-negativity, and zero
+      iff identity.
+\item \textbf{Law of Logic}: \texttt{Foundation.LogicAsFunctionalEquationLogic};
+      recovered-real RCL transport.
+\item \textbf{Complex carrier}: \texttt{Foundation.ComplexFromLogic};
+      \texttt{equivComplex}, coordinate transport, and algebra transport.
+\item \textbf{Tower audit}: \texttt{Foundation.RecoveredTowerAxiomAudit};
+      audit surface for \texttt{LogicNat} through \texttt{LogicComplex}.
+\item \textbf{Continuous combiner}: \texttt{Foundation.GeneralizedDAlembert};
+      assembled continuous-combiner bilinear classification with four named
+      residual analysis inputs.
+\item \textbf{Universal forcing}: \texttt{Foundation.LogicRealization},
+      \texttt{Foundation.ArithmeticOf}, and
+      \texttt{Foundation.UniversalForcing}; realization interface,
+      forced arithmetic object, canonical arithmetic invariance,
+      \texttt{UniversalForcingCert}, and
+      \texttt{forced\_arithmetic\_surfaces\_equivalent}.
+\item \textbf{Further realizations}: \texttt{Foundation.DiscreteLogicRealization},
+      \texttt{Foundation.ModularLogicRealization},
+      \texttt{Foundation.OrderedLogicRealization},
+      \texttt{Foundation.CategoricalLogicRealization}, and
+      \texttt{Foundation.PhysicsLogicRealization}; Boolean, periodic modular,
+      ordered faithful, Lawvere-style, and identity-tick realization hooks.
+\item \textbf{Universal audit}: \texttt{Foundation.UniversalForcingAudit};
+      audit surface for realization invariance and Peano surface.
+\item \textbf{Prime ledger}: \texttt{NumberTheory.LogicPrimeLedgerAtom};
+      recovered prime-ledger certificate.
+\item \textbf{Erd\H{o}s-Straus}: \texttt{NumberTheory.LogicPhaseBudgetBridge};
+      recovered-arithmetic phase-budget bridge.
+\item \textbf{RH wrapper}: \texttt{NumberTheory.LogicRH\_From\_RCL};
+      recovered-prime RH wrapper with analytic zeta bridge left explicit.
+\end{itemize}
+\endgroup
+
+The current audit separates three classes of dependency:
+\begin{itemize}
+\item the Peano core, which is free of domain-specific axioms;
+\item quotient/completion/analytic transport layers, which use the
+standard Lean kernel and Mathlib infrastructure;
+\item downstream number-theory applications, where external analytic
+or classical inputs are named explicitly.
+\end{itemize}
+
+\section*{Acknowledgements}
+
+We thank the team at the Recognition Physics Institute and the broader
+formal mathematics community.
+
+\begin{thebibliography}{99}
+
+\bibitem{Washburn2026LogicFE}
+Washburn, J.
+\emph{A Functional-Equation Encoding of Logical Consistency on
+Continuous Positive-Ratio Comparisons: A Conditional Rigidity Theorem.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026UniversalForcing}
+Washburn, J.
+\emph{The Universal Forcing Meta-Theorem:
+One Law of Logic, One Arithmetic, Across All Realizations.}
+Manuscript, April 2026.
+
+\bibitem{Washburn2026RealityFromOneDistinction}
+Washburn, J.
+\emph{Reality from One Distinction:
+A Forcing Chain for Spacetime, Time, and the Fundamental Constants.}
+Manuscript, April 2026.
+
+\bibitem{WashburnZlatanovicAllahyarov2026}
+Washburn, J., Zlatanović, M., Allahyarov, E.
+\emph{The d'Alembert Inevitability Theorem.}
+Mathematics (MDPI), to appear, 2026.
+
+\bibitem{WashburnZlatanovic2026}
+Washburn, J., Zlatanović, M.
+\emph{Uniqueness of the Canonical Reciprocal Cost.}
+Mathematics 14 (2026), 935.
+
+\bibitem{Aczel1966}
+Aczél, J.
+\emph{Lectures on Functional Equations and Their Applications.}
+Academic Press, 1966.
+
+\bibitem{Lawvere1964}
+Lawvere, F. W.
+\emph{An elementary theory of the category of sets.}
+Proc. Natl. Acad. Sci. USA 52:1506--1511, 1964.
+
+\end{thebibliography}
+
+\end{document}

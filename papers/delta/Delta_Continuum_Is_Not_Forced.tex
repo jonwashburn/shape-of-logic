@@ -1,0 +1,1209 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{30,90,156}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=codeblue,
+  citecolor=codeblue,
+  urlcolor=codeblue,
+}
+
+\title{%
+  Where Necessity Ends:\\
+  Why Distinction Forces Arithmetic but Not the Continuum}
+\author{%
+  Jonathan Washburn\\
+  Recognition Physics Institute, Austin, TX, USA\\
+  \texttt{jon@recognitionphysics.org}}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}\sloppy
+A foundational program that derives structure from a single primitive must, at
+some point, confront the question of where derivation stops and posit begins. We
+study that boundary for $\delta$, the primitive act of distinction, on which the
+Recognition Science program builds arithmetic, a cost function, and ultimately a
+claim of physical law. We argue, and prove in the precise sense set out below,
+that distinction forces the discrete arithmetic layer (the natural numbers, the
+integers, the rational field) but does not force the continuous completion of
+that layer into the real line. The obstruction is not a missing lemma to be
+filled in later. It is a structural impossibility, and we give it four
+mutually reinforcing proofs: one from cardinality, one from definability in any
+countable language, one from Lebesgue measure, and one from the model theory of
+first-order systems. We first make the informal premise precise by defining a
+finitary generative system and proving that the collection such a system reaches
+is countable; distinction is such a system. The real line is uncountable, so no
+finitary generative process produces it. We sharpen this in two directions. In
+any fixed countable language, only countably many real numbers are definable, so
+the obstruction is not special to sequential generation but defeats every
+countable naming scheme at once. And the set of all reals that distinction can
+name, by any such route, has Lebesgue measure zero, so a real drawn at random is
+unnamed with probability one. We then make the case that this negative result is
+not a defeat but the correct and stronger outcome: it was the right target all
+along, it carries strictly more information than a forcing result would have, it
+reduces the entire arbitrary content of the framework to two nested posits, and
+the boundary it identifies lands exactly on the fault line where mathematics
+itself becomes independent of its axioms. The honest terminal claim of the
+program is therefore a stratified one: logic forces the arithmetic, the continuum
+is posited, and within the continuum a single unit of scale is chosen. Everything
+else is derived.
+\end{abstract}
+
+\tableofcontents
+
+\section{The question this paper settles}
+
+A foundational program is judged less by what it claims to derive than by how
+honestly it draws the line between what it derives and what it assumes. The
+Recognition Science program takes as its single primitive the act of
+distinction, written $\delta$: the capacity to tell two things apart. From this
+one act the program builds, in order, the counting numbers, the integers, the
+field of ratios, a canonical cost function on those ratios, and from the cost
+function a chain of physical consequences. The program's largest ambition is
+captured in a single sentence: the law of logic, in every setting where it
+applies, forces the same structure, so that mathematics and physics are two
+readings of one invariant.
+
+That ambition raises an immediate and uncomfortable question. The cost function,
+which is the load-bearing joint of the whole construction, is pinned down only
+on a \emph{continuous} domain. The argument that selects it uses the tools of
+analysis: limits, derivatives, the behavior of a function in a whole
+neighborhood of a point. None of those tools is available on the bare field of
+ratios, which is full of gaps. So the cost function is forced only after one has
+moved from the ratios to their continuous completion, the real line. And this
+forces the question into the open: does distinction \emph{force} that completion
+into existence, or does it merely \emph{assume} it?
+
+This is not a peripheral technical point. It is the precise location of the
+boundary between the part of the program that is derived and the part that is
+posited. If distinction forces the continuum, the program's maximal claim
+survives intact: structure all the way down, nothing arbitrary. If distinction
+does not force the continuum, the maximal claim is false, and the honest claim is
+something more modest and more precise: an arithmetic core that is genuinely
+forced, sitting beneath a continuum that must be assumed.
+
+This paper settles the question. The answer is that distinction does not force
+the continuum, the answer is not close, and the answer cannot be otherwise. We
+prove this, we explain why a competent skeptic should believe it independently of
+our framing, and we argue at length that this negative answer is the stronger and
+more valuable of the two possible outcomes. We record the argument here, in full
+prose with the supporting mathematics stated as theorems, so that the result and
+its reasons are preserved against the natural temptation of any ambitious program
+to quietly reopen a question it does not like the answer to.
+
+\section{What distinction gives, step by step}
+
+We begin by laying out, without any imported machinery, exactly what
+distinction produces. This is the part that is forced, and seeing it clearly is
+necessary before the boundary can be located.
+
+\subsection{Counting}
+
+The primitive is that two things can be told apart. Perform the act, then
+perform it again on the result, and again. Each performance produces a new
+distinguishable state from the previous one. The bare structure of ``a starting
+state, and an operation that always yields a fresh successor'' is the structure
+of counting. One, two, three, and so on without end. There is nothing optional
+here. The moment one accepts that distinction can be iterated, one has the
+counting numbers, with their order and their arithmetic of addition and
+multiplication. This layer is forced in the strongest possible sense: it is
+simply what iterated distinction \emph{is}.
+
+The single most important property of this layer, for everything that follows,
+is how it is generated. It is generated \emph{sequentially}. Each number is
+reached from the previous one by one more act of distinction. There is a first,
+and from each there is a next, and every number is reached in a finite number of
+steps from the start. This is the property we will return to as the decisive
+one, and in Section~\ref{sec:model} we make it precise.
+
+\subsection{Ratios}
+
+A distinction has a direction and an undoing. To tell $A$ from $B$ is implicitly
+also to tell $B$ from $A$; the act has a forward sense and a reverse sense. When
+one counts in the forward sense and counts in the reverse sense and compares the
+two counts, one obtains a ratio: so many of these per so many of those. Closing
+the counting numbers under this forward-and-reverse comparison produces first the
+integers (counting with a sign) and then the field of ratios, where one may add,
+subtract, multiply, and divide freely.
+
+This layer too is forced, and it inherits the decisive property of the layer
+beneath it. A ratio is built from two counts and a sign. Counts are reached
+sequentially; there are countably many of them; pairs of them are still only
+countably many. So the field of ratios, however rich it looks, is still a
+sequentially generated, step-by-step object. One could in principle list every
+ratio in a single infinite sequence, hitting each exactly once. We will prove
+this in Section~\ref{sec:central} and use it.
+
+\subsection{Comparison, and the first crack}
+
+The purpose of the whole construction is comparison: to ask how much it costs to
+tell one thing apart, measured against telling another thing apart. Comparison
+attaches a magnitude to a ratio. So far, so good, and still entirely within the
+forced layer.
+
+But here distinction does something that breaks its own number system. It can
+\emph{pose} comparison questions that the ratios cannot \emph{answer}. The
+cleanest example is geometric and ancient. Form a square by distinction: a side,
+and a second side at right angles to it. Ask for the ratio of the square's
+diagonal to its side. This is a perfectly legitimate comparison; distinction can
+state it without any difficulty. Yet no ratio is the answer. The answer is the
+square root of two, and the square root of two is provably not a ratio of any two
+whole numbers. The proof is the oldest impossibility proof in mathematics: if it
+were such a ratio in lowest terms, both terms would have to be even, contradicting
+``lowest terms.'' We restate it as Proposition~\ref{prop:sqrt2} for the record.
+
+So distinction generates questions whose answers are missing from the very number
+system distinction produces. The field of ratios looks complete from the inside,
+but it is riddled with gaps, and distinction's own comparisons fall straight into
+them. This is the crack through which the continuum enters, and it is the place
+where we must be most careful.
+
+\section{A generative model of distinction}\label{sec:model}
+
+The argument of this paper turns on the claim that distinction is a countable
+generator. That claim was stated informally above. Because everything rests on
+it, we make it precise here, as a definition and a theorem, rather than leaving
+it as an appeal to intuition. The reader who already accepts that the products
+of a step-by-step process form a countable collection may skim this section; we
+include it because a careful skeptic is entitled to see the premise stated in a
+form that can be inspected.
+
+\begin{definition}[Finitary generative system]\label{def:gensys}
+A \emph{finitary generative system} consists of a set $S_0$ of \emph{initial
+objects} that is finite or countably infinite, together with a set $R$ of
+\emph{construction rules} that is finite or countably infinite, where each rule
+$\rho \in R$ takes a finite tuple of already-constructed objects and returns one
+new object. The \emph{generated collection} $\langle S_0, R\rangle$ is the
+smallest set containing $S_0$ and closed under every rule in $R$. Equivalently,
+define stages by $G_0 = S_0$ and $G_{k+1} = G_k \cup \{\rho(\bar x) : \rho \in R,\ \bar x \text{ a finite tuple from } G_k\}$,
+and set $\langle S_0, R\rangle = \bigcup_{k \in \mathbb N} G_k$.
+\end{definition}
+
+\begin{theorem}[Generative systems reach only countable collections]\label{thm:countgen}
+The generated collection of any finitary generative system is countable.
+\end{theorem}
+
+\begin{proof}
+We show each stage $G_k$ is countable by induction on $k$. The base stage
+$G_0 = S_0$ is countable by hypothesis. Suppose $G_k$ is countable. A new object
+of $G_{k+1}$ is determined by a choice of rule $\rho \in R$ and a finite tuple of
+arguments drawn from $G_k$. The set of rules is countable. The set of finite
+tuples from a countable set is countable, since the finite tuples of length $n$
+inject into the $n$-fold product of a countable set, each such product is
+countable, and a countable union of countable sets is countable. The set of
+pairs (rule, argument tuple) is therefore a countable union of countable sets,
+hence countable, and $G_{k+1}$ is the image of that countable set together with
+$G_k$, so it is countable. By induction every stage is countable. The generated
+collection is the union of the stages over $k \in \mathbb N$, a countable union
+of countable sets, and is therefore countable.
+\end{proof}
+
+\begin{remark}
+The enumerations used in the proof are explicit. The rules and initial objects
+of a generative system come with a presentation, so each $G_k$ can be listed by
+an effective procedure that interleaves rule indices with argument tuples; the
+diagonal union of these listings is again effective. No choice principle beyond
+the explicit interleaving is required. This matters for the present setting,
+where distinction's acts are presented one at a time and the enumeration is the
+record of the acts performed.
+\end{remark}
+
+\begin{remark}[What is established, and what is assumed]
+It is worth separating the part of Theorem~\ref{thm:countgen} that is a theorem
+from the part that is an interpretive premise. With a finitary generative system
+presented as a seed set $S_0$ together with a set $R$ of finite-arity rules, the
+generated collection is the union over stages of the seed-plus-rule closure, and
+its countability follows from the countability of $S_0$ and of $R$ by the argument
+above. The contrapositive is equally definite: any uncountable reach forces either
+an uncountable seed or uncountably many rules, which is the precise sense in which
+escaping countability requires an infinitary act; and no finitary system of this
+kind exhausts $\mathbb R$. What is established is the implication, that a finitary
+system's reach is countable. Whether distinction is a finitary system in this sense
+is the interpretive premise discussed in \S9, and is not itself a theorem.
+\end{remark}
+
+The reading of distinction we adopt is that it is exactly such a system. Its
+single initial object is the starting, undifferentiated state. Its single rule is
+the act $\delta$ itself, which takes a constructed state and returns its
+distinguished successor. Counting is the orbit of this one rule from the one
+initial object. The further layers, sign and ratio, are obtained by adding
+finitely many further finite-arity rules: pairing two counts to form a signed
+count, and pairing two signed counts to form a ratio. All of these rules are of
+finite arity, and there are finitely many of them, so the whole apparatus is a
+finitary generative system in the exact sense of Definition~\ref{def:gensys}.
+Theorem~\ref{thm:countgen} then applies directly.
+
+\begin{corollary}\label{cor:layercount}
+The counting numbers, the integers, and the field of ratios produced by
+distinction are each countable.
+\end{corollary}
+
+\begin{proof}
+Each is the generated collection of a finitary generative system, as described
+above, and is countable by Theorem~\ref{thm:countgen}.
+\end{proof}
+
+\section{What the continuum is, defined from the inside}
+
+It is tempting to respond to the gaps by simply importing the real numbers from
+standard mathematics. We deliberately do not do that, because the whole question
+is whether distinction \emph{forces} the reals, and one cannot answer that by
+assuming them. Instead we describe what the continuum would have to be if it were
+built from the inside, in distinction's own terms.
+
+The gaps are the answers to comparison questions that the ratios miss. To fill
+them is to insist on a single principle: every comparison that distinction can
+pose, every sequence of ratio-comparisons that is visibly closing in on a target,
+actually \emph{has} a target inside the system. Phrased in the standard language
+of analysis, this is the completeness principle: every bounded increasing
+sequence has a limit, or equivalently every set with an upper bound has a least
+upper bound. The continuous line is precisely the field of ratios with this
+principle imposed, every gap filled by the target that some converging sequence of
+ratios points at.
+
+This is the honest internal definition. The continuum is not a separate
+mathematical object handed down from elsewhere. It is what one gets by demanding
+that distinction's questions are answerable. And that demand is exactly the thing
+whose status we must now decide. Is the demand a \emph{consequence} of
+distinction, or is it an \emph{addition} to distinction? The phrase ``every set
+with an upper bound'' in the completeness principle is worth marking now, because
+it quantifies over arbitrary \emph{sets} of ratios, not over ratios. We return to
+that quantifier in Section~\ref{sec:modeltheory}, where it turns out to carry the
+whole weight of the posit.
+
+\section{Why the completion must come before the cost}
+
+Before deciding the status of the completion, we should be clear about why it
+cannot be sidestepped, because it would be convenient if the cost function could
+be forced directly on the ratios and the whole continuum question avoided.
+
+It cannot. On the field of ratios alone, the cost function is provably not
+pinned down. One can fix its value and even its local behavior at a chosen point
+and still vary it freely elsewhere, because the gaps insulate one region of the
+domain from another. A constraint imposed near one point leaks away through the
+holes before it can reach a distant point. The ratios are too loose, too
+perforated, to determine a function.
+
+The argument that does pin down the cost works by a local-to-global mechanism: it
+fixes the curvature of the cost at a single distinguished point and shows that
+this single local datum propagates to determine the entire function. But
+propagation of a local fact to a global conclusion requires a domain with no
+gaps, a domain in which ``near this point'' genuinely reaches everywhere by a
+chain of overlapping neighborhoods. On a perforated domain the propagation
+stalls at the first gap. So the cost can be forced only after the gaps are
+closed.
+
+This fixes the logical order beyond dispute. The cost is a statement about a
+function on a domain. A gapped domain leaves the function underdetermined. One
+cannot force the function until the domain is complete. Completing the domain is
+building the continuum. Therefore the continuum is logically prior to the cost:
+domain first, then the function on it. Whatever the status of the continuum turns
+out to be, it is settled \emph{before} the cost question even becomes well-posed.
+This is why the continuum, and not the cost, is the true final target of the
+foundational analysis.
+
+\section{The central theorem: distinction does not force the continuum}\label{sec:central}
+
+We now state and prove the central result. The proof is elementary, which is
+part of the point: the obstruction is so basic that no amount of additional
+cleverness in the cost argument could ever route around it. We assemble the
+pieces as numbered propositions so that each can be checked on its own.
+
+\subsection{The forced layer is countable}
+
+\begin{proposition}[Irrationality of the diagonal]\label{prop:sqrt2}
+There is no ratio of whole numbers whose square is two.
+\end{proposition}
+
+\begin{proof}
+Suppose $p/q$ is such a ratio in lowest terms, so $p^2 = 2q^2$. Then $p^2$ is
+even, hence $p$ is even, say $p = 2m$. Then $4m^2 = 2q^2$, so $q^2 = 2m^2$ is
+even, hence $q$ is even. But then $p$ and $q$ share the factor two, contradicting
+the assumption that $p/q$ is in lowest terms.
+\end{proof}
+
+\begin{proposition}[The ratios are countable]\label{prop:qcount}
+The field of ratios is countable.
+\end{proposition}
+
+\begin{proof}
+A ratio is determined by a numerator and a positive denominator, that is, by a
+pair of integers. The integers are countable, listed as $0, 1, -1, 2, -2, \dots$.
+The pairs of integers are countable, by the standard diagonal enumeration of a
+product of two countable sets. Restricting to pairs with nonzero denominator and
+identifying pairs that represent the same ratio only removes or merges entries
+from a countable list, which leaves a countable list. Hence the ratios are
+countable. This is also immediate from Corollary~\ref{cor:layercount}.
+\end{proof}
+
+We push one level further to forestall the natural objection that distinction
+might reach beyond raw listing by solving the algebraic questions it can pose.
+
+\begin{proposition}[The real algebraic numbers are countable]\label{prop:algcount}
+The set of real numbers that are roots of some nonzero polynomial with integer
+coefficients is countable.
+\end{proposition}
+
+\begin{proof}
+A polynomial with integer coefficients is a finite sequence of integers, namely
+its coefficient list. The finite sequences of integers form a countable set, as a
+countable union over the length of the sequence of the finite products of a
+countable set. Discard the zero polynomial. Each remaining polynomial of degree
+$n$ has at most $n$ real roots. The real algebraic numbers are therefore the
+union, over a countable set of polynomials, of finite sets of roots, which is a
+countable union of finite sets and hence countable.
+\end{proof}
+
+So even the most generous reading of ``close distinction's questions,'' the
+passage to the algebraic closure, does not escape countability. The square root
+of two and every other algebraic gap-filler is reached, and the result is still a
+countable collection.
+
+\subsection{No countable language names more than countably many reals}
+
+The arguments so far rest on distinction proceeding sequentially. A skeptic might
+grant that and still wonder whether some cleverer notion of ``naming a real''
+could reach uncountably many. The following proposition closes that door for
+every naming scheme expressible in a countable language, which is to say for
+every naming scheme a human or a machine could actually use.
+
+\begin{proposition}[Definability is countable]\label{prop:defcount}
+Fix a language with countably many symbols and a countable set of allowed
+parameters. At most countably many real numbers are uniquely specified by a
+formula of that language in the structure of the real line. Consequently the set
+of reals not so specified is uncountable.
+\end{proposition}
+
+\begin{proof}
+A formula is a finite string over the countably many symbols of the language
+together with the countably many parameter names, so the set of formulas is a
+countable union, over the length of the string, of finite products of a countable
+alphabet, hence countable. Say a real $r$ is \emph{named} by a formula $\varphi(x)$
+if $r$ is the unique real satisfying $\varphi$. Map each named real to the formula
+of least index that names it; this map is injective from the named reals into the
+countable set of formulas, so the named reals are countable. The complement of a
+countable set inside the real line is uncountable by Proposition~\ref{prop:cantor}
+below, since a countable set cannot equal the uncountable line.
+\end{proof}
+
+The content of Proposition~\ref{prop:defcount} is sharper than sequential
+generation. Distinction's descriptive apparatus is a countable language: it has a
+countable stock of acts, and any single object it picks out is picked out by a
+finite description in that stock. Whether one models distinction's reach as a
+generative system, as in Section~\ref{sec:model}, or as the much more permissive
+class of all reals definable by a finite formula, the conclusion is the same. The
+reach is countable. The obstruction is not an artifact of insisting on
+step-by-step generation; it survives the most liberal reasonable notion of
+naming.
+
+\subsection{The continuum is uncountable}
+
+\begin{proposition}[Cantor]\label{prop:cantor}
+The set of real numbers is uncountable.
+\end{proposition}
+
+\begin{proof}
+It suffices to show the reals between zero and one cannot be listed. Suppose a
+list $r_1, r_2, r_3, \dots$ claimed every such real, each written as an infinite
+decimal. Define a real $d$ between zero and one digit by digit: let the $n$-th
+digit of $d$ be $5$ if the $n$-th digit of $r_n$ is not $5$, and $4$ if it is
+$5$. The choice of two non-extreme digits avoids the ambiguity of expansions
+ending in all nines. Then $d$ differs from $r_n$ in the $n$-th digit for every
+$n$, so $d$ appears nowhere on the list, yet $d$ is a real number between zero and
+one. The list was therefore incomplete. Since any proposed list fails the same
+way, no list of the reals exists, and the reals are uncountable.
+\end{proof}
+
+\subsection{The conclusion is forced}
+
+We now have the two halves and the conclusion is immediate. Everything
+distinction can name is countable, whether by generation
+(Theorem~\ref{thm:countgen}, Corollary~\ref{cor:layercount}), by algebraic
+closure (Proposition~\ref{prop:algcount}), or by definition in a countable
+language (Proposition~\ref{prop:defcount}). The continuum is uncountable
+(Proposition~\ref{prop:cantor}). An uncountable collection cannot be the output
+of a countable process, because that output is countable by definition.
+
+\begin{theorem}[The continuum is not forced by distinction]
+\label{thm:main}
+The continuous completion of the field of ratios is not a consequence of the
+primitive act of distinction. Concretely: distinction generates a countable
+field of ratios; the real line that completes it is uncountable; and no
+enumeration of values that a finitary generative process could produce, and no
+collection of reals nameable in a countable language, exhausts the real line.
+Hence the completeness principle, which fills every gap that a comparison points
+at, asserts the existence of uncountably many points that no act of distinction
+ever names. It is an addition to distinction, not a derivation from it.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{cor:layercount} the ratios are countable, and by
+Proposition~\ref{prop:algcount} their algebraic closure is still countable, so
+the discrete and algebraic reach of distinction is countable. By
+Proposition~\ref{prop:defcount} even the reals nameable by a finite formula in a
+countable language are countable. By Proposition~\ref{prop:cantor} the real line
+is uncountable. A countable set is not equal to an uncountable one, so the real
+line contains reals outside every one of these countable collections. The
+completeness principle posits all of those reals at once, including the ones no
+generative or definitional route reaches. It therefore adds elements that
+distinction does not produce, which is the claim.
+\end{proof}
+
+The force of this is worth stating in the plainest possible terms. Distinction
+can name a square root of two, because that gap is pointed at by a definable
+converging sequence of ratios. It can name any single gap that some rule
+singles out. What it cannot do is name \emph{all} the gaps, because there are
+uncountably many of them and distinction has only countably many acts to spend.
+Almost every real number is never named by any sequence of distinctions, not
+because we have not yet found the sequence, but because there are not enough
+sequences to go around. The completeness principle quietly posits all of those
+unnamed points at once. That single quiet posit is the entire content of the
+move from the ratios to the reals, and it is not something distinction forces.
+
+\subsection{The named reals are negligible}
+
+The previous results say the unnamed reals are uncountable. We can say something
+quantitatively stronger: the named reals are not merely a proper subset but a
+vanishingly small one, of size zero in the sense of measure.
+
+\begin{corollary}[The reachable reals have measure zero]\label{cor:measure}
+The set of real numbers that distinction can name, by generation, algebraic
+closure, or definition in a countable language, has Lebesgue measure zero.
+Consequently a real number drawn uniformly at random from any interval is, with
+probability one, never named.
+\end{corollary}
+
+\begin{proof}
+Each route produces a countable set of reals. Enumerate such a set as
+$x_1, x_2, x_3, \dots$. Fix $\varepsilon > 0$ and cover $x_n$ by an open interval
+of length $\varepsilon / 2^{n}$. The total length of the cover is at most
+$\varepsilon \sum_{n \geq 1} 2^{-n} = \varepsilon$. Since $\varepsilon$ was
+arbitrary, the set has outer measure zero, hence Lebesgue measure zero. A measure
+zero set carries probability zero under the uniform distribution on any interval,
+so its complement carries probability one.
+\end{proof}
+
+This converts the obstruction from a statement about cardinality, which some
+readers find abstract, into a statement about chance, which is concrete. If one
+could draw a real number at random and ask distinction to name it, distinction
+would fail almost surely. The continuum is not merely larger than distinction's
+reach; distinction's reach is a set of measure zero inside it.
+
+\begin{remark}[Formal verification]
+Corollary~\ref{cor:measure} is machine-checked for the generation route. Building
+on the verified Theorem~\ref{thm:countgen}, the Lean theorem
+\verb|generated_volume_zero| proves that the reach of a finitary generative system
+on $\mathbb R$ has Lebesgue measure zero (a countable set is null for the atomless
+volume measure), and \verb|generated_ae_unreachable| proves the complementary
+almost-everywhere statement that a Lebesgue-random real lies outside the reach.
+Both are \verb|sorry|-free with no new axiom.
+\end{remark}
+
+\section{The second, independent proof: model theory}\label{sec:modeltheory}
+
+A skeptic who distrusts arguments about sizes of infinity should be given an
+independent route to the same conclusion, and there is one, drawn from the model
+theory of formal systems. It does not count anything. It works instead by
+exhibiting, for any first-order description distinction could give of itself, a
+countable structure that satisfies that description, so that the description
+cannot pin down the uncountable line.
+
+\begin{theorem}[Downward L\"owenheim--Skolem]\label{thm:ls}
+A theory in a language with countably many symbols, if it has an infinite model,
+has a countable model.
+\end{theorem}
+
+We take this classical theorem as established and use it. Its relevance is that
+any account distinction gives of its own numbers and ratios, phrased in ordinary
+first-order language quantifying over individual numbers and ratios, is a theory
+in a countable language. Whatever such a theory says is therefore satisfied by
+some countable structure, and so no such theory can force its models to be
+uncountable.
+
+The completeness principle that singles out the real line is of a different
+logical kind, and this is the crux.
+
+\begin{theorem}[Dedekind categoricity]\label{thm:dedekind}
+Any two complete ordered fields are isomorphic. The completeness axiom that
+delivers this uniqueness quantifies over arbitrary subsets of the field: every
+nonempty subset with an upper bound has a least upper bound.
+\end{theorem}
+
+The least-upper-bound axiom in Theorem~\ref{thm:dedekind} ranges over all
+\emph{subsets} of the field, not over its elements. It is a second-order
+statement. Its quantifier is the power-set operation applied to the ratios, and
+the power set of a countable set has the size of the continuum. So the only sense
+in which one can say ``logic forces the real line'' is by admitting full
+second-order logic, with its quantification over all subsets, as ``logic.'' But
+quantification over all subsets is the continuum under another name. To force the
+reals that way is not to derive them from distinction; it is to assume the
+continuum in the disguise of a logical rule.
+
+\begin{theorem}[First-order distinction has countable models]\label{thm:fo}
+The first-order theory of the real line in any countable language, that is, the
+collection of all first-order sentences true of the reals with their order and
+arithmetic, has a countable model. No first-order axiomatization of distinction's
+numbers can therefore be categorical for the uncountable real line.
+\end{theorem}
+
+\begin{proof}
+The first-order theory of the reals in a countable language has an infinite
+model, namely the reals, so by Theorem~\ref{thm:ls} it has a countable model.
+That countable model satisfies every first-order sentence the reals satisfy, yet
+it is countable and so not isomorphic to the reals. Hence the first-order theory
+does not determine the reals up to isomorphism.
+\end{proof}
+
+\begin{remark}[Formal verification]
+Theorem~\ref{thm:fo} is machine-checked. In the Lean module
+\texttt{PRCModelTheoryNonForcing}, the theorem
+\texttt{real\_has\_countable\_ee\_model} produces, for any countable first-order
+language $L$ carrying a structure on $\mathbb{R}$ (hypothesis
+$\mathrm{card}\,L \le \aleph_0$), a structure $N$ with
+$\mathbb{R} \cong_{L} N$ and $|N| = \aleph_0$; it is a direct instantiation of
+Mathlib's downward L\"owenheim--Skolem theorem
+\texttt{exists\_elementarilyEquivalent\_card\_eq} at the cardinal $\aleph_0$.
+The companion \texttt{real\_not\_first\_order\_categorical} then derives
+$|\mathbb{R}| \ne |N|$ from \texttt{mk\_real}
+($|\mathbb{R}| = \mathfrak{c}$) and \texttt{aleph0\_lt\_continuum}, so the
+elementarily-equivalent companion is provably not equinumerous with
+$\mathbb{R}$, hence not isomorphic to it by any structure map. The packaged
+\texttt{real\_first\_order\_underdetermined} bundles all three facts. With this,
+all four of the paper's independent non-forcing arguments are Lean-backed:
+cardinality (\S\ref{sec:central}), generative countability
+(Theorem~\ref{thm:countgen}), Lebesgue measure (Corollary~\ref{cor:measure}),
+and model theory (this remark).
+\end{remark}
+
+Two independent pillars of the foundations of mathematics, Cantor's theorem on
+the sizes of infinite sets and the L\"owenheim--Skolem theorem on the models of
+first-order theories, therefore deliver the same verdict, and the definability
+and measure arguments reinforce it from two further directions. The continuum is
+not forceable from a step-by-step generative base, nor from any first-order
+description, nor from any countable naming scheme, and the reach that does exist
+is negligible in measure. This is not a quirk of one formalization. It is
+overdetermined.
+
+\section{Objections and replies}\label{sec:objections}
+
+The result attracts a small number of natural objections, each of which has a
+clean reply. We state the strongest forms and answer them, because a negative
+result of this kind earns its standing precisely by surviving the obvious
+attempts to evade it.
+
+\paragraph{The Dedekind-cut construction builds the reals from the ratios alone.}
+A Dedekind cut is a subset of the ratios. To construct one cut, the cut that names
+the square root of two, is unobjectionable, and distinction can do it for any cut
+that a rule singles out. But the real line is not one cut; it is the collection of
+\emph{all} cuts. That collection is the power set of the ratios, and the power
+set of a countable set has the size of the continuum. The phrase ``from the ratios
+alone'' hides the power-set operation, which is exactly the posit in question.
+Constructing the reals as cuts does not avoid the continuum; it introduces it
+under the name ``set of all cuts.''
+
+\paragraph{The Cauchy-sequence construction does the same without power sets.}
+The same reply applies in a different dress. A single definable Cauchy sequence
+of ratios names a single limit, and there are only countably many such definable
+sequences. The real line is the set of \emph{all} Cauchy sequences modulo those
+that converge to zero, and that set again has the size of the continuum. Naming
+one limit is cheap; forming the totality of all limits is the posit.
+
+\paragraph{Constructive analysis builds a continuum without classical logic.}
+It builds \emph{a} continuum, and that continuum is countable, because each
+constructive real comes with an algorithm that produces its approximations and
+there are only countably many algorithms. This is consistent with our theorem,
+not a refutation of it. Constructive analysis produces a coherent, countable
+substitute for the classical line and does not claim to name every classical
+real. If one adopts the constructive continuum, the arbitrary content of the
+framework shrinks rather than grows, because the constructive line is itself a
+generated, countable object; what one gives up is the classical completeness that
+names the unnamed points, which is the very thing we are saying is a posit.
+
+\paragraph{Distinction need not be sequential; it could branch.}
+Branching does not help unless the branching is itself uncountable. A process that
+branches finitely or countably at each of countably many stages produces only
+countably many finite or countable paths describable in the system, by the same
+stage-counting as Theorem~\ref{thm:countgen}. To reach uncountably many objects
+one must allow uncountable branching at some node or paths of uncountable length,
+and either move posits an uncountable structure at the level of the acts
+themselves. That is assuming the continuum at the start, which is circular.
+
+\paragraph{This is just Cantor's theorem with extra words.}
+The mathematics is elementary and we say so plainly; the propositions of
+Section~\ref{sec:central} are nineteenth and twentieth century results. The
+contribution is not a new theorem of set theory. It is the location of a specific
+foundational boundary: the demonstration that a particular generative primitive,
+proposed as the single root of mathematics and physics, reaches exactly the
+countable arithmetic and stops at the uncountable continuum, and that this
+boundary is forced by results no one disputes. The value is in placing the seam,
+not in re-proving the diagonal argument.
+
+\section{Why this was the right target all along}
+
+It would be easy to read Theorem~\ref{thm:main} as a setback, a place where the
+program fell short of its stated ambition. That reading is wrong, and correcting
+it is one purpose of this paper. The negative result is not where the
+program failed to reach its target. It \emph{is} the target, properly understood.
+Here is the argument for that claim.
+
+A program that asserts ``everything is forced, nothing is arbitrary'' has, on
+inspection, no successful outcome available to it. Taken literally the assertion
+is false, and Cantor's theorem makes it false in a single line: a countable
+generator cannot force an uncountable object, and the continuum that physics
+runs on is uncountable. Softened to survive that objection, the assertion
+degrades into an unfalsifiable slogan, agreeable and empty. Either way a serious
+reader stops reading, because a claim that cannot be wrong cannot be informative.
+
+The claim that does have content, that can be proved and can be attacked, is not
+``everything is forced'' but ``forcing reaches exactly this far and no farther,
+and here is the precise seam where it stops.'' The interesting question in any
+foundational program is never ``is everything necessary,'' which is a mood. It is
+``where does necessity end,'' which has an answer. Locating that seam is the real
+work, and the seam is the theorem.
+
+Seen this way, the long effort to pin down the cost function was not a detour
+from the continuum question; it was what made the continuum question visible. By
+proving that the cost \emph{form} is forced and that only a single unit of scale
+remains free within it, the program established that the cost layer contributes
+exactly one small unit of arbitrariness and no more. That left the continuum as
+the \emph{last} unexamined seam, the only remaining place where the program might
+be quietly assuming something large. Theorem~\ref{thm:main} examines that seam and
+finds the assumption, names it, and measures it. The target was always the seam.
+The seam is the continuum. We have now found it.
+
+\section{Why the negative result is stronger than forcing would have been}
+
+There are four distinct senses in which the result that distinction does not
+force the continuum is a stronger and more valuable outcome than a result that it
+does. They are worth separating, because they compound.
+
+\paragraph{First: it is true and unassailable, where forcing would have been
+fragile.} A claimed derivation of the real line from distinction would have had
+to lean on the very cost argument that itself presupposes the real line, since
+that argument uses limits and derivatives that have no meaning without
+completeness. A forcing claim resting on an argument that imports the thing it
+claims to force is circular, and it would have collapsed under the first careful
+reading. The negative result has the opposite character. It rests on Cantor's
+theorem and the L\"owenheim--Skolem theorem, two of the most secure results in
+all of mathematics, and it cannot be overturned without overturning them. A
+correct impossibility is worth more than a circular possibility.
+
+\paragraph{Second: it carries more information.} ``The continuum is forced''
+would convey a single bit: necessary. The negative result conveys a structured
+picture: there is a forced countable core; the continuum is not in it; and the
+distance between them is exactly the gap between the countable and the
+uncountable, the smallest infinite size against the size of the continuum. A
+partition of the framework into a forced part and a posited part, with the
+boundary between them measured, is strictly more information than a flat
+declaration that there is no boundary. Knowing where the line is tells you more
+than being told there is no line.
+
+\paragraph{Third: it shrinks the arbitrary content of the framework to almost
+nothing, and proves the remainder is not free.} After the cost result and the
+continuum result are placed side by side, the total non-logical content of the
+entire construction is exactly two nested posits: one continuum, and one unit of
+scale chosen within it. The unit presupposes the continuum it lives in, so the
+two are stacked rather than independent. Everything else, the counting, the
+ratios, the form of the cost function, is proved to be forced. A program that
+can say ``here is the complete list of everything I assume, it has two entries,
+and I have proved that nothing else is assumed'' is in a far stronger position
+than one that says ``I assume nothing,'' because the first statement is precise
+and true and the second is vague and false. Minimizing and naming the posits, and
+proving the rest necessary, is a deeper structural claim about the architecture
+of the theory than a blanket denial of any posits could ever be.
+
+\paragraph{Fourth: the seam lands exactly on the fault line of mathematics
+itself.} The boundary identified by Theorem~\ref{thm:main} is not an arbitrary
+place. The jump from the countable to the uncountable is the precise location of
+the deepest known independence phenomena in mathematics: the continuum
+hypothesis, which asks about sizes between the countable and the continuum and
+which G\"odel and Cohen proved can be neither proved nor disproved from the
+standard axioms; the divide between constructive and classical analysis; the
+divide between the computable real numbers, which are countable, and the
+arbitrary reals, which are not. By proving that distinction's boundary sits
+exactly at this jump, the program shows that the one place where it must posit is
+the same place where set theory itself goes undecidable. That coincidence is
+evidence that the boundary is real and fundamental rather than an artifact of one
+particular formalization. The single free choice in this account of reality is
+located at precisely the point where mathematics has independently discovered
+that it, too, must choose.
+
+\section{What the result does, and does not, say about the program's ambition}
+
+It is important to state precisely how this result interacts with the program's
+guiding thesis, because it neither destroys that thesis nor leaves it untouched;
+it scopes it correctly.
+
+Look at what the forced core actually contains. Counting, ratios, and the form of
+the cost function are all \emph{arithmetic}: discrete, countable, combinatorial
+structure. The continuum is \emph{analysis}: a completion layered on top of the
+arithmetic to support limits and smoothness. The program's central thesis is that
+the law of logic forces the same \emph{arithmetic} structure in every setting
+where it applies. The present result says exactly that and proves it where it
+holds: the arithmetic is forced, fully, and the continuum is a separate analytic
+posit that was never part of the forced arithmetic to begin with. The thesis was
+over-reaching by one level when it implicitly carried the continuum along with the
+arithmetic. The honest result hands back the level the thesis actually owns, the
+arithmetic, with a proof, and identifies the level it does not own, the continuum,
+with equal precision. This is a correction of scope, and it leaves the program's
+genuine claim standing on firmer ground than before, because the claim is now
+exactly as large as what can be proved and no larger.
+
+The terminal statement of the program is therefore a stratified one, and we state
+it in full so that it cannot be misremembered as either more or less than it is.
+Distinction forces the discrete number tower and the field of ratios; this is
+arithmetic, and it is derived. The continuous completion is the first genuine
+posit beyond distinction; it is analysis, and it is assumed, an addition whose
+exact size is the gap between the countable and the uncountable. Within the
+completion, the form of the cost function is forced, and only a single unit of
+scale remains free. Every link in that chain is settled, including, now, the
+boundary where forcing stops.
+
+\section{The honest caveat, and the sharper target, now resolved}
+
+Two honesty notes belong on the record, lest the result be taken to claim either
+more or less than it does. The first is a standing premise. The second names a
+sharper question that earlier drafts of this paper left open; that question has
+since been settled, in the positive direction, by a completeness-free formal
+proof, and this section records both the premise and the resolution.
+
+The first concerns a premise. The proof that the forced layer is countable rests
+on the reading of distinction as a finitary generative system, made precise in
+Definition~\ref{def:gensys}, so that its products are reachable by finite
+construction and can be listed. This reading is strongly motivated. It is what
+distinction \emph{is} as a primitive, and the counting layer it produces is the
+natural numbers, the very prototype of a sequentially generated set. The
+definability argument of Proposition~\ref{prop:defcount} reduces how much the
+premise has to carry, since it shows the conclusion survives even if one replaces
+``generated step by step'' with the far weaker ``nameable by any finite formula
+in a countable language.'' The only way left to escape the conclusion would be to
+declare that distinction may pose uncountably many comparisons in a single
+stroke, or branch uncountably at one act, but that is just the completeness
+principle, or the continuum, smuggled into the acts themselves, so forcing the
+continuum by that route is circular. We record the premise plainly: distinction
+proceeds by countably many acts, each of finite reach. Granting it, the
+conclusion is unavoidable, and the definability argument shows the granting is
+generous rather than restrictive.
+
+The second concerns the sharper question lurking behind the whole discussion,
+which earlier drafts named as open and which is now closed. We had shown that
+distinction does not force the real line. We had \emph{not} shown that the
+continuum is \emph{necessary in order to force the cost function}. Those are
+different statements. The cost argument as classically constructed needs the
+continuum because it uses limits and derivatives, but that was a fact about the
+classical argument, not a fact about the cost function itself. The real question
+was whether the cost function can be forced on a countable but suitably rich
+field, a real-closed field of algebraic numbers, say, using only algebraic and
+order data, with no completeness assumed at all.
+
+The answer is yes, and it is now a machine-checked theorem. The classical
+uniqueness proof reduces the composition law to d'Alembert's functional equation
+$H(s+t)+H(s-t)=2H(s)H(t)$ for the log-coordinate transform $H$ of the cost, and
+then uses continuity, or smoothness, to select the hyperbolic-cosine solution
+$H(t)=\cosh(ct)$ and discard the oscillatory cosine solution. The one place this
+proof spends an analytic hypothesis is the selection of that branch. The new
+proof replaces the analytic hypothesis with a purely order-theoretic one. If $H$
+is monotone on $[0,\infty)$ it already exceeds $1$ there, which excludes the
+bounded cosine branch by order alone; and monotonicity fixes the sign in the
+difference identity $H(s+t)-H(s-t)=\pm 2\sqrt{(H(s)^2-1)(H(t)^2-1)}$ that the
+classical argument fixed by a limit. From the resulting addition law one shows
+that $\varphi(t)=H(t)+\sqrt{H(t)^2-1}$ is multiplicative, so its logarithm is
+additive and monotone, hence linear by the monotone solution of Cauchy's additive
+equation, which needs only Archimedean density of the rationals and never a least
+upper bound. Therefore $H(t)=\cosh(ct)$, and the cost form is forced. The entire
+chain uses field operations, square roots, the order, and Archimedean density,
+and nothing else, so it holds verbatim over any Archimedean real-closed field,
+including the countable real-algebraic field in which every distinction-posable
+algebraic comparison already resolves.
+
+The classification is moreover complete in both directions, and the residual
+freedom is exactly one positive real, no more and no less. The forcing direction
+just described shows that every monotone solution is one of the scale-family
+members $F_c(x)=(x^c+x^{-c})/2-1$. The faithfulness direction shows that distinct
+positive scales give distinct costs: if two such members agree on all of the
+positive reals, their exponents are equal. The proof evaluates at the single
+point $x=2$, where the equality becomes $\cosh(c\log 2)=\cosh(c'\log 2)$, and the
+strict monotonicity of $\cosh$ on the nonnegative reals forces $c=c'$, again with
+no completeness. So the monotone, reciprocal, normalized, composition-law costs
+are in bijection with the positive reals, and the one unit of scale is genuine and
+irreducible: no order-only datum can collapse it further.
+
+Pinning that one residual takes a single additional order-level datum, and once it
+is supplied the family collapses to the canonical cost itself. The unit
+calibration is the log-coordinate curvature condition $G''(0)=1$ at the
+identity ratio, the same calibration that the original continuous theorem uses;
+within the scale family it is equivalent to $c^2=1$, hence $c=\pm 1$, and both
+signs name the same cost because the family is reciprocal-symmetric in its
+exponent ($F_{-1}=F_{1}$). The result is the completeness-free analogue of the
+headline uniqueness theorem: any reciprocal-symmetric, normalized,
+composition-law cost whose log-transform is monotone on $[0,\infty)$ and which is
+unit-calibrated equals the canonical cost $J(x)=\tfrac12(x+x^{-1})-1$ on the
+positive reals, with continuity nowhere invoked. Crucially, the calibration
+transfers for free: the log-coordinate transform evaluates the cost only at the
+positive points $e^t$, so the monotone forcing's positive-domain equality with a
+scale-family member lifts to an equality of log-transforms everywhere, and the
+curvature condition is read off the family member directly. This is formalized as
+\texttt{law\_of\_logic\_forces\_jcost\_monotone} (in
+\texttt{PRCNativeCostUniqueness}), and \verb|#print axioms| reports dependence on
+only the three standard kernel axioms, with no \texttt{sorry} and no
+Recognition-Science-specific axiom. The continuum is thus removed not just from
+the family classification but from the selection of the canonical cost itself.
+
+The consequence is the one earlier drafts named as the better outcome: the
+continuum posit dissolves for the cost. Monotonicity, an order property present on
+any ordered field, does everything continuity was doing in the uniqueness proof,
+and the total arbitrary content of the framework, on the cost side, drops from the
+two nested posits of a continuum and a unit to the single posit of a unit of
+scale. The forcing direction, that a monotone reciprocal normalized
+composition-law cost is one of the scale-family members, and the faithfulness
+direction, that distinct positive scale parameters give distinct costs, both rest
+only on the monotone form of the d'Alembert reduction and the elementary fact that
+a monotone additive function on the line is linear. No appeal to continuity, and
+no appeal to completeness, enters either direction.
+
+One might worry that the surviving unit of scale is a continuum object smuggled
+back in: a calibration condition phrased through a second derivative looks like an
+analytic posit. It is not. The calibration is visible already in the cost of a
+single $\delta$-act, as a discrete, exact, analysis-free datum. The most primitive
+act along the integer ladder is the step from orbit $n$ to orbit $n+1$, carried by
+the ratio $(n+1)/n$, and the canonical cost of that act is the exact closed
+rational form
+\[
+  J\!\left(\frac{n+1}{n}\right) = \frac{1}{2n(n+1)},
+\]
+a one-line algebraic identity with nothing continuous in it. Two facts follow.
+First, $\tfrac{1}{2n(n+1)} = \tfrac12\!\left(\tfrac1n - \tfrac1{n+1}\right)$, so the
+costs telescope: the total recognition cost of generating the entire integer
+ladder from the unit orbit is $\sum_{n\ge 1} \tfrac{1}{2n(n+1)} = \tfrac12$
+exactly. Second, the leading per-step coefficient is
+$n^2\,J\!\left(\tfrac{n+1}{n}\right)\to\tfrac12$. Both are formalized
+(\texttt{jcost\_successor\_increment} and
+\texttt{jcost\_successor\_increment\_tendsto} in \texttt{PRCNativeCostUniqueness}),
+with \verb|#print axioms| reporting only the three standard kernel axioms.
+
+The honest reading of this is sharper than a naive "the act cost forces $J$."
+A scale-family member $F_c$ has, in log coordinates, the form $\cosh(ct)-1$, so its
+discrete per-step act cost satisfies
+$n^2\,F_c\!\left(\tfrac{n+1}{n}\right)\to c^2/2$
+(\texttt{costLambda\_successor\_increment\_tendsto}, sorry-free, the standard kernel
+axioms only). The act-cost ladder therefore sees exactly the calibration invariant
+$c^2$, the same invariant the continuous condition $G''(0)=c^2$ sees, and nothing
+more. It does not, by itself, fix which $c^2$ counts as the unit; the displayed
+identity is the canonical $c=1$ instance.
+The payoff is therefore not that $\delta$ forces $J$ through the back door of the
+completion, but that the calibration is not analytic in nature: it is the leading
+coefficient of an exact rational ladder of $\delta$-act costs, a discrete object.
+The residual freedom is one positive number, the choice of scale, recorded as the
+faithfulness of the family ($F_c$ injective in $c$ on the positives); the analysis
+adds nothing to it and the continuum is nowhere required to state or to pin it.
+
+\section{The positive companion: the forced arithmetic is canonical, and the cost realizes it}\label{sec:canonical}
+
+The result so far is a boundary: forcing reaches through the arithmetic and stops
+at the continuum. That leaves a question on the forced side that is easy to miss
+and that, unanswered, would hollow out the program's positive claim. Distinction
+forces an arithmetic. Forced \emph{up to what}? If two settings each realize
+distinction and each force their own number tower, are those towers the same
+arithmetic, or merely both countable? The distinction matters, because ``both
+countable'' is empty. Any two countably infinite step-algebras are abstractly
+isomorphic, so an existence-of-isomorphism statement carries no content; it would
+be true even if the two settings had nothing structurally in common beyond
+cardinality. A program that claimed only that much would be claiming nothing.
+
+The honest positive claim is canonicity, and it is provable. Package the forced
+arithmetic as what it is: the initial Peano object generated by the realization's
+zero and step. Initiality is not decoration. It says that for any other Peano
+object there is one and only one map out of the initial one that respects zero and
+step. Apply this to two forced arithmetics $A$ and $B$. There is a unique
+structure-preserving map $A\to B$ and a unique one $B\to A$, their composites are
+the unique structure-preserving self-maps, which are the identities, so the two
+maps are mutually inverse. The forced arithmetics are therefore isomorphic, and
+the isomorphism is not one choice among many: it is the only zero-and-step
+preserving function between them. Anything that preserves the generating data
+\emph{equals} it. This is the difference between ``an isomorphism exists,'' which
+is vacuous, and ``the structure morphism is unique and is forced,'' which is the
+real statement.
+
+This is machine-checked. In \texttt{CanonicalForcing} the theorem
+\texttt{forcing\_map\_unique} proves that any zero-and-step preserving function
+between two forced arithmetics equals the canonical forcing map, and
+\texttt{forcing\_equiv\_unique} proves that two such equivalences are equal as
+functions, uniqueness up to nothing rather than up to isomorphism. The same facts
+on the main realization path appear as \texttt{universal\_forcing\_unique} and
+its companions, with \verb|#print axioms| reporting no \texttt{sorry} and no
+Recognition-Science-specific axiom. The forced arithmetic is canonical in the
+strict sense: determined, not merely existent.
+
+Canonicity at the level of zero and step already implies it at the level of
+arithmetic, and this is worth stating because ``the same arithmetic'' should mean
+the semiring, not just the successor tower. Addition and multiplication on the
+forced carrier are the standard primitive-recursive operations, defined by
+recursion on step with base zero. The decisive structural fact is that those
+operations are \emph{determined} by zero and step: a single induction shows that
+any function fixing zero and commuting with step automatically preserves both
+addition and multiplication, because each recursion equation is matched on the
+nose by the homomorphism property. The canonical forcing map, being the unique
+zero-and-step morphism, therefore preserves $0$, $1$, $+$, and $\times$ for free,
+and being a bijection it is a semiring isomorphism, not merely a bijection of
+underlying sets. So distinction does not force a bare counting sequence onto which
+arithmetic must afterward be imposed; it forces the arithmetic, operations and
+all, as one determined structure. This is formalized in \texttt{ForcedSemiring}:
+the general preservation lemmas \texttt{map\_preserves\_add} and
+\texttt{map\_preserves\_mul}, and the forcing-map corollaries
+\texttt{forcingFn\_add}, \texttt{forcingFn\_mul}, \texttt{forcingFn\_one}, and
+\texttt{forcingFn\_bijective}, all \texttt{sorry}-free and with no
+Recognition-Science-specific axiom.
+
+Naming the forced object removes any remaining abstraction. The forced carrier,
+with its operations, is isomorphic as a $(0,1,+,\times)$-structure to the natural
+numbers Lean already has, the map being the recovery equivalence that sends each
+generated orbit to its iteration count. This is \texttt{forcedArithmeticIsNat} in
+\texttt{ForcedSemiring}, assembled from the recovery theorems \texttt{toNat\_add}
+and \texttt{toNat\_mul} of \texttt{ArithmeticFromLogic}. The arithmetic distinction
+forces is therefore not an abstract initial algebra one must take on faith; it is
+$\mathbb{N}$, with no base, no positional notation, and no arithmetic axiom
+posited, recovered as a theorem. One honest qualification belongs on the record:
+because the strict realization interface uses one uniform free orbit for every
+setting, the canonical map between any two forced arithmetics is, on that
+interface, the identity (\texttt{forcingFn\_eq\_id}). The content that is not
+trivial is the general preservation lemmas, which constrain \emph{any} zero-and-step
+map, and the cross-carrier uniqueness established earlier in this section for
+realizations whose carriers are presented differently; the strict identity is just the cleanest
+instance of a determined map, not a weakening of the claim.
+
+The second forced layer, the ratios, is forced in the same concrete sense, and it
+turns out to be exactly the home of the cost. Embed the forced numbers into the
+rationals by iteration count. The embedding preserves $0$, $1$, addition, and
+multiplication, and is injective, so the forced semiring sits inside $\mathbb{Q}$
+as a sub-semiring. The ratios of the forced numbers are then not some proper
+sub-collection but all of $\mathbb{Q}_{>0}$: every positive rational $q$ is the
+ratio of two positive forced numbers, namely the numerator and denominator of $q$
+in lowest terms, read back through the recovery map. So distinction forces the
+full positive-ratio field, the second layer the informal account names. This is
+\texttt{positive\_ratios\_surject} in \texttt{ForcedRatios}, with the embedding
+laws \texttt{toRat\_add}, \texttt{toRat\_mul}, and \texttt{toRat\_injective}
+alongside. The payoff is the link back to the comparison that started the whole
+construction: the recognition cost of a forced ratio $a/b$ vanishes exactly when
+$a=b$, since $J$ vanishes only at the identity ratio. The cost's natural domain is
+precisely the forced positive ratios, and its null locus is precisely the diagonal
+of the forced numbers, formalized as \texttt{jcost\_forced\_ratio\_zero\_iff}. The
+genesis chain on the forced side is therefore complete and every link is a
+\texttt{sorry}-free theorem: counting gives the semiring $\mathbb{N}$, differences
+give the integers $\mathbb{Z}$, ratios give the positive group $\mathbb{Q}_{>0}$,
+differences over positive counts give the full rational field $\mathbb{Q}$, and the
+cost lives on the positive ratios with the diagonal as its zero set. The continuum
+appears at none of these links.
+
+The integer layer is forced in the same concrete sense as the ratio layer, and by
+the additive mirror of the same construction. Where a ratio compares two forced
+counts multiplicatively, a difference compares them additively; where the ratio
+layer's symmetry is the reciprocal involution $x\mapsto x^{-1}$, the integer
+layer's symmetry is negation $z\mapsto -z$, the credit/debit swap of the ledger.
+Every integer is a difference of two forced numbers, so the forced differences are
+exactly $\mathbb{Z}$, with the count-embedding preserving $0$, $1$, addition, and
+multiplication and being injective; this is \texttt{integers\_surject} in
+\texttt{ForcedIntegers}. The two layers carry the same comparison geometry: an
+involution swapping two counts, with fixed locus exactly the diagonal $a=b$.
+Negation fixes a forced difference precisely when the counts agree
+(\texttt{forced\_difference\_fixed\_iff}), the additive null, just as the
+reciprocal fixes a forced ratio precisely at the unit, the cost's zero.
+
+The positive ratio group is not yet the field the informal account names, and the
+gap is worth closing precisely rather than glossing. $\mathbb{Q}_{>0}$ has no zero
+and no additive inverses; it is a multiplicative group, not a field. The full
+rational field is the field of fractions of the forced integers, and it is forced
+in the same concrete sense: every rational, positive, negative, or zero, is a
+difference of two forced counts over a positive forced count,
+$q=(\,a-b\,)/c$ with $c>0$, the signed numerator supplied by the integer layer and
+the positive denominator by the counting layer. This is
+\texttt{rationals\_surject} in \texttt{ForcedField}. The field is exactly the
+structure in which both forced involutions coexist: negation, the additive
+symmetry inherited from $\mathbb{Z}$, and reciprocal, the multiplicative symmetry
+inherited from $\mathbb{Q}_{>0}$, formalized together as
+\texttt{field\_negation\_swap} and \texttt{field\_reciprocal\_symm}. So
+$\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}_{>0}$, and $\mathbb{Q}$ are not separate
+posits; they are counting, counting-with-a-sign, counting-as-a-ratio, and the
+field where sign and ratio meet, each forced and each carrying an involution whose
+fixed points are the diagonal. The cost lives on the positive part, where the
+multiplicative involution acts and the diagonal is its zero.
+
+One structural remark sharpens the link between the ratio layer and the cost,
+and it is worth stating because it shows the cost's defining symmetry is not
+imported from outside but acts on the forced object itself. The recognition cost
+is built on the reciprocal involution $x\mapsto x^{-1}$: $J(x)=\tfrac12(x+x^{-1})-1$
+is exactly the cost invariant under it, $J(x)=J(x^{-1})$. That involution is an
+involution of the forced ratio field: on a forced ratio it is the swap
+$a/b\mapsto b/a$. The cost is invariant under the swap, the swap fixes a forced
+ratio exactly on the diagonal $a=b$, and that fixed locus is precisely the cost's
+null set. So the symmetry the cost is built on, restricted to the object
+distinction forces, is the same symmetry whose fixed points are the cost's zeros;
+the unit ratio is both the involution's only fixed point and the cost's only
+root. This is \texttt{jcost\_forced\_ratio\_recip\_symm},
+\texttt{forced\_ratio\_recip\_fixed\_iff}, and
+\texttt{forced\_ratio\_recip\_fixed\_iff\_cost\_zero} in \texttt{ForcedRatios},
+each \texttt{sorry}-free. The cost does not sit on the forced ratios as a separate
+gadget with its own private symmetry; its symmetry is a symmetry of the forced
+ratios.
+
+A last word on the scope of canonicity, since the uniqueness above was stated for
+the strict realization interface where every setting uses one uniform free orbit.
+The same uniqueness holds with no such restriction. For any two Law-of-Logic
+realizations whatever, in any universes, and any forced arithmetics over them, the
+structure-preserving equivalence between the carriers exists and is the unique
+zero-and-step preserving function between them, the canonical map determined by
+the generating data with no representational freedom. Here the two carriers may be
+genuinely different presentations, so the equivalence is a nontrivial isomorphism
+rather than the identity, and the content is exactly that it is nonetheless the
+only structure morphism. This is \texttt{ArithmeticOf.universal\_objective} in
+\texttt{CanonicalForcing}, the general statement of which the strict identity map
+is the cleanest special case.
+
+Canonicity needs a faithfulness premise to be non-empty, and that premise is
+itself a recognition condition rather than an external assumption. A realization
+forces a faithful copy of the number tower when its comparison operator can tell
+the iterates of its generator apart: if comparing the $m$-fold and $n$-fold
+iterates returns the null cost only when $m=n$, then the native interpretation of
+the tower is injective and the realization carries a true copy of $\mathbb{N}$.
+We call this the realization's recognition law, formalized as
+\texttt{FaithfulRealization} with the injectivity consequence
+\texttt{interpret\_injective} in \texttt{FaithfulOrbit}. It is not vacuous. Four
+independent domain realizations, drawn from music, biology, narrative, and ethics,
+each satisfy it, with the iterate values computed explicitly and the comparison
+shown to separate them; these are the \texttt{*\_faithful} theorems in the same
+module. Distinction's forcing of a canonical arithmetic is thus exhibited, not
+merely asserted, across settings that share no surface vocabulary.
+
+The loop closes on the cost. The natural worry about everything above is that the
+comparison operator is left abstract, so the canonical arithmetic might be forced
+by some convenient bookkeeping device unrelated to the cost this paper actually
+pins. It is not. The canonical recognition cost $J(x)=\tfrac12(x+x^{-1})-1$ itself
+defines a faithful realization. Take the multiplicative ladder on the positive
+reals, generated by a base greater than one, and compare two rungs $a$ and $b$ by
+$J(a/b)$. Because $J$ vanishes exactly at the identity ratio, two rungs compare to
+the null cost only when they are equal, so distinct ladder rungs are
+distinguishable and the recognition law holds. The cost the framework forces is
+therefore the very operator whose vanishing locus generates the arithmetic. This
+is \texttt{jcostLadder\_faithful} in \texttt{FaithfulOrbit}, and the unification
+\texttt{jcost\_forces\_form\_and\_arithmetic} in \texttt{JCostUnification} states
+the two halves as one theorem over the single cost $J$: the same $J$ that \S9
+pins by order alone is the comparison that forces the canonical number tower.
+
+The reading is sharper than the boundary result alone. Distinction does not force
+just \emph{an} arithmetic, and it does not force merely \emph{a} countable set; it
+forces \emph{the} arithmetic, canonically, the same initial tower in every setting
+that realizes the law, with the connecting isomorphism determined uniquely by the
+generating data. And the recognition cost is not a structure layered on top of
+that arithmetic as a second ingredient. It is the operator whose null set is the
+diagonal, hence the very thing that makes the tower's elements recognizable as
+distinct. Arithmetic and cost are not two posits meeting by arrangement. They are
+one law seen from two sides, and the continuum is on neither side.
+
+\section{Conclusion}
+
+The question of whether distinction forces the continuum has a definite answer,
+and the answer is no. The obstruction is not a gap in the present state of the
+work; it is a structural impossibility proved four times over, by the
+uncountability of the continuum, by the countability of every naming scheme in a
+countable language, by the vanishing measure of the reachable reals, and by the
+countable models of first-order theories. Distinction is a step-by-step
+generator, its reach is countable and of measure zero, and the continuum is
+neither. The completeness principle that fills the gaps is an addition to
+distinction, the exact size of that addition being the distance from the
+countable to the uncountable.
+
+Far from wounding the program, this is the result the program should have been
+aiming at from the start. It replaces an unfalsifiable ambition with a precise and
+defensible claim: forcing reaches exactly through the arithmetic and stops at the
+continuum. The arbitrary content of the construction is at most two nested posits,
+a continuum and a unit, with everything else derived; and on the cost side, where
+\S9 now shows monotonicity replaces completeness, even the continuum posit
+dissolves and only the unit of scale remains. The boundary so
+identified is not arbitrary but lands on the deepest known fault line in
+mathematics, the seam where set theory itself becomes independent of its axioms.
+A foundational program earns its credibility not by claiming to assume nothing,
+but by naming exactly what it assumes, proving that it assumes nothing more, and
+showing that the one place it must choose is the same place mathematics has always
+had to choose. That is what the present result accomplishes, and it is why the
+honest negative is stronger than the forcing claim would have been.
+
+\begin{thebibliography}{99}
+
+\bibitem{Cantor1891}
+G.~Cantor,
+``\"Uber eine elementare Frage der Mannigfaltigkeitslehre,''
+\emph{Jahresbericht der Deutschen Mathematiker-Vereinigung}, 1 (1891), 75--78.
+
+\bibitem{Dedekind1872}
+R.~Dedekind,
+\emph{Stetigkeit und irrationale Zahlen},
+Vieweg, 1872.
+
+\bibitem{Lowenheim1915}
+L.~L\"owenheim,
+``\"Uber M\"oglichkeiten im Relativkalk\"ul,''
+\emph{Mathematische Annalen}, 76 (1915), 447--470.
+
+\bibitem{Skolem1920}
+T.~Skolem,
+``Logisch-kombinatorische Untersuchungen \"uber die Erf\"ullbarkeit oder
+Beweisbarkeit mathematischer S\"atze,''
+\emph{Skrifter Videnskapsselskapet i Kristiania}, 1920.
+
+\bibitem{Turing1936}
+A.~M.~Turing,
+``On Computable Numbers, with an Application to the Entscheidungsproblem,''
+\emph{Proc.\ London Math.\ Soc.}, 42 (1936), 230--265.
+
+\bibitem{Godel1940}
+K.~G\"odel,
+\emph{The Consistency of the Continuum Hypothesis},
+Princeton University Press, 1940.
+
+\bibitem{Cohen1963}
+P.~J.~Cohen,
+``The Independence of the Continuum Hypothesis,''
+\emph{Proc.\ Natl.\ Acad.\ Sci.\ USA}, 50 (1963), 1143--1148.
+
+\bibitem{Bishop1967}
+E.~Bishop,
+\emph{Foundations of Constructive Analysis},
+McGraw-Hill, 1967.
+
+\bibitem{WashburnArithmetic2026}
+J.~Washburn,
+``Arithmetic from Distinction: A Number Tower Forced by a Single Primitive,''
+draft, 2026.
+
+\bibitem{WashburnFE2026}
+J.~Washburn,
+``A Functional-Equation Encoding of Logical Consistency on Continuous
+Positive-Ratio Comparisons,'' draft, 2026.
+
+\end{thebibliography}
+
+\end{document}
