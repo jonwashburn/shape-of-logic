@@ -302,54 +302,59 @@ through the calibration length λ_rec:
 where ℏ_base is the natural unit conversion factor.
 -/
 
-/-- Reduced Planck constant ħ in RS-native units: ħ = E_coh · τ₀ = φ⁻⁵ · 1.
+/-- Native action quantum in RS-native units: `hbar = E_coh · tau0 = φ⁻⁵ · 1`.
 
 ## ATTACKER BREADCRUMB (read before declaring ℏ = φ⁻⁵ "true by definition")
 
-The lemma `hbar_eq_phi_inv_fifth` below closes by `unfold; simp`. That
-makes it look like ℏ = φ⁻⁵ is a tautology of unit choice. The honest
-reading is more nuanced:
+The lemma `hbar_eq_phi_inv_fifth` below closes by `unfold; simp`. That is
+intentional: this file *defines* the RS-native action unit. Two separate
+questions then arise, and they have different answers; do not collapse them.
 
-* `cLagLock = φ⁻⁵` is a derived structural quantity, not a unit choice.
-  It is the canonical "C_lag" cost-locking constant fixed by the φ⁻⁵
-  ladder rung from `Foundation.GapDerivation` and downstream gap arithmetic
-  (the same exponent appears in `kappa_einstein_eq : κ_E = 8 · φ⁵` via
-  `G = λ_rec² · c³ / (π · ℏ)` substitution).
-* `tau0 = 1` is the RS-native time unit (one tick).
-* `hbar = cLagLock · tau0 = φ⁻⁵ · 1 = φ⁻⁵` then follows by definition
-  in RS-native units.
+* Is the EXPONENT `5` forced, or a free choice? Forced, modulo one modeling
+  step. The coherence energy carries one factor of `φ⁻¹` per configuration
+  degree of freedom of a recognition event, and a recognition event has
+  `D + 2` such degrees: `D` spatial (lattice, T8), `1` temporal (tick advance,
+  T2), `1` balance (ledger neutrality `J(x)=J(x⁻¹)`, T3). With `D = 3` forced
+  by T8 this gives `configDim = 5`, hence `E_coh = φ^(-(D+2)) = φ⁻⁵`. This is
+  boundary item B-22, proved in `Foundation/GapDerivation.lean`
+  (`configDim_at_D3`, `E_coh_gap_eq`, `Gap45Cert.ecoh`). The link back to THIS
+  constant is machine-checked there:
+  `GapDerivation.Constants_E_coh_eq_configDim` and
+  `GapDerivation.hbar_exponent_eq_configDim` prove
+  `E_coh = hbar = φ^(-(configDim D))`. The forced content is the count
+  `D + 2`; the only modeling input is the `φ⁻¹`-per-dof rule. So the honest tag
+  for the exponent is derived-modulo-one-modeling-step, NOT pure unit choice.
+* Is the SI VALUE of `ℏ` (in J·s) predicted? No. A pure-number theory cannot
+  output an absolute dimensionful SI constant without a dimensional anchor:
+  see `Constants/NativeDimensionalBoundary.no_nontrivial_dimensionless_monomial`.
 
-So the "true by definition" reading is correct *at the level of
-RS-native units*: in the unit system where one tick is the time unit,
-ℏ is φ⁻⁵ as a pure number. The substantive content is that the
-SAME φ⁻⁵ appears across ℏ, E_coh, the gap function, the rung structure,
-and the κ_E / G = φ⁵/π identity; none of those identifications is a
-free choice.
+So "true by definition" is correct only at the level of native units (one tick
+= the time unit ⟹ the native action quantum is `φ⁻⁵` as a pure number). The
+substantive, non-definitional content is that the exponent equals the forced
+configuration dimension `D + 2 = 5`.
 
-## What the SI calibration looks like (NOT a free λ_rec parameter)
+## What the SI calibration looks like
 
-Mapping ℏ_RS (= φ⁻⁵ in RS-native units) to ℏ_SI (= 1.0545×10⁻³⁴ J·s)
-requires the `ExternalCalibration` structure in
-`Constants/RSNativeUnits.lean`, which carries three conversion factors
-(seconds_per_tick, meters_per_voxel, joules_per_coh) with one
-c-consistency constraint. Closing the dimensional bridge means
-deriving those factors from RS primitives, not setting them.
-`Foundation/DimensionalBridgeStructural.lean` tags this as the
-"principal open frontier" with a named residual and two candidate
-discharge routes. -/
+Mapping `hbar_RS = φ⁻⁵` to SI units requires a dimensional anchor.  The
+conversion is uniquely determined once the anchor is supplied
+(`Foundation/SIBridgeClosure.lean`, `Verification/FirstPrinciplesToSI.lean`,
+`Measurement/RSNative/Calibration/SingleAnchor.lean`); the boundary theorem
+explaining why an anchor is required lives in
+`Constants/NativeDimensionalBoundary.lean`. -/
 noncomputable def hbar : ℝ := cLagLock * tau0
 
 lemma hbar_pos : 0 < hbar := mul_pos cLagLock_pos tau0_pos
 
-/-- **THEOREM C-004.1**: ℏ = φ⁻⁵ in RS-native units.
+/-- **THEOREM C-004.1**: the native action quantum equals `φ⁻⁵`.
 
-    This is the fundamental identity: ℏ = E_coh · τ₀ = φ⁻⁵ · 1 = φ⁻⁵.
+    This is the native identity: `hbar = E_coh · tau0 = φ⁻⁵ · 1 = φ⁻⁵`.
 
     Note: the proof is `unfold; simp` because, in RS-native units, ℏ
     is *defined* as `cLagLock · τ₀` with `cLagLock = φ⁻⁵` and `τ₀ = 1`.
-    The structural content is that `cLagLock = φ⁻⁵` is itself forced
-    by the gap-derivation / rung structure (NOT a unit choice); see
-    the breadcrumb on `def hbar` above. -/
+    It is not a derivation of the SI value of Planck's constant. What is more
+    than a unit choice is the EXPONENT `5 = D + 2` (forced configuration
+    dimension), derived in `Foundation/GapDerivation.lean` and bridged back to
+    this constant by `GapDerivation.hbar_exponent_eq_configDim`. -/
 lemma hbar_eq_phi_inv_fifth : hbar = phi ^ (-(5 : ℝ)) := by
   unfold hbar cLagLock tau0 tick
   simp
@@ -382,10 +387,10 @@ theorem hbar_lt_one : hbar < 1 := by
   apply (div_lt_iff₀ h3).mpr
   linarith
 
-/-- **THEOREM C-004.4**: ℏ = E_coh · τ₀ (the action quantum identity).
+/-- **THEOREM C-004.4**: native action quantum identity.
 
-    This is the fundamental physical interpretation: Planck's constant
-    is the minimal action (energy × time) for a recognition event. -/
+    The native action quantum is the energy-time product of one coherence
+    event and one tick. -/
 theorem hbar_action_identity : hbar = E_coh * tau0 := rfl
 
 /-- **THEOREM C-004.5**: Bounds on ℏ from φ bounds.
@@ -499,8 +504,11 @@ noncomputable def lambda_rec : ℝ := ell0
 lemma lambda_rec_pos : 0 < lambda_rec := by
   simp [lambda_rec]
 
-/-- Newton's gravitational constant G derived from first principles (RS-native form).
-    \(G = \lambda_{\text{rec}}^2 c^3 / (\pi \hbar)\). -/
+/-- RS-native gravitational coupling projection through the recognition/Planck
+    bridge: \(G = \lambda_{\text{rec}}^2 c^3 / (\pi \hbar)\).
+
+    This is not a prediction of the SI value of Newton's constant.  SI conversion
+    requires the dimensional bridge in `Foundation/SIBridgeClosure.lean`. -/
 noncomputable def G : ℝ := (lambda_rec^2) * (c^3) / (Real.pi * hbar)
 
 lemma G_pos : 0 < G := by

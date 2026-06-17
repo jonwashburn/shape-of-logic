@@ -2,19 +2,21 @@ import Mathlib
 import IndisputableMonolith.Constants
 
 /-!
-# SI Bridge Closure: From RS-Native Predictions to SI Values
+# SI Bridge Closure: Unique Calibration Map From RS-Native Units to SI
 
 ## Status: STRUCTURAL THEOREM (0 sorry, 0 RS-internal axiom; closure 2026-05-09).
 
 ## What this module closes
 
-This module closes the principal open frontier flagged in
-`Foundation/DimensionalBridgeStructural.lean`: the SI dimensional bridge.
+This module closes the SI **conversion map** flagged in
+`Foundation/DimensionalBridgeStructural.lean`: once the dimensional anchor is
+supplied, the tick, voxel, and coherence-mass conversion factors are uniquely
+determined.
 
 The framework predicts, in RS-native units, the dimensionless triple
   c_RS = 1,  ℏ_RS = φ⁻⁵,  G_RS = φ⁵/π
-together with the Planck identity G·π·ℏ = λ_rec²·c³ that holds tautologically
-in RS-native (`λ_rec = ℓ₀ = 1`).
+together with the recognition/Planck bridge identity
+`G·π·ℏ = λ_rec²·c³` in the native gauge (`λ_rec = ℓ₀ = 1`).
 
 We formalise the SI bridge as three positive conversion factors
   a_T  = sec/tick    (one tick in seconds)
@@ -27,8 +29,9 @@ RS predictions against the SI values of c, ℏ, G:
   ℏ-constraint:  ℏ_SI = ℏ_RS · a_M · a_L² / a_T
   G-constraint:  G_SI = G_RS · a_L³ / (a_M · a_T²)
 
-Under SI-2019 conventions, c_SI and ℏ_SI are exact (defined). G_SI is the
-single CODATA measurement that anchors the bridge.
+Under SI-2019 conventions, `c_SI` and `ℏ_SI` are exact definitions. `G_SI` is
+the CODATA measurement that anchors this particular bridge.  The module proves
+uniqueness of the calibration; it does not predict the SI value of `G`.
 
 ## Main result (this module)
 
@@ -40,17 +43,18 @@ i.e. **τ₀ = √π · τ_Planck**. Uniquely determined; no further input.
 
 **`tau0_eq_sqrt_pi_planck_time`**: closed-form τ₀ in seconds.
 
-The full triple `(a_T, a_L, a_M)` is uniquely determined and closed-form.
+The full triple `(a_T, a_L, a_M)` is uniquely determined in closed form,
+conditional on the supplied SI anchor.
 
 ## Honest accounting
 
 The framework's claim is now precise:
 * **Zero free dimensionless parameters**: all RS dimensionless ratios
   (φ-power expressions) are forced by T0–T8.
-* **One free dimensional anchor**: any physical theory needs one measurement
-  to convert between its natural units and SI. Modern SI (post-2019) makes
-  this anchor concrete: with `c_SI` and `ℏ_SI` exact by definition, ONE
-  additional dimensional measurement (here, `G_SI`) closes the bridge.
+* **One dimensional anchor for SI display**: any pure-number theory needs a
+  dimensional anchor to convert native units into SI. Modern SI (post-2019)
+  makes this anchor concrete: with `c_SI` and `ℏ_SI` exact by definition, one
+  additional dimensional measurement (here, `G_SI`) fixes the conversion map.
 * **Reduction over the Standard Model**: the SM has 19+ free dimensional
   parameters (masses, mixing angles in GeV). RS reduces to 1.
 
@@ -288,7 +292,7 @@ theorem a_T_eq (b : SIBridge) (hC : IsClosedBridge b) :
   have h_sqrt_sq : Real.sqrt (b.a_T ^ 2) = b.a_T := Real.sqrt_sq h_aT_nonneg
   rw [← h_sqrt_sq, h_sq]
 
-/-- **HEADLINE THEOREM**: τ₀ = √π · τ_Planck under the closed bridge. -/
+/-- **HEADLINE THEOREM**: τ₀ = √π · τ_Planck under the calibrated bridge. -/
 theorem tau0_eq_sqrt_pi_planck_time (b : SIBridge) (hC : IsClosedBridge b) :
     b.a_T = Real.sqrt Real.pi * tau_Planck := by
   rw [a_T_eq b hC]
@@ -299,34 +303,35 @@ theorem tau0_eq_sqrt_pi_planck_time (b : SIBridge) (hC : IsClosedBridge b) :
 
 /-! ## §6. Honest accounting of the closure -/
 
-/-- The framework predicts τ₀ in seconds = √π · τ_Planck.
-Numerically: τ_Planck ≈ 5.391 × 10⁻⁴⁴ s, so τ₀ ≈ 9.55 × 10⁻⁴⁴ s. -/
+/-- The calibrated tick duration in seconds under the supplied SI anchor:
+τ₀ = √π · τ_Planck. Numerically: τ_Planck ≈ 5.391 × 10⁻⁴⁴ s, so
+τ₀ ≈ 9.55 × 10⁻⁴⁴ s. -/
 def tau0_predicted_seconds : ℝ := Real.sqrt Real.pi * tau_Planck
 
 theorem tau0_predicted_seconds_pos : 0 < tau0_predicted_seconds := by
   unfold tau0_predicted_seconds
   exact mul_pos (Real.sqrt_pos.mpr Real.pi_pos) tau_Planck_pos
 
-/-- **MASTER STATEMENT**: under the c, ℏ, G constraints, the SI bridge
-is uniquely determined and `a_T = √π · τ_Planck`. This closes the
-principal open frontier of `DimensionalBridgeStructural.lean`. -/
+/-- **MASTER STATEMENT**: under the c, ℏ, G calibration constraints, the SI
+bridge is uniquely determined and `a_T = √π · τ_Planck`. This closes the
+conversion-map problem conditional on the dimensional anchor. -/
 theorem si_bridge_closed_under_three_constraints :
     ∀ b : SIBridge, IsClosedBridge b →
       b.a_T = Real.sqrt Real.pi * tau_Planck := tau0_eq_sqrt_pi_planck_time
 
 /-! ## §7. Master certificate -/
 
-/-- **SI BRIDGE CLOSURE CERTIFICATE**.
+/-- **SI BRIDGE CALIBRATION CERTIFICATE**.
 
-Five clauses establishing the SI bridge closure:
+Five clauses establishing the SI bridge calibration map:
 
 1. The c, ℏ, G constraints uniquely determine `a_T² = π · ℏ_SI · G_SI / c_SI⁵`.
 2. Therefore `a_T = √π · τ_Planck` in closed form.
 3. The Planck time is positive (sanity).
-4. The predicted τ₀ in seconds is positive.
-5. The bridge has zero free dimensionless parameters; it has one free
-   dimensional anchor (the measured G_SI), as does any physical theory
-   mapping to laboratory units.
+4. The calibrated τ₀ in seconds is positive.
+5. The bridge has zero free dimensionless parameters; it has one dimensional
+   anchor for SI display (the measured G_SI), as does any pure-number physical
+   theory mapping to laboratory units.
 -/
 structure SIBridgeClosureCert where
   /-- Algebraic identity: a_T² determined uniquely. -/
@@ -337,7 +342,7 @@ structure SIBridgeClosureCert where
     b.a_T = Real.sqrt Real.pi * tau_Planck
   /-- Sanity: τ_Planck > 0. -/
   tau_Planck_positive : 0 < tau_Planck
-  /-- Sanity: predicted τ₀ in seconds > 0. -/
+  /-- Sanity: calibrated τ₀ in seconds > 0. -/
   tau0_predicted_positive : 0 < tau0_predicted_seconds
   /-- Sanity: the Planck identity ℏ_RS · G_RS = 1/π holds. -/
   planck_identity : hbar_RS * G_RS = 1 / Real.pi

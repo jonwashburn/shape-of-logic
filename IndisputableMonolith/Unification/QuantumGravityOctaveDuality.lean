@@ -7,10 +7,10 @@ import IndisputableMonolith.Cost
 
 **The central theorem**: `kappa_einstein * hbar = 8`
 
-The Einstein gravitational coupling κ and the Planck quantum of action ℏ are
+The RS-native Einstein coupling κ and the RS-native action quantum ℏ are
 locked together by the octave number 8 — the same 8-tick cycle that drives all
-RS dynamics. This is not a numerical coincidence: it is a *theorem* forced by
-the single J-cost functional.
+RS dynamics. This is a native coupling identity, not a derivation of the SI
+values of `ℏ` or `G`.
 
 ## What is proved here (zero sorry)
 
@@ -21,13 +21,12 @@ the single J-cost functional.
   iff x = 1, via AM ≥ GM with equality iff the two arguments are equal.
 
 **§2 — QG-001: κ · ℏ = 8** (quantum-gravity octave duality):
-  κ = 8φ⁵ and ℏ = φ⁻⁵ are φ-fifth-power dual, differing only by the octave
-  factor 8. Product = 8 · φ⁵ · φ⁻⁵ = 8 · φ⁰ = 8. This is the first formal
-  proof that QM and gravity are locked by the octave.
+  κ = 8φ⁵ and ℏ = φ⁻⁵ are φ-fifth-power dual in RS-native units, differing
+  only by the octave factor 8. Product = 8 · φ⁵ · φ⁻⁵ = 8 · φ⁰ = 8.
 
 **§3 — QG-002: G · ℏ = 1/π** (Gauss-Bonnet closure):
-  G = λ²c³/(π·ℏ) = 1/(π·ℏ) in RS units, so G · ℏ = 1/π. The factor 1/π is the
-  Gauss-Bonnet curvature quantum of Q₃.
+  G = λ²c³/(π·ℏ) = 1/(π·ℏ) in RS-native units, so G · ℏ = 1/π. This is the
+  recognition/Planck bridge identity in the native gauge.
 
 **§4 — QG-003: Planck area = 1/π in RS**:
   ℓ_P² = G·ℏ/c³ = 1/π. Planck scale = recognition scale / √π.
@@ -40,8 +39,9 @@ the single J-cost functional.
 
 ## Epistemic status
 
-Every theorem: PROVED, zero sorry. Inputs: J-cost (T5), constants κ=8φ⁵,
-ℏ=φ⁻⁵, G=φ⁵/π (proved in `Constants`), Mathlib real analysis.
+Every theorem: PROVED, zero sorry. Inputs: J-cost (T5), native constants
+κ=8φ⁵, ℏ=φ⁻⁵, G=φ⁵/π (as defined/proved in `Constants`), Mathlib real
+analysis.  SI conversion is outside this module.
 
 ## Registry
 - QG-001: κ · ℏ = 8  (quantum-gravity octave duality)
@@ -123,9 +123,9 @@ theorem jcost_reciprocal_symmetry (x : ℝ) :
 The product of Einstein coupling and Planck action quantum = the octave 8.
 Proof: κ = 8φ⁵, ℏ = φ⁻⁵, so κ·ℏ = 8·φ⁵·φ⁻⁵ = 8·φ^(5−5) = 8·1 = 8. -/
 
-/-- **QG-001**: κ · ℏ = 8. Quantum-gravity octave duality.
+/-- **QG-001**: κ · ℏ = 8. Native quantum-gravity octave duality.
 
-    First formal proof that Einstein coupling × Planck constant = octave. -/
+    This is a native coupling lock, not an SI-value prediction. -/
 theorem kappa_hbar_octave : kappa_einstein * hbar = 8 := by
   rw [kappa_einstein_eq, hbar_eq_phi_inv_fifth]
   have hphi : (0 : ℝ) < phi := phi_pos
