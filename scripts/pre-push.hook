@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# shape-of-logic pre-push gate (tracked copy; installed to .git/hooks/pre-push
+# by scripts/install_push_gate.sh). Blocks confidential content from the
+# public repo. Keep in sync with .git/hooks/pre-push.
+set -uo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+z40="0000000000000000000000000000000000000000"
+files=""
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "${local_sha:-}" ] && continue
+  if [ "$local_sha" = "$z40" ]; then continue; fi
+  if [ "$remote_sha" = "$z40" ] || [ -z "${remote_sha:-}" ]; then
+    base="$(git merge-base origin/main "$local_sha" 2>/dev/null || true)"
+    if [ -n "$base" ]; then range="$base..$local_sha"; else range="$local_sha"; fi
+  else
+    range="$remote_sha..$local_sha"
+  fi
+  f="$(git diff --name-only "$range" 2>/dev/null || git show --name-only --pretty=format: "$local_sha" 2>/dev/null)"
+  files="$files
+$f"
+done
+
+files="$(printf '%s\n' "$files" | sort -u | sed '/^$/d')"
+[ -z "$files" ] && exit 0
+
+printf '%s\n' "$files" | bash "$REPO_ROOT/scripts/ai_push_gate.sh" -
+[ $? -ne 0 ] && { echo "pre-push: gate blocked the push. See above."; exit 1; }
+exit 0
