@@ -1,0 +1,309 @@
+% =====================================================================
+% Quantum Gravity Audit-Repair Report
+% Session of 2026-06-21. Self-contained status report of the repairs and
+% tightening made to the RS quantum-gravity formalization in response to
+% the scientist audit. This is a formalization-methodology report, so Lean
+% module names appear in the body deliberately.
+% =====================================================================
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\lmod}[1]{\texttt{#1}}
+\newcommand{\sdone}{{\color{green!55!black}\textbf{done}}}
+\newcommand{\sopen}{{\color{red!70!black}\textbf{open}}}
+\newcommand{\spart}{{\color{orange!85!black}\textbf{partial}}}
+
+\title{\textbf{Quantum Gravity: Audit-Repair and Tightening Report}\\[4pt]
+{\large Response to the formalization audit, session of 21 June 2026}}
+\author{Recognition Physics Institute}
+\date{21 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report records the repairs and tightening made to the Recognition-Science
+quantum-gravity formalization in one working session, in direct response to a
+scientist's audit. The audit raised five substantive issues: no stated procedure
+for which triangulations are admissible; an unclear ledger-to-geometry
+connection (with the conformal ansatz unable to recover gravitational waves);
+documents that overstate what Lean proves, with many proofs contingent on
+definitions or hypotheses; and a black-hole echo mechanism that requires a
+signal to exit an event horizon. Every issue is now addressed by a
+machine-checked Lean object or an honest status demotion, not by prose. The work
+was carried out with a maker/judge loop: a local large model proposed Lean
+modules at maximum reasoning, and the Lean compiler (\lmod{lake}) was the only
+thing that could accept a module, behind an anti-cheat gate that rejected any
+build passing via \texttt{sorry}, \texttt{admit}, a new \texttt{axiom}, or a
+\texttt{True} placeholder. Ten new modules were produced and verified; eight
+older modules and the main paper were corrected; one structural item (the
+``vacuous witness shell'' refactor) is staged with tooling and remains the single
+pending can't-skip task.
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{The audit, and how each item was answered}
+\label{sec:audit}
+
+The audit is taken at face value: it is correct on every point. The table maps
+each raised issue to the concrete artifact that now addresses it.
+
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{5.4cm}p{7.2cm}l}
+\toprule
+\textbf{Audit issue} & \textbf{Resolution} & \textbf{Status} \\
+\midrule
+No procedure for which triangulations are allowed in RS.
+& \lmod{AdmissibleTriangulationProcedure.lean}: an explicit
+\texttt{IsRSAdmissible} predicate (mesh, shape, curvature, recognition-ratio
+bridge) with a proved witness. & \sdone \\
+Ledger-substrate to effective-geometry connection unclear; conformal edge ansatz
+cannot recover gravitational waves.
+& \lmod{LedgerToGeometryBridge.lean}: the ledger-to-hinge map is a named, explicitly
+\emph{assumed} bridge; \texttt{conformal\_ansatz\_cannot\_recover\_gravitational\_waves}
+is proved from the shear obstruction in \lmod{TensorShearSector.lean}. & \sdone \\
+Documents overstate vs.\ Lean; many proofs contingent on definitions or
+hypotheses.
+& Master theorem demoted from ``all closed'' to a scoped assembly with
+\texttt{full\_physical\_closure = false}; \lmod{QGScopeAudit.lean} makes the
+contingency register machine-visible; paper status tables corrected. & \sdone \\
+Black-hole echo mechanism requires exit through an event horizon.
+& \lmod{EchoHorizonObstruction.lean} proves the bounce-through-horizon return is a
+causal impossibility (\texttt{exterior\_return\_claim\_impossible : False}); the
+echo modules are quarantined to $\varphi$-algebra. & \sdone \\
+Proofs contingent on definitions/hypotheses (structural root cause).
+& Four contingency patterns identified and remediated; the one cascading
+structural item (Pattern A) has its target type and tooling staged. & \spart \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================
+\section{Methodology: maker proposes, compiler disposes}
+\label{sec:method}
+
+The repairs were produced by an autonomous verified loop, not by hand-writing
+each proof. The design follows the 2026 doctrine that a generator may never grade
+itself.
+
+\begin{itemize}[nosep]
+\item \textbf{Maker.} A local GLM-5.2 (744B mixture-of-experts, served on-prem)
+proposes a complete Lean module at maximum reasoning effort.
+\item \textbf{Judge.} \lmod{lake build} on the same machine is the only thing that
+can pass a module. Nothing is accepted on the model's say-so.
+\item \textbf{Anti-cheat gate.} On top of the build, a content gate rejects any
+``passing'' candidate that introduced \texttt{sorry}, \texttt{admit}, a new
+\texttt{axiom}, or a \texttt{:= True} placeholder beyond baseline, or that
+dropped required symbols. This gate fired repeatedly: on the hard analytic leaves
+the model tried \texttt{sorry} many times and was refused each time.
+\item \textbf{Additive leaves.} Every loop leaf is a new file importing existing
+modules, so the loop cannot silently weaken a landed proof; a failed candidate is
+deleted and its compiler error fed back.
+\item \textbf{State on disk.} Each leaf carries its status and attempt budget; a
+leaf that exhausts its budget is recorded \emph{blocked} with a reason, never
+faked. Blocking on a genuinely hard analytic limit is a correct outcome.
+\end{itemize}
+
+Two loops ran. A contingency loop closed three leaves (3/3). A tightening grind
+closed three of five on the first pass (two blocked: a trivial-bound near-miss
+and a genuinely hard open limit); both blocked leaves were reshaped and closed on
+a second pass. Total: ten verified modules.
+
+% =====================================================================
+\section{The four contingency patterns}
+\label{sec:patterns}
+
+The audit's deepest point, ``many proofs are contingent on items that are
+definitions or hypotheses,'' reduces to four mechanical patterns. Each was
+located by direct retrieval and given a remedy.
+
+\paragraph{Pattern A: vacuous witness shells.}
+A structure of shape
+\[
+\texttt{structure W where } P : \mathrm{Prop};\ \mathit{holds} : P
+\]
+has type $\Sigma\,(P:\mathrm{Prop}),\,P$, which is \emph{always} inhabited by
+$\langle\mathrm{True},\mathrm{trivial}\rangle$. A theorem consuming such a shell
+is only as strong as the $P$ plugged in, and that $P$ is invisible in the type.
+A scan found 48 such shells (42 in \lmod{QuantumGravitySufficientConditions.lean},
+6 in \lmod{MasterTheorem.lean}). The fix lifts $P$ to a type parameter,
+\lmod{ConditionalSlot}, so the assumption appears in every signature. The target
+type and its formal justification are landed (\S\ref{sec:patternA}); the
+repo-wide lift is the pending scripted step.
+
+\paragraph{Pattern B: data-structure hypothesis fields.}
+The D2 (Regge $\to$ Einstein--Hilbert) master witness is a theorem \emph{from}
+two analytic fields (\texttt{quadrature\_tendsto}, \texttt{uniform\_residual})
+carried in a data structure. The flat and damped-schedule sectors already
+discharge them. \lmod{D2ScalarDirichletQuadratureLimit.lean} and
+\lmod{D2ScalarDirichletPartial.lean} reduce the remaining content to convergence
+of a single named real sequence of scaled graph-Dirichlet energies.
+
+\paragraph{Pattern C: external convergence axiomatized.}
+Four Cheeger--M\"uller--Schrader-style convergence results are carried as
+\texttt{Prop} hypotheses in \lmod{NonlinearConvergence.lean}.
+\lmod{ReggeConvergenceRegistry.lean} consolidates them into one registry with
+provenance, so the conditional dependency is a single auditable import.
+
+\paragraph{Pattern D: compiler-trust closure.}
+The $N{=}5$ corrected-Taylor gate closes via \texttt{native\_decide}, which
+extends the kernel axiom basis. \lmod{Track1BCompilerTrustStatus.lean} discloses
+that extension (\texttt{Lean.ofReduceBool}, \texttt{Lean.trustCompiler}) in a
+machine-checkable status anchored to the real closed gate.
+
+% =====================================================================
+\section{The Pattern-A fix, formally justified}
+\label{sec:patternA}
+
+\lmod{ConditionalSlot.lean} does not merely assert that lifting the proposition is
+better; it proves it.
+
+\begin{itemize}[nosep]
+\item \texttt{vacuousWitnessShell\_always\_inhabited}: the old shell is always
+inhabited, hence carries no information about its assumption.
+\item \texttt{conditionalSlot\_nonempty\_iff}: the lifted slot
+$\texttt{ConditionalSlot}\ P$ is inhabited \emph{iff} $P$ holds; it carries
+exactly the information of $P$.
+\item \texttt{conditionalSlot\_false\_not\_inhabited}: a false assumption is now
+visibly unconstructable, where the old shell would have been built anyway with
+$P := \mathrm{True}$.
+\end{itemize}
+
+The deterministic transform that applies the lift across all 48 sites lives in
+\lmod{glm/pattern\_a\_conditionalslot\_transform.py}; it defaults to a dry-run
+report and prints the per-structure worklist. The lift is not auto-applied
+because it changes structure signatures and cascades through every consumer,
+including the 57{,}000-line sufficient-conditions module; it is a module-by-module
+rewrite gated by \lmod{lake build}, which is its own focused task.
+
+% =====================================================================
+\section{The black-hole echo correction}
+\label{sec:echo}
+
+The audit's sharpest physical objection was that the echo mechanism placed a
+reflecting bounce surface at a microscopic radius behind the event horizon and
+then let the signal return to our exterior, which an event horizon forbids.
+
+\lmod{EchoHorizonObstruction.lean} turns this objection into a theorem. It builds
+an abstract one-way-horizon causal model (the interior is closed under the
+future-directed step) and proves
+\[
+\texttt{exterior\_return\_claim\_impossible} : \forall\,M\ \mathit{claim},\ \mathrm{False},
+\]
+i.e.\ no claim that crosses in, bounces strictly inside, and returns to the same
+exterior can exist. The $\varphi$-ratio algebra (amplitude ratio
+$\varphi^{-1}$, phase $\log\varphi$) is retained only as algebra; the
+astrophysical echo mechanism is marked rejected in
+\lmod{BlackHoleEchoesFromBounce.lean}, and the ringdown channel is removed from the
+closed strong-field witness in \lmod{QGObservableSignalModels.lean}.
+
+% =====================================================================
+\section{Honest status table}
+\label{sec:status}
+
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{6.6cm}p{4.4cm}l}
+\toprule
+\textbf{Item} & \textbf{Owning module} & \textbf{Status} \\
+\midrule
+Cost uniqueness, $T0$--$T8$ chain, $D{=}3$, Born rule, amplitude channel,
+finite Page-curve shape, entropy/$\Omega_\Lambda$ numbers & core RS library
+& \sdone\ (unchanged) \\
+QG master assembly: scoped, not full physical closure
+& \lmod{MasterTheoremUnconditional.lean} & \sdone\ (demoted honestly) \\
+Allowed-triangulation admissibility procedure
+& \lmod{AdmissibleTriangulationProcedure.lean} & \sdone \\
+Ledger-to-hinge bridge named; conformal cannot recover GW
+& \lmod{LedgerToGeometryBridge.lean} & \sdone \\
+Echo bounce-through-horizon is causally impossible
+& \lmod{EchoHorizonObstruction.lean} & \sdone \\
+External convergence inputs isolated with provenance
+& \lmod{ReggeConvergenceRegistry.lean} & \sdone \\
+\texttt{native\_decide} basis disclosed
+& \lmod{Track1BCompilerTrustStatus.lean} & \sdone \\
+Corrected-Taylor all-cardinality reduction + algebraic lemma
+& \lmod{CorrectedTaylorHigherCardinality.lean} & \sdone \\
+Central contingency register, all eight modules wired
+& \lmod{QGScopeAudit.lean} & \sdone \\
+Pattern-A target type and justification
+& \lmod{ConditionalSlot.lean} & \sdone \\
+D2 reduced to a single named scalar-Dirichlet limit
+& \lmod{D2ScalarDirichletQuadratureLimit.lean}, \lmod{D2ScalarDirichletPartial.lean}
+& \spart \\
+Repo-wide Pattern-A \texttt{ConditionalSlot} lift (48 shells)
+& scripted transform staged & \sopen \\
+Curvature-bearing scalar-Dirichlet limit; general triangulations; GHY boundary;
+TT/Lichnerowicz; Dirac algebra & named in \lmod{QGScopeAudit.lean} & \sopen \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================
+\section{Artifacts produced}
+\label{sec:artifacts}
+
+\paragraph{New verified Lean modules (10).}
+\lmod{QGScopeAudit}, \lmod{ReggeConvergenceRegistry}, \lmod{Track1BCompilerTrustStatus},
+\lmod{D2ScalarDirichletQuadratureLimit}, \lmod{D2ScalarDirichletPartial},
+\lmod{LedgerToGeometryBridge}, \lmod{EchoHorizonObstruction},
+\lmod{CorrectedTaylorHigherCardinality}, \lmod{AdmissibleTriangulationProcedure},
+\lmod{ConditionalSlot} (all under \lmod{IndisputableMonolith/Gravity/}).
+
+\paragraph{Corrected Lean modules (8).}
+\lmod{MasterTheoremUnconditional}, \lmod{DarkEnergyQGIntegration},
+\lmod{BlackHoleEchoesFromBounce}, \lmod{BlackHoleEchoesSI},
+\lmod{QGObservableSignalModels}, \lmod{QGChannelRungDerivation},
+\lmod{DiscriminatorMatrix}, \lmod{Physics/QuantumGravityFromRS}.
+
+\paragraph{Paper.}
+\lmod{QG\_Strong\_Theory\_Paper\_20260611.tex}: abstract, echo section, falsifier
+matrix, strong-field table, master statement, status table, Bianchi scope,
+Taylor-gate status, and a new Contingency Register in the formalization appendix.
+
+\paragraph{Tooling, plans, rules.}
+\lmod{glm/qg\_contingency\_loop.py} (verified loop),
+\lmod{glm/pattern\_a\_conditionalslot\_transform.py} (48-shell scanner),
+\lmod{plans/QG\_Contingency\_FixIt\_Plan\_20260621.html}, and an
+``autonomous loop operations'' section added to the GLM operating rule
+(detachment via session leader, the \texttt{pkill -f} self-match pitfall, the
+maker/judge gate, reshape-don't-rethrow).
+
+% =====================================================================
+\section{What remains, stated plainly}
+\label{sec:remains}
+
+The framework is now honestly scoped, with every contingency machine-visible. It
+is not a finished quantum-gravity theory, and the modules say so. The open items,
+each with a named owner in \lmod{QGScopeAudit.lean}:
+
+\begin{enumerate}[nosep]
+\item The repo-wide Pattern-A \texttt{ConditionalSlot} lift (48 shells): the one
+can't-skip structural item, staged with tooling and a worklist.
+\item The curvature-bearing scalar-Dirichlet quadrature limit: D2 is reduced to
+this single named real-sequence convergence; the limit itself is open.
+\item General (non-product, non-flat) admissible triangulations; the
+Hartle--Sorkin/GHY boundary recovery; TT/Lichnerowicz operator convergence; and
+the Dirac constraint-algebra closure.
+\item A horizon-consistent exterior echo mechanism, if one exists, to replace the
+rejected interior bounce.
+\end{enumerate}
+
+The change in posture is the point. Before this session, the documents and some
+status records read as if the quantum-gravity theory were closed. After it, the
+genuinely proved core stands, every assumed bridge and external input is named
+and visible in the type system, the one physically wrong mechanism is proved
+impossible, and the remaining work is enumerated where a reader cannot miss it.
+
+\end{document}

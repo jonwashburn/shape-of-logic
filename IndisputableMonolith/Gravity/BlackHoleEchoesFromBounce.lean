@@ -2,12 +2,19 @@ import Mathlib
 import IndisputableMonolith.Constants
 
 /-!
-# Black-Hole Echoes from RS Bounce (Track G3 of Plan v7)
+# Black-Hole Echo Rung Algebra and Bounce-Mechanism Quarantine
 
-## Status: THEOREM (structural identity for the echo delay in
-RS-native units, 0 sorry, 0 axiom).
-## HYPOTHESIS at the empirical level (the echo signature in
-LIGO/Virgo data is the falsifier).
+## Status: STRUCTURAL THEOREM for the φ-rung algebra only
+
+The physical bounce-to-exterior echo mechanism is **not closed**.  Earlier
+drafts described a wave packet crossing an event horizon, reaching a microscopic
+bounce surface, and re-emerging into the same exterior universe.  That mechanism
+is rejected as stated: a true event horizon does not allow such escape.
+
+This module therefore keeps only the algebraic model surface: positive rung
+radii, positive φ-phase delays, and geometric damping by `1/φ`.  These are
+theorem-grade identities inside the proposed rung model.  They do not prove an
+observable black-hole echo prediction.
 
 The classical Schwarzschild black hole has a singularity at `r = 0`.
 RS predicts no singularity: at the Planck scale, the J-cost of the
@@ -20,17 +27,18 @@ recognition rung gap traversed during collapse:
 with `N` the rung gap from the horizon to the deepest interior
 recognition state.
 
-## Echo signature
+## Quarantined echo signature
 
-A wave packet falling in past the horizon hits the bounce wall and
-re-emerges as an "echo" at the horizon, delayed by the
-two-way travel time across the bounce region. Numerically:
+The old interior-bounce echo story is not used as physics.  If a future
+horizon-consistent exterior-reflection mechanism is derived, its local delay
+law is expected to use the same φ-rung phase factor.  At present the formal
+content is only the proposed model formula:
 
   Δt = (2 r_min / c) · log φ
 
 with `log φ` the per-rung phase delay on the recognition lattice.
-This is the RS signature in gravitational-wave merger ringdowns:
-each ringdown event should carry a φ-delayed echo train.
+This is a structural rung-model formula, not a theorem that gravitational-wave
+merger ringdowns carry an observable echo train.
 
 ## What this module proves
 
@@ -47,14 +55,12 @@ each ringdown event should carry a φ-delayed echo train.
   ringdown ledger), so the cumulative echo amplitude is geometric
   with ratio `1/φ < 1`.
 
-## Falsifier
+## Physical status
 
-LIGO/Virgo post-processing of any BH-BH merger event in the catalog
-that conclusively shows no echo at the predicted delay
-`Δt = 2 r_min · log φ` after the main ringdown, with sufficient SNR
-to exclude an echo at the predicted amplitude. Publicly accessible
-events: GW150914, GW170817, GW190521 (heavy mass), GW230529
-(intermediate-mass).
+The event-horizon escape mechanism is rejected as stated.  A replacement must
+derive an exterior, horizon-consistent reflection surface or abandon the echo
+prediction.  Until then LIGO/Virgo non-detection is not a clean falsifier of
+the RS core; it tests only this quarantined echo mechanism.
 -/
 
 namespace IndisputableMonolith
@@ -64,6 +70,29 @@ namespace BlackHoleEchoesFromBounce
 open Constants
 
 noncomputable section
+
+/-! ## §0. Physical mechanism status -/
+
+/-- Honest status of the black-hole echo sector. -/
+structure BlackHoleEchoMechanismStatus where
+  phi_rung_algebra_closed : Bool
+  bounce_escape_mechanism_rejected : Bool
+  horizon_consistent_exterior_mechanism_open : Bool
+  astrophysical_echo_prediction_theorem_grade : Bool
+
+/-- The φ algebra is retained, but the old event-horizon escape mechanism is
+not a theorem-grade physical prediction. -/
+def blackHoleEchoMechanismStatus : BlackHoleEchoMechanismStatus where
+  phi_rung_algebra_closed := true
+  bounce_escape_mechanism_rejected := true
+  horizon_consistent_exterior_mechanism_open := true
+  astrophysical_echo_prediction_theorem_grade := false
+
+theorem blackHoleEchoMechanismStatus_not_theorem_grade :
+    blackHoleEchoMechanismStatus.phi_rung_algebra_closed = true ∧
+    blackHoleEchoMechanismStatus.bounce_escape_mechanism_rejected = true ∧
+    blackHoleEchoMechanismStatus.astrophysical_echo_prediction_theorem_grade = false :=
+  ⟨rfl, rfl, rfl⟩
 
 /-! ## §1. The bounce radius -/
 
@@ -231,13 +260,12 @@ def blackHoleEchoesCert : BlackHoleEchoesCert where
   cumulativeEchoAmplitude_strictly_decreasing :=
     cumulativeEchoAmplitude_strictly_decreasing
 
-/-- **BLACK-HOLE ECHOES ONE-STATEMENT.** RS predicts a bounce at
-radius `r_min(N) = ℓ_P · φ^(N/2)` (here in RS-native units `ℓ_P = 1`,
-parameterised by integer rung gap `N`); each ringdown event carries
-an echo train at delay `Δt = 2 r_min log φ`, with per-echo
-amplitude damping `1/φ ∈ (0.617, 0.622)` (geometric, strictly
-decreasing). Two-rung-step identities: `r_min(N+2) = r_min(N) · φ²`
-and `Δt(N+2) = Δt(N) · φ²`. -/
+/-- **BLACK-HOLE ECHO RUNG-ALGEBRA ONE-STATEMENT.**  In the proposed
+interior-rung model, the rung radius is positive, the local delay formula
+`Δt = 2 r_min log φ` is positive, and the algebraic damping factor lies in
+`(0.617, 0.622)`.  This theorem does not prove an observable echo train from a
+black hole, because the old bounce-through-horizon mechanism is rejected as
+stated by `blackHoleEchoMechanismStatus`. -/
 theorem black_hole_echoes_one_statement :
     (∀ N : ℕ, 0 < bounceRadius N) ∧
     (∀ N : ℕ, bounceRadius (N + 2) = bounceRadius N * phi ^ 2) ∧

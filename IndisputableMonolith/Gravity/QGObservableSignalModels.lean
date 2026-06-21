@@ -20,8 +20,11 @@ signal model carrying:
 * `separationTheorem`: proof that RS prediction and null baseline are
   separated by more than the falsifier threshold
 
-The five channels are: PTA stochastic background, EHT shadow/ring,
-S-star orbits near Sgr A*, Cassini/Shapiro delay, and ringdown echoes.
+The physical strong-field witness now uses the three horizon-exterior channels:
+EHT shadow/ring, S-star orbits near Sgr A*, and Cassini/Shapiro delay.
+Ringdown echo algebra remains listed as a quarantined formula-level channel, but
+it is not consumed as theorem-grade strong-field physics until a
+horizon-consistent echo mechanism is derived.
 -/
 
 namespace IndisputableMonolith
@@ -112,13 +115,14 @@ noncomputable def cassiniChannel : ObservationChannelSignalModel where
     simp only [sub_zero, abs_of_pos hp]
     exact hp
 
-/-- Ringdown echo channel: amplitude ratio between successive echoes.
-RS predicts `φ^(-1) ≈ 0.618`; no other quantum-gravity framework predicts
-this specific value.  The null baseline (no echoes, classical GR) predicts
-zero echo amplitude. -/
+/-- Quarantined ringdown echo algebra channel: the φ-rung model carries the
+formula `φ^(-1) ≈ 0.618` for a successive-amplitude ratio.  This is not
+currently a theorem-grade black-hole prediction, because the old
+bounce-through-event-horizon mechanism has been rejected and no replacement
+exterior mechanism has been derived. -/
 noncomputable def ringdownChannel : ObservationChannelSignalModel where
-  channelName := "Ringdown echoes"
-  observable := "echo amplitude ratio A_{n+1}/A_n"
+  channelName := "Ringdown echo algebra (quarantined)"
+  observable := "formal echo amplitude ratio A_{n+1}/A_n"
   rsPrediction := Constants.phi⁻¹
   nullBaseline := 0
   rsPrediction_ne_null := by
@@ -132,7 +136,9 @@ noncomputable def ringdownChannel : ObservationChannelSignalModel where
 
 /-! ## §3. Channel collection and separation -/
 
-/-- The five QG falsifier channels collected as a list. -/
+/-- The five listed QG channels.  The ringdown entry is retained only as
+quarantined algebraic content; it is not consumed by the physical strong-field
+witness below. -/
 noncomputable def qgChannels : List ObservationChannelSignalModel :=
   [ptaChannel, ehtChannel, sStarChannel, cassiniChannel, ringdownChannel]
 
@@ -143,6 +149,27 @@ prediction and null baseline. -/
 theorem all_channels_separated :
     ∀ c ∈ qgChannels, 0 < |c.rsPrediction - c.nullBaseline| :=
   fun c _ => c.separation_pos
+
+/-! ## §3b. Ringdown quarantine status -/
+
+/-- Honest status for the ringdown channel in this signal-model table. -/
+structure RingdownChannelStatus where
+  phi_ratio_formula_carried : Bool
+  physical_strong_field_witness : Bool
+  horizon_consistent_mechanism_open : Bool
+
+/-- The ringdown channel keeps the φ ratio formula but is not part of the
+closed strong-field physical witness. -/
+def ringdownChannelStatus : RingdownChannelStatus where
+  phi_ratio_formula_carried := true
+  physical_strong_field_witness := false
+  horizon_consistent_mechanism_open := true
+
+theorem ringdownChannelStatus_not_physical_witness :
+    ringdownChannelStatus.phi_ratio_formula_carried = true ∧
+    ringdownChannelStatus.physical_strong_field_witness = false ∧
+    ringdownChannelStatus.horizon_consistent_mechanism_open = true :=
+  ⟨rfl, rfl, rfl⟩
 
 /-! ## §4. Strengthened D5 witnesses from signal models -/
 
@@ -156,32 +183,37 @@ noncomputable def ptaSignalModelWitness :
     0 < |ptaChannel.rsPrediction - ptaChannel.nullBaseline|
   holds := ⟨ptaChannel.rsPrediction_ne_null, ptaChannel.separation_pos⟩
 
-/-- The signal-model strong-field witness: every named strong-field channel
-has a positive RS deviation distinct from the GR zero baseline. -/
+/-- The signal-model strong-field witness: the three horizon-exterior
+strong-field channels have positive RS deviations distinct from the GR zero
+baseline.  Ringdown is deliberately excluded by
+`ringdownChannelStatus_not_physical_witness`. -/
 noncomputable def strongFieldSignalModelWitness :
     MasterTheorem.StrongFieldTestsDistinctFromGR where
   rs_strong_field_distinct_GR_only :=
     (ehtChannel.rsPrediction ≠ ehtChannel.nullBaseline) ∧
     (sStarChannel.rsPrediction ≠ sStarChannel.nullBaseline) ∧
-    (cassiniChannel.rsPrediction ≠ cassiniChannel.nullBaseline) ∧
-    (ringdownChannel.rsPrediction ≠ ringdownChannel.nullBaseline)
+    (cassiniChannel.rsPrediction ≠ cassiniChannel.nullBaseline)
   holds :=
     ⟨ehtChannel.rsPrediction_ne_null,
      sStarChannel.rsPrediction_ne_null,
-     cassiniChannel.rsPrediction_ne_null,
-     ringdownChannel.rsPrediction_ne_null⟩
+     cassiniChannel.rsPrediction_ne_null⟩
 
 /-! ## §5. Master cert -/
 
 structure QGObservableSignalModelsCert where
   channel_count : qgChannels.length = 5
   all_separated : ∀ c ∈ qgChannels, 0 < |c.rsPrediction - c.nullBaseline|
+  ringdown_status :
+    ringdownChannelStatus.phi_ratio_formula_carried = true ∧
+    ringdownChannelStatus.physical_strong_field_witness = false ∧
+    ringdownChannelStatus.horizon_consistent_mechanism_open = true
   pta_witness : MasterTheorem.PTAStochasticGWDistinctFromInflation
   strong_field_witness : MasterTheorem.StrongFieldTestsDistinctFromGR
 
 noncomputable def qgObservableSignalModelsCert : QGObservableSignalModelsCert where
   channel_count := qgChannels_length
   all_separated := all_channels_separated
+  ringdown_status := ringdownChannelStatus_not_physical_witness
   pta_witness := ptaSignalModelWitness
   strong_field_witness := strongFieldSignalModelWitness
 
@@ -190,16 +222,19 @@ theorem qgObservableSignalModelsCert_inhabited :
   ⟨qgObservableSignalModelsCert⟩
 
 /-- **OBSERVATION-CHANNEL SIGNAL MODELS ONE-STATEMENT.**  Five typed channels
-(PTA, EHT, S-star, Cassini, ringdown) each carry formula-level RS predictions,
-GR/inflation null baselines, and proved separation.  The PTA and strong-field
-master-theorem witnesses route through the channel models. -/
+(PTA, EHT, S-star, Cassini, ringdown algebra) each carry formula-level RS
+values, GR/inflation null baselines, and proved algebraic separation.  The
+physical strong-field master-theorem witness uses EHT, S-star, and Cassini
+only; ringdown is quarantined until a horizon-consistent mechanism is derived. -/
 theorem qg_observable_signal_models_one_statement :
     qgChannels.length = 5 ∧
     (∀ c ∈ qgChannels, 0 < |c.rsPrediction - c.nullBaseline|) ∧
+    ringdownChannelStatus.physical_strong_field_witness = false ∧
     Nonempty MasterTheorem.PTAStochasticGWDistinctFromInflation ∧
     Nonempty MasterTheorem.StrongFieldTestsDistinctFromGR :=
   ⟨qgChannels_length,
    all_channels_separated,
+   rfl,
    ⟨ptaSignalModelWitness⟩,
    ⟨strongFieldSignalModelWitness⟩⟩
 

@@ -154,7 +154,9 @@ noncomputable def canonicalPTADistinctWitness_bandRoute :
   PTAStructural.ptaStochasticGWObservableBandWitness
 
 /-- Canonical theorem-built strong-field witness, strengthened to typed
-observation-channel signal models for EHT, S-star, Cassini, and ringdown. -/
+observation-channel signal models for EHT, S-star, and Cassini.  Ringdown echo
+algebra is quarantined in `QGObservableSignalModels` and is not consumed as a
+closed physical strong-field witness. -/
 noncomputable def canonicalStrongFieldDistinctWitness :
     MasterTheorem.StrongFieldTestsDistinctFromGR :=
   QGObservableSignalModels.strongFieldSignalModelWitness
@@ -164,13 +166,21 @@ noncomputable def canonicalStrongFieldDistinctWitness_channelRoute :
     MasterTheorem.StrongFieldTestsDistinctFromGR :=
   StrongFieldStructural.strongFieldObservableDistinctFromGRWitness
 
-/-! ## §2. Unconditional master theorem -/
+/-! ## §2. Scoped theorem-built master assembly -/
 
-/-- **Unconditional quantum-gravity master theorem.**  The five formerly
-external master inputs are supplied here by theorem-built canonical witnesses:
+/-- **Scoped theorem-built quantum-gravity master assembly.**  The five formerly
+external master inputs are supplied here by canonical theorem-built witnesses:
 D2 physical Regge/EH product-filter convergence plus Schläfli Bianchi,
 D3 many-body amplitude-linearity, D4 recognition-tick Page transfer,
-D5 PTA observable band, and D5 named strong-field channels. -/
+D5 PTA observable band, and D5 named strong-field channels.
+
+This is a zero-argument Lean assembly theorem for the current witness route.
+It is **not** a claim that the full physical quantum-gravity framework is
+closed from primitives.  The D2 route remains scoped to the canonical
+product-filter six-tet torus surface, the general triangulation and Lorentzian
+causal-simplex problems remain open, and the black-hole echo mechanism is not
+yet horizon-consistent.  See `closureStatus_unconditional` below for the
+machine-readable physical-scope audit. -/
 theorem rs_quantum_gravity_master_unconditional :
     MasterTheorem.RSQuantumGravityMaster
       canonicalRegEHContinuumAndBianchiWitness
@@ -203,31 +213,54 @@ theorem endpointRoute_master_theorem_valid :
     canonicalPTADistinctWitness
     canonicalStrongFieldDistinctWitness
 
-/-! ## §4. Closure status -/
+/-! ## §4. Physical-scope closure status -/
 
-/-- Closure status for the unconditional QG master theorem after the canonical
-witnesses above have been installed. -/
+/-- Honest status for the zero-argument master assembly above.
+
+The first field records the Lean fact: theorem-built witnesses have been
+installed for the older conditional master theorem.  The remaining fields record
+the physical-scope frontier that those witnesses do **not** close. -/
 structure MasterTheoremUnconditionalClosureStatus where
-  closed_count : ℕ
-  structural_count : ℕ
-  open_count : ℕ
-  total_count : ℕ
-  total_eq : closed_count + structural_count + open_count = total_count
+  theorem_built_witnesses_installed : Bool
+  full_physical_closure : Bool
+  d2_quadrature_open : Bool
+  general_triangulation_open : Bool
+  tensor_tt_recovery_open : Bool
+  lorentzian_causal_triangulations_open : Bool
+  boundary_ghy_open : Bool
+  echo_mechanism_open_or_rejected : Bool
 
-/-- All twelve master-theorem clauses are closed on the canonical theorem-built
-route. -/
+/-- The theorem-built assembly exists, but the full physical quantum-gravity
+framework is not closed.  This record is intentionally conservative: it keeps
+the useful master theorem available while preventing downstream papers or
+certificates from counting scoped witnesses as complete physical recovery. -/
 def closureStatus_unconditional : MasterTheoremUnconditionalClosureStatus where
-  closed_count := 12
-  structural_count := 0
-  open_count := 0
-  total_count := 12
-  total_eq := by decide
+  theorem_built_witnesses_installed := true
+  full_physical_closure := false
+  d2_quadrature_open := true
+  general_triangulation_open := true
+  tensor_tt_recovery_open := true
+  lorentzian_causal_triangulations_open := true
+  boundary_ghy_open := true
+  echo_mechanism_open_or_rejected := true
 
-theorem closureStatus_unconditional_all_closed :
-    closureStatus_unconditional.closed_count = 12 ∧
-    closureStatus_unconditional.structural_count = 0 ∧
-    closureStatus_unconditional.open_count = 0 :=
-  ⟨rfl, rfl, rfl⟩
+/-- The current zero-argument master assembly must not be cited as full
+physical closure. -/
+theorem closureStatus_unconditional_not_full_physical_closure :
+    closureStatus_unconditional.theorem_built_witnesses_installed = true ∧
+    closureStatus_unconditional.full_physical_closure = false :=
+  ⟨rfl, rfl⟩
+
+/-- At least one load-bearing physical target remains open; in fact D2
+quadrature is still open on the current scoped route. -/
+theorem closureStatus_unconditional_has_open_target :
+    closureStatus_unconditional.d2_quadrature_open = true ∨
+    closureStatus_unconditional.general_triangulation_open = true ∨
+    closureStatus_unconditional.tensor_tt_recovery_open = true ∨
+    closureStatus_unconditional.lorentzian_causal_triangulations_open = true ∨
+    closureStatus_unconditional.boundary_ghy_open = true ∨
+    closureStatus_unconditional.echo_mechanism_open_or_rejected = true :=
+  Or.inl rfl
 
 end MasterTheoremUnconditional
 end Gravity

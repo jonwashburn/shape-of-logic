@@ -3,13 +3,14 @@ import IndisputableMonolith.Constants
 import IndisputableMonolith.Cosmology.PhiRungLadder
 
 /-!
-# Gravity: φ-Rung Scale-Address Derivation for D5 Channel Predictions
+# Gravity: φ-Rung Scale-Address Derivation for D5 Channel Formulas
 
 ## Status: STRUCTURAL THEOREM (0 sorry, 0 RS-internal axiom).
 
-Each QG falsifier channel predicts a correction at a specific φ-power.
-This module derives the φ-power for each channel from the rung scale
-address of the observable.
+Each QG channel formula carries a correction at a specific φ-power.  The
+four exterior strong-field channels are physical prediction surfaces.  The
+ringdown row is retained only as quarantined φ-rung algebra until a
+horizon-consistent echo mechanism is derived.
 
 ## The rung address principle
 
@@ -40,7 +41,7 @@ gravitational-wave injection both sample the φ-ladder at the same rung.
 | EHT       | 2·φ^(-44)           | shadow shift at the photon ring, ×2 projection |
 | S-star    | φ^(-44)             | periapsis residual at the strong-field rung    |
 | Cassini   | 3·φ^(-44)           | Shapiro delay, ×3 from path integral           |
-| Ringdown  | φ^(-1)              | one-rung reflection coefficient                |
+| Ringdown  | φ^(-1)              | quarantined one-rung algebra                   |
 -/
 
 namespace IndisputableMonolith
@@ -92,11 +93,10 @@ photon path: the delay integral picks up three accumulated rung
 crossings (ingress, closest approach, egress). -/
 def cassiniCorrectionValue : ℝ := 3 * phi ^ (-strongFieldRung)
 
-/-- Ringdown correction: the echo amplitude ratio is φ^(-1).
-This is the one-rung reflection coefficient: a wavepacket at one
-rung of the self-similar barrier reflects with amplitude φ^(-1),
-which follows from the golden-ratio energy partition
-1 = φ^(-1) + φ^(-2). -/
+/-- Quarantined ringdown algebra: the formal amplitude ratio is φ^(-1).
+This is the one-rung algebraic coefficient from the golden-ratio partition
+`1 = φ^(-1) + φ^(-2)`.  It is not a closed physical black-hole echo
+prediction. -/
 def ringdownCorrectionValue : ℝ := phi⁻¹
 
 /-! ## §3. All corrections are positive -/
@@ -119,10 +119,9 @@ theorem ringdownCorrectionValue_pos : 0 < ringdownCorrectionValue :=
 /-! ## §4. The golden-ratio energy partition -/
 
 /-- The golden-ratio energy partition: 1 = φ^(-1) + φ^(-2).
-This is equivalent to the defining equation φ² = φ + 1.
-The partition determines the echo reflection coefficient: at each
-self-similar rung boundary, energy splits into φ^(-1) reflected
-and φ^(-2) transmitted. -/
+This is equivalent to the defining equation φ² = φ + 1.  The partition
+determines the formal rung coefficient; a physical echo mechanism remains a
+separate open target. -/
 theorem golden_ratio_partition :
     phi⁻¹ + phi ^ (-2 : ℤ) = 1 := by
   have hne : phi ≠ 0 := phi_ne_zero
@@ -159,8 +158,8 @@ theorem eht_eq_two_times_pta :
 theorem cassini_eq_three_times_pta :
     cassiniCorrectionValue = 3 * ptaCorrectionValue := rfl
 
-/-- The ringdown rung is exactly one step on the self-similar ladder:
-φ^(-1) = the one-rung reflection amplitude. -/
+/-- The quarantined ringdown algebra is exactly one step on the self-similar
+ladder: φ^(-1). -/
 theorem ringdown_is_one_rung :
     ringdownCorrectionValue = phi ^ (-1 : ℤ) := by
   unfold ringdownCorrectionValue
@@ -225,17 +224,18 @@ noncomputable def cassiniDerived : DerivedChannelPrediction where
   correctionValue_pos := cassiniCorrectionValue_pos
 
 noncomputable def ringdownDerived : DerivedChannelPrediction where
-  channelName := "Ringdown echoes"
-  observable := "echo amplitude ratio A_{n+1}/A_n"
+  channelName := "Ringdown echo algebra (quarantined)"
+  observable := "formal echo amplitude ratio A_{n+1}/A_n"
   rung := 1
   geometricPrefactor := 1
   correctionValue := ringdownCorrectionValue
   correctionValue_eq := by
     unfold ringdownCorrectionValue
-    simp [zpow_neg_one]
+    simp
   correctionValue_pos := ringdownCorrectionValue_pos
 
-/-- The five derived channels as a list. -/
+/-- The five derived channel formulas as a list.  The ringdown item is
+quarantined algebra, not a physical strong-field prediction. -/
 noncomputable def derivedChannels : List DerivedChannelPrediction :=
   [ptaDerived, ehtDerived, sStarDerived, cassiniDerived, ringdownDerived]
 
@@ -253,7 +253,7 @@ theorem four_channels_share_rung_44 :
     sStarDerived.rung = 44 ∧
     cassiniDerived.rung = 44 := ⟨rfl, rfl, rfl, rfl⟩
 
-/-- The ringdown channel uses rung 1 (the one-step self-similar rung). -/
+/-- The quarantined ringdown algebra uses rung 1. -/
 theorem ringdown_rung_eq_1 : ringdownDerived.rung = 1 := rfl
 
 /-! ## §7. Master cert -/
