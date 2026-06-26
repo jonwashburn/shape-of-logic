@@ -22,7 +22,7 @@ At D = 3 this gives φ^{−5}, matching `Constants.E_coh`.
 - `gap_at_D3`: D²(D+2) = 9 × 5 = 45
 - `coprimality_odd`: gcd(2^D, D²(D+2)) = 1 for all odd D
 - `coprimality_even_fails`: gcd(2^D, D²(D+2)) > 1 for all even D ≥ 2
-- `gap_balance`: φ^{1−gap} × φ^{gap} = φ  (matter-consciousness link)
+- `gap_balance`: φ^{1−gap} × φ^{gap} = φ  (matter-coherence link)
 
 The coprimality result provides a fourth argument that D must be odd.
 Combined with Alexander duality (selecting D = 3), gap-45 follows
@@ -48,15 +48,8 @@ def configDim (d : ℕ) : ℕ := d + 2
     At D = 3 the linear formula 3D coincides with D². -/
 def parityCount (d : ℕ) : ℕ := d ^ 2
 
-/-- Consciousness gap: (parity count) × (coherence exponent) = D²(D+2). -/
-def consciousnessGap (d : ℕ) : ℕ := parityCount d * configDim d
-
-/-- Backwards-compatible name retained for public modules that still use the
-older `dimensionGap` identifier. -/
+/-- Dimension gap: (parity count) × (coherence exponent) = D²(D+2). -/
 def dimensionGap (d : ℕ) : ℕ := parityCount d * configDim d
-
-theorem dimensionGap_eq_consciousnessGap (d : ℕ) :
-    dimensionGap d = consciousnessGap d := rfl
 
 /-! ## B-22: Configuration Dimension -/
 
@@ -80,9 +73,9 @@ theorem parityCount_matches_enumeration :
 
 /-! ## Gap = 45 -/
 
-theorem gap_at_D3 : consciousnessGap D = 45 := by native_decide
+theorem gap_at_D3 : dimensionGap D = 45 := by native_decide
 
-theorem gap_factors : consciousnessGap D = 9 * 5 := by native_decide
+theorem gap_factors : dimensionGap D = 9 * 5 := by native_decide
 
 theorem gap_is_lcm : Nat.lcm 9 5 = 45 := by native_decide
 
@@ -114,7 +107,7 @@ theorem coprimality_even_fails (k : ℕ) (hk : 0 < k) :
   exact absurd h3 (by norm_num)
 
 /-- At D = 3: gcd(8, 45) = 1. -/
-theorem coprime_at_D3 : Nat.Coprime (2 ^ D) (consciousnessGap D) := by native_decide
+theorem coprime_at_D3 : Nat.Coprime (2 ^ D) (dimensionGap D) := by native_decide
 
 /-! ## φ-Dependent Results -/
 
@@ -162,8 +155,8 @@ def A : ℤ := 1
 
 /-- η_B · Θ_crit = φ^A = φ, where η_B = φ^{A−gap} and Θ_crit = φ^{gap}. -/
 theorem gap_balance :
-    phi ^ (A - ↑(consciousnessGap D)) * phi ^ (↑(consciousnessGap D) : ℤ) = phi := by
-  have hg : (↑(consciousnessGap D) : ℤ) = 45 := by exact_mod_cast gap_at_D3
+    phi ^ (A - ↑(dimensionGap D)) * phi ^ (↑(dimensionGap D) : ℤ) = phi := by
+  have hg : (↑(dimensionGap D) : ℤ) = 45 := by exact_mod_cast gap_at_D3
   rw [hg, show A = (1 : ℤ) from rfl, ← zpow_add₀ (ne_of_gt phi_pos)]
   have : (1 : ℤ) - 45 + 45 = 1 := by norm_num
   rw [this, zpow_one]
@@ -176,10 +169,10 @@ structure Gap45Cert where
   config_dim : configDim D = 5
   parity_count : parityCount D = 9
   parity_matches : parityCount D = Fintype.card NineParities.ParityIndex
-  gap : consciousnessGap D = 45
-  coprime : Nat.Coprime (2 ^ D) (consciousnessGap D)
+  gap : dimensionGap D = 45
+  coprime : Nat.Coprime (2 ^ D) (dimensionGap D)
   ecoh : E_coh_gap = phi ^ (-5 : ℤ)
-  balance : phi ^ (A - ↑(consciousnessGap D)) * phi ^ (↑(consciousnessGap D) : ℤ) = phi
+  balance : phi ^ (A - ↑(dimensionGap D)) * phi ^ (↑(dimensionGap D) : ℤ) = phi
   odd_coprime : ∀ k, Nat.Coprime (2 ^ (2*k+1)) ((2*k+1)^2 * (2*k+3))
   even_not_coprime : ∀ k, 0 < k → ¬ Nat.Coprime (2^(2*k)) ((2*k)^2 * (2*k+2))
 
