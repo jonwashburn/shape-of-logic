@@ -5,6 +5,7 @@ import IndisputableMonolith.LedgerFloor
 import IndisputableMonolith.Gravity
 import IndisputableMonolith.Foundation.MeasureForcing
 import IndisputableMonolith.Constants.AlphaGenesis
+import IndisputableMonolith.Quantum
 
 /-!
 # Shape of Logic — root module
@@ -59,4 +60,13 @@ exports no later-physics or private application verticals; those remain in the
 * `Constants.AlphaGenesis.existsUnique_closingLoad` — the second-order
   residual problem has exactly one answer in load units (quarantine module)
 * `Gravity.DerivedFactors` — HSB suppression from SevenBeatViolation saturation
+
+## Quantum layer (recognition-first)
+
+* `Quantum.RecognitionFirst.eightTick_weyl` — the finite Heisenberg–Weyl relation on
+  the 8-tick recognition cycle; `canonical_noncommutativity` is the recognition root of
+  `[x,p] ≠ 0` (continuum `[x,p]=iℏ` and `ℏ=φ⁻⁵` remain OPEN)
+* `Quantum.PureTwoQubit.EntropyConcurrence` — Wootters concurrence and the
+  concurrence→entropy certificate for pure two-qubit states
+* `Quantum.HolographicBound.holographic_bound` — `S ≤ A/(4 l_P²)` from ledger projection
 -/
