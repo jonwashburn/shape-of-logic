@@ -1,6 +1,7 @@
 import IndisputableMonolith.Quantum.RecognitionFirst.EightTickWeyl
 import IndisputableMonolith.Quantum.PureTwoQubit.EntropyConcurrence
 import IndisputableMonolith.Quantum.HolographicBound
+import IndisputableMonolith.Quantum.BornRule
 
 /-!
 # IndisputableMonolith.Quantum
@@ -24,9 +25,17 @@ derive standard quantum structure from the recognition substrate:
   its derivation from ledger projection (`holography_from_ledger`), the Bekenstein bound,
   and the area-scaling of information.
 
-These export no later-physics or private application verticals; the Born-rule and
-unitary-evolution derivations remain in the `/reality` repository pending a clean-substrate
-refactor of their measurement certificates.
+- `Quantum.BornRule`: the Born rule from the recognition cost functional. The
+  measurement weight `r ↦ r²` is forced by the two-branch geodesic action and the
+  kernel-match certificate (`born_rule_from_jcost`), and `gleason_from_rs` packages the
+  Gleason-style derivation from the recognition substrate. Its dependency base is the
+  neutral `Spectral.DFT8` backbone and the `Foundation.ComplexStructureForcing` /
+  `Foundation.BornRuleForcing` chain, all Mathlib-only and axiom-clean. This replaces the
+  earlier note that the Born-rule derivation remained private: its measurement
+  certificates (`Measurement.PathAction`, `TwoBranchGeodesic`, `KernelMatch`, `C2ABridge`,
+  `Verification.TwoOutcomeBornCert`) have been refactored onto the clean substrate.
+
+These export no later-physics or private application verticals.
 -/
 
 namespace IndisputableMonolith
