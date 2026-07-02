@@ -33,10 +33,11 @@ IMPORTED (standard physics, NOT derived by RS):
   in: quark doublets/singlets, lepton doublets, colors per quark).
 - The minimal-neutrino convention (left-handed only, 2 DOF per generation).
   See Part 5 for the Dirac-neutrino branch (g_f = 96, g_star = 112).
-- The 7/8 thermal weight, i.e. the value of the Fermi–Dirac vs.
-  Bose–Einstein energy-density integral ratio
-  ∫x³/(eˣ+1)dx / ∫x³/(eˣ−1)dx = 7/8. RS fixes the SIGN via
-  spin-statistics; the integral value is standard statistical mechanics.
+- The SIGN assignment (+1 fermions, −1 bosons) comes from RS
+  spin-statistics; the integral VALUE
+  ∫x³/(eˣ+1)dx / ∫x³/(eˣ−1)dx = 7/8 is now PROVED in Lean
+  (Cosmology.ThermalWeightSevenEighths.fermi_bose_ratio, axiom-clean),
+  so it is a theorem of this library, no longer an imported constant.
 - The high-temperature scope. g_star is temperature dependent; the single
   number 106.75 applies above T_EW only. The temperature dependence
   (threshold decoupling steps) is implemented in
@@ -85,8 +86,11 @@ in thermal equilibrium is 7/8. Division of labor: the SIGN (+1 fermions,
 structure (IndisputableMonolith.Foundation.SpinStatistics and
 IndisputableMonolith.QFT.SpinStatistics in the full `reality` repository;
 not included in this curated repository). The VALUE 7/8 of the resulting
-thermal integral ratio is standard statistical mechanics, imported here
-as a rational constant, not re-derived in Lean.
+thermal integral ratio is ALSO proved in Lean:
+Cosmology.ThermalWeightSevenEighths.fermi_bose_ratio shows
+mellin fermiKernel 4 / mellin boseKernel 4 = 7/8 via η(4) = (7/8)ζ(4),
+axiom-clean. This module still carries 7/8 as a rational constant for
+the bookkeeping, but the constant is theorem-backed, not imported.
 
 ## Result
 
@@ -192,9 +196,11 @@ noncomputable section
 /-- The Fermi-Dirac weighting factor: 7/8.
     Fermions contribute 7/8 as much energy density per DOF as bosons
     in thermal equilibrium: ∫₀^∞ x³/(eˣ+1) dx = (7/8) × ∫₀^∞ x³/(eˣ-1) dx.
-    IMPORTED CONSTANT: the integral value 7/8 is standard statistical
-    mechanics and is NOT re-derived here (the integrals are not formalized
-    in this module). What RS supplies is the sign difference (Fermi-Dirac
+    THEOREM-BACKED CONSTANT: the integral value 7/8 is proved in
+    Cosmology.ThermalWeightSevenEighths (fermi_bose_ratio: the Mellin
+    transforms of the Fermi-Dirac and Bose-Einstein kernels at s = 4
+    have ratio η(4)/ζ(4) = 7/8, axiom-clean). What RS supplies is the
+    sign difference (Fermi-Dirac
     +1 vs Bose-Einstein −1), a consequence of the 8-tick spin-statistics
     theorem (Foundation.SpinStatistics / QFT.SpinStatistics in the full
     `reality` repository; not included in this curated repository). -/
@@ -216,7 +222,8 @@ theorem fermi_dirac_weight_pos : 0 < fermi_dirac_weight := by
     - generation COUNT 3 from Q₃ face-pairs (RS-derived); the per-generation
       30 DOF uses the imported SM representation content and the
       minimal-neutrino convention.
-    - 7/8: sign from spin-statistics (RS-derived); integral value imported.
+    - 7/8: sign from spin-statistics (RS-derived); integral value proved
+      in Cosmology.ThermalWeightSevenEighths (fermi_bose_ratio).
 
     Valid in the high-T SM regime (T ≳ T_EW) only. This is verified SM
     bookkeeping with RS-sourced group/generation inputs, not an

@@ -29,9 +29,13 @@ The counting itself is forced by the Q₃ chord-cube content:
   fermion count above is for *all three* generations summed.
 
 The total `g_b = 28`, `g_f = 90`, and the Boltzmann factor for fermions is
-exactly `7/8` (the difference between Bose-Einstein and Fermi-Dirac
-distributions integrated against `T^3`).  Multiplying out gives an exact
-rational `427/4 = 106.75`.
+exactly `7/8`.  The `7/8` is itself a THEOREM, not a convention: the
+downstream module `Cosmology.ThermalWeightSevenEighths` proves
+`mellin fermiKernel 4 / mellin boseKernel 4 = 7/8` (the Fermi-Dirac to
+Bose-Einstein energy-density ratio, `η(4)/ζ(4)`), axiom-clean, and
+identifies `fermion_boltzmann` with that ratio
+(`fermion_boltzmann_forced`).  Multiplying out gives an exact rational
+`427/4 = 106.75`.
 
 Everything in this module is exact `ℚ` arithmetic with one closing
 `native_decide`; the bridge `g_star_derived_eq_baryogenesis` exhibits
@@ -137,8 +141,20 @@ theorem fermionic_dof_eq : fermionic_dof = 90 := by
 /-! ## g_⋆ formula -/
 
 /-- The fermionic Boltzmann factor `7/8` is the exact ratio of the
-    Fermi-Dirac to Bose-Einstein contribution to the relativistic energy
-    density when integrated against `T^3`. -/
+    Fermi-Dirac to Bose-Einstein energy-density integrals.
+
+    STATUS: THEOREM (proved downstream, not a convention). The value is
+    forced by quantum statistics:
+    `Cosmology.ThermalWeightSevenEighths.fermi_bose_ratio` proves
+    `mellin fermiKernel 4 / mellin boseKernel 4 = 7/8`
+    (i.e. `∫ t³/(eᵗ+1) / ∫ t³/(eᵗ−1) = η(4)/ζ(4) = 7/8`), and
+    `fermion_boltzmann_forced` identifies this `def` with that ratio.
+    That module imports this one, so the pointer here is a docstring;
+    the proof is axiom-clean (Mathlib base axioms only).
+
+    The remaining physics input is *which* species takes the `+1`
+    (Fermi-Dirac) sign: the exchange sign, which RS forces via
+    `Foundation.EightTick.spin_statistics_key`. -/
 def fermion_boltzmann : ℚ := 7 / 8
 
 /-- The derived value of `g_⋆` as an exact rational. -/
