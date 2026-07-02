@@ -4,20 +4,49 @@ import IndisputableMonolith.Foundation.GaugeFromCube
 import IndisputableMonolith.Foundation.ParticleGenerations
 
 /-!
-# g_star = 106.75 Derived from Q₃ Particle Content
+# g_star = 106.75: Standard Model Bookkeeping with RS-Sourced Inputs
 
-The effective number of relativistic degrees of freedom at the electroweak
-scale is not an empirical input — it is forced by the Q₃ cube geometry
-that determines the Standard Model gauge group and particle content.
+STATUS TAG: **BOOKKEEPING over adopted SM content** (not a novel RS prediction).
 
-## The Derivation Chain
+This module computes the standard high-temperature Standard Model
+relativistic degree count
 
-1. Q₃ automorphism group B₃ decomposes as S₃ × (ℤ/2ℤ)² × ℤ/2ℤ
-   → SU(3) × SU(2) × U(1)  (from GaugeFromCube)
-2. D = 3 → 3 generations of fermions (from ParticleGenerations)
-3. The gauge boson content is fixed by the gauge group dimensions
-4. The fermion content is fixed by generation count × representations
-5. g_star = bosonic_dof + (7/8) × fermionic_dof = 106.75
+  g_star = g_b + (7/8) g_f = 28 + (7/8)·90 = 427/4 = 106.75
+
+as exact rational arithmetic in Lean. Honest scope (per the 2026-06-25
+external review): this is the textbook count, valid ONLY in the
+high-temperature regime T ≳ T_EW where all listed species are relativistic
+and thermally populated. It is correct bookkeeping, not a new calculation.
+
+## What RS supplies vs. what is imported
+
+RS-DERIVED inputs (each proved upstream, cited by name):
+- The gauge group SU(3)×SU(2)×U(1) from Q₃ automorphisms (GaugeFromCube).
+- The generation count 3 = face_pairs(3) from D = 3 (ParticleGenerations).
+- The sign choice Fermi–Dirac vs. Bose–Einstein from the 8-tick
+  spin-statistics theorem (Foundation.SpinStatistics and QFT.SpinStatistics
+  in the full `reality` repository; those modules are not included in this
+  curated repository).
+
+IMPORTED (standard physics, NOT derived by RS):
+- The Standard Model matter representations (which reps the fermions sit
+  in: quark doublets/singlets, lepton doublets, colors per quark).
+- The minimal-neutrino convention (left-handed only, 2 DOF per generation).
+  See Part 5 for the Dirac-neutrino branch (g_f = 96, g_star = 112).
+- The 7/8 thermal weight, i.e. the value of the Fermi–Dirac vs.
+  Bose–Einstein energy-density integral ratio
+  ∫x³/(eˣ+1)dx / ∫x³/(eˣ−1)dx = 7/8. RS fixes the SIGN via
+  spin-statistics; the integral value is standard statistical mechanics.
+- The high-temperature scope. g_star is temperature dependent; the single
+  number 106.75 applies above T_EW only. The temperature dependence
+  (threshold decoupling steps) is implemented in
+  Cosmology.GStarThresholds as g_star(T).
+
+## Assembly
+
+1. Gauge boson content fixed by the gauge group dimensions (RS-sourced group).
+2. Fermion content = 3 generations × 30 DOF/gen (RS-sourced count; SM reps).
+3. g_star = bosonic_dof + (7/8) × fermionic_dof = 106.75.
 
 ## Bosonic Degrees of Freedom (28)
 
@@ -51,14 +80,22 @@ Per generation DOF = 24 + 6 = 30
 
 Fermi-Dirac statistics gives ⟨n⟩ = 1/(e^{E/T}+1) vs Bose-Einstein
 ⟨n⟩ = 1/(e^{E/T}-1). The energy density ratio for fermions vs bosons
-in thermal equilibrium is 7/8. This is a theorem from spin-statistics
-(already proved in SpinStatistics: half-integer spin → Fermi-Dirac).
+in thermal equilibrium is 7/8. Division of labor: the SIGN (+1 fermions,
+−1 bosons) follows from spin-statistics, which IS proved from the 8-tick
+structure (IndisputableMonolith.Foundation.SpinStatistics and
+IndisputableMonolith.QFT.SpinStatistics in the full `reality` repository;
+not included in this curated repository). The VALUE 7/8 of the resulting
+thermal integral ratio is standard statistical mechanics, imported here
+as a rational constant, not re-derived in Lean.
 
 ## Result
 
-g_star = 28 + (7/8) × 90 = 28 + 78.75 = 106.75
+g_star = 28 + (7/8) × 90 = 28 + 78.75 = 106.75  (high-T SM regime only)
 
-## Status: 0 sorry, 0 axiom
+For the temperature-dependent g_star(T) step function (threshold
+decoupling), see Cosmology.GStarThresholds.
+
+## Status: 0 sorry, 0 axiom (arithmetic verified; scope tags above bind)
 -/
 
 namespace IndisputableMonolith
@@ -154,26 +191,36 @@ noncomputable section
 
 /-- The Fermi-Dirac weighting factor: 7/8.
     Fermions contribute 7/8 as much energy density per DOF as bosons
-    in thermal equilibrium. This follows from the integral
-    ∫₀^∞ x³/(eˣ+1) dx = (7/8) × ∫₀^∞ x³/(eˣ-1) dx.
-    The sign difference (Fermi-Dirac +1 vs Bose-Einstein −1) is a
-    consequence of spin-statistics (SpinStatistics.lean). -/
+    in thermal equilibrium: ∫₀^∞ x³/(eˣ+1) dx = (7/8) × ∫₀^∞ x³/(eˣ-1) dx.
+    IMPORTED CONSTANT: the integral value 7/8 is standard statistical
+    mechanics and is NOT re-derived here (the integrals are not formalized
+    in this module). What RS supplies is the sign difference (Fermi-Dirac
+    +1 vs Bose-Einstein −1), a consequence of the 8-tick spin-statistics
+    theorem (Foundation.SpinStatistics / QFT.SpinStatistics in the full
+    `reality` repository; not included in this curated repository). -/
 def fermi_dirac_weight : ℝ := 7 / 8
 
 theorem fermi_dirac_weight_pos : 0 < fermi_dirac_weight := by
   norm_num [fermi_dirac_weight]
 
-/-- **THE g_star THEOREM**: g_star = 106.75 from Q₃ particle content.
+/-- g_star = 106.75, assembled from the counts above.
 
     g_star = bosonic_dof + (7/8) × fermionic_dof
            = 28 + (7/8) × 90
            = 28 + 78.75
            = 106.75
 
-    Every ingredient is forced:
-    - 28 bosonic DOF from SU(3)×SU(2)×U(1) gauge structure (Q₃ automorphisms)
-    - 90 fermionic DOF from 3 generations × 30 DOF/gen (Q₃ face-pairs)
-    - 7/8 from spin-statistics (forced by SpinStatistics) -/
+    Honest ingredient list (see module header for the full split):
+    - gauge GROUP from Q₃ automorphisms (RS-derived); gauge boson DOF then
+      follow from the group dimensions plus standard polarization counting.
+    - generation COUNT 3 from Q₃ face-pairs (RS-derived); the per-generation
+      30 DOF uses the imported SM representation content and the
+      minimal-neutrino convention.
+    - 7/8: sign from spin-statistics (RS-derived); integral value imported.
+
+    Valid in the high-T SM regime (T ≳ T_EW) only. This is verified SM
+    bookkeeping with RS-sourced group/generation inputs, not an
+    independent RS prediction of a new number. -/
 def g_star_derived : ℝ :=
   (bosonic_dof : ℝ) + fermi_dirac_weight * (fermionic_dof : ℝ)
 
@@ -208,7 +255,59 @@ theorem fermionic_traces_to_Q3 :
     fermionic_dof = 90 :=
   ⟨rfl, rfl, fermionic_dof_eq⟩
 
-/-! ## Part 5: Master Certificate -/
+/-! ## Part 5: Model-Dependent Branch — Thermalized Dirac Neutrinos
+
+The 106.75 value uses the minimal-SM convention: neutrinos are left-handed
+only (2 DOF per generation). If neutrinos are Dirac AND the right-handed
+components are thermally populated, each generation gains 2 more DOF:
+
+  g_f = 96,  g_star = 28 + (7/8)·96 = 112.
+
+This branch is carried explicitly so the convention is a named input,
+not a hidden assumption. Which branch reality takes is a MODEL choice
+(and for the right-handed states, a thermalization question) that this
+module does not decide. -/
+
+/-- Neutrino DOF per generation with thermalized Dirac (right-handed)
+    components: 1 flavor × 2 chiralities × 2 (p + ap) = 4. -/
+def neutrino_dof_per_gen_dirac : ℕ := 1 * chiralities * particle_antiparticle
+
+theorem neutrino_dof_per_gen_dirac_eq : neutrino_dof_per_gen_dirac = 4 := by
+  native_decide
+
+/-- Fermion DOF per generation in the thermalized-Dirac-neutrino branch: 32. -/
+def fermion_dof_per_gen_dirac : ℕ :=
+  quark_dof_per_gen + charged_lepton_dof_per_gen + neutrino_dof_per_gen_dirac
+
+theorem fermion_dof_per_gen_dirac_eq : fermion_dof_per_gen_dirac = 32 := by
+  native_decide
+
+/-- Total fermion DOF in the thermalized-Dirac-neutrino branch: 96. -/
+def fermionic_dof_dirac : ℕ := n_generations * fermion_dof_per_gen_dirac
+
+theorem fermionic_dof_dirac_eq : fermionic_dof_dirac = 96 := by native_decide
+
+noncomputable section
+
+/-- g_star in the thermalized-Dirac-neutrino branch. -/
+def g_star_dirac : ℝ :=
+  (bosonic_dof : ℝ) + fermi_dirac_weight * (fermionic_dof_dirac : ℝ)
+
+/-- g_star = 112 with thermalized right-handed Dirac neutrinos. -/
+theorem g_star_dirac_eq : g_star_dirac = 112 := by
+  unfold g_star_dirac fermi_dirac_weight
+  rw [bosonic_dof_eq, fermionic_dof_dirac_eq]
+  norm_num
+
+/-- The two branches differ by (7/8)·6 = 5.25: the neutrino convention is
+    a real model input that moves the answer, not notation. -/
+theorem g_star_branch_gap : g_star_dirac - g_star_derived = 5.25 := by
+  rw [g_star_dirac_eq, g_star_derived_eq]
+  norm_num
+
+end
+
+/-! ## Part 6: Master Certificate -/
 
 structure GStarCert where
   bosonic : bosonic_dof = 28
