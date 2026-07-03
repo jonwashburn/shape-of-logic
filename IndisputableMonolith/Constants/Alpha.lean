@@ -7,9 +7,14 @@ namespace Constants
 
 noncomputable section
 
-/-! ### Electromagnetic Fine-Structure Constant (α_EM) Derivation
+/-! ### Electromagnetic Fine-Structure Constant (α_EM) Construction
 
-Derivation of the fine-structure constant from geometric and recognition primitives.
+Construction of the EM coupling expression from geometric and recognition primitives.
+This is NOT a derivation of the measured infrared value `α⁻¹(0) = 137.035999`: that
+value is an irreducible boundary condition in the present formalization (see the
+HONEST STATUS section below and the AlphaGenesis verdict modules). What is forced is
+the photon channel, the closure normalization `4π`, an `O(4π)` recognition-scale
+coupling, and the φ-dressing. The exact IR value is OPEN.
 
 Canonical formula: α⁻¹ = (4π·11) · exp(−(w8·ln φ)/(4π·11))
 
@@ -21,8 +26,17 @@ legacy additive correction from the certified pipeline.
 
 ## ATTACKER BREADCRUMB (read this before declaring α numerology)
 
-The α⁻¹ ∈ (137.030, 137.039) prediction is parameter-free at the dimensionless
-level. Every input is forced by the T0–T8 forcing chain. Specifically:
+CAVEAT (2026-06-19): this breadcrumb argues the construction is not arbitrary
+numerology; it does NOT establish the exact CODATA value. The dressing `φ⁻ᵗ` and
+the weight `w₈` are forced with zero α-input. The SEED `4π·11` is an identification,
+NOT a derived gauge normalization: the gauge-invariant photon count on the cube is
+the cycle rank `E−V+1 = 5`, not the passive-edge ledger count `11` (`U1Normalization`).
+Read the cross-application of `11` below as evidence the count is structural in the
+ledger, not as a derivation of the inverse coupling. Exact `α⁻¹(0)` is OPEN; see the
+HONEST STATUS section below.
+
+The α⁻¹ ∈ (137.030, 137.039) value is parameter-free at the dimensionless level in
+the sense that nothing is fit to CODATA. The forced inputs entering the construction:
 
 * `4π`: total Gaussian curvature of S² ≅ ∂Q₃, forced by Gauss-Bonnet on the
   cube boundary; Q₃ comes from D = 3 (T8). See `Constants/AlphaPrecision.lean`
@@ -47,29 +61,10 @@ level. Every input is forced by the T0–T8 forcing chain. Specifically:
 * `ln(φ)`: pure consequence of φ being the ladder ratio.
 
 The certified band `(137.030, 137.039)` is proved in
-`Numerics/Interval/AlphaBounds.lean` (see `alphaInv_gt`, `alphaInv_lt`).
-CODATA 2022 value 137.035999084(21) is inside.
-
-## Alpha Genesis (2026-06-10): the forward derivation
-
-`Constants/AlphaGenesis/` derives this formula forward (mirror of Mass
-Genesis), discharging the discrete-choice critique:
-
-* the exponential resummation is FORCED (factorization + unit response →
-  `exp(−ε)`; the additive form is excluded outright):
-  `AlphaGenesis.DressingResponse.response_forced`;
-* the φ-pattern is FORCED (T6 self-similarity on the T7 carrier):
-  `AlphaGenesis.EightTickLadder.pattern_forced`;
-* the dressing factor IS the T9 forced measure:
-  `AlphaGenesis.alphaInv_eq_seed_mul_forced_weight`
-  (`α⁻¹ = (4π·11) · contWeight(w₈/(4π·11))`);
-* the forward object equals this pipeline value:
-  `AlphaGenesis.alphaInvGenesis_eq_alphaInv`, certified by
-  `AlphaGenesisCert.verified_any`.
-
-The remaining open item is the second-order seam load, uniquely pinned and
-falsifier-guarded in `AlphaGenesis/ResidualTarget.lean` (quarantined: M1-M3
-never reference CODATA).
+`Numerics/Interval/AlphaBounds.lean` (see `alphaInv_gt`, `alphaInv_lt`). This is the
+value of the assembled expression. CODATA 2022 value 137.035999084(21) falls inside
+the band, but that is the ~5.6 ppm near-miss of the identification, NOT a forced
+equality: the band does not derive the exact infrared value (boundary condition, OPEN).
 
 ## Common misreading (do not repeat)
 
@@ -79,6 +74,26 @@ Surveying this file alone, an attacker may read the closed form `(348 + 210√2
 canonical projection chain is not visible from this file. Read those two
 files before judging w₈; the integers fall out of mechanical algebra after
 Parseval and the 64-cell are fixed.
+
+## HONEST STATUS OF THE SEED `4π·11` (2026-06-18 audit, READ THIS)
+
+The forced parts of this formula are the dressing `g(t)=φ⁻ᵗ`
+(`AlphaGenesis.CalibrationForcing`, zero α-input) and the weight `w₈`
+(`GapWeight`, zero α-input). The SEED `4π·11` is NOT a derived coupling; three
+quarantine verdict modules in `Constants/AlphaGenesis/` settle this:
+* `ScaleIdentification`: `alphaInv` exceeds the Thomson ceiling `α⁻¹(0)`, so it
+  is off the physical running curve at every scale (the 5.6 ppm overshoot is not
+  a scale artifact).
+* `U1Normalization`: `11` is the passive-edge LEDGER count, not the
+  gauge-invariant photon count (cycle rank `E−V+1 = 5`); a real gauge seed would
+  be `4π·5 ≈ 63`, not `137`.
+* `CurvatureJCostVerdict`: `4π = 2π·χ(S²)` is a linear topological invariant, not
+  a cost; the genuine quadratic J-cost of the cube curvature is `π² ≈ 9.87`. So
+  `4π·11` is a category error, not a recognition cost.
+
+Net: `α⁻¹(0) = 137.035999` is OPEN. The calibration-free forced content is an
+`O(4π)` UV-scale recognition cost. Treat `4π·11` as an identification (a ~5.6 ppm
+near-miss), not a first-principles derivation of the fine-structure constant.
 -/
 
 /-- Geometric seed from ledger structure: `4π·11`.
@@ -90,9 +105,11 @@ Parseval and the 64-cell are fixed.
     the canonical certified `alphaInv` pipeline. -/
 @[simp] def delta_kappa : ℝ := -(103 : ℝ) / (102 * Real.pi ^ 5)
 
-/-- Dimensionless inverse fine-structure constant (canonical exponential resummation).
-    This value (~137.036) is derived from the structural seed and gap with zero
-    adjustable parameters. -/
+/-- Dimensionless inverse fine-structure constant expression (canonical exponential
+    resummation). This is the value of the assembled construction (~137.04) with nothing
+    fit to CODATA. The seed `4π·11` is an identification, not a derived coupling; the
+    exact infrared value `α⁻¹(0) = 137.035999` is a boundary condition (OPEN). See the
+    HONEST STATUS section above and `Constants/AlphaGenesis/`. -/
 @[simp] def alphaInv : ℝ := alpha_seed * Real.exp (-(f_gap / alpha_seed))
 
 /-- Fine-structure constant (α_EM). -/

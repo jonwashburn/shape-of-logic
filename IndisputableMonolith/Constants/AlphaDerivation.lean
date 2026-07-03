@@ -3,10 +3,15 @@ import IndisputableMonolith.Constants
 import IndisputableMonolith.Constants.GapWeight
 
 /-!
-# Alpha Derivation from First Principles
+# Alpha Construction from the Cubic Ledger (seed assembly; exact α(0) OPEN)
 
-This module provides a complete, constructive derivation of the fine-structure
-constant α⁻¹ from the geometry of the cubic ledger.
+This module assembles the seed `4π·11` from the geometry of the cubic ledger. It is
+NOT a first-principles derivation of the measured fine-structure constant: the
+*identification* of the seed with the inverse EM coupling fails the audit (see HONEST
+STATUS below and `Constants/AlphaGenesis/`). The exact infrared value `α⁻¹(0)` is a
+boundary condition, OPEN. What is forced is the `O(4π)` recognition-scale content and
+the φ-dressing; the cube combinatorics below explain the seed's construction, not the
+measured coupling value.
 
 ## Main Results
 
@@ -35,6 +40,17 @@ The coupling to the vacuum geometry involves the OTHER edges of the cube.
 - Base normalization: 6 × 17 = 102
 - Closure term: +1 (Euler characteristic constraint)
 - Seam count: 103
+
+## HONEST STATUS (2026-06-18 audit)
+
+This module assembles the seed `4π·11` from cube combinatorics, but the
+*identification* of that seed with the inverse EM coupling is NOT a
+first-principles derivation. See the three quarantine verdict modules in
+`Constants/AlphaGenesis/`: `ScaleIdentification` (above the Thomson ceiling),
+`U1Normalization` (`11` is the ledger count, not the gauge photon count `5`),
+and `CurvatureJCostVerdict` (`4π` is a topological invariant, not a cost; the
+genuine quadratic J-cost is `π²`). The exact value `α⁻¹(0) = 137.035999` is
+OPEN; treat `4π·11` as a ~5.6 ppm identification, not a derivation.
 
 -/
 
@@ -239,11 +255,14 @@ theorem curvature_term_eq : curvature_term = -(103 : ℝ) / (102 * Real.pi ^ 5) 
 
 /-! ## Part 8: Alpha Assembly -/
 
-/-- The inverse fine-structure constant derived from first principles.
+/-- The RS α⁻¹ construction value (legacy additive form; the seed 4π·11 is an
+    identification, not derived, so this is a construction, not a first-principles
+    derivation of the measured α).
     α⁻¹ = geometric_seed - (f_gap + curvature_term) -/
 noncomputable def alphaInv_derived : ℝ := geometric_seed - (f_gap + curvature_term)
 
-/-- Main theorem: The derived α⁻¹ matches the formula in Constants.Alpha. -/
+/-- The α⁻¹ construction value matches the additive formula in Constants.Alpha
+    (an algebraic identity of the construction, not a derivation of measured α). -/
 theorem alphaInv_derived_eq_formula :
     alphaInv_derived = 4 * Real.pi * 11 - (f_gap + (-(103 : ℝ) / (102 * Real.pi ^ 5))) := by
   simp only [alphaInv_derived, geometric_seed_eq, curvature_term_eq]

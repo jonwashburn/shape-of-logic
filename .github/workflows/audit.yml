@@ -1,0 +1,23 @@
+name: IP audit
+
+# Fast, dependency-free guard that runs on every push and PR. It fails the
+# build if any Lean source contains a `sorry`/`admit`, declares a local
+# `axiom`, sits under a forbidden path, or mentions a confidential keyword.
+# The keyword and path deny-lists live in scripts/audit_public.py.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run public IP audit
+        run: python3 scripts/audit_public.py

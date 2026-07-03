@@ -86,12 +86,13 @@ inductive Rival : Type
   | Bohmian -- Bohmian / Diosi-Penrose stochastic-collapse substrates
 deriving DecidableEq
 
-/-- The three observable sectors with theorem-grade RS predictions from
-Sessions 90-93. -/
+/-- The three algebraic sectors carried by the discriminator matrix.  The
+leading-log sector is physical; the echo damping and rung-phase sectors are
+quarantined rung algebra until the missing echo mechanism is derived. -/
 inductive Sector : Type
   | LeadingLog   -- BH entropy leading-log coefficient (Session 90; QNM spectroscopy / holographic)
-  | EchoDamping  -- Per-echo amplitude damping ratio (Session 93; GWTC-3 echo amplitudes)
-  | RungPhase    -- Per-rung phase delay coefficient (Session 93; GWTC-3 echo timing)
+  | EchoDamping  -- Quarantined φ-rung amplitude ratio
+  | RungPhase    -- Quarantined φ-rung phase coefficient
 deriving DecidableEq
 
 /-! ## §2. Rival predictions per sector -/
@@ -107,11 +108,11 @@ def rivalPrediction : Rival → Sector → Option ℝ
   | .String,  .EchoDamping  => some (1 / 2)    -- String fuzzball uniform damping
   | .String,  .RungPhase    => none             -- Depends on string scale; not a clean prediction
   | .CDT,     .LeadingLog   => none             -- CDT does not give phi-rational leading-log
-  | .CDT,     .EchoDamping  => none             -- No echo signal in CDT (no bounce)
-  | .CDT,     .RungPhase    => none             -- No echo timing in CDT
+  | .CDT,     .EchoDamping  => none             -- No matching φ-rung amplitude algebra
+  | .CDT,     .RungPhase    => none             -- No matching φ-rung phase algebra
   | .Bohmian, .LeadingLog   => none             -- Bohmian/DP do not produce phi-rational signals
-  | .Bohmian, .EchoDamping  => none             -- No echoes
-  | .Bohmian, .RungPhase    => none             -- No echoes
+  | .Bohmian, .EchoDamping  => none             -- No matching φ-rung amplitude algebra
+  | .Bohmian, .RungPhase    => none             -- No matching φ-rung phase algebra
 
 /-! ## §3. RS prediction bands per sector -/
 
@@ -156,15 +157,15 @@ above string-theory's `-3/2`. -/
 theorem cell_String_LeadingLog : c_RS - (-3 / 2) > 5 / 4 :=
   c_RS_string_margin
 
-/-- (String, EchoDamping): RS per-echo damping ratio `1/φ` is strictly
-above string fuzzball's uniform `1/2`. -/
+/-- (String, EchoDamping): the quarantined RS rung-algebra ratio `1/φ` is
+strictly above the common fuzzball proxy `1/2`.  This is an algebraic
+separation, not a closed black-hole echo mechanism. -/
 theorem cell_String_EchoDamping : echoDampingRatio > 1 / 2 :=
   echoDampingRatio_above_half
 
 /-- (String, RungPhase): no clean string-specific prediction for the
-per-rung phase delay. RS predicts a positive φ-rational delay
-`log φ > 0`; any string prediction would have to match this within RS's
-band `(0, 1/2)` to evade discrimination. -/
+per-rung phase delay. The quarantined RS rung algebra gives a positive
+φ-rational delay `log φ > 0`; a physical echo interpretation remains open. -/
 theorem cell_String_RungPhase_positive : rungPhaseDelay > 0 :=
   rungPhaseDelay_pos
 
@@ -174,13 +175,12 @@ from any CDT zero-prediction. -/
 theorem cell_CDT_LeadingLog_distinct : c_RS < 0 :=
   c_RS_neg
 
-/-- (CDT, EchoDamping): CDT does not produce echoes (no bounce). RS
-predicts a positive damping ratio. -/
+/-- (CDT, EchoDamping): CDT does not produce this φ-rung algebra.  The RS
+ratio is positive, but the physical echo mechanism is not closed. -/
 theorem cell_CDT_EchoDamping_positive : 0 < echoDampingRatio :=
   echoDampingRatio_pos
 
-/-- (CDT, RungPhase): CDT does not produce echo timing. RS predicts a
-positive phase delay. -/
+/-- (CDT, RungPhase): CDT does not produce this φ-rung phase algebra. -/
 theorem cell_CDT_RungPhase_positive : 0 < rungPhaseDelay :=
   rungPhaseDelay_pos
 
@@ -190,20 +190,22 @@ stochastic collapse violates T1). RS predicts `c_RS < 0`. -/
 theorem cell_Bohmian_LeadingLog_distinct : c_RS < 0 :=
   c_RS_neg
 
-/-- (Bohmian, EchoDamping): Bohmian / DP substrates do not produce
-echoes. RS predicts a positive damping ratio. -/
+/-- (Bohmian, EchoDamping): Bohmian / DP substrates do not produce this
+φ-rung algebra.  This is not a claim of a closed observable echo mechanism. -/
 theorem cell_Bohmian_EchoDamping_positive : 0 < echoDampingRatio :=
   echoDampingRatio_pos
 
-/-- (Bohmian, RungPhase): Bohmian / DP substrates do not produce echo
-timing. RS predicts a positive phase delay. -/
+/-- (Bohmian, RungPhase): Bohmian / DP substrates do not produce this
+φ-rung phase algebra. -/
 theorem cell_Bohmian_RungPhase_positive : 0 < rungPhaseDelay :=
   rungPhaseDelay_pos
 
 /-! ## §5. Master matrix cert -/
 
 /-- **Discriminator matrix cert**: every cell of the 4 × 3 matrix is
-theorem-grade. At least one cell per rival is filled with an explicit
+theorem-grade as algebra.  Echo damping and rung phase are quarantined
+algebraic cells until a horizon-consistent physical echo mechanism exists.
+At least one cell per rival is filled with an explicit
 discriminator inequality, satisfying the Track 6 success criterion 2
 ("Discriminator matrix exists, with at least one cell per rival showing
 an unambiguous distinction"). -/

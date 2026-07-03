@@ -1,0 +1,32 @@
+name: Lean build
+
+# Rebuilds the public library from scratch and re-checks every proof. The
+# Mathlib olean cache is fetched with `lake exe cache get` so only this
+# repository's modules compile from source.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+          bash elan-init.sh -y --default-toolchain "$(cat lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+
+      - name: Build public roots
+        run: |
+          lake build IndisputableMonolith
+          lake build IndisputableMonolith.Foundation
+          lake build IndisputableMonolith.Gravity
