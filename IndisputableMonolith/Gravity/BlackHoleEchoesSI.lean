@@ -3,23 +3,23 @@ import IndisputableMonolith.Foundation.SIBridgeClosure
 import IndisputableMonolith.Gravity.BlackHoleEchoesFromBounce
 
 /-!
-# Gravity Track 3.D (partial closure): Black-Hole Echo Phenomenology in SI Units
+# Gravity Track 3.D: SI Lift of Quarantined Echo Rung Algebra
 
-## Status: STRUCTURAL THEOREM (0 sorry, 0 RS-internal axiom; closure 2026-05-22).
+## Status: STRUCTURAL THEOREM for SI conversion only
 
 ## What this module closes
 
-This module implements part of **Track 3.D of the quantum-gravity master plan**
-(`Quantum_Gravity_Discovery_Master_Plan_20260521.html`, §4 Track 3.D):
-the SI conversion of the RS echo phenomenology established in
-`Gravity.BlackHoleEchoesFromBounce`, anchored on the dimensional bridge
-in `Foundation.SIBridgeClosure` (Track 5.A, closed 2026-05-09).
+This module converts the φ-rung algebra from
+`Gravity.BlackHoleEchoesFromBounce` into SI units.  It does not close the
+physical black-hole echo mechanism.  The imported native module now records the
+old event-horizon escape mechanism as rejected and the horizon-consistent
+exterior mechanism as open.
 
-The RS-native module proves the bounce radius `r_min(N) = φ^N` (in
-Planck units), the echo delay `Δt = 2 r_min · log φ`, and the per-echo
-amplitude damping ratio `1/φ`. The damping ratio is dimensionless and
-already SI-invariant. The bounce radius and the echo delay both need SI
-lifting through the closed dimensional bridge.
+The RS-native module proves the rung-model radius `r_min(N) = φ^N` (in
+Planck units), the formal local delay `Δt = 2 r_min · log φ`, and the
+algebraic damping ratio `1/φ`. The damping ratio is dimensionless and already
+SI-invariant. The radius and formal delay are converted through the dimensional
+bridge, but no observable merger-echo theorem is claimed here.
 
 ## Substantive content
 
@@ -56,18 +56,12 @@ content, dimensionless, and unaffected by the SI lift. The `2`
 factor in `Δt = 2 r_min log φ` is the geometric two-way-traversal
 factor for a bounce, NOT RS-forced.
 
-## Falsifier (master plan §7 "Echo phenomenology" row)
+## Physical status
 
-LIGO/Virgo post-processing of any BH-BH merger event in the GWTC-3
-catalog (e.g. GW150914, GW170817, GW190521, GW230529) that conclusively
-shows no echo at the SI-predicted delay
-`Δt_SI = (2 r_s · t_bounce / c_SI) · log φ`
-after the main ringdown, with sufficient SNR to exclude an echo at the
-SI-predicted amplitude `(1/φ)^n · A_main` after `n` cycles.
-
-Sub-leading-log entropy `c_RS = -log φ / 2 ≈ -0.241` (Track 3.B) and
-the echo-delay `log φ ≈ 0.481` are independent observational handles
-for the φ-rational signature on the BH ringdown ledger.
+These SI formulas are not a LIGO/Virgo falsifier until a horizon-consistent
+exterior echo mechanism exists.  Sub-leading-log entropy remains a separate
+black-hole discriminator; the echo mechanism is open or rejected as currently
+stated.
 
 Zero `sorry`. Zero new RS-specific axioms.
 -/
@@ -292,14 +286,11 @@ def blackHoleEchoesSICert : BlackHoleEchoesSICert where
 theorem blackHoleEchoesSICert_inhabited : Nonempty BlackHoleEchoesSICert :=
   ⟨blackHoleEchoesSICert⟩
 
-/-- **BLACK-HOLE ECHOES SI ONE-STATEMENT** (Track 3.D partial closure form).
-RS predicts a bounce at radius `r_min_SI(N) = ℓ_Planck_SI · φ^N`,
-producing an echo train at delay
-`Δt_SI(N) = (2 r_min_SI / c_SI) · log φ`
-on every BH-BH merger ringdown. The per-echo amplitude damping ratio
-`1/φ ∈ (0.617, 0.622)` is dimensionless and SI-invariant. The squared
-delay encodes the Planck-time-squared anchor:
-`Δt_SI(N)² = 4 · (ℏG/c⁵) · φ^(2N) · (log φ)²`. -/
+/-- **BLACK-HOLE ECHO SI RUNG-ALGEBRA ONE-STATEMENT.**  The SI lift of the
+quarantined rung model has positive radius, positive formal delay, the
+two-step φ² scaling law, and dimensionless damping ratio
+`1/φ ∈ (0.617, 0.622)`.  This theorem does not assert an observable echo on
+BH-BH merger ringdowns. -/
 theorem black_hole_echoes_SI_one_statement :
     (∀ N : ℕ, 0 < bounceRadius_SI N) ∧
     (∀ N : ℕ, bounceRadius_SI (N + 2) = bounceRadius_SI N * phi ^ 2) ∧

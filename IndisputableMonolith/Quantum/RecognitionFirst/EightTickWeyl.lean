@@ -5,20 +5,21 @@ import Mathlib.Data.ZMod.Basic
 /-!
 # The eight-tick Weyl relation: the recognition root of canonical non-commutativity
 
+Recognition-first physics (`plans/RS_Recognition_First_Physics_Program_20260623.html`).
 Conventional QM POSTULATES the canonical commutator `[x,p] = iℏ`. RS DERIVES it: on the
 8-tick recognition cycle `ZMod 8`, "occupation" and "cost-rate" are the shift and clock
 operators of the finite Heisenberg–Weyl group. They satisfy the Weyl relation
 `clock ∘ shift = ω • (shift ∘ clock)` with `ω` a primitive 8th root of unity, so they
 do NOT commute. Canonical non-commutativity is the cyclic recognition structure, not an
-axiom. The continuum limit gives `[x,p] = iℏ` (OPEN derive-tick work), and the
+axiom. The continuum limit gives `[x,p] = iℏ` (node D3, OPEN derive-tick work), and the
 magnitude is tied to `ℏ = φ⁻⁵` through the J-cost quantum.
 
-Axiom-clean: `[propext, Classical.choice, Quot.sound]`. The braiding is
+Closed 2026-06-26 (axiom-clean: `[propext, Classical.choice, Quot.sound]`). The braiding is
 ring-generic: its only ring-specific content is `ω^8 = 1` and `ω ≠ 1`. The exponent
 reconciliation `ω^(k.val) = ω^((k-1).val + 1)` is a finite `ZMod 8` fact discharged by
 `decide`, with the single wraparound case `k = 0` (`ω^0 = ω^8`) closed by `omega_pow_eight`.
 The narrow imports (no full `import Mathlib`) keep the file light. The continuum limit
-`[x,p]=iℏ` and the magnitude `ℏ=φ⁻⁵` remain OPEN, not asserted here.
+`[x,p]=iℏ` and the magnitude `ℏ=φ⁻⁵` remain OPEN (node D6), not asserted here.
 -/
 
 namespace IndisputableMonolith
@@ -75,10 +76,10 @@ theorem eightTick_weyl (ψ : ZMod 8 → ℂ) (k : ZMod 8) :
     · rw [h0, h7, pow_zero]; exact omega_pow_eight.symm
   simp only [clock, shift]
   rw [e]
-  simp [pow_succ, mul_comm, mul_left_comm]
+  simp [pow_succ, mul_comm, mul_assoc, mul_left_comm]
 
 /-- **Canonical non-commutativity emerges.** The clock and shift operators do not
-commute. This is the finite, exact RS root of `[x,p] ≠ 0`; the continuum limit
+commute. This is the finite, exact RS root of `[x,p] ≠ 0`; the continuum limit (node D3)
 turns it into `[x,p] = iℏ`. -/
 theorem canonical_noncommutativity :
     ∃ ψ : ZMod 8 → ℂ, clock (shift ψ) ≠ shift (clock ψ) := by
