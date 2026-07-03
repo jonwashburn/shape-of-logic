@@ -16,7 +16,10 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   else
     range="$remote_sha..$local_sha"
   fi
-  f="$(git diff --name-only "$range" 2>/dev/null || git show --name-only --pretty=format: "$local_sha" 2>/dev/null)"
+  # Only check files PRESENT in the pushed tree (Added/Copied/Modified/Renamed/
+  # Type-changed). Deletions (--diff-filter excludes D) publish nothing, so
+  # removing a denied file (e.g. Foundation/Reference.lean) must not be blocked.
+  f="$(git diff --name-only --diff-filter=ACMRT "$range" 2>/dev/null || git show --name-only --diff-filter=ACMRT --pretty=format: "$local_sha" 2>/dev/null)"
   files="$files
 $f"
 done
