@@ -168,13 +168,30 @@ theorem CostUniqueness_proven : CostUniqueness := by
   exact Cost.FunctionalEquation.law_of_logic_forces_jcost
     F hRecip hNorm hComp hCalib hCont x hx
 
-/-- Spacetime emergence with Lorentzian (1,3) signature. Witnessed by
-`Unification.SpacetimeEmergence.SpacetimeEmergenceCert` inhabitation. -/
+/-- Carried content for the Lorentzian-signature clause (M4): four spacetime
+dimensions, exactly one timelike and three spacelike metric directions, and
+the trace/determinant normalization of the emergent metric. -/
+def Lorentzian_1_3_carried_prop : Prop :=
+  Unification.SpacetimeEmergence.spacetime_dim = 4 ∧
+  ((Finset.univ.filter
+      (fun i : Fin 4 => Unification.SpacetimeEmergence.η i i < 0)).card = 1 ∧
+   (Finset.univ.filter
+      (fun i : Fin 4 => 0 < Unification.SpacetimeEmergence.η i i)).card = 3) ∧
+  (∑ i : Fin 4, Unification.SpacetimeEmergence.η i i) = 2 ∧
+  (∏ i : Fin 4, Unification.SpacetimeEmergence.η i i) = -1
+
+/-- Spacetime emergence with Lorentzian (1,3) signature: carried metric
+content (M4) together with the full emergence certificate. -/
 def Lorentzian_1_3 : Prop :=
+  Lorentzian_1_3_carried_prop ∧
   Nonempty Unification.SpacetimeEmergence.SpacetimeEmergenceCert
 
 theorem Lorentzian_1_3_proven : Lorentzian_1_3 :=
-  Unification.SpacetimeEmergence.spacetime_emergence_cert_nonempty
+  ⟨⟨Unification.SpacetimeEmergence.spacetime_emergence_cert.dim_eq_four,
+    Unification.SpacetimeEmergence.spacetime_emergence_cert.signature_lorentzian,
+    Unification.SpacetimeEmergence.spacetime_emergence_cert.metric_trace,
+    Unification.SpacetimeEmergence.spacetime_emergence_cert.metric_det⟩,
+   Unification.SpacetimeEmergence.spacetime_emergence_cert_nonempty⟩
 
 /-- BMV von Neumann entropy positivity (unconditional). Witnessed by
 `Quantum.PureTwoQubit.EntropyConcurrence.pure_two_qubit_entropy_positive_unconditional`. -/
@@ -190,49 +207,138 @@ def bmv_positive_unconditional : Prop :=
 theorem bmv_positive_unconditional_proven : bmv_positive_unconditional :=
   Quantum.PureTwoQubit.EntropyConcurrence.pure_two_qubit_entropy_positive_unconditional
 
-/-- SI Hawking temperature (Track 3.A, Session 89). Witnessed by
-`Gravity.HawkingTemperatureSI.hawkingTemperatureSICert_inhabited`. -/
+/-- Carried content for the Hawking-temperature clause (M4): positivity,
+strict antitonicity in the mass, and the Page-time cube law with positive
+coefficient. -/
+def hawking_temperature_SI_carried_prop : Prop :=
+  (∀ M : ℝ, 0 < M → 0 < Gravity.HawkingTemperatureSI.T_hawking_SI M) ∧
+  (∀ M1 M2 : ℝ, 0 < M1 → 0 < M2 → M1 < M2 →
+    Gravity.HawkingTemperatureSI.T_hawking_SI M2 <
+      Gravity.HawkingTemperatureSI.T_hawking_SI M1) ∧
+  (0 < Gravity.HawkingTemperatureSI.K_Page_SI) ∧
+  (∀ M : ℝ, Gravity.HawkingTemperatureSI.t_Page_SI M =
+    Gravity.HawkingTemperatureSI.K_Page_SI * M ^ 3)
+
+/-- SI Hawking temperature (Track 3.A, Session 89): carried thermodynamic
+content (M4) together with the full SI certificate. -/
 def hawking_temperature_SI : Prop :=
+  hawking_temperature_SI_carried_prop ∧
   Nonempty Gravity.HawkingTemperatureSI.HawkingTemperatureSICert
 
 theorem hawking_temperature_SI_proven : hawking_temperature_SI :=
-  ⟨Gravity.HawkingTemperatureSI.hawkingTemperatureSICert⟩
+  ⟨⟨Gravity.HawkingTemperatureSI.hawkingTemperatureSICert.T_hawking_SI_pos,
+    Gravity.HawkingTemperatureSI.hawkingTemperatureSICert.T_hawking_SI_strict_anti,
+    Gravity.HawkingTemperatureSI.hawkingTemperatureSICert.K_Page_SI_pos,
+    Gravity.HawkingTemperatureSI.hawkingTemperatureSICert.t_Page_SI_eq_K_mul_M_cube⟩,
+   ⟨Gravity.HawkingTemperatureSI.hawkingTemperatureSICert⟩⟩
+
+/-- Carried content for the leading-log discriminator clause (M4): the RS
+coefficient sits strictly more than `1/4` from the loop value `-1/2` and
+strictly more than `5/4` from the semiclassical value `-3/2`, in signed and
+absolute form. -/
+def c_RS_observable_distinct_carried_prop : Prop :=
+  (Gravity.BlackHoleEntropyFromLedger.c_RS - (-1 / 2) > 1 / 4) ∧
+  (Gravity.BlackHoleEntropyFromLedger.c_RS - (-3 / 2) > 5 / 4) ∧
+  (|Gravity.BlackHoleEntropyFromLedger.c_RS - (-1 / 2)| > 1 / 4) ∧
+  (|Gravity.BlackHoleEntropyFromLedger.c_RS - (-3 / 2)| > 5 / 4)
 
 /-- Leading-log entropy coefficient is observable-distinct from LQG and
-string (Track 3.B / Session 90). Witnessed by
-`Gravity.BlackHoleEntropySI.blackHoleEntropySICert`. -/
+string (Track 3.B / Session 90): carried margin content (M4) together with
+the full SI entropy certificate. -/
 def c_RS_observable_distinct : Prop :=
+  c_RS_observable_distinct_carried_prop ∧
   Nonempty Gravity.BlackHoleEntropySI.BlackHoleEntropySICert
 
 theorem c_RS_observable_distinct_proven : c_RS_observable_distinct :=
-  ⟨Gravity.BlackHoleEntropySI.blackHoleEntropySICert⟩
+  ⟨⟨Gravity.BlackHoleEntropySI.blackHoleEntropySICert.c_RS_LQG_margin,
+    Gravity.BlackHoleEntropySI.blackHoleEntropySICert.c_RS_string_margin,
+    Gravity.BlackHoleEntropySI.blackHoleEntropySICert.c_RS_LQG_margin_abs,
+    Gravity.BlackHoleEntropySI.blackHoleEntropySICert.c_RS_string_margin_abs⟩,
+   ⟨Gravity.BlackHoleEntropySI.blackHoleEntropySICert⟩⟩
 
-/-- Cosmological constant from φ (Track 4.A). Witnessed by
-`Cosmology.Track4ACert.track4ACert_inhabited`. -/
+/-- Carried content for the cosmological-constant clause (M4): the formula
+`Ω_Λ = 11/16 - α/π`, the certified band `(0.683, 0.686)`, the Planck-2018
+2σ consistency, and the gap-from-dimension route forcing the rung `-44`. -/
+def omega_lambda_from_phi_carried_prop : Prop :=
+  (Cosmology.OmegaLambdaDerivation.omega_lambda =
+    (11 / 16 : ℝ) - Constants.alpha / Real.pi) ∧
+  (0.683 < Cosmology.OmegaLambdaDerivation.omega_lambda ∧
+   Cosmology.OmegaLambdaDerivation.omega_lambda < 0.686) ∧
+  (|Cosmology.OmegaLambdaDerivation.omega_lambda -
+      Cosmology.OmegaLambdaDerivation.omega_lambda_planck2018| <
+    2 * Cosmology.OmegaLambdaDerivation.omega_lambda_planck_err) ∧
+  (Cosmology.EtaBExactRungDerivation.eta_B_rung_from_dimension
+    Foundation.GapDerivation.D = -44)
+
+/-- Cosmological constant from φ (Track 4.A): carried formula/band/Planck
+content (M4) together with the full Track 4.A certificate. -/
 def omega_lambda_from_phi : Prop :=
+  omega_lambda_from_phi_carried_prop ∧
   Nonempty Cosmology.Track4ACert.Track4ACert
 
 theorem omega_lambda_from_phi_proven : omega_lambda_from_phi :=
-  Cosmology.Track4ACert.track4ACert_inhabited
+  ⟨⟨Cosmology.Track4ACert.track4ACert.omegaLambda_formula,
+    Cosmology.Track4ACert.track4ACert.omegaLambda_band,
+    Cosmology.Track4ACert.track4ACert.planck_2sigma,
+    Cosmology.Track4ACert.track4ACert.etaB_dimension_route⟩,
+   Cosmology.Track4ACert.track4ACert_inhabited⟩
+
+/-- Carried content for the QNM/echo discriminator clause (M4): the
+leading-log margins against the loop and semiclassical values, and the echo
+damping ratio strictly inside `(1/2, 1)` and positive (distinct from uniform
+damping, no echo, and no damping). -/
+def rs_qnm_distinct_LQG_string_carried_prop : Prop :=
+  ((Gravity.BlackHoleEntropyFromLedger.c_RS - (-1 / 2) > 1 / 4) ∧
+   (Gravity.BlackHoleEntropyFromLedger.c_RS - (-3 / 2) > 5 / 4)) ∧
+  ((Gravity.BlackHoleEchoesFromBounce.echoDampingRatio > 1 / 2) ∧
+   (Gravity.BlackHoleEchoesFromBounce.echoDampingRatio < 1) ∧
+   (0 < Gravity.BlackHoleEchoesFromBounce.echoDampingRatio))
 
 /-- QNM discriminator: RS distinct from LQG and string at the leading-log
-coefficient (Session 93). Witnessed by
-`Gravity.DiscriminatorCert.discriminatorMatrixCert_inhabited`. -/
+coefficient (Session 93): carried margin and echo-band content (M4)
+together with the full discriminator-matrix certificate. -/
 def rs_qnm_distinct_LQG_string : Prop :=
+  rs_qnm_distinct_LQG_string_carried_prop ∧
   Nonempty Gravity.DiscriminatorCert.DiscriminatorMatrixCert
 
 theorem rs_qnm_distinct_LQG_string_proven : rs_qnm_distinct_LQG_string :=
-  ⟨Gravity.DiscriminatorCert.discriminatorMatrixCert⟩
+  ⟨⟨Gravity.DiscriminatorCert.rs_qnm_distinct_LQG_string,
+    Gravity.DiscriminatorCert.rs_echo_distinct_uniform_no_echo⟩,
+   ⟨Gravity.DiscriminatorCert.discriminatorMatrixCert⟩⟩
+
+/-- Carried content for the zero-free-parameter clause (M4): the gravity
+sector's dimensionless constants in φ-closed form: `ℏ = φ⁻⁵`,
+`κ_E = 8φ⁵`, `c_RS = -log φ / 2`, echo damping `1/φ`, rung phase `log φ`,
+`S_lead(A) = A/4`, `T_H(M) = 1/(8πM)`, and the η_B rung `-44`. -/
+def gravity_sector_zero_free_parameters_carried_prop : Prop :=
+  (Constants.hbar = Constants.phi ^ (-(5 : ℝ))) ∧
+  (Constants.kappa_einstein = 8 * Constants.phi ^ (5 : ℝ)) ∧
+  (Gravity.BlackHoleEntropyFromLedger.c_RS = -(Real.log Constants.phi) / 2) ∧
+  (Gravity.BlackHoleEchoesFromBounce.echoDampingRatio = 1 / Constants.phi) ∧
+  (Gravity.BlackHoleEchoesFromBounce.rungPhaseDelay = Real.log Constants.phi) ∧
+  (∀ A : ℝ, Gravity.BlackHoleEntropyFromLedger.S_lead A = A / 4) ∧
+  (∀ M : ℝ, Gravity.HawkingTemperatureFromRung.T_hawking M =
+    1 / (8 * Real.pi * M)) ∧
+  (Cosmology.PhiRungLadder.eta_B_rung_val = (-44 : ℤ))
 
 /-- Gravity sector has zero free dimensionless parameters (Track 5.B /
-Session 96). Witnessed by
-`Gravity.ZeroFreeParameters.gravity_sector_zero_free_parameters`. -/
+Session 96): carried closed-form content (M4) together with the full
+closed-form bundle. -/
 def gravity_sector_zero_free_parameters : Prop :=
+  gravity_sector_zero_free_parameters_carried_prop ∧
   Nonempty Gravity.ZeroFreeParameters.GravitySectorConstantsClosedForm
 
 theorem gravity_sector_zero_free_parameters_proven :
     gravity_sector_zero_free_parameters :=
-  Gravity.ZeroFreeParameters.gravity_sector_zero_free_parameters
+  ⟨⟨Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.hbar_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.kappa_einstein_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.c_RS_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.echoDampingRatio_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.rungPhaseDelay_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.S_lead_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.T_hawking_closed_form,
+    Gravity.ZeroFreeParameters.gravitySectorConstantsClosedForm.eta_B_rung_eq_neg_44⟩,
+   Gravity.ZeroFreeParameters.gravity_sector_zero_free_parameters⟩
 
 /-! ### Hypothesis inputs (5 of 12 — open tracks) -/
 
