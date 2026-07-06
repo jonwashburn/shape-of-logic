@@ -1,7 +1,6 @@
 import Mathlib
 import IndisputableMonolith.Constants
-import IndisputableMonolith.Constants.Alpha
-import IndisputableMonolith.Constants.GapWeight
+import IndisputableMonolith.Constants.ExternalAnchors
 import IndisputableMonolith.Cost
 import IndisputableMonolith.Foundation.DimensionForcing
 
@@ -37,14 +36,23 @@ namespace IndisputableMonolith
 namespace Cosmology
 namespace PhaseSaturationVacuum
 
-open Real Constants
+open Real
 
 noncomputable section
 
-/-! ## Part 1: The Ω_Λ Formula -/
+/-! ## Part 1: The Ω_Λ Formula
+
+The EM correction uses the MEASURED `ExternalAnchors.alpha_CODATA` (2026-07-06
+revert): within RS the exact value of α is a free boundary datum
+(`Constants.AlphaGenesis.KappaGammaIrreducibility`), so it enters this formula
+as the one measured input, not as a construction.
+-/
+
+/-- The measured fine-structure constant used in this module (one measured input). -/
+noncomputable def alpha : ℝ := Constants.ExternalAnchors.alpha_CODATA
 
 /-- The RS prediction for the dark energy fraction.
-    Ω_Λ = 11/16 - α/π, derived from cube geometry + fine-structure correction. -/
+    Ω_Λ = 11/16 - α/π: cube-geometry seed minus the measured-α EM correction. -/
 def Omega_Lambda : ℝ := 11/16 - alpha / Real.pi
 
 /-- Ω_Λ is well-defined. -/
@@ -52,85 +60,20 @@ theorem Omega_Lambda_def : Omega_Lambda = 11/16 - alpha / Real.pi := rfl
 
 /-- α is positive (needed for bounds). -/
 private lemma alpha_pos_aux : 0 < alpha := by
-  unfold alpha alphaInv alpha_seed
-  positivity
+  unfold alpha Constants.ExternalAnchors.alpha_CODATA
+  norm_num
 
 /-- α/π is positive. -/
 private lemma alpha_over_pi_pos : 0 < alpha / Real.pi :=
   div_pos alpha_pos_aux Real.pi_pos
 
-/-- alpha_seed > 132 (since 4π·11 > 4·3·11 = 132). -/
-private lemma alpha_seed_gt_132 : 132 < alpha_seed := by
-  simp only [alpha_seed]
-  nlinarith [Real.pi_gt_three]
-
-private lemma alpha_seed_pos : 0 < alpha_seed := by linarith [alpha_seed_gt_132]
-
-/-- √2 bounds for w8 estimation. -/
-private lemma sqrt2_lo : Real.sqrt 2 > 1.4 := by
-  rw [show (1.4:ℝ) = Real.sqrt (1.4^2) from (Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 1.4)).symm]
-  exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
-
-private lemma sqrt2_hi : Real.sqrt 2 < 1.42 := by
-  rw [show (1.42:ℝ) = Real.sqrt (1.42^2) from (Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 1.42)).symm]
-  exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
-
-private lemma phi_lo : phi > 1.618 := by
-  unfold phi
-  have h5 : Real.sqrt 5 > 2.236 := by
-    rw [show (2.236:ℝ) = Real.sqrt (2.236^2) from (Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 2.236)).symm]
-    exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
-  linarith
-
-/-- w8 < 5 (from the formula with sqrt/phi bounds). -/
-private lemma w8_lt_5 : w8_from_eight_tick < 5 := by
-  unfold w8_from_eight_tick
-  nlinarith [sqrt2_lo, sqrt2_hi, phi_lo, sq_nonneg (Real.sqrt 2),
-             mul_pos (show Real.sqrt 2 > 0 by positivity) (show phi > 0 from phi_pos)]
-
-/-- log(phi) < 1 (since phi < e). -/
-private lemma log_phi_lt_1 : Real.log phi < 1 := by
-  have h_e : Real.exp 1 > phi := by
-    have h_exp1_ge2 : Real.exp 1 ≥ 2 := by
-      have := Real.add_one_le_exp (1 : ℝ)
-      linarith
-    linarith [phi_lt_onePointSixTwo]
-  rw [← Real.log_exp 1]
-  exact Real.log_lt_log phi_pos h_e
-
-/-- f_gap < 5 (from w8 < 5 and log(phi) < 1). -/
-private lemma f_gap_lt_5 : f_gap < 5 := by
-  unfold f_gap
-  calc w8_from_eight_tick * Real.log phi
-      < w8_from_eight_tick * 1 := mul_lt_mul_of_pos_left log_phi_lt_1 w8_pos
-    _ = w8_from_eight_tick := mul_one _
-    _ < 5 := w8_lt_5
-
-/-- alphaInv > 2 (using exp(-x) ≥ 1-x and f_gap < alpha_seed - 2). -/
-private lemma alphaInv_gt_2 : alphaInv > 2 := by
-  have h_exp_ge : Real.exp (-(f_gap / alpha_seed)) ≥ 1 - f_gap / alpha_seed := by
-    have := Real.add_one_le_exp (-(f_gap / alpha_seed))
-    linarith
-  have h_fgap_small : f_gap < alpha_seed - 2 := by
-    calc f_gap < 5 := f_gap_lt_5
-      _ < alpha_seed - 2 := by linarith [alpha_seed_gt_132]
-  calc alphaInv = alpha_seed * Real.exp (-(f_gap / alpha_seed)) := rfl
-    _ ≥ alpha_seed * (1 - f_gap / alpha_seed) :=
-        mul_le_mul_of_nonneg_left h_exp_ge (le_of_lt alpha_seed_pos)
-    _ = alpha_seed - f_gap := by field_simp [ne_of_gt alpha_seed_pos]
-    _ > 2 := by linarith
-
 /-- alpha < 1/2. -/
 private lemma alpha_lt_half : alpha < 1 / 2 := by
-  have h_alphaInv_pos : 0 < alphaInv := by linarith [alphaInv_gt_2]
-  have h_eq : alpha = 1 / alphaInv := by unfold alpha; field_simp
-  rw [h_eq, div_lt_div_iff₀ h_alphaInv_pos (by norm_num : (0:ℝ) < 2)]
-  linarith [alphaInv_gt_2]
+  unfold alpha Constants.ExternalAnchors.alpha_CODATA
+  norm_num
 
 /-- alpha is positive. -/
-private lemma alpha_pos_local : 0 < alpha := by
-  have : 0 < alphaInv := by linarith [alphaInv_gt_2]
-  unfold alpha; positivity
+private lemma alpha_pos_local : 0 < alpha := alpha_pos_aux
 
 /-- α/π < 11/16 (ensures Ω_Λ > 0). -/
 theorem alpha_over_pi_lt_seed : alpha / Real.pi < 11 / 16 := by
@@ -179,26 +122,16 @@ theorem Omega_Lambda_lt_069 : Omega_Lambda < 0.69 := by
   calc Omega_Lambda < 11 / 16 := Omega_Lambda_lt_seed
     _ < 0.69 := by norm_num
 
-/-- **HYPOTHESIS H_AlphaInvBound**: alphaInv > 130.
-
-    This is a numerical fact (alphaInv ≈ 137.036) that follows from
-    the interval arithmetic in `IndisputableMonolith.Numerics.Interval.AlphaBounds`
-    but requires the W8Bounds module which has pre-existing errors.
-
-    When those are fixed, this hypothesis becomes a theorem.
-    For now, we record it explicitly. -/
-def H_AlphaInvBound : Prop := 130 < alphaInv
-
-/-- Under H_AlphaInvBound, Ω_Λ > 0.68.
-    alpha < 1/130, alpha/pi < 1/390 < 0.003, so Ω_Λ > 0.6875 - 0.003 > 0.68. -/
-theorem Omega_Lambda_gt_068_conditional (h : H_AlphaInvBound) : 0.68 < Omega_Lambda := by
-  unfold Omega_Lambda H_AlphaInvBound at *
-  have halphaInv_pos : 0 < alphaInv := by linarith
-  have halpha_eq : alpha = 1 / alphaInv := by unfold alpha; ring
-  have halpha_pos : 0 < alpha := by rw [halpha_eq]; positivity
+/-- Ω_Λ > 0.68 (unconditional with the measured α).
+    alpha < 1/130, alpha/pi < 1/390 < 0.003, so Ω_Λ > 0.6875 - 0.003 > 0.68.
+    (The former `H_AlphaInvBound` hypothesis is obsolete: with the measured
+    CODATA α this is a plain numeric fact.) -/
+theorem Omega_Lambda_gt_068 : 0.68 < Omega_Lambda := by
+  unfold Omega_Lambda
   have halpha_lt : alpha < 1 / 130 := by
-    rw [halpha_eq, div_lt_div_iff₀ halphaInv_pos (by norm_num : (0:ℝ) < 130)]
-    linarith
+    unfold alpha Constants.ExternalAnchors.alpha_CODATA
+    norm_num
+  have halpha_pos : 0 < alpha := alpha_pos_aux
   have hpi3 : (3 : ℝ) < Real.pi := Real.pi_gt_three
   have : alpha / Real.pi < (1 / 130) / 3 := by
     calc alpha / Real.pi

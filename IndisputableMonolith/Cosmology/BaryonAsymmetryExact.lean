@@ -45,7 +45,8 @@ pair. The golden ratio is the self-similar overshoot.
 ## Main Results
 
 - `eta_B_rung_structural`: 44 = 4 × 11 (flip count × torsion gap)
-- `rung_matches_alpha_seed`: 44π = α_seed (same "44" in both)
+- `rung_matches_alpha_seed_nat`: the rung product is 44 (the former
+  "44π = α_seed" clause was removed as tautological; see Part 7 note)
 - `phi_neg44_times_phi45_eq_phi`: φ⁻⁴⁴ × φ⁴⁵ = φ
 - `eta_B_phi45_balance`: η_B × φ⁴⁵ = φ
 - `BaryonAsymmetryExactCert`: master certificate
@@ -89,16 +90,15 @@ theorem rung_44_is_product :
     flip_count_gen0 * torsion_gap_01 = 44 := by
   native_decide
 
-/-- **THEOREM**: The same "44" appears in the α⁻¹ seed: α_seed = 44π.
-    The fine structure constant and the baryon asymmetry are both
-    governed by the product 4 × 11. -/
+/-- The rung product 4 × 11 = 44. (The former "α connection" clause
+    `alpha_seed = 44π` was removed 2026-07-06: it was a tautological
+    restatement of the α construction's DEFINITION, and the seed 4π·11
+    is an identification, not a derived coupling — see
+    `Constants.AlphaGenesis`. The shared "44" is numerology until a
+    forcing theorem connects the two; no such theorem exists.) -/
 theorem rung_matches_alpha_seed_nat :
     (flip_count_gen0 * torsion_gap_01 : ℕ) = 44 := by
   native_decide
-
-/-- α_seed = 44π, and 44 = 4 × 11. -/
-theorem alpha_seed_eq_44pi : alpha_seed = 44 * Real.pi := by
-  unfold alpha_seed; ring
 
 /-- The baryon asymmetry rung is the negative of the 44 product. -/
 theorem eta_B_rung_eq : eta_B_rung = -(flip_count_gen0 * torsion_gap_01 : ℤ) := by
@@ -199,8 +199,6 @@ theorem eta_B_eq_phi_over_phi45_scale :
 theorem full_derivation_chain :
     -- Rung structure
     flip_count_gen0 * torsion_gap_01 = 44 ∧
-    -- Connection to α
-    alpha_seed = 44 * Real.pi ∧
     -- φ-power identity
     phi ^ (-44 : ℤ) * phi ^ (45 : ℤ) = phi ∧
     -- η_B is positive and small
@@ -210,7 +208,7 @@ theorem full_derivation_chain :
     1 < phi45_scale ∧
     -- The link
     eta_B_phi_scale * phi45_scale = phi := by
-  exact ⟨rung_44_is_product, alpha_seed_eq_44pi,
+  exact ⟨rung_44_is_product,
     phi_neg44_times_phi45_eq_phi', eta_B_phi_scale_pos,
     eta_B_phi_scale_lt_one, phi45_scale_gt_one,
     eta_B_phi45_balance⟩
@@ -240,14 +238,12 @@ def discrepancy_percent : ℝ := 4.5
 
     This packages every result in the derivation chain:
     - The rung assignment 44 = 4 × 11
-    - The α connection: α_seed = 44π
     - The φ-power identity: φ⁻⁴⁴ × φ⁴⁵ = φ
     - The φ⁴⁴ / φ⁴⁵ balance: η_B × φ⁴⁵ = φ
     - All intermediaries (J_CP > 0, Sakharov, sphaleron rate, etc.) -/
 structure BaryonAsymmetryExactCert where
   -- Rung structure
   rung_is_product : flip_count_gen0 * torsion_gap_01 = 44
-  alpha_connection : alpha_seed = 44 * Real.pi
   -- φ-power identity
   phi_identity : phi ^ (-44 : ℤ) * phi ^ (45 : ℤ) = phi
   -- η_B properties
@@ -269,11 +265,11 @@ structure BaryonAsymmetryExactCert where
     The baryon-to-photon ratio η_B sits on φ-rung −44 = −(4 × 11),
     and the φ⁴⁴ / φ⁴⁵ balance η_B × φ⁴⁵ = φ holds exactly.
 
-    Every ingredient traces to Q₃ cube geometry and the golden ratio φ
-    with zero free parameters. -/
+    Every ingredient traces to Q₃ cube geometry and the golden ratio φ;
+    the sphaleron-rate input carries the α boundary datum (see
+    `SphaleronRateCert`). -/
 theorem baryon_asymmetry_exact_cert : BaryonAsymmetryExactCert where
   rung_is_product := rung_44_is_product
-  alpha_connection := alpha_seed_eq_44pi
   phi_identity := phi_neg44_times_phi45_eq_phi'
   eta_pos := eta_B_phi_scale_pos
   eta_small := eta_B_phi_scale_lt_one

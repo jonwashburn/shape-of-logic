@@ -165,51 +165,17 @@ theorem G_ℏ_product : G_rs * ℏ_rs = 1 := by
   rw [zpow_neg, mul_inv_cancel₀]
   exact pow_ne_zero 5 phi_pos.ne'
 
-/-! ## Fine Structure Constant: α -/
+/-! ## Fine Structure Constant: α (REMOVED)
 
-/-- The geometric seed for α: 1/137.
-    This comes from the holographic area count. -/
-noncomputable def α_seed : ℝ := 1 / 137
-
-/-- The gap-45 correction factor.
-    This accounts for the gap-45 barrier. -/
-noncomputable def gap_correction : ℝ := 1 + 45 / (360 * 137)
-
-/-- **Fine structure constant** (approximate).
-
-    α emerges from the geometric seed (holographic area counting)
-    with corrections from the gap-45 barrier.
-
-    The derivation: α ≈ 1/137 × (1 + gap_45/(lcm×137))
-
-    More precisely, α⁻¹ ≈ 137.035999... which RS derives from
-    geometric arguments involving φ, 8-tick, and gap-45. -/
-noncomputable def α_rs : ℝ := α_seed * gap_correction
-
-/-- α⁻¹ ≈ 137.036 (RS prediction). -/
-noncomputable def α_inverse_rs : ℝ := 1 / α_rs
-
-/-- **THE α DERIVATION CLAIM**
-
-    RS derives α⁻¹ ≈ 137.035999... from:
-    1. Holographic area count → geometric seed 137
-    2. Gap-45 correction → fractional adjustment
-    3. φ-based fine-tuning → exact value
-
-    This is a strong empirical prediction. If α⁻¹ deviated
-    significantly from the RS prediction, the framework would be falsified. -/
-theorem α_derivation_claim :
-    ∃ (seed : ℕ) (correction : ℝ),
-      seed = 137 ∧
-      correction > 0 ∧
-      α_rs = (1 / seed) * (1 + correction) := by
-  use 137, 45 / (360 * 137)
-  constructor
-  · rfl
-  constructor
-  · norm_num
-  · unfold α_rs α_seed gap_correction
-    ring
+The former `α_seed = 1/137`, `gap_correction = 1 + 45/(360·137)`, and
+`α_rs = α_seed · gap_correction` block (α⁻¹ = 136.875...) was removed
+2026-07-06. It contradicted the repository's canonical construction band
+(`Numerics.Interval.AlphaBounds`, (137.030, 137.039)) by 0.16 and missed
+CODATA by ~7.7×10⁶σ; its "derivation" was a `rfl`/`ring` restatement of its
+own definition. The honest position on α is stated in
+`Constants.AlphaGenesis` (measurement verdict M7; κ_γ-irreducibility M8:
+within RS the exact value of α⁻¹ is a free boundary datum, the U(1) kinetic
+normalization, not a derived constant). -/
 
 /-! ## The Dimensionless Ratios -/
 

@@ -8046,10 +8046,13 @@ structure T6T8_To_CosmologyConstants_Bridge
   etaB_corrected_band :
     Cosmology.EtaBPrefactorDerivation.eta_B_corrected_two_sided > 6.0e-10 ∧
       Cosmology.EtaBPrefactorDerivation.eta_B_corrected_two_sided < 6.2e-10
-  /-- ΩΛ is routed through its closed formula and theorem-backed bounds. -/
+  /-- ΩΛ is routed through its closed formula and theorem-backed bounds.
+      The `α` in the formula is the measured CODATA value (the one measured
+      input; within RS the exact α is a free boundary datum, see
+      `Constants.AlphaGenesis.KappaGammaIrreducibility`). -/
   omega_lambda_formula :
     Cosmology.CosmologicalConstantDerivation.Omega_Lambda_RS =
-      11 / 16 - (Constants.alpha / Real.pi)
+      11 / 16 - (Constants.ExternalAnchors.alpha_CODATA / Real.pi)
   omega_lambda_bounds :
     (0 : ℝ) < Cosmology.CosmologicalConstantDerivation.Omega_Lambda_RS ∧
       Cosmology.CosmologicalConstantDerivation.Omega_Lambda_RS < (11 / 16 : ℝ)
@@ -9935,79 +9938,22 @@ theorem t6_to_phi_constants_canonical_bridge_holds (h6 : T6_Phi_Forced) :
   hbar_positive := ConstantDerivations.ℏ_pos
   G_positive := ConstantDerivations.G_pos
 
-/-! ### Bridge: T6 → Canonical Fine-Structure Constant α
+/-! ### Bridge: T6 → Fine-Structure Constant α (REMOVED 2026-07-06)
 
-The fine-structure constant α is not a free parameter in RS. T6's
-φ-forcing combined with the gap-45 / 8-tick synchronization fixes
-`α_rs = (1/137) × (1 + 45 / (360 × 137))` — the holographic-area seed
-`1/137` corrected by the gap-45 closure ratio. The canonical bridge
-names the seed, the correction, the formula, and witnesses positivity. -/
+The former `T6_To_AlphaConstant_Canonical_Bridge` asserted, as a certified
+"canonical" bridge, the formula `α_rs = (1/137) × (1 + 45/(360×137))`
+(α⁻¹ = 136.875...). That value contradicted the repository's own construction
+band (137.030, 137.039) by 0.16 and missed CODATA by ~7.7×10⁶σ, and the
+"bridge" was a `rfl`/`ring` restatement of a definition. It has been deleted
+together with its `ConstantDerivations` α block.
 
-/-- **T6 → Canonical Fine-Structure Constant α bridge certificate.**
-
-    T6's φ-forcing plus the gap-45 / 8-tick synchronization fixes the
-    fine-structure constant `α_rs = α_seed × gap_correction =
-    (1/137) × (1 + 45 / (360 × 137))`. The bridge names the canonical
-    formula, the seed, the correction, positivity of each piece, and
-    the derivation claim that identifies seed = 137. -/
-structure T6_To_AlphaConstant_Canonical_Bridge (_h6 : T6_Phi_Forced) :
-    Prop where
-  /-- The α seed is exactly `1 / 137` (holographic area count). -/
-  alpha_seed_is_one_over_137 : ConstantDerivations.α_seed = 1 / 137
-  /-- The gap-45 correction is exactly `1 + 45 / (360 × 137)`. -/
-  gap_correction_canonical :
-    ConstantDerivations.gap_correction = 1 + 45 / (360 * 137)
-  /-- The canonical `α_rs` formula. -/
-  alpha_rs_canonical :
-    ConstantDerivations.α_rs =
-      (1 / 137) * (1 + 45 / (360 * 137))
-  /-- The α seed is strictly positive. -/
-  alpha_seed_positive : ConstantDerivations.α_seed > 0
-  /-- The gap-45 correction is strictly positive. -/
-  gap_correction_positive : ConstantDerivations.gap_correction > 0
-  /-- `α_rs` is strictly positive. -/
-  alpha_rs_positive : ConstantDerivations.α_rs > 0
-  /-- The α-derivation claim packaged: ∃ seed = 137, correction > 0,
-      α_rs = (1/seed) × (1 + correction). This is the legacy
-      existential surface for `α`, fixed at the canonical witness. -/
-  alpha_derivation_legacy :
-    ∃ (seed : ℕ) (correction : ℝ),
-      seed = 137 ∧
-      correction > 0 ∧
-      ConstantDerivations.α_rs = (1 / seed) * (1 + correction)
-
-/-- `T6_To_AlphaConstant_Canonical_Bridge` certificates are
-    propositionally unique for a fixed T6 instance. -/
-instance T6_To_AlphaConstant_Canonical_Bridge.instSubsingleton
-    {h6 : T6_Phi_Forced} :
-    Subsingleton (T6_To_AlphaConstant_Canonical_Bridge h6) where
-  allEq _ _ := by rfl
-
-/-- T6 supplies the canonical α bridge. -/
-theorem t6_to_alpha_constant_canonical_bridge_holds (h6 : T6_Phi_Forced) :
-    T6_To_AlphaConstant_Canonical_Bridge h6 where
-  alpha_seed_is_one_over_137 := rfl
-  gap_correction_canonical := rfl
-  alpha_rs_canonical := by
-    unfold ConstantDerivations.α_rs ConstantDerivations.α_seed
-      ConstantDerivations.gap_correction
-    ring
-  alpha_seed_positive := by
-    unfold ConstantDerivations.α_seed
-    norm_num
-  gap_correction_positive := by
-    unfold ConstantDerivations.gap_correction
-    have h : (45 : ℝ) / (360 * 137) > 0 := by positivity
-    linarith
-  alpha_rs_positive := by
-    unfold ConstantDerivations.α_rs ConstantDerivations.α_seed
-      ConstantDerivations.gap_correction
-    have h1 : (1 : ℝ) / 137 > 0 := by norm_num
-    have h2 : (1 : ℝ) + 45 / (360 * 137) > 0 := by
-      have : (45 : ℝ) / (360 * 137) > 0 := by positivity
-      linarith
-    exact mul_pos h1 h2
-  alpha_derivation_legacy := ConstantDerivations.α_derivation_claim
+The honest, machine-checked position on α lives in `Constants.AlphaGenesis`:
+the first-order construction value is EXCLUDED by measurement at more than
+30,000σ (`MeasurementVerdict`), and within RS the exact value of α⁻¹ is a
+free boundary datum — the U(1) kinetic normalization κ_γ, which no
+normalization-blind forced closure can pin
+(`KappaGamma.kappa_blind_closure_cannot_pin`). α is NOT part of the forcing
+chain's derived constants. -/
 
 /-! ### Bridge: T6 → Canonical Mass Ladder
 
@@ -10491,16 +10437,6 @@ structure Spine_To_Extras_Bridge : Prop where
   /-- T6 fixes the Planck mass at the canonical exponent `-5`. -/
   t6_forces_planck_mass_canonical_exponent :
     ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)
-  /-- T6 + gap-45 fixes the fine-structure constant α at the canonical
-      formula `(1/137) × (1 + 45/(360 × 137))`. -/
-  t6_forces_alpha_canonical :
-    ConstantDerivations.α_rs =
-      (1 / 137) * (1 + 45 / (360 * 137))
-  /-- T6 + gap-45 fixes the α-seed at `1/137`. -/
-  t6_forces_alpha_seed : ConstantDerivations.α_seed = 1 / 137
-  /-- T6 + gap-45 fixes the gap correction at `1 + 45/(360 × 137)`. -/
-  t6_forces_gap_correction :
-    ConstantDerivations.gap_correction = 1 + 45 / (360 * 137)
   /-- T5 (via `Jcost_unit0`) forces the existence of a consistent
       configuration at zero cost (`True`, ratio = 1). -/
   t5_forces_zero_cost_consistent :
@@ -10534,7 +10470,6 @@ theorem spine_to_extras_bridge_holds
     (t0 : T0_Logic_Forced) (t5 : T5_J_Unique) (t6 : T6_Phi_Forced) :
     Spine_To_Extras_Bridge :=
   let phi_consts := t6_to_phi_constants_canonical_bridge_holds t6
-  let alpha_canonical := t6_to_alpha_constant_canonical_bridge_holds t6
   let ref_canonical := t5_to_canonical_reference_bridge_holds t5
   let exist_canonical := t5_to_canonical_existent_bridge_holds t5
   let classical_logic_bundle := t0_to_classical_logic_and_unique_minimizer_bridge_holds t0
@@ -10548,9 +10483,6 @@ theorem spine_to_extras_bridge_holds
     t6_forces_G_hbar_inverse := phi_consts.G_hbar_inverse
     t6_forces_planck_length_unit := phi_consts.planck_length_canonical
     t6_forces_planck_mass_canonical_exponent := phi_consts.planck_mass_canonical
-    t6_forces_alpha_canonical := alpha_canonical.alpha_rs_canonical
-    t6_forces_alpha_seed := alpha_canonical.alpha_seed_is_one_over_137
-    t6_forces_gap_correction := alpha_canonical.gap_correction_canonical
     t5_forces_zero_cost_consistent := exist_canonical.zero_cost_consistent_legacy
     t5_forces_reference := ref_canonical.reference_forced_legacy }
 
@@ -10709,11 +10641,6 @@ structure CompleteForcingChain where
       `ℏ`, `G`, and the Planck length / Planck mass, rather than the
       legacy existential surface used by `Spine_To_Extras_Bridge`. -/
   t6_to_phi_constants_canonical : T6_To_PhiConstants_Canonical_Bridge t6
-  /-- Canonical α (fine-structure constant) bridge from T6: fixes the
-      holographic-area seed `1/137` and the gap-45 correction `1 +
-      45 / (360 × 137)`, replacing the legacy existential surface
-      `∃ seed correction, ...`. -/
-  t6_to_alpha_canonical : T6_To_AlphaConstant_Canonical_Bridge t6
   /-- Canonical Mass Ladder bridge from T6: fixes
       `m = yardstick * φ^(rung - 8 + gap(Z))`, proves φ-rung spacing,
       routes Standard Model fermion masses, and keeps PDG comparisons
@@ -10815,7 +10742,6 @@ def complete_forcing_chain : CompleteForcingChain :=
     t5_to_canonical_reference := t5_to_canonical_reference_bridge_holds h5
     measurement := bvar_meas.measurement
     t6_to_phi_constants_canonical := t6_to_phi_constants_canonical_bridge_holds h6
-    t6_to_alpha_canonical := t6_to_alpha_constant_canonical_bridge_holds h6
     t6_to_mass_ladder_canonical := t6_to_canonical_mass_ladder_bridge_holds h6
     spine_to_extras := spine_to_extras_bridge_holds h0 h5 h6
   }
@@ -11006,7 +10932,6 @@ theorem ultimate_inevitability_canonical :
 
     Extends `ultimate_inevitability_canonical` with the additional
     canonical bridges closed in the forcing chain:
-    - The fine-structure constant α at canonical formula.
     - Gap-45 = T(9), the 9th triangular number from cumulative
       phase over a closed 8-tick cycle.
     - The canonical dimension D = 3.
@@ -11027,10 +10952,6 @@ theorem ultimate_inevitability_extended :
      ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 ∧
      ConstantDerivations.planck_length_rs = 1 ∧
      ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)) ∧
-    -- α at canonical formula
-    (ConstantDerivations.α_rs = (1 / 137) * (1 + 45 / (360 * 137)) ∧
-     ConstantDerivations.α_seed = 1 / 137 ∧
-     ConstantDerivations.gap_correction = 1 + 45 / (360 * 137)) ∧
     -- Gap-45 = T(9)
     (DimensionForcing.gap_45 = 45 ∧
      Gap45.PhysicalMotivation.triangular 9 = 45 ∧
@@ -11044,7 +10965,6 @@ theorem ultimate_inevitability_extended :
     (CliffordBridge.spinorDimFormula 3 = 2 ∧
      CliffordBridge.cliffordPeriod = 8) :=
   let phi_consts := t6_to_phi_constants_canonical_bridge_holds t6_holds
-  let alpha_canonical := t6_to_alpha_constant_canonical_bridge_holds t6_holds
   let godel_canonical := t0_to_classical_logic_and_unique_minimizer_bridge_holds t0_holds
   let exist_canonical := t5_to_canonical_existent_bridge_holds t5_holds
   let dim_canonical := t8_to_canonical_dimension_bridge_holds t8_holds
@@ -11057,9 +10977,6 @@ theorem ultimate_inevitability_extended :
    ⟨phi_consts.c_rs_canonical, phi_consts.hbar_rs_canonical,
     phi_consts.G_rs_canonical, phi_consts.G_hbar_inverse,
     phi_consts.planck_length_canonical, phi_consts.planck_mass_canonical⟩,
-   ⟨alpha_canonical.alpha_rs_canonical,
-    alpha_canonical.alpha_seed_is_one_over_137,
-    alpha_canonical.gap_correction_canonical⟩,
    ⟨gap45_canonical.gap_45_eq_45,
     gap45_canonical.triangular_9_eq_45,
     gap45_canonical.sync_period_eq_360,

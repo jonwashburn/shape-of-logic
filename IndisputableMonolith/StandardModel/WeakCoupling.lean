@@ -14,16 +14,22 @@ two independently RS-derived quantities:
 
 via the tree-level electroweak identity: α = α_W · sin²θ_W.
 
-Both inputs are zero-parameter derivations from Q₃ cube geometry:
-- α comes from the EMAlphaCert chain (44π · exp(−f_gap/44π))
-- sin²θ_W comes from the gauge embedding: (D − φ)/(2D) at D = 3
+Input status (honest, 2026-07-06):
+- α here is the RS CONSTRUCTION value (44π · exp(−f_gap/44π), band
+  (137.030, 137.039)). The construction's exact value is EXCLUDED by
+  measurement at >30,000σ (`Constants.AlphaGenesis.MeasurementVerdict`),
+  and within RS the exact α is a free boundary datum
+  (`Constants.AlphaGenesis.KappaGammaIrreducibility`). So α_W built on it
+  is a construction-band object, NOT a parameter-free derivation of the
+  measured weak coupling.
+- sin²θ_W = (3 − φ)/6 is φ-structural from the gauge embedding at D = 3.
 
 ## Main Results
 
 - `alpha_W`: the weak coupling constant = α / sin²θ_W
 - `alpha_W_pos`: α_W is positive
 - `alpha_W_gt_alpha`: α_W > α (since sin²θ_W < 1)
-- `alpha_W_structural`: α_W is fully RS-derived
+- `WeakCouplingCert`: the combination identity (construction-band input)
 
 ## Status: 0 sorry, 0 axiom
 -/
@@ -88,10 +94,13 @@ theorem alpha_W_gt_two_alpha : 2 * alpha < alpha_W := by
 
 /-! ## Part 3: Structural Certificate -/
 
-/-- α_W is fully RS-derived: no free parameters enter its computation.
-    - α comes from the EMAlphaCert (44π seed + f_gap from 8-tick)
-    - sin²θ_W = (3 − φ)/6 from gauge embedding geometry
-    Both trace to Q₃ cube structure + golden ratio φ. -/
+/-- The α_W combination identity, with honest input status:
+    - α is the RS CONSTRUCTION value (44π seed + f_gap from 8-tick); its
+      exact value is a boundary datum in RS, not a derived constant
+      (`Constants.AlphaGenesis.KappaGammaIrreducibility`), so this cert
+      certifies the combination STRUCTURE, not a parameter-free value of
+      the measured weak coupling.
+    - sin²θ_W = (3 − φ)/6 from gauge embedding geometry (φ-structural). -/
 structure WeakCouplingCert where
   alpha_from_cube : alphaInv = alpha_seed * Real.exp (-(f_gap / alpha_seed))
   sin2_from_phi : sin2_theta_W_rs = (3 - Constants.phi) / 6

@@ -95,22 +95,26 @@ def placeholderClauseCount : ℕ := 0
 
 /-! ## §2. The carried theorem clauses and the six certificate clauses -/
 
-/-- Disclosure: the Lorentzian-signature clause is `Nonempty` of the
-spacetime-emergence certificate. -/
+/-- Disclosure: the Lorentzian-signature clause is the carried metric content
+(M4) conjoined with `Nonempty` of the spacetime-emergence certificate. -/
 theorem lorentzian_clause_is_cert :
     MasterTheorem.Lorentzian_1_3 =
-      Nonempty Unification.SpacetimeEmergence.SpacetimeEmergenceCert := rfl
+      (MasterTheorem.Lorentzian_1_3_carried_prop ∧
+       Nonempty Unification.SpacetimeEmergence.SpacetimeEmergenceCert) := rfl
 
-/-- Disclosure: the Hawking-temperature clause is `Nonempty` of the SI cert. -/
+/-- Disclosure: the Hawking-temperature clause is the carried thermodynamic
+content (M4) conjoined with `Nonempty` of the SI cert. -/
 theorem hawking_clause_is_cert :
     MasterTheorem.hawking_temperature_SI =
-      Nonempty Gravity.HawkingTemperatureSI.HawkingTemperatureSICert := rfl
+      (MasterTheorem.hawking_temperature_SI_carried_prop ∧
+       Nonempty Gravity.HawkingTemperatureSI.HawkingTemperatureSICert) := rfl
 
-/-- Disclosure: the leading-log discriminator clause is `Nonempty` of the
-black-hole entropy SI cert. -/
+/-- Disclosure: the leading-log discriminator clause is the carried margin
+content (M4) conjoined with `Nonempty` of the black-hole entropy SI cert. -/
 theorem cRS_clause_is_cert :
     MasterTheorem.c_RS_observable_distinct =
-      Nonempty Gravity.BlackHoleEntropySI.BlackHoleEntropySICert := rfl
+      (MasterTheorem.c_RS_observable_distinct_carried_prop ∧
+       Nonempty Gravity.BlackHoleEntropySI.BlackHoleEntropySICert) := rfl
 
 /-- The two carried theorem clauses hold. -/
 theorem carried_clauses_hold :

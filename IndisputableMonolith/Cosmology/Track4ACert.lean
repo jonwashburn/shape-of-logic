@@ -20,9 +20,10 @@ single Track 4.A certificate per the master plan
 
 2. **Ω_Λ formula and band.** The dark-energy fraction is
    `Ω_Λ = 11/16 - α/π` with structural geometric seed `11/16` from the
-   D=3 ledger (T8 + gap-45) and EM correction `α/π` from the certified
-   `α⁻¹ ∈ (137.030, 137.039)` band. The proved interval is
-   `Ω_Λ ∈ (0.683, 0.686)`. Anchored at
+   D=3 ledger (T8 + gap-45) and EM correction `α/π` using the MEASURED
+   CODATA α (one measured input; within RS the exact α is a free
+   boundary datum, see `Constants.AlphaGenesis.KappaGammaIrreducibility`).
+   The proved interval is `Ω_Λ ∈ (0.683, 0.686)`. Anchored at
    `Cosmology.OmegaLambdaDerivation.omega_lambda_interval` and
    `omega_lambda` definition.
 
@@ -79,7 +80,7 @@ Five clauses establishing Track 4.A's three closure points:
    fermionic DOF) that converge.
 2. `omegaLambda_formula`: `Ω_Λ = 11/16 − α/π`, with `11/16` the
    structural seed from D=3 ledger structure and `α/π` the EM
-   correction.
+   correction using the measured CODATA α (one measured input).
 3. `omegaLambda_band`: `Ω_Λ ∈ (0.683, 0.686)`.
 4. `planck_2sigma`: the RS prediction is consistent with Planck 2018's
    `0.6889 ± 0.0056` at the 2σ level.
@@ -90,7 +91,8 @@ structure Track4ACert where
   etaB_rung_forced : EtaBExactRungCert
   /-- (2) Ω_Λ formula: 11/16 - α/π. -/
   omegaLambda_formula :
-    omega_lambda = (11 / 16 : ℝ) - Constants.alpha / Real.pi
+    omega_lambda = (11 / 16 : ℝ)
+      - Constants.ExternalAnchors.alpha_CODATA / Real.pi
   /-- (3) Ω_Λ ∈ (0.683, 0.686). -/
   omegaLambda_band : 0.683 < omega_lambda ∧ omega_lambda < 0.686
   /-- (4) RS consistent with Planck 2018 at 2σ. -/
@@ -119,13 +121,13 @@ theorem track4ACert_inhabited : Nonempty Track4ACert :=
 /-- **TRACK 4.A HEADLINE THEOREM.**
 
 The cosmological-constant fraction `Ω_Λ` and the baryon-to-photon
-ratio rung exponent `−44` are simultaneously forced by RS structure
-(D = 3 plus the certified `α⁻¹` band), yielding a structural
+ratio rung exponent `−44` are simultaneously pinned by RS structure
+(D = 3) plus one measured input (the CODATA α), yielding a structural
 prediction `Ω_Λ ∈ (0.683, 0.686)` that overlaps Planck 2018 within 2σ
-and three convergent derivations of the rung integer that share zero
-free parameters. -/
+and three convergent derivations of the rung integer. -/
 theorem track4A_headline :
-    omega_lambda = (11 / 16 : ℝ) - Constants.alpha / Real.pi ∧
+    omega_lambda = (11 / 16 : ℝ)
+      - Constants.ExternalAnchors.alpha_CODATA / Real.pi ∧
     0.683 < omega_lambda ∧ omega_lambda < 0.686 ∧
     |omega_lambda - omega_lambda_planck2018| < 2 * omega_lambda_planck_err ∧
     eta_B_rung_from_dimension Foundation.GapDerivation.D = -44 ∧

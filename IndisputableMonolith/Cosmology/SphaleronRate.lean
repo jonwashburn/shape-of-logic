@@ -95,10 +95,12 @@ theorem sphaleron_rate_structural :
 
 /-! ## Part 3: Provenance Certificate -/
 
-/-- The sphaleron rate is fully RS-derived:
-    - κ_sph from Q₃ Hamiltonian cycles (combinatorial)
-    - α_W from α / sin²θ_W (both RS-derived)
-    No free parameters. -/
+/-- Sphaleron-rate provenance (honest, 2026-07-06):
+    - κ_sph from Q₃ Hamiltonian cycles (combinatorial, structural)
+    - α_W from α / sin²θ_W, where α is the RS CONSTRUCTION value whose
+      exact value is a boundary datum in RS, not a derived constant
+      (`Constants.AlphaGenesis.KappaGammaIrreducibility`, `MeasurementVerdict`).
+    The structure is RS-derived; the α input carries one boundary datum. -/
 structure SphaleronRateCert where
   kappa_from_Q3 : kappa_sph = 3 / 4
   kappa_positive : 0 < kappa_sph

@@ -3,19 +3,19 @@ import IndisputableMonolith.Constants
 import IndisputableMonolith.Foundation.PhiForcing
 
 /-!
-# C-001: Fine Structure Constant Derivation
+# α_lock: the ILG kernel exponent (NOT the fine-structure constant)
 
-Formalizes the RS derivation of the fine structure constant α from φ.
+HONEST STATUS (2026-07-06): despite this module's historical name,
+`alphaLock = (1 − 1/φ)/2 ≈ 0.19` is the information-limited-gravity
+kernel exponent. It is NOT the electromagnetic fine-structure constant
+α ≈ 1/137 ≈ 0.0073, and no "ledger-to-lab conversion" connecting the two
+exists in this repository. The former claim that it resolves
+"C-001: What determines α?" is RETRACTED.
 
-## Registry Item
-- C-001: What determines the fine structure constant α ≈ 1/137?
-
-## RS Derivation
-α_lock = (1 − 1/φ)/2. This is the canonical coupling in RS-native units,
-derived from the ledger's reciprocal symmetry J(x) = J(1/x).
-
-The conventional α ≈ 1/137.036 relates to α_lock via the full
-ledger-to-lab conversion (see Physics/AlphaPrecision.lean).
+The honest position on the EM α is in `Constants.AlphaGenesis`: the exact
+value of α⁻¹(0) is a free boundary datum within RS
+(`KappaGammaIrreducibility`), and the first-order construction value is
+excluded by measurement (`MeasurementVerdict`).
 -/
 
 namespace IndisputableMonolith
@@ -54,20 +54,18 @@ theorem alphaLock_numerical_bounds :
       exact h_phi'
     linarith
 
-/-! ## C-001 Resolution Statement -/
+/-! ## Structure statement (formerly mislabeled "C-001 Resolution") -/
 
-/-- **C-001 Resolution**: The fine structure constant is determined by φ.
-
-    α_lock = (1 − 1/φ)/2 has no free parameters.
-    It is the unique coupling compatible with the ledger's
-    reciprocal symmetry and self-similar closure.
-
-    Relationship to measured α ≈ 1/137 requires the conversion
-    from RS-native to SI units (λ_rec calibration). -/
-theorem fine_structure_derived :
+/-- α_lock structure: `alphaLock = (1 − 1/φ)/2` with unit-interval bounds.
+    This is a φ-structural fact about the ILG kernel exponent. It does NOT
+    determine the EM fine-structure constant; see the module header. -/
+theorem alphaLock_structure :
     0 < alphaLock ∧ alphaLock < 1 ∧
     alphaLock = (1 - 1 / phi) / 2 :=
   ⟨alphaLock_pos, alphaLock_lt_one, rfl⟩
+
+@[deprecated alphaLock_structure (since := "2026-07-06")]
+alias fine_structure_derived := alphaLock_structure
 
 end FineStructureConstant
 end Constants

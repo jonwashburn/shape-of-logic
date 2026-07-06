@@ -2,16 +2,17 @@ import Mathlib
 import IndisputableMonolith.Constants
 
 /-!
-# Fine Structure Constant from RS — A1 SM Depth
+# The 44π factor (HONEST STATUS: identification, not a derivation of α)
 
-RS prediction: α⁻¹ = 44π × correction ≈ 137.036.
-
-The 44π factor comes from the gauge loop area in the recognition lattice.
-
-Key structural facts:
-1. The rung is 44 = gap(3) - 1
-2. α⁻¹ > 0 (trivially)
-3. 44π > 0
+This module records trivial facts about the number 44π used as the seed in
+the α⁻¹ CONSTRUCTION. HONEST STATUS (2026-07-06): the seed 4π·11 is an
+IDENTIFICATION, not a derived coupling (the gauge-invariant photon count on
+Q₃ is the cycle rank b₁ = 5, not 11), the construction's first-order value
+is excluded by measurement at >30,000σ
+(`Constants.AlphaGenesis.MeasurementVerdict`), and within RS the exact
+value of α⁻¹(0) is a free boundary datum
+(`Constants.AlphaGenesis.KappaGammaIrreducibility`). Nothing here derives
+the fine-structure constant.
 
 Lean status: 0 sorry, 0 axiom.
 -/

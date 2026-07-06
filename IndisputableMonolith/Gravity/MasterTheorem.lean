@@ -261,7 +261,7 @@ theorem c_RS_observable_distinct_proven : c_RS_observable_distinct :=
 2σ consistency, and the gap-from-dimension route forcing the rung `-44`. -/
 def omega_lambda_from_phi_carried_prop : Prop :=
   (Cosmology.OmegaLambdaDerivation.omega_lambda =
-    (11 / 16 : ℝ) - Constants.alpha / Real.pi) ∧
+    (11 / 16 : ℝ) - Constants.ExternalAnchors.alpha_CODATA / Real.pi) ∧
   (0.683 < Cosmology.OmegaLambdaDerivation.omega_lambda ∧
    Cosmology.OmegaLambdaDerivation.omega_lambda < 0.686) ∧
   (|Cosmology.OmegaLambdaDerivation.omega_lambda -

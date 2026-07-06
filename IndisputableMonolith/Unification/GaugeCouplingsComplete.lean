@@ -71,15 +71,21 @@ open StandardModel.WeinbergAngle
 
 /-- **C-014.1**: Electromagnetic coupling α (fine-structure constant).
 
-    Derived from D=3 cube geometry: 4π·11 with gap correction.
-    α⁻¹ ≈ 137.036, α ≈ 0.007297
+    HONEST STATUS (2026-07-06): the theorem proved here is ONLY positivity
+    of the α CONSTRUCTION (band (137.030, 137.039)). The exact measured
+    value of α is NOT derived: within RS it is a free boundary datum
+    (`Constants.AlphaGenesis.KappaGammaIrreducibility`), and the
+    construction's first-order value is excluded by measurement at
+    >30,000σ (`Constants.AlphaGenesis.MeasurementVerdict`).
 
-    **Formula**: α = 1/alphaInv where alphaInv = 4π·11·exp(f_gap/(4π·11))
-    
-    **Proved**: α > 0 (derived from geometric seed, always positive). -/
-theorem alpha_coupling_derived : alpha > 0 := by
+    **Proved**: α > 0 (positivity of the construction; formerly misnamed
+    `alpha_coupling_derived`). -/
+theorem alpha_construction_pos : alpha > 0 := by
   unfold alpha alphaInv alpha_seed
   positivity
+
+@[deprecated alpha_construction_pos (since := "2026-07-06")]
+alias alpha_coupling_derived := alpha_construction_pos
 
 /-- **C-014.2**: Strong coupling α_s (at M_Z).
 

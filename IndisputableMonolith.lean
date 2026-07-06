@@ -53,12 +53,24 @@ exports no later-physics or private application verticals; those remain in the
 * `Constants.AlphaGenesis.EightTickLadder.pattern_forced` — the φ-pattern
   on the 8-tick carrier is forced by T6 self-similarity
 * `Constants.AlphaGenesis.alphaInv_eq_seed_mul_forced_weight` —
-  `α⁻¹ = (4π·11) · contWeight(w₈/(4π·11))`: the α dressing IS the forced
-  measure at the spectral gap load
+  `α⁻¹ = (4π·11) · contWeight(w₈/(4π·11))`: the dressing shape is the forced
+  measure at the spectral gap load. HONEST STATUS: the seed `4π·11` is an
+  identification, not a derived coupling, and the first-order value is
+  excluded by measurement (see `MeasurementVerdict` below); exact `α⁻¹(0)`
+  is a boundary condition, OPEN
 * `Constants.AlphaGenesis.AlphaGenesisCert.verified_any` — the seven-clause
   forward-derivation certificate (M1–M3 reference no measured value)
 * `Constants.AlphaGenesis.existsUnique_closingLoad` — the second-order
   residual problem has exactly one answer in load units (quarantine module)
+* `Constants.AlphaGenesis.MeasurementVerdict.alphaInvGenesis_exceeds_CODATA_by_0007`
+  — the measurement verdict: the first-order construction value exceeds
+  CODATA by more than `7×10⁻⁴`, an exclusion at more than 30,000σ
+  (`margin_0007_gt_30000_sigma`)
+* `Constants.AlphaGenesis.KappaGamma.alpha_not_pinned_by_forcedClosure` and
+  `kappa_blind_closure_cannot_pin` — the irreducibility theorems: the forced
+  closure is κ_γ-independent and no normalization-blind condition can pin
+  the coupling, so within RS the exact value of `α⁻¹` is a free boundary
+  datum (the U(1) kinetic normalization), not a derived constant
 * `Gravity.DerivedFactors` — HSB suppression from SevenBeatViolation saturation
 
 ## Quantum layer (recognition-first)

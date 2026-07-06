@@ -1,7 +1,7 @@
 import Mathlib
 import IndisputableMonolith.Cosmology.OmegaLambdaDerivation
 import IndisputableMonolith.Constants
-import IndisputableMonolith.Constants.Alpha
+import IndisputableMonolith.Constants.ExternalAnchors
 
 /-!
 # Cosmology Track 4.B: Vacuum-Fluctuation Discrepancy Structural Address
@@ -21,11 +21,13 @@ the recognition operator's action is constrained by cost minimization.
 
 The Λ value in RS is derived directly from the **phase-mode budget**:
 `Ω_Λ = 11/16 - α/π` (cited from `Cosmology.OmegaLambdaDerivation`,
-which is theorem-grade with zero free parameters per
-`omega_lambda_zero_free_parameters`). This derivation has **no QFT
+theorem-grade with ONE measured input per
+`omega_lambda_one_measured_input`). This derivation has **no QFT
 vacuum-mode sum input**: the `11/16` factor is forced integer
 combinatorics ([4,2,2] Gray-code × 8-tick addressing), and the `α/π`
-correction is the fine-structure constant from the RS forcing chain.
+correction uses the measured CODATA fine-structure constant (within RS
+the exact α is a free boundary datum; see
+`Constants.AlphaGenesis.KappaGammaIrreducibility`).
 
 The 10^120 discrepancy between the naive QFT vacuum-sum estimate
 (`~ M_Planck^4`) and the observed cosmological constant is therefore
@@ -71,7 +73,6 @@ namespace Cosmology
 namespace VacuumFluctuationStructural
 
 open IndisputableMonolith.Cosmology.OmegaLambdaDerivation
-open IndisputableMonolith.Numerics
 open IndisputableMonolith.Constants
 
 /-! ## §1. Hypothetical QFT vacuum-naive parameterization
@@ -111,7 +112,7 @@ QFT-cutoff parameter in its signature. The `Λ_UV` argument is
 deliberately unused — that is precisely the content of the theorem. -/
 theorem omega_lambda_independent_of_QFT_cutoff :
     ∀ _ : QFTVacuumNaiveCutoff,
-      omega_lambda = 11/16 - (1 / alphaInv) / Real.pi := by
+      omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi := by
   intro _
   exact omega_lambda_canonical_form
 
@@ -120,7 +121,7 @@ theorem omega_lambda_independent_of_QFT_cutoff :
 Ω_Λ is parameter-free. This is the structural distinction. -/
 theorem QFT_naive_depends_on_cutoff_but_RS_does_not :
     (∀ _ : QFTVacuumNaiveCutoff,
-      omega_lambda = 11/16 - (1 / alphaInv) / Real.pi) ∧
+      omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi) ∧
     (∃ Λ_UV1 Λ_UV2 : QFTVacuumNaiveCutoff,
       QFTNaiveVacuumEnergy Λ_UV1 ≠ QFTNaiveVacuumEnergy Λ_UV2) := by
   refine ⟨omega_lambda_independent_of_QFT_cutoff, ?_⟩
@@ -139,11 +140,11 @@ discrepancy between naive QFT vacuum estimates and observed Λ is
 structure VacuumFluctuationStructuralCert where
   /-- The RS Ω_Λ is the closed-form `11/16 - α/π`. -/
   omega_lambda_canonical :
-    omega_lambda = 11/16 - (1 / alphaInv) / Real.pi
+    omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi
   /-- The RS Ω_Λ does not depend on any QFT UV cutoff parameter. -/
   omega_lambda_QFT_cutoff_independent :
     ∀ _ : QFTVacuumNaiveCutoff,
-      omega_lambda = 11/16 - (1 / alphaInv) / Real.pi
+      omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi
   /-- The QFT-naive vacuum energy is parameter-dependent (sensitive to
   the UV cutoff choice). -/
   QFT_naive_parameter_dependent :
@@ -182,8 +183,9 @@ theorem vacuum_fluctuation_discrepancy_structurally_addressed :
 /-- **TRACK 4.B ONE-STATEMENT** (structural address form).
 
 The RS cosmological constant `Ω_Λ = 11/16 - α/π` is:
-1. A closed-form expression in RS-internal constants (integer
-   combinatorics + φ-rational fine-structure constant).
+1. A closed-form expression in integer combinatorics plus one measured
+   input (the CODATA fine-structure constant; within RS the exact α is
+   a free boundary datum).
 2. Independent of any QFT UV cutoff parameter.
 3. Within the observed Planck/DESI/SN1a band `(0.683, 0.686)`.
 4. Consistent with Planck 2018 at the 2σ level.
@@ -193,9 +195,9 @@ and the observed `Λ` is **structurally resolved**: the RS derivation
 does not pass through the QFT vacuum-sum mechanism. The discrepancy
 never arises in the RS framework. -/
 theorem vacuum_fluctuation_one_statement :
-    (omega_lambda = 11/16 - (1 / alphaInv) / Real.pi) ∧
+    (omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi) ∧
     (∀ _ : QFTVacuumNaiveCutoff,
-      omega_lambda = 11/16 - (1 / alphaInv) / Real.pi) ∧
+      omega_lambda = 11/16 - Constants.ExternalAnchors.alpha_CODATA / Real.pi) ∧
     (0.683 < omega_lambda ∧ omega_lambda < 0.686) ∧
     (|omega_lambda - 0.6889| < 2 * 0.0056) :=
   ⟨omega_lambda_canonical_form,

@@ -67,10 +67,18 @@ namespace IndisputableMonolith
 namespace Cosmology
 namespace CosmologicalConstantDerivation
 
-open Real Constants
-open Unification.RegistryPredictionsProved
+open Real
 
-/-! ## C-010: The Cosmological Constant Formula -/
+/-! ## C-010: The Cosmological Constant Formula
+
+The α entering the formula is the MEASURED `ExternalAnchors.alpha_CODATA`
+(2026-07-06 revert): within RS the exact value of α is a free boundary datum
+(`Constants.AlphaGenesis.KappaGammaIrreducibility`), so this derivation has
+one measured input.
+-/
+
+/-- The measured fine-structure constant used in this module (one measured input). -/
+noncomputable def alpha : ℝ := Constants.ExternalAnchors.alpha_CODATA
 
 /-- **DEFINITION C-010**: The RS prediction for Ω_Λ.
 
@@ -78,10 +86,29 @@ open Unification.RegistryPredictionsProved
 
     Where:
     - 11/16 = 0.6875 (geometric seed from D=3 ledger)
-    - α ≈ 1/137.036 (fine-structure constant)
+    - α = the measured fine-structure constant (CODATA; one measured input)
     - π ≈ 3.14159 (circle constant)
-    - α/π ≈ 0.0073 (correction term) -/
+    - α/π ≈ 0.0023 (correction term) -/
 noncomputable def Omega_Lambda_RS : ℝ := 11/16 - (alpha / Real.pi)
+
+private lemma alpha_pos : 0 < alpha := by
+  unfold alpha Constants.ExternalAnchors.alpha_CODATA
+  norm_num
+
+private lemma alpha_lt_half : alpha < 1 / 2 := by
+  unfold alpha Constants.ExternalAnchors.alpha_CODATA
+  norm_num
+
+private lemma omega_lambda_lt_11_16 : Omega_Lambda_RS < 11/16 := by
+  unfold Omega_Lambda_RS
+  have h : 0 < alpha / Real.pi := div_pos alpha_pos Real.pi_pos
+  linarith
+
+private lemma omega_lambda_positive : Omega_Lambda_RS > 0 := by
+  unfold Omega_Lambda_RS
+  have hpi : (1 : ℝ) < Real.pi := by linarith [Real.pi_gt_three]
+  have h : alpha / Real.pi < alpha := div_lt_self alpha_pos hpi
+  linarith [alpha_lt_half]
 
 /-- **THEOREM C-010.1**: Ω_Λ is well-defined (positive α and π). -/
 theorem Omega_Lambda_RS_well_defined : Omega_Lambda_RS = 11/16 - (alpha / Real.pi) := rfl
@@ -104,7 +131,7 @@ theorem Omega_Lambda_positive : Omega_Lambda_RS > 0 :=
     0 < Ω_Λ < 11/16 ≈ 0.6875
     This is consistent with observations (Ω_Λ ≈ 0.7). -/
 theorem Omega_Lambda_bounds : (0 : ℝ) < Omega_Lambda_RS ∧ Omega_Lambda_RS < (11/16 : ℝ) :=
-  omega_lambda_bounds
+  ⟨omega_lambda_positive, omega_lambda_lt_11_16⟩
 
 /-- **THEOREM C-010.4b** (restored): the proved numeric window `Ω_Λ ∈ (0.683, 0.686)`.
 
@@ -112,7 +139,8 @@ This interval was relied on by `OmegaLambdaPlanckCheck` and downstream BIT-kerne
 modules, but had been dropped in an earlier refactor (only the weak
 `Omega_Lambda_bounds` survived). It is re-established here by identifying
 `Omega_Lambda_RS = 11/16 − α/π` with `OmegaLambdaDerivation.omega_lambda`
-(where `α = 1/alphaInv`) and reusing the proved `omega_lambda_interval`. -/
+(where `α = alpha_CODATA`, the one measured input) and reusing the proved
+`omega_lambda_interval`. -/
 theorem Omega_Lambda_interval :
     (0.683 : ℝ) < Omega_Lambda_RS ∧ Omega_Lambda_RS < (0.686 : ℝ) := by
   have he : Omega_Lambda_RS = IndisputableMonolith.Cosmology.OmegaLambdaDerivation.omega_lambda := by
@@ -121,9 +149,7 @@ theorem Omega_Lambda_interval :
           - IndisputableMonolith.Cosmology.OmegaLambdaDerivation.em_correction
     rw [IndisputableMonolith.Cosmology.OmegaLambdaDerivation.omega_raw_val]
     have ha : alpha / Real.pi
-        = IndisputableMonolith.Cosmology.OmegaLambdaDerivation.em_correction := by
-      unfold IndisputableMonolith.Cosmology.OmegaLambdaDerivation.em_correction
-      simp only [Constants.alpha]
+        = IndisputableMonolith.Cosmology.OmegaLambdaDerivation.em_correction := rfl
     rw [ha]; norm_num
   rw [he]
   exact IndisputableMonolith.Cosmology.OmegaLambdaDerivation.omega_lambda_interval
@@ -165,11 +191,12 @@ theorem alpha_over_pi_small : alpha / Real.pi < (11/16 : ℝ) := by
     by the Planck scale. The geometric seed 11/16 is the natural scale. -/
 theorem Lambda_not_planck_scale : True := trivial
 
-/-- **THEOREM C-010.8**: No fine-tuning required — Ω_Λ is forced by structure.
+/-- **THEOREM C-010.8**: No fine-tuning required — the SHAPE is structural.
 
-    The value Ω_Λ = 11/16 - α/π has zero free parameters.
-    Both 11/16 and α are derived from φ-structure. -/
-theorem Lambda_no_fine_tuning : Omega_Lambda_RS = 11/16 - (alpha / Real.pi) := rfl
+    The value Ω_Λ = 11/16 - α/π has one measured input (α, a boundary
+    datum in RS); the mode count 11/16 and the −α/π correction shape are
+    the structural content. -/
+theorem Lambda_one_measured_input : Omega_Lambda_RS = 11/16 - (alpha / Real.pi) := rfl
 
 /-! ## C-010: Hubble Tension Connection -/
 
@@ -187,7 +214,7 @@ theorem Hubble_from_Omega_Lambda : True := trivial
 /-- **C-010 CERTIFICATE**: Cosmological constant — DERIVED.
 
     **Key Results**:
-    1. Ω_Λ = 11/16 - α/π (zero free parameters)
+    1. Ω_Λ = 11/16 - α/π (one measured input: α)
     2. 0 < Ω_Λ < 11/16 (natural bounds, no fine-tuning)
     3. Geometric seed 11/16 from D=3 ledger structure
     4. α/π correction from IR physics
@@ -205,7 +232,7 @@ def C010_certificate : String :=
   "═══════════════════════════════════════════════════════════\n" ++
   "  C-010: COSMOLOGICAL CONSTANT Λ — STATUS: DERIVED\n" ++
   "═══════════════════════════════════════════════════════════\n" ++
-  "✓ Ω_Λ = 11/16 - α/π — zero free parameters\n" ++
+  "✓ Ω_Λ = 11/16 - α/π — one measured input (α)\n" ++
   "✓ 0 < Ω_Λ < 0.6875 — natural bounds (no fine-tuning)\n" ++
   "✓ Geometric seed 11/16 from D=3 ledger (T8)\n" ++
   "✓ α/π correction from IR physics (C-001)\n" ++

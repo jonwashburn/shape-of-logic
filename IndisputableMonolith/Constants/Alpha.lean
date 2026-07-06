@@ -46,8 +46,11 @@ the sense that nothing is fit to CODATA. The forced inputs entering the construc
   appears across α, Ω_Λ = 11/16, CKM, neutrino-mass rung, and 44 = 4·11
   baryon arithmetic; cross-application consistency is the discriminating
   evidence that the count is structural, not adjustable. See
-  `Cosmology/Unification44.lean`, `StandardModel/CKMFromCube.lean`,
-  `Masses/TorsionForcing.lean`.
+  `Cosmology/BaryonAsymmetryExact.lean`, `StandardModel/CKMFromCube.lean`,
+  `Masses/TorsionForcing.lean`. (Caveat: the gauge-invariant photon count
+  on Q₃ is the cycle rank b₁ = 5, not 11 — see
+  `Constants/AlphaGenesis/U1Normalization.lean` — so the seed reading of
+  `11` is an identification, not a derived coupling.)
 * `w₈ ≈ 2.49057`: the canonical Parseval-normalized 64-cell projection of
   the DFT-8 of the φ-pattern. The closed form `(348 + 210√2 −
   (204 + 130√2)φ)/7` is forced by Parseval + the 64 = 8×8 cell + sin²(kπ/8)
