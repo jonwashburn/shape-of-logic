@@ -447,6 +447,28 @@ structure T4_To_T5_Cost_Bridge
     rcl_surface_available = bridge.rcl_surface
   t5 : T5_J_Unique
 
+/-- **HONESTY NOTE (2026 audit, T4→T5 arrow).** The T5 record below is
+proved entirely from `CostUniqueness` lemmas about `Jcost` and from
+`law_of_logic_forces_jcost`; it consumes NOTHING from `bridge` beyond
+re-exporting `bridge.rcl_surface` as a field. An earlier revision bound
+`bridge.rcl_surface` inside the uniqueness proof as an unused variable
+(`_rcl_surface`), which cosmetically suggested the T−1..T4 floor feeds the
+T5 proof. It does not: deleting T−1..T4 would break no T5 proof. The
+substantive gap — that the floor's own cost provably CANNOT satisfy the
+composition law T5 needs (`PrimitiveDistinction.lean`), so the continuous
+positive-ratio comparison surface is an imported hypothesis (SI2/C6), not
+a consequence of the floor — is recorded in the paper as open problems.
+This structure packages the conditional chain; it is not a forcing proof
+of T5 from T4.
+
+Repair pointer: `Foundation.RecognitionLedgerFloor` builds the upgraded
+carrier (free additive defect ledger `I →₀ ℕ` with kernel-derived
+observable equivalence and unconditional additivity) that answers the
+audit's kernel/cokernel gaps at the floor level. That module is NOT yet
+wired into this chain: no field of this bridge consumes it. Integrating
+it — i.e. replacing the imported comparison-surface hypothesis with a
+theorem from the ledger floor, if that is possible at all — is an open
+task, not a completed step. -/
 theorem t4_to_t5_cost_bridge_holds
     {h4 : T4_Recognition_Forced} (bridge : T4_To_T5_Realization_Bridge h4) :
     T4_To_T5_Cost_Bridge bridge where
@@ -459,7 +481,6 @@ theorem t4_to_t5_cost_bridge_holds
     J_calibrated := CostUniqueness.Jcost_is_calibrated
     J_continuous := CostUniqueness.Jcost_continuous_pos
     uniqueness := fun F hAczel hRecip hNorm hComp hCalib hCont => by
-      have _rcl_surface := bridge.rcl_surface
       let _ : Cost.FunctionalEquation.AczelSmoothnessPackage := hAczel
       exact Cost.FunctionalEquation.law_of_logic_forces_jcost F
         hRecip hNorm hComp hCalib hCont

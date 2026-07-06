@@ -2,34 +2,23 @@ import Mathlib
 import IndisputableMonolith.Cost
 
 /-!
-# T5 Cost Uniqueness Certificate
+# T5 Packaging Certificate (transport lemma, NOT the uniqueness theorem)
 
-This audit certificate packages **Theorem T5** — the fundamental uniqueness result:
+**Honesty note (2026 audit correction).** This certificate is a *packaging
+tautology*, and its docstring previously oversold it as "the crown jewel."
+The `JensenSketch` hypotheses include BOTH `F(exp t) ≤ J(exp t)` and
+`J(exp t) ≤ F(exp t)`, i.e. they already assert `F = J` on the exponential
+axis. The conclusion `F = J on (0,∞)` is then just transport along
+`exp/log` surjectivity. Hypothesis ≈ conclusion; no uniqueness content
+lives here.
 
-> Any function F satisfying the JensenSketch axioms equals Jcost on (0, ∞).
-
-## Why this is the crown jewel
-
-This is THE uniqueness theorem for the Recognition Science cost function:
-
-1. **Axioms**: JensenSketch requires only:
-   - Symmetry: F(x) = F(1/x) for x > 0
-   - Unit normalization: F(1) = 0
-   - Bounding: F(exp t) = J(exp t) for all t (squeezed between upper and lower)
-
-2. **Conclusion**: F = J on all positive reals
-
-3. **Physical meaning**: The J-cost is not arbitrary — it's the UNIQUE function
-   satisfying these natural symmetry and normalization conditions.
-
-## Proof approach
-
-The proof uses:
-- Symmetry implies evenness in log-coordinates
-- Unit normalization pins F(1) = J(1) = 0
-- The squeeze between upper and lower bounds forces equality
-
-This is T5 in the Recognition Science framework.
+The ACTUAL T5 uniqueness theorem — the one with real mathematical
+content — is `law_of_logic_forces_jcost` in `Cost/FunctionalEquation.lean`:
+reciprocal symmetry + unit normalization + the composition law (C6) +
+calibration + continuity force `F = J`, via the proved Aczél/d'Alembert
+classification (`Cost/AczelProof.lean`). Cite THAT theorem for T5
+uniqueness claims; cite this certificate only as the trivial axis-to-ray
+transport step.
 -/
 
 namespace IndisputableMonolith
@@ -41,10 +30,12 @@ open IndisputableMonolith.Cost
 structure T5UniqueCert where
   deriving Repr
 
-/-- Verification predicate: T5 cost uniqueness.
+/-- Verification predicate: exp-axis-to-positive-ray transport.
 
-Any function F satisfying JensenSketch equals Jcost on positive reals.
-This certifies THE fundamental uniqueness theorem. -/
+Any function F satisfying `JensenSketch` (whose bounds already pin
+`F = J` on the exponential axis) equals `Jcost` on the positive reals.
+This is a packaging/transport lemma; the substantive T5 uniqueness
+theorem is `law_of_logic_forces_jcost` (see module header). -/
 @[simp] def T5UniqueCert.verified (_c : T5UniqueCert) : Prop :=
   ∀ (F : ℝ → ℝ) [JensenSketch F] {x : ℝ}, 0 < x → F x = Jcost x
 

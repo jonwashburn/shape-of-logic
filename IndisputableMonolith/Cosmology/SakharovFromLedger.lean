@@ -15,8 +15,13 @@ three conditions (Sakharov, 1967):
 2. **C and CP violation**
 3. **Departure from thermal equilibrium**
 
-This module derives all three from the RS ledger structure with zero
-imported physics.
+This module proves TWO structural facts (a ΔB bookkeeping identity and
+J_CP ≠ 0) and carries the THIRD condition (departure from equilibrium) as an
+explicit, underived hypothesis parameter. An earlier revision claimed all
+three were derived "with zero imported physics"; that was false (the
+out-of-equilibrium condition was a `True` placeholder) and is corrected
+below. Baryon number as a ledger winding charge is itself an
+interpretation, not a derived anomaly structure (audit FQ4).
 
 ## Derivation
 
@@ -29,30 +34,26 @@ structure permits balanced multi-axis rotations.
 
 The B-violation rate scales with the weak coupling:
   Γ_sph ∝ α_W⁵ T⁴
-where α_W = α/sin²θ_W is RS-derived.
+(standard sphaleron-rate scaling, imported from the SM literature; α_W is
+NOT derived here).
 
 ### Condition 2: CP Violation
 PROVED in CPPhaseDerivation: the Berry phase of the chiral Gray code
 cycle gives δ_CKM ≠ 0, hence J_CP > 0 (JarlskogInvariant).
 
-### Condition 3: Out of Equilibrium
-The electroweak phase transition occurs at a temperature on the φ-ladder
-where the Higgs field acquires a VEV. In RS, this transition is a
-J-cost phase transition: above T_EW the symmetric phase (⟨H⟩ = 0) has
-lower J-cost; below T_EW the broken phase (⟨H⟩ ≠ 0) wins.
-
-The transition is first-order if the cubic term in the effective
-potential is nonzero, which the φ-corrections to the Higgs potential
-ensure. A first-order transition provides the needed departure from
-equilibrium via bubble nucleation.
+### Condition 3: Out of Equilibrium — HYPOTHESIS, NOT DERIVED
+Whether the electroweak transition is first order is an open
+thermal-field-theory question; in the minimal SM with m_H ≈ 125 GeV it is a
+crossover. No RS derivation exists. The condition is carried below as an
+explicit hypothesis parameter on every downstream statement.
 
 ## Main Results
 
-1. `SakharovConditions`: structure packaging all three conditions
-2. `all_sakharov_from_RS`: all three derived from RS
-3. `b_violation_from_sphaleron`: B violation rate from weak coupling
-4. `cp_violation_from_jarlskog`: CP violation from J_CP > 0
-5. `out_of_equilibrium_from_phi_transition`: EW phase transition
+1. `SakharovConditions EWFirstOrder`: structure packaging the two proved
+   pieces plus the named out-of-equilibrium hypothesis
+2. `sakharov_from_RS (hEW)`: CONDITIONAL assembly given the hypothesis
+3. `sphaleron_changes_B_by_3`, `sphaleron_preserves_b_minus_l`: ΔB bookkeeping
+4. `cp_source_positive`: CP violation from J_CP > 0 (structural)
 -/
 
 namespace IndisputableMonolith
@@ -80,11 +81,17 @@ def deltaB_per_sphaleron : ℕ := face_pairs 3
 
 theorem sphaleron_changes_B_by_3 : deltaB_per_sphaleron = 3 := rfl
 
-/-- B + L is violated by sphalerons, but B - L is conserved.
-    This follows from the ledger structure: sphalerons rotate all
-    three winding numbers equally, so the sum changes but differences don't. -/
-theorem b_minus_l_conserved :
-    deltaB_per_sphaleron = deltaB_per_sphaleron := rfl
+/-- Sphaleron events change lepton number by the same amount as baryon
+    number (one unit per generation, 3 generations). This is imported SM
+    anomaly bookkeeping, not a ledger derivation (audit FQ4). -/
+def deltaL_per_sphaleron : ℕ := face_pairs 3
+
+/-- B − L is unchanged per sphaleron event: ΔB = ΔL, so Δ(B−L) = 0.
+    (An earlier revision stated this as the tautology `ΔB = ΔB`, which
+    carried no content; corrected to the actual invariant.) -/
+theorem sphaleron_preserves_b_minus_l :
+    (deltaB_per_sphaleron : ℤ) - (deltaL_per_sphaleron : ℤ) = 0 := by
+  simp [deltaB_per_sphaleron, deltaL_per_sphaleron]
 
 /-! ## Part 2: CP Violation Source Term
 
@@ -112,41 +119,53 @@ the Higgs VEV is zero (symmetric phase); below, it acquires a nonzero value.
 In RS, the Higgs field is not fundamental — it emerges from the ε⁴ term
 of J(e^ε) = cosh(ε) − 1. The VEV v = 246 GeV sits on a specific φ-rung. -/
 
-/-- The Higgs VEV in RS-native units is on the φ-ladder.
-    v_EW = 246 GeV, and φ^{rung} × (anchor) gives the scale.
+/-! **PHYSICAL HYPOTHESIS (NOT DERIVED — corrected 2026-07-06).**
 
-    The critical temperature for the EW phase transition is:
-    T_EW ∝ v_EW ∝ φ^{rung_EW}
+An earlier revision defined `ew_transition_is_first_order : Prop := True` and
+"proved" it with `trivial`. The 2026 internal audit correctly identified this
+as a vacuous placeholder wearing a physics name. It is retracted.
 
-    At T > T_EW: symmetric phase, sphalerons active
-    At T < T_EW: broken phase, sphalerons exponentially suppressed -/
-def ew_transition_is_first_order : Prop :=
-  True
+The honest status: whether the electroweak phase transition is first order is
+a hard thermal-field-theory question. In the minimal Standard Model with
+m_H ≈ 125 GeV the transition is in fact a CROSSOVER (Kajantie–Laine–
+Rummukainen–Shaposhnikov 1996), so a first-order transition requires
+beyond-SM dynamics. No RS derivation of this exists, and this repository has
+no finite-temperature effective potential with which even to STATE it
+faithfully.
 
-/-- The departure from equilibrium is provided by the first-order
-    nature of the EW phase transition. Bubble nucleation creates
-    out-of-equilibrium conditions at the bubble walls. -/
-theorem out_of_equilibrium : ew_transition_is_first_order := trivial
+Rather than fake content, everything downstream is PARAMETERIZED over an
+abstract proposition `EWFirstOrder : Prop`. The dependence is therefore
+visible in every type signature, and no theorem in this repository
+discharges it. -/
 
-/-! ## Part 4: Sakharov Conditions Assembled -/
+/-! ## Part 4: Sakharov Conditions Assembled (conditionally) -/
 
-/-- The three Sakharov conditions for baryogenesis. -/
-structure SakharovConditions where
+/-- The three Sakharov conditions, parameterized over the UNDERIVED
+    out-of-equilibrium proposition. `EWFirstOrder` is an abstract Prop:
+    this repository cannot state it faithfully, let alone prove it. -/
+structure SakharovConditions (EWFirstOrder : Prop) where
   b_violation : deltaB_per_sphaleron = 3
   cp_violation : cp_asymmetry_parameter ≠ 0
-  out_of_eq : ew_transition_is_first_order
+  out_of_eq : EWFirstOrder
 
-/-- All three Sakharov conditions are satisfied from RS first principles. -/
-def sakharov_from_RS : SakharovConditions where
+/-- **CONDITIONAL assembly**: given the out-of-equilibrium hypothesis
+    (NOT derived here; a crossover in the minimal SM), the two structural
+    conditions (ΔB per sphaleron event, J_CP ≠ 0) combine with it into the
+    Sakharov package. This is bookkeeping of the two proved pieces plus one
+    named hypothesis — NOT a derivation of baryogenesis. -/
+def sakharov_from_RS {EWFirstOrder : Prop} (hEW : EWFirstOrder) :
+    SakharovConditions EWFirstOrder where
   b_violation := rfl
   cp_violation := cp_asymmetry_nonzero
-  out_of_eq := out_of_equilibrium
+  out_of_eq := hEW
 
-/-- The master theorem: baryogenesis is possible in RS because all
-    Sakharov conditions are derived (not postulated). -/
-theorem baryogenesis_possible :
-    deltaB_per_sphaleron = 3 ∧ cp_asymmetry_parameter ≠ 0 ∧ ew_transition_is_first_order :=
-  ⟨rfl, cp_asymmetry_nonzero, out_of_equilibrium⟩
+/-- Conditional statement: two structural facts hold unconditionally; the
+    third (out-of-equilibrium) is carried as an explicit hypothesis. The
+    earlier claim that all three were "derived (not postulated)" is
+    retracted. -/
+theorem baryogenesis_possible {EWFirstOrder : Prop} (hEW : EWFirstOrder) :
+    deltaB_per_sphaleron = 3 ∧ cp_asymmetry_parameter ≠ 0 ∧ EWFirstOrder :=
+  ⟨rfl, cp_asymmetry_nonzero, hEW⟩
 
 end SakharovFromLedger
 end Cosmology

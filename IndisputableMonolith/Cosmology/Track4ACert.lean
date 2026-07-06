@@ -55,9 +55,11 @@ sub-tasks 1, 2, 3 all upgrade from OPEN/CONDITIONAL to THEOREM.
 
 Anti-retreat principle #5 ("`eta_B = phi^(-44)` as definition" is BANNED
 in the master statement) is satisfied by routing the rung-44 to
-`EtaBExactRungDerivation.etaBExactRungCert`, where the −44 is forced by
-three structurally independent routes from `D = 3`, none of which uses
-`η_B` as input.
+`EtaBExactRungDerivation.etaBExactRungCert`. NOTE (honesty correction,
+2026-07-06): the three routes there are arithmetic re-expressions of the
+same integer content, not independent confirmations; none uses `η_B` as
+input, but the rung ASSIGNMENT to η_B remains HYPOTHESIS-grade (see the
+corrected docstring in `EtaBExactRungDerivation`).
 -/
 
 namespace IndisputableMonolith

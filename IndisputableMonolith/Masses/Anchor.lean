@@ -193,16 +193,21 @@ namespace ChargeIndex
 
 end ChargeIndex
 
-/-! ## Summary: Parameter-Free Derivation
+/-! ## Summary: Provenance of the Sector Constants (honesty-corrected 2026-07-06)
 
-All sector constants trace back to:
+The INTEGER inputs trace back to:
 1. D = 3 (dimension, from T9 linking)
 2. cube_edges(D) = 12 (hypercube formula)
 3. active_edges_per_tick = 1 (atomic tick, from T2)
 4. passive_field_edges = 11 (12 - 1)
 5. wallpaper_groups = 17 (crystallographic, Fedorov 1891)
 
-NO free parameters. NO fitting to mass data.
+An earlier revision ended this summary with "NO free parameters. NO fitting
+to mass data." That was an overclaim (2026 mass-program audit): the sector
+YARDSTICKS act as one empirical anchor per sector (an integer-pair choice
+that sets the absolute scale), so the ladder predicts within-sector RATIOS
+given an anchor, not absolute masses from nothing. No CONTINUOUS parameter
+is fit, but the anchor choices are real inputs and are named as such.
 -/
 
 end Masses

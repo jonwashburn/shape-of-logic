@@ -81,7 +81,8 @@ substantive content is steps 1-4 above.
 - Bit-cost normalization (Step 2'):
   `IndisputableMonolith.Cost.IsCalibrated`
 - SI bridge (downstream of Step 5, separate frontier):
-  `IndisputableMonolith.Foundation.DimensionalBridgeStructural`
+  `IndisputableMonolith.Foundation.SIBridgeClosure` (conversion map;
+  the dimensional anchor itself is the named open frontier)
 - Planck gate identity in SI form:
   `IndisputableMonolith.Constants.PlanckScaleMatching.planck_gate_identity`
 -/

@@ -228,9 +228,13 @@ theorem derivation_chain_complete :
 /-! ## Part 6: Certificate -/
 
 /-- Baryon asymmetry certificate: the SIGN chain (THEOREM) plus the rung
-    arithmetic (HYPOTHESIS-grade assignments; see Part 4 docstrings). -/
-structure BaryonAsymmetryCert where
-  sakharov : SakharovConditions
+    arithmetic (HYPOTHESIS-grade assignments; see Part 4 docstrings).
+
+    Parameterized over the UNDERIVED out-of-equilibrium proposition
+    `EWFirstOrder` (see `SakharovFromLedger`): the certificate exists only
+    conditionally on that named physical hypothesis. -/
+structure BaryonAsymmetryCert (EWFirstOrder : Prop) where
+  sakharov : SakharovConditions EWFirstOrder
   jarlskog_pos : jarlskog_structural > 0
   eta_pos : eta_B_structural > 0
   eta_small : eta_B_structural < 1
@@ -239,9 +243,11 @@ structure BaryonAsymmetryCert where
                    jarlskog_structural > 0 ∧ deltaB_per_sphaleron = 3 ∧
                    eta_B_structural > 0
 
-/-- The baryon asymmetry certificate is verified. -/
-def baryonAsymmetryCert : BaryonAsymmetryCert where
-  sakharov := sakharov_from_RS
+/-- The baryon asymmetry certificate, CONDITIONAL on the out-of-equilibrium
+    hypothesis (not derived here). -/
+def baryonAsymmetryCert {EWFirstOrder : Prop} (hEW : EWFirstOrder) :
+    BaryonAsymmetryCert EWFirstOrder where
+  sakharov := sakharov_from_RS hEW
   jarlskog_pos := jarlskog_positive
   eta_pos := eta_B_positive
   eta_small := eta_B_small

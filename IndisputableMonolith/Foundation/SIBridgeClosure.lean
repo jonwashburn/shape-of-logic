@@ -8,10 +8,9 @@ import IndisputableMonolith.Constants
 
 ## What this module closes
 
-This module closes the SI **conversion map** flagged in
-`Foundation/DimensionalBridgeStructural.lean`: once the dimensional anchor is
-supplied, the tick, voxel, and coherence-mass conversion factors are uniquely
-determined.
+This module closes the SI **conversion map** (the named open frontier of the
+dimensional bridge): once the dimensional anchor is supplied, the tick,
+voxel, and coherence-mass conversion factors are uniquely determined.
 
 The framework predicts, in RS-native units, the dimensionless triple
   c_RS = 1,  ℏ_RS = φ⁻⁵,  G_RS = φ⁵/π

@@ -5,36 +5,47 @@ import IndisputableMonolith.RecogSpec.Core
 -- The ledger structure is defined independently here for the T5 forcing argument
 
 /-!
-# T5 Gap Closure: Ledger-Derived Cost Functional
+# Ledger-Derived Cost Constraints (Symmetry and Unit) — with a No-Go Certificate
 
-This module derives the cost functional constraints from the ledger structure (T3),
-closing the gap in the T5 derivation chain.
+This module derives TWO of the T5 constraints from the ledger structure (T3),
+and proves that the remaining constraint CANNOT be so derived.
 
 ## Main Results
 
 1. **Symmetry Forced**: The ledger's double-entry structure forces F(x) = F(1/x).
 2. **Unit Forced**: The identity posting (no change) has zero cost, forcing F(1) = 0.
-3. **Additivity**: Ledger costs are additive in log-space.
+3. **NO-GO (`aczel_hypothesis_refuted`)**: symmetry + unit + continuity +
+   curvature calibration do NOT force the Cosh-Add (d'Alembert) identity.
+   Witness: `G(t) = t²/2`. The composition law C6 is an independent,
+   load-bearing hypothesis of the T5 characterization theorem.
 
-## The Derivation Chain
+## The Honest Chain
 
 ```
 T3 (Ledger Structure)
   ↓ [Double-entry bookkeeping]
-Ledger Cost Functional
-  ↓ [Symmetry of debit/credit]
-F(x) = F(1/x)  (Reciprocal Symmetry)
+F(x) = F(1/x)  (Reciprocal Symmetry — proved here)
   ↓ [Identity posting = no entry]
-F(1) = 0  (Unit Normalization)
-  ↓ [Sequential postings combine additively]
-Cosh-Add Identity  (via functional equation theory)
-  ↓
-T5: J(x) = ½(x + 1/x) - 1 is unique
+F(1) = 0  (Unit Normalization — proved here)
+
+C6 (composition / Cosh-Add)  — INDEPENDENT HYPOTHESIS (not derivable; no-go proved here)
+C7 (calibration λ = 1)       — normalization choice
+  ↓ [given C1–C7: Aczél-type classification]
+T5: J(x) = ½(x + 1/x) - 1 is the unique admissible cost
 ```
+
+## History
+
+An earlier revision of this file claimed the Cosh-Add identity followed from
+the ledger constraints plus continuity, citing Aczél (1966, Thm. 3.1.3), and
+concluded T5 was "unconditionally forced" from T1–T4. Both claims were false
+(2026 internal audit, Finding 2) and are retracted; the refutation is now a
+kernel-checked theorem in this file.
 
 ## References
 
 - Aczél, J. "Lectures on Functional Equations and Their Applications" (1966), Ch. 3
+  (classification of d'Alembert solutions — used with, not instead of, C6)
 - Recognition Science: T3 Ledger Necessity theorems
 
 -/
@@ -98,12 +109,14 @@ The cost of a ledger posting measures the "work" required to record the transiti
 This is defined in terms of the ratio, capturing the asymmetry between source and target.
 -/
 
-/-- A cost functional on ledger postings. -/
+/-- A cost functional on ledger postings.
+
+Note: an earlier revision carried a vacuous field `domain : ∀ x, 0 < x → True`
+(flagged in external audit as contentless debris). It has been removed; the
+positivity of ratios is enforced at the `LedgerPosting` level, not here. -/
 structure LedgerCostFunctional where
   /-- The cost function on positive ratios. -/
   cost : ℝ → ℝ
-  /-- Cost is only defined for positive ratios. -/
-  domain : ∀ x, 0 < x → True
 
 /-- The cost of a ledger posting under a cost functional. -/
 noncomputable def LedgerCostFunctional.postingCost
@@ -253,7 +266,9 @@ From the ledger structure (T3), we derive:
 2. Unit normalization: F(1) = 0
 
 These are the two physical constraints of T5. The remaining constraint
-(Cosh-Add identity) follows from functional equation theory given continuity.
+(the Cosh-Add identity, i.e. the composition law C6) is an INDEPENDENT
+hypothesis: it does not follow from these constraints plus continuity
+(see `aczel_hypothesis_refuted` below).
 -/
 theorem ledger_forces_t5_constraints
     (F : LedgerCostFunctional)
@@ -263,63 +278,49 @@ theorem ledger_forces_t5_constraints
   · exact symmetry_forced_from_double_entry F hLC.double_entry
   · exact unit_forced_from_identity_posting F hLC.zero_identity
 
-/-! ## Part 7: The Cosh-Add Identity as Mathematical Theorem
+/-! ## Part 7: The Cosh-Add Identity Is an Independent Hypothesis (corrected)
 
-The Cosh-Add identity is not a physical assumption but a mathematical consequence
-of the constraints derived above plus continuity.
+An earlier revision of this section claimed the Cosh-Add identity is "a
+mathematical consequence of the constraints derived above plus continuity",
+citing Aczél (1966, Theorem 3.1.3). **That claim was false** and is
+retracted (2026 internal audit, Finding 2). Aczél's theorem classifies the
+solutions OF the d'Alembert equation; it does not derive the equation from
+evenness, normalization, continuity, and calibration. The counterexample
+`G(t) = t²/2` (below) satisfies all four conditions and violates Cosh-Add.
 
-**Mathematical Theorem (Aczél 1966, Theorem 3.1.3)**:
-Let G : ℝ → ℝ be a continuous function satisfying:
-1. G is even: G(-t) = G(t)
-2. G(0) = 0
-3. G''(0) = 1 (curvature normalization)
-
-If G arises from a cost functional F via G(t) = F(exp(t)), and F satisfies
-the ledger constraints (symmetry, unit), then G satisfies the d'Alembert
-functional equation:
-
-  G(t+u) + G(t-u) = 2·G(t)·G(u) + 2·(G(t) + G(u))
-
-This is equivalent to the Cosh-Add identity used in T5.
-
-**Reference**: Aczél, J. "Lectures on Functional Equations and Their Applications"
-              Academic Press, 1966, Chapter 3.
+The honest status: Cosh-Add is the log-axis form of the composition law
+(closure hypothesis C6 in the RS_v1 paper) and enters as an independent,
+load-bearing hypothesis of the T5 characterization theorem.
 -/
 
-/-- The Cosh-Add identity in the form used by T5.
+/-- The Cosh-Add (d'Alembert-type) identity in the form used by T5.
 
-This is a **mathematical theorem**, not a physical assumption.
-It follows from:
-- Symmetry (derived from ledger double-entry)
-- Unit normalization (derived from identity posting)
-- Continuity (physical requirement for any cost functional)
-- Curvature normalization (gauge choice)
-
-The proof is classical functional equation theory (d'Alembert equation).
+This is the log-axis form of the composition law C6. It is an INDEPENDENT
+hypothesis of the T5 characterization: it is NOT implied by symmetry, unit
+normalization, continuity, and curvature calibration (see
+`aczel_hypothesis_refuted`).
 -/
 def CoshAddFromLedger (G : ℝ → ℝ) : Prop :=
   ∀ t u : ℝ, G (t+u) + G (t-u) = 2 * (G t * G u) + 2 * (G t + G u)
 
-/-- **Theorem (Aczél's Theorem 3.1.3)**: The Cosh-Add identity follows from ledger constraints.
+/-- **REFUTED PROPOSITION** (retained only so its refutation can be stated).
 
-**Proof sketch**: This is a classical result from functional equation theory.
-The key steps are:
-1. From evenness and continuity, G is twice differentiable
-2. The second derivative G'' satisfies G''(t) = G(t) + 1 (from curvature normalization)
-3. Setting H = G + 1, we get H'' = H with H(0) = 1, H'(0) = 0
-4. By ODE uniqueness, H = cosh, so G = cosh - 1
-5. G = cosh - 1 satisfies the Cosh-Add identity (direct computation)
+This proposition asserts that evenness + normalization + continuity + unit
+log-curvature alone force the Cosh-Add (d'Alembert) identity. **It is FALSE.**
+The quadratic cost `G(t) = t²/2` satisfies every hypothesis and violates
+Cosh-Add (see `aczel_hypothesis_refuted` below).
 
-**Citation**: Aczél, J. "Lectures on Functional Equations and Their Applications"
-Academic Press, 1966, Chapter 3, Theorem 3.1.3
+An earlier revision of this file misattributed this proposition to Aczél
+(1966, Theorem 3.1.3) and presented it as established mathematics. That was
+an error, identified in the 2026 internal audit (Thapa, T−2..T5 forcing
+report, Finding 2). Aczél's classification runs in the OTHER direction: it
+classifies solutions OF the d'Alembert equation; it does not derive the
+equation from regularity hypotheses. The composition law (the paper's
+closure hypothesis C6) is genuinely load-bearing and cannot be obtained
+from symmetry, normalization, continuity, and calibration alone.
 
-This represents established mathematics, not a physical assumption.
-
-Rather than introducing a global axiom, we record Aczél's theorem as an explicit
-hypothesis that downstream modules may assume when they need the classical
-functional-equation result.
--/
-
+Nothing in this repository may assume this proposition. It is kept as a
+`def` solely as the subject of the no-go certificate below. -/
 def aczel_theorem_3_1_3_hypothesis : Prop :=
   ∀ (G : ℝ → ℝ),
     Function.Even G →
@@ -328,58 +329,74 @@ def aczel_theorem_3_1_3_hypothesis : Prop :=
     deriv (deriv G) 0 = 1 →
     CoshAddFromLedger G
 
-theorem aczel_theorem_3_1_3 (hAczel : aczel_theorem_3_1_3_hypothesis) :
-    ∀ (G : ℝ → ℝ),
-      Function.Even G →
-      G 0 = 0 →
-      Continuous G →
-      deriv (deriv G) 0 = 1 →
-      CoshAddFromLedger G :=
-  -- The proof uses functional equation theory from Aczél
-  -- Combined with ODE uniqueness: G'' = G at 0 with G(0)=0, G'(0)=0 gives G = cosh - 1
-  hAczel
+/-- The quadratic-cost witness `G(t) = t²/2`. Even, vanishes at 0, continuous,
+with unit second derivative at the origin — yet it does not satisfy Cosh-Add. -/
+noncomputable def quadraticWitness : ℝ → ℝ := fun t => t ^ 2 / 2
 
-/-- The Cosh-Add identity is a mathematical consequence of ledger constraints. -/
-theorem cosh_add_is_mathematical_consequence (hAczel : aczel_theorem_3_1_3_hypothesis) :
-    ∀ (G : ℝ → ℝ),
-      -- Symmetry (from ledger double-entry)
-      Function.Even G →
-      -- Unit (from identity posting)
-      G 0 = 0 →
-      -- Continuity (physical requirement)
-      Continuous G →
-      -- Curvature normalization (gauge choice)
-      deriv (deriv G) 0 = 1 →
-      -- Then Cosh-Add follows (mathematical theorem)
-      CoshAddFromLedger G :=
-  aczel_theorem_3_1_3 hAczel
+lemma quadraticWitness_even : Function.Even quadraticWitness := by
+  intro t; simp [quadraticWitness]
 
-/-! ## Summary
+lemma quadraticWitness_zero : quadraticWitness 0 = 0 := by
+  simp [quadraticWitness]
 
-The T5 derivation chain is now:
+lemma quadraticWitness_continuous : Continuous quadraticWitness := by
+  unfold quadraticWitness; fun_prop
+
+lemma quadraticWitness_deriv : deriv quadraticWitness = fun t => t := by
+  funext x
+  have h : HasDerivAt quadraticWitness x x := by
+    have := (hasDerivAt_pow 2 x).div_const 2
+    simpa [quadraticWitness, pow_one] using this
+  simpa using h.deriv
+
+lemma quadraticWitness_second_deriv : deriv (deriv quadraticWitness) 0 = 1 := by
+  rw [quadraticWitness_deriv]
+  simp
+
+/-- The witness violates Cosh-Add at t = u = 1: LHS = 2, RHS = 5/2. -/
+lemma quadraticWitness_not_coshAdd : ¬ CoshAddFromLedger quadraticWitness := by
+  intro h
+  have h11 := h 1 1
+  norm_num [quadraticWitness] at h11
+
+/-- **NO-GO CERTIFICATE (Finding 2 resolution)**: the proposition
+`aczel_theorem_3_1_3_hypothesis` is false. Symmetry, unit normalization,
+continuity, and unit log-curvature calibration do NOT force the Cosh-Add
+identity; the composition law C6 is an independent, load-bearing hypothesis.
+
+Witness: `G(t) = t²/2`. -/
+theorem aczel_hypothesis_refuted : ¬ aczel_theorem_3_1_3_hypothesis := by
+  intro h
+  exact quadraticWitness_not_coshAdd
+    (h quadraticWitness quadraticWitness_even quadraticWitness_zero
+      quadraticWitness_continuous quadraticWitness_second_deriv)
+
+/-! ## Summary (corrected 2026-07-06)
+
+What this file actually establishes:
 
 ```
-T1 (MP) → T2 (Discrete) → T3 (Ledger) → T5 Constraints
-                                           ↓
-                              ┌────────────┴────────────┐
-                              │                         │
-                    Symmetry (Forced)           Unit (Forced)
-                    F(x) = F(1/x)               F(1) = 0
-                              │                         │
-                              └────────────┬────────────┘
-                                           ↓
-                              Cosh-Add (Mathematical Theorem)
-                                           ↓
-                              T5: J(x) = ½(x + 1/x) - 1
+T3 (Ledger)  →  Symmetry F(x) = F(1/x)   (from double-entry, proved above)
+             →  Unit F(1) = 0            (from identity posting, proved above)
 ```
 
-The only remaining "gap" is the Cosh-Add identity, which is:
-- NOT a physical assumption
-- A mathematical theorem from functional equation theory
-- Follows from the ledger-derived constraints plus continuity
+What it does NOT establish, and what `aczel_hypothesis_refuted` proves CANNOT
+be established from these constraints alone:
 
-This makes T5 **unconditionally forced** from T1-T4, modulo classical
-functional equation theory (which is pure mathematics, not physics).
+```
+Symmetry + Unit + Continuity + Calibration  ↛  Cosh-Add  ↛  J
+```
+
+The Cosh-Add (d'Alembert) identity is equivalent to the composition law
+(the paper's closure hypothesis C6) and must be assumed or motivated
+independently. The witness `G(t) = t²/2` satisfies every ledger-derived
+constraint plus continuity and calibration, and is not J.
+
+Consequently T5 is a CONDITIONAL characterization theorem: given C1–C7
+(including the load-bearing C6 and the calibration C7), J is the unique
+cost. It is NOT unconditionally forced from T1–T4. An earlier revision of
+this summary claimed otherwise; that claim is retracted, and the refutation
+is now a kernel-checked certificate in this file.
 -/
 
 end LedgerCost

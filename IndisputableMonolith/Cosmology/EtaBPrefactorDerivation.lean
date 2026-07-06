@@ -6,68 +6,52 @@ import IndisputableMonolith.Cosmology.BaryonHigherOrder
 import IndisputableMonolith.Cosmology.EtaBIntervalCert
 
 /-!
-# η_B Order-One Prefactor c: Two-Sided 8-Tick Washout
+# η_B Order-One Prefactor c: SELECTED ANSATZ, NOT A DERIVATION
 
-This module derives the order-one prefactor `c` in the baryogenesis
-formula
+**HONESTY CORRECTION (2026-07-06 audit, Thapa baryon-photon follow-up).**
+This module's earlier docstring said it "derives the order-one prefactor
+structurally". That was an overclaim, and it is retracted. The accurate
+status of the prefactor `c_RS = (1 − φ^(−8))^2` is:
 
-  η_B = c × J_CP × (Γ_sph / H) / g★
+1. **Selected, not derived.** The squared form was chosen from a family
+   of a-priori-comparable order-one lookalikes — (1 − δ), (1 − δ)^2,
+   (1 − 2δ), e^(−2δ), and others with δ = φ^(−8) — because it moves the
+   bare rung φ^(−44) ≈ 6.41×10⁻¹⁰ into the Planck band. No Boltzmann or
+   rate calculation in this repository produces the squared polynomial
+   form; a genuine thermal washout is exponential in Γ/H and
+   temperature-dependent, and this factor is neither.
 
-structurally from the recognition-cycle washout mechanism.
+2. **The prefactor is numerically the missing sub-rung.** Any residual
+   factor of order (0.9, 1.0) applied to φ^(−44) would land in the band;
+   the selection therefore carries essentially no independent
+   evidential weight beyond the decade-level match of the bare rung.
 
-## Structural Argument
+3. **What IS proved (and remains proved):** the algebra
+   `c_RS_expanded`, positivity, `c_RS < 1`, and the interval arithmetic
+   showing c_RS · φ^(−44) ∈ (6.0, 6.2)×10⁻¹⁰. These are kernel-checked
+   facts about a *defined* quantity, not evidence that the definition is
+   the physical washout.
 
-After the electroweak phase transition the sphaleron is active for
-approximately N_sph ≈ φ^(2^D) recognition cycles. Each cycle, the
-recognition operator R̂ reduces ledger imbalance at rate
-δ = φ^(−2^D) = φ^(−8) (one rung per fundamental tick at D = 3).
-
-The matter and antimatter sectors each carry one full
-dimensionGap (D)-worth of fermionic DOF (`fermionic_dof = 2 ×
-dimensionGap D`). Each sector contributes an independent washout
-channel at rate δ. The combined washout factor is therefore:
-
-  c_RS = (1 − δ)^2 = (1 − φ^(−8))^2
-
-This is the **two-sided 8-tick washout**: one factor of (1 − δ) for
-the matter sector, one factor of (1 − δ) for the antimatter sector,
-each at the 8-tick rung set by D = 3 via T7.
-
-## Numerical Predictions
-
-  φ^(−8) ≈ 0.02129
-  (1 − φ^(−8))^2 ≈ 0.9579
-  (1 − φ^(−8))^2 × φ^(−44) ≈ 0.9579 × 6.376 × 10⁻¹⁰ ≈ 6.107 × 10⁻¹⁰
-
-Observed η_B = (6.10 ± 0.04) × 10⁻¹⁰ (Planck 2018).
-The corrected RS prediction lands at the central observed value to
-within the experimental uncertainty.
-
-## Comparison with First-Order Correction
-
-`BaryonHigherOrder.lean` defines a first-order correction (1 − φ^(−8))
-giving η_B^(1) ≈ 6.24 × 10⁻¹⁰ (2.3% gap). This module's two-sided
-correction (1 − φ^(−8))^2 gives η_B^(2) ≈ 6.11 × 10⁻¹⁰
-(< 0.5% gap, inside 1σ of CMB). The square is the structural
-consequence of independent matter / antimatter washout channels,
-both at the 8-tick rung.
+The two-sided-washout story (matter and antimatter sectors each
+contributing one factor of (1 − δ) at the 8-tick rung) is retained
+below as the *motivating heuristic* for why the squared form was tried
+first. It is a HYPOTHESIS with no rate derivation behind it.
 
 ## Epistemic Status
 
-THEOREM (algebra and numerical bounds): the prefactor
-c_RS = (1 − φ^(−8))^2, applied to the leading φ^(−44), produces
-η_B in the band (6.0, 6.2) × 10⁻¹⁰ which contains the Planck 2018
-central value 6.10 × 10⁻¹⁰.
+DEF (ansatz): c_RS = (1 − φ^(−8))^2, a selected order-one factor.
+THEOREM (algebra and numerical bounds only): positivity, c_RS < 1,
+and the band inclusion c_RS · φ^(−44) ∈ (6.0, 6.2) × 10⁻¹⁰.
+HYPOTHESIS (interpretive, no supporting calculation): the two-sided
+washout reading of the square.
 
-HYPOTHESIS (interpretive): the squared form arises from independent
-matter and antimatter sphaleron washout channels at the 8-tick rung.
-A first-principles derivation of "exactly squared" from a Boltzmann-
-equation analysis is the natural next step.
+OPEN: a Boltzmann/rate derivation with explicit Γ/H that either
+produces this factor or replaces it. Until that exists, the honest
+paper-level claim is the decade-level match of the bare rung φ^(−44),
+and this module must not be cited as a precision prediction.
 
-Falsifier: if Planck or future precision measurements push η_B
-outside (6.0, 6.2) × 10⁻¹⁰ at > 3σ, the squared two-sided form is
-falsified and the alternative (1 − 2φ^(−8)) or higher-order form
-becomes preferred.
+Falsifier (unchanged): η_B measured outside (6.0, 6.2) × 10⁻¹⁰ at
+> 3σ kills the squared ansatz specifically.
 
 ## Status: 0 sorry, 0 RS-specific axiom
 -/

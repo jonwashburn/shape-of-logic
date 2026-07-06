@@ -1482,7 +1482,19 @@ structure T4_To_T5_Cost_Bridge
   /-- The T5 theorem surface produced downstream of that RCL surface. -/
   t5 : T5_J_Unique
 
-/-- The T4 realization bridge supplies the T5 cost bridge. -/
+/-- The T4 realization bridge PACKAGES the T5 cost bridge.
+
+**HONESTY NOTE (2026 audit, T4→T5 arrow).** The T5 record below is proved
+entirely from `CostUniqueness` lemmas and `law_of_logic_forces_jcost`; it
+consumes nothing from `bridge` inside the uniqueness proof. An earlier
+revision bound the bridge's RCL surface as an unused variable
+(`_rcl_surface`) inside that proof, which cosmetically suggested the
+T−1..T4 floor feeds T5. It does not: deleting T−1..T4 breaks no T5 proof.
+The continuous positive-ratio comparison surface and the composition law
+are imported hypotheses (SI2/C6 in the RS_v1 paper), not consequences of
+the floor; `PrimitiveDistinction.lean` proves the floor's own cost cannot
+satisfy the composition law. This is a conditional packaging, not a
+forcing proof of T5 from T4. -/
 theorem t4_to_t5_cost_bridge_holds
     {h4 : T4_Recognition_Forced} (bridge : T4_To_T5_Realization_Bridge h4) :
     T4_To_T5_Cost_Bridge bridge where
@@ -1498,8 +1510,6 @@ theorem t4_to_t5_cost_bridge_holds
     J_calibrated := CostUniqueness.Jcost_is_calibrated
     J_continuous := CostUniqueness.Jcost_continuous_pos
     uniqueness := fun F hAczel hRecip hNorm hComp hCalib hCont => by
-      have _rcl_surface :=
-        bridge.rcl_surface T4ToT5.jcostComparison T4ToT5.jcostComparison_satisfies_laws
       let _ : Cost.FunctionalEquation.AczelSmoothnessPackage := hAczel
       exact Cost.FunctionalEquation.law_of_logic_forces_jcost F
         hRecip hNorm hComp hCalib hCont

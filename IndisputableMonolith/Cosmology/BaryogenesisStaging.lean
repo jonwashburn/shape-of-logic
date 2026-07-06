@@ -1096,13 +1096,27 @@ noncomputable def fixedPointMap (x : ℝ) : ℝ := 1 + 1/x
 -- fixed-point equation φ = 1 + 1/φ). The contraction rate |f'(φ)| = φ⁻² = c²
 -- confirms that one fixed-point iteration traverses exactly two recognition rungs.
 theorem phi_fixed_point_and_suppression_identity :
-  fixedPointMap phi = phi ∧ 1 / phi = phi - 1 := sorry
+  fixedPointMap phi = phi ∧ 1 / phi = phi - 1 := by
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  have hs : (0 : ℝ) < Real.sqrt 5 := Real.sqrt_pos.mpr (by norm_num)
+  have hpos : 0 < phi := by unfold phi; linarith
+  have hne : phi ≠ 0 := ne_of_gt hpos
+  have hsq : phi ^ 2 = phi + 1 := by
+    unfold phi; field_simp; nlinarith [h5]
+  have hinv : 1 / phi = phi - 1 := by
+    rw [div_eq_iff hne]; nlinarith [hsq]
+  exact ⟨by unfold fixedPointMap; rw [hinv]; ring, hinv⟩
 
 theorem b0_closure_certificate
     (BminusL : ℚ)
     (hfactor : (28 / 79 : ℚ) ≠ 0) :
-    (28 / 79 : ℚ) * BminusL = 0 ↔ BminusL = 0 :=
-  sorry
+    (28 / 79 : ℚ) * BminusL = 0 ↔ BminusL = 0 := by
+  constructor
+  · intro h
+    rcases mul_eq_zero.mp h with h' | h'
+    · exact absurd h' hfactor
+    · exact h'
+  · intro h; rw [h, mul_zero]
 
 /-- SU(2)_L sphaleron equilibrium constraint among chemical potentials, per
     generation.  The sphaleron operator ∏(qqq l) couples three colored quark

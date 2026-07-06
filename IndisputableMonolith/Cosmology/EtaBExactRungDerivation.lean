@@ -60,11 +60,15 @@ plus the single active edge:
     = eta_B_rung_from_fermionic
     = -44
 
-Each route is an independent structural commitment. The probability
-that three independent structural arguments (gap-from-dimension,
-Gray-code chirality, fermionic DOF) all converge on the same integer
-by accident is low; the framework can be falsified at any of them
-by independent means.
+HONESTY CORRECTION (2026-07-06, per the baryon-photon audit follow-up): the
+three routes are NOT statistically independent confirmations. They are three
+arithmetic re-expressions that reuse the same integer content (the gap 45 and
+the active-edge count 1); the "agreement" theorems certify that the
+bookkeeping is consistent, not that three independent physical arguments
+converge. What IS nontrivial is that the SAME small integers recur across
+sites; whether that recurrence is load-bearing or a look-elsewhere artifact
+is an OPEN question (audit FQ6). The rung assignment itself (why THIS charge,
+at THIS epoch, with the +1 offset A = 1) remains HYPOTHESIS-grade.
 
 ## Status: 0 sorry, 0 RS-specific axiom
 Depends only on `propext`, `Classical.choice`, `Quot.sound`, plus
@@ -257,9 +261,11 @@ theorem chirality_only_defined_at_D3 :
 
 /-- The η_B exact rung certificate.
 
-    The integer −44 governing the baryon-to-photon ratio's φ-rung
-    has three structurally independent derivations from D = 3, and
-    all three converge. -/
+    Certifies that three arithmetic re-expressions of the integer −44
+    (gap-from-dimension, chirality × torsion, fermionic DOF) agree, and
+    that none uses the empirical η_B as input. The routes share integer
+    content and are NOT independent confirmations (see module docstring
+    correction); the rung ASSIGNMENT to η_B is HYPOTHESIS-grade. -/
 structure EtaBExactRungCert where
   /-- Route A: gap-from-dimension yields −44. -/
   route_A_dimension : eta_B_rung_from_dimension Foundation.GapDerivation.D = -44
@@ -289,13 +295,15 @@ structure EtaBExactRungCert where
     eta_B_rung_from_dimension Foundation.GapDerivation.D
       + (Foundation.GapDerivation.dimensionGap Foundation.GapDerivation.D : ℤ) = 1
 
-/-- **THE η_B EXACT RUNG THEOREM**:
+/-- **THE η_B RUNG-ARITHMETIC CERTIFICATE**:
 
-    The φ-rung exponent −44 of the baryon-to-photon ratio is forced
-    by D = 3 via three structurally independent routes that all agree.
-
-    No route uses the empirical value of η_B as input. The agreement
-    is a derivation, not a fit. -/
+    The integer −44 is reproduced by three arithmetic re-expressions from
+    D = 3, none of which uses the empirical value of η_B as input. The
+    arithmetic is THEOREM-grade; the routes are consistency checks of
+    shared integer content, not independent confirmations; and the
+    physical assignment of this rung to the baryon-to-photon ratio
+    (charge choice, epoch, sign, the offset A = 1) is HYPOTHESIS-grade
+    (audit FQ1–FQ6). -/
 theorem etaBExactRungCert : EtaBExactRungCert where
   route_A_dimension := eta_B_rung_from_dimension_at_D3
   route_B_chirality := eta_B_rung_from_chirality_eq

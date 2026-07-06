@@ -30,7 +30,7 @@ NOT derive the Standard Model spectrum. Earlier language in this file
   (Foundation.DimensionForcing / T8), the 8-tick period 2^D = 8
   (Foundation.EightTick), and the generation count 3 (Q₃ face pairs).
   The spin-statistics EXCHANGE SIGN (fermion −1 / boson +1 under 2π) is
-  derived in `Foundation.SpinStatistics` in the parent repository; note
+  derived in `Foundation.SpinStatistics` (this repository); note
   that module proves the SIGN of the statistics, NOT the 7/8 thermal
   weight, which is the standard Fermi/Bose integral ratio and is imported.
 - **PROVED HERE (exact kernel-checked arithmetic on the counts above)**:
@@ -312,7 +312,7 @@ STATUS: HYPOTHESIS. The 7/8 weight's actual provenance is the Fermi/Bose
 thermal integral (imported; §3). The tick-fraction reading below reproduces
 the same number by construction — (8−1)/8 — and the exchange-sign half of
 the story (fermion −1 under 2π) IS derived upstream
-(Foundation.SpinStatistics, parent repository). But no theorem connects
+(`Foundation.SpinStatistics`, this repository). But no theorem connects
 tick-occupancy counting to the thermal integral, so the identification of
 the two 7/8's is an interpretation, not a result. -/
 

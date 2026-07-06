@@ -495,8 +495,10 @@ If you are looking for the place the framework calibrates against
 SI/CODATA, it is NOT λ_rec. The SI bridge lives in:
 * `Constants/RSNativeUnits.lean` `ExternalCalibration` structure
   (seconds_per_tick, meters_per_voxel, joules_per_coh, with c-consistency).
-* `Foundation/DimensionalBridgeStructural.lean` (the explicit "principal
-  open frontier" tag with the named residual).
+* `Foundation/SIBridgeClosure.lean` (the conversion-map closure; the
+  dimensional ANCHOR itself remains the explicit "principal open
+  frontier" — one external scale must be supplied, by dimensional
+  analysis it cannot be derived from dimensionless structure).
 The dimensional bridge is one open frontier, not a hidden cluster of
 calibrations spread across the constants. -/
 noncomputable def lambda_rec : ℝ := ell0

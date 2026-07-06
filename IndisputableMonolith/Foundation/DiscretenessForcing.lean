@@ -456,6 +456,19 @@ theorem discreteness_forced :
   intro x hx_pos hx_ne hdef
   exact hx_ne (hunique x hx_pos hdef)
 
+/-! **SCOPE NOTE (2026 audit).** `discreteness_forced` above does NOT prove
+that stable existence requires a discrete state space. Its conclusion
+restates the uniqueness-of-minimum conjunct of its own hypothesis (the
+no-isolation conjunct is unused), and `stable_existence_requires_discrete`
+below is a quantifier reorder, not a derivation. No theorem in this module
+shows any physical configuration space is discrete; the discreteness of
+the T0 floor is installed by the choice of the `Bool` carrier at the
+T−1→T0 stage, not derived here. What IS real in this module is the
+J-analysis (isolated zero, unit log-curvature, the quartic tail bound),
+all of which is downstream of T5, not a pre-T5 forcing step. The names
+`discreteness_forced` and `stable_existence_requires_discrete` are kept
+for source stability; read them with this scope note. -/
+
 /-! ## RSExists Requires Discreteness -/
 
 /-- A predicate for "stable existence" in the RS sense.

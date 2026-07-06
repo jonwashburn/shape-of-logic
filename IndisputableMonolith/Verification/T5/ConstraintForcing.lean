@@ -45,36 +45,31 @@ Any rescaling F → cF preserves the physics because all observables are ratios.
 
 **Formal theorem**: `curvature_is_gauge_normalization`
 
-### Constraint 4: Cosh-Add Identity — **MATHEMATICAL THEOREM**
+### Constraint 4: Cosh-Add Identity — **INDEPENDENT HYPOTHESIS (corrected)**
 
-**Status**: This is NOT a physical assumption. It is a mathematical consequence
-of the ledger-derived constraints (symmetry, unit) plus continuity.
+**Status (corrected 2026-07-06)**: an earlier revision claimed Cosh-Add was a
+mathematical consequence of the ledger constraints plus continuity, citing
+Aczél (1966, Thm. 3.1.3). That claim was FALSE: the quadratic cost
+`G(t) = t²/2` satisfies symmetry, unit, continuity, and calibration and
+violates Cosh-Add. See the kernel-checked refutation
+`LedgerCost.aczel_hypothesis_refuted`. Cosh-Add is the log-axis form of the
+composition law C6 and enters the T5 characterization as an independent,
+load-bearing hypothesis.
 
-**Reference**: Aczél, J. "Lectures on Functional Equations and Their Applications"
-              Academic Press, 1966, Chapter 3, Theorem 3.1.3
-
-**Formal theorem**: `LedgerCost.cosh_add_is_mathematical_consequence`
-
-## Summary (UPDATED)
+## Summary (corrected)
 
 | Constraint | Status | Source |
 |------------|--------|--------|
 | F(x) = F(1/x) | **FORCED** | T3 Ledger double-entry |
 | F(1) = 0 | **FORCED** | T3 Identity posting |
-| F''(0) = 1 | Gauge choice | Cancels in observables |
-| Cosh-Add | **Math theorem** | Aczél (1966) |
+| F''(0) = 1 | Calibration choice (C7) | fixes λ in cosh(λ log x) − 1 |
+| Cosh-Add | **Independent hypothesis (C6)** | no-go: `aczel_hypothesis_refuted` |
 
-## Conclusion
+## Conclusion (corrected)
 
-**T5 is now UNCONDITIONALLY FORCED from T1-T4.**
-
-The derivation chain is:
-```
-T1 (MP) → T2 (Discrete) → T3 (Ledger) → T5 Constraints → T5 (J uniqueness)
-```
-
-The only "gap" is the Cosh-Add identity, which is pure mathematics (functional
-equation theory), not a physical assumption.
+T5 is a CONDITIONAL characterization theorem: given C1–C7 (with C6 and C7
+load-bearing), J is the unique admissible cost. It is NOT unconditionally
+forced from T1–T4; the earlier claim to that effect is retracted.
 -/
 
 namespace IndisputableMonolith
@@ -193,30 +188,26 @@ def IdentityRecognitionZero (F : ℝ → ℝ) : Prop :=
 def UnitNormalized (F : ℝ → ℝ) : Prop :=
   F 1 = 0
 
-def CurvatureRescale (F : ℝ → ℝ) : Prop :=
-  True -- Placeholder for "F is related to F_canonical by scaling"
+/-! ## Summary Theorem
 
-def PreservesObservables (F : ℝ → ℝ) : Prop :=
-  True -- Placeholder
+The former `CurvatureRescale`/`PreservesObservables` definitions (both `True`
+placeholders) and the third conjunct that consumed them were removed in the
+2026-07-06 honesty pass: a vacuous clause is not evidence. What survives is
+exactly what is proved: symmetry and unit normalization are forced. -/
 
-/-! ## Summary Theorem -/
-
-/-- T5 constraints are all either physically forced or gauge choices that cancel. -/
+/-- The two ledger-derived T5 constraints. Curvature calibration (C7) and the
+composition law (C6) are NOT listed here because they are not forced; see the
+corrected module docstring and `LedgerCost.aczel_hypothesis_refuted`. -/
 theorem t5_constraints_are_forced :
     -- Reciprocal symmetry: forced by exchange invariance
     (∀ F : ℝ → ℝ, ExchangeInvariant F → ReciprocalSymmetric F) ∧
     -- Unit normalization: forced by identity recognition
-    (∀ F : ℝ → ℝ, IdentityRecognitionZero F → UnitNormalized F) ∧
-    -- Curvature: gauge choice that cancels in observables
-    (∀ F : ℝ → ℝ, CurvatureRescale F → PreservesObservables F) := by
+    (∀ F : ℝ → ℝ, IdentityRecognitionZero F → UnitNormalized F) := by
   constructor
   · intro F hInv
     exact reciprocal_symmetry_forced F hInv
-  constructor
   · intro F hId
     exact unit_normalization_forced F hId
-  · intro F _
-    trivial
 
 /-! ## Ledger-Based Forcing (New)
 
@@ -254,15 +245,10 @@ theorem t5_constraints_implies_reciprocal_from_ledger
   t5_constraints_imply_reciprocal_from_ledger F hF x hx
 
 /-!
-The Cosh-Add identity is a mathematical theorem, not a physical assumption.
-
-This documents that the final constraint (Cosh-Add) follows from functional
-equation theory given the ledger-derived constraints plus continuity.
-
-**Reference**: Aczél (1966), Theorem 3.1.3
-
-This is documented and used in `Verification.T5.LedgerCost` (see
-`LedgerCost.cosh_add_is_mathematical_consequence`).
+The Cosh-Add identity is an INDEPENDENT hypothesis (the composition law C6),
+not a consequence of the ledger constraints plus continuity. The refutation
+of the earlier "mathematical theorem" claim is kernel-checked in
+`Verification.T5.LedgerCost.aczel_hypothesis_refuted` (witness `G(t) = t²/2`).
 -/
 
 -- Suppress unused variable warnings for the summary theorem

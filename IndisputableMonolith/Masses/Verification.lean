@@ -248,7 +248,16 @@ theorem tau_electron_ratio_error :
   rw [div_lt_iff₀ hexp_pos, abs_lt]
   constructor <;> nlinarith [phi17_gt, phi17_lt, hr.1, hr.2]
 
-/-! ## Summary Certificate -/
+/-! ## Summary Certificate
+
+NAMING NOTE (2026-07-06 honesty pass): this structure certifies RESIDUALS,
+not successes. The muon lands ~3.75% below and the tau ~6.70% above the
+integer-rung prediction, while both masses are measured to better than a
+part in 10⁵. What the certificate proves is exactly that the stated
+tolerance intervals hold — i.e. the ladder is a leading-order ansatz with
+percent-level residuals, not a precision match. Interpreting these bounds
+as "verification" of the mass model was flagged by the 2026 mass-program
+audit; the docstrings now state the residual reading explicitly. -/
 
 structure MassVerificationCert where
   electron_in_range : (0.5098 : ℝ) < electron_pred ∧ electron_pred < 0.5102
@@ -313,14 +322,16 @@ theorem proton_relative_error :
   unfold m_p_exp
   constructor <;> nlinarith [hb.1, hb.2]
 
-/-! ## Verification Supersedes mass_ladder_assumption
+/-! ## Interval Bounds Supersede mass_ladder_assumption
 
 The concrete interval-arithmetic bounds above replace the placeholder
-`mass_ladder_assumption` from `Assumptions.lean`. The following theorem
-provides the direct replacement: the phi-ladder model with geometry-derived
-parameters matches PDG masses without any external assumption. -/
+`mass_ladder_assumption` from `Assumptions.lean`. The tolerances are
+percent-level (0.3% / 4% / 3%): they certify residuals of a leading-order
+ansatz relative to an empirical electron anchor, NOT a parameter-free
+precision match. -/
 
-/-- Direct verification that the phi-ladder model matches PDG to stated tolerances.
+/-- Interval bounds: the phi-ladder ansatz (with the empirical electron
+    anchor) reproduces PDG masses to the stated percent-level tolerances.
     This supersedes `Masses.mass_ladder_assumption`. -/
 theorem phi_ladder_verified :
     (|electron_pred - m_e_exp| / m_e_exp < 0.003) ∧

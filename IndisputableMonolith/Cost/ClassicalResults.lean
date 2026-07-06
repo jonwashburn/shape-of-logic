@@ -3,20 +3,13 @@ import Mathlib
 /-!
 # Classical Mathematical Results
 
-This module declares well-established mathematical results as axioms pending
-full Lean formalization. Each axiom is justified with academic references.
+HEADER CORRECTED (2026-07-06): an earlier revision of this module declared
+these results as `axiom`s; every one has since been PROVED as a `theorem`
+over Mathlib (the body below contains no `axiom` declarations). The stale
+header claiming otherwise confused auditors and is replaced by this note.
 
-These are NOT new physical assumptions - they are standard mathematical facts
-from real analysis, complex analysis, and functional equations that would
-require substantial Mathlib infrastructure to prove formally.
-
-## Justification
-
-All axioms in this module are:
-1. **Textbook results** with multiple independent proofs in literature
-2. **Computationally verifiable** (can be checked numerically to arbitrary precision)
-3. **Used routinely** in mathematical physics without re-proving
-4. **Candidates for future formalization** when infrastructure is available
+These are standard mathematical facts from real analysis, complex analysis,
+and functional equations, now formalized.
 
 ## References
 

@@ -25,10 +25,11 @@ The mathematical content is:
   with the canonical RS-native-to-SI calibration.
 
 The unit bridge to a tabletop observable in SI is parameterized by an
-inhabitant of `Constants.RSNativeUnits.ExternalCalibration`, which
-lives at the named open frontier of
-`Foundation.DimensionalBridgeStructural`. Until that frontier is
-discharged, T4 is a CONDITIONAL THEOREM with the calibration as input.
+inhabitant of `Constants.RSNativeUnits.ExternalCalibration`, the named
+open frontier of the dimensional bridge (conversion map closed in
+`Foundation.SIBridgeClosure`; the anchor is external by dimensional
+analysis). Until an anchor is supplied, T4 is a CONDITIONAL THEOREM
+with the calibration as input.
 
 ## What is proved here
 
@@ -138,8 +139,9 @@ RS-native BMV phase rate to SI. It records:
 3. The test-mass parameters `(m₁, m₂, {r_ab})` in SI units.
 
 This is a deliberately simple `Prop`-valued structure: the actual
-`ExternalCalibration` instance lives in
-`Foundation.DimensionalBridgeStructural`'s named open frontier. -/
+`ExternalCalibration` instance is the named open frontier of the
+dimensional bridge (see `Constants.RSNativeUnits` and
+`Foundation.SIBridgeClosure`). -/
 structure UnitBridgeInput where
   /-- SI conversion scale (positive). -/
   Uconv : ℝ
