@@ -110,7 +110,7 @@ free parameter: changing it would amount to re-scaling the cost functional
 itself, which is forbidden by Theorem `law_of_logic_forces_jcost`. -/
 noncomputable def J_bit_normalized : ℝ := 1
 
-/-- Step 3: curvature cost of embedding one recognition token at scale `λ`.
+/-- Step 3: curvature cost of embedding one recognition event at scale `λ`.
 
 Derived from `|κ| = 2 χ(S²) = 4` curvature quanta on the bounding sphere,
 Gauss-Bonnet normalization with `χ = 2`, and bounding area `A = 4πλ²`:
@@ -351,7 +351,7 @@ theorem kappa_normalized_eq_one : kappa_normalized = 1 := by
   have hpi : Real.pi ≠ 0 := Real.pi_ne_zero
   simp [euler_S2]; field_simp; norm_num
 
-/-- J_curv = 2λ² is the curvature cost per recognition token.
+/-- J_curv = 2λ² is the curvature cost per recognition event.
     Derivation: |κ_normalized| × (4πλ²) / (2π × χ(S²))
     = 1 × (4πλ²) / (2π × 2) = 2λ² / 2 ... wait, let's be precise:
     J_curv = (|κ|/(2χ)) × (A/(2π)) where |κ| = 4, χ = 2, A = 4πλ²
