@@ -9892,20 +9892,21 @@ nodes. This bridge makes the dependency explicit:
 /-! ### Bridge: T6 → Canonical φ-Constants
 
 The fundamental constants `c`, `ℏ`, `G` in RS units are not free
-parameters: T6's φ-forcing pins each one to a specific integer power of
-`φ`, not merely to "some" integer power. The canonical bridge names the
-exact exponents and witnesses the constraints they satisfy (`c = 1`,
-`ℏ = φ^(-5)`, `G = φ^5`, `G · ℏ = 1`, `planck_length = 1`,
-`planck_mass = φ^(-5)`). This replaces the existential
-`∃ n : ℤ, ℏ_rs = φ^n` with the concrete value `n = -5`. -/
+parameters: T6's φ-forcing pins each one to a specific value algebraic in
+`φ` (and, for `G`, the physical `π`). The canonical bridge names the
+exact values and witnesses the constraints they satisfy (`c = 1`,
+`ℏ = φ^(-5)`, `G = φ^5/π` i.e. `G·π = φ^5`, `G · ℏ = 1/π`,
+`planck_length = √(1/π)`, `planck_mass = √π·φ^(-5)`). This replaces the
+existential `∃ n : ℤ, ℏ_rs = φ^n` with the concrete value `n = -5`. The
+`π` in `G` is the holographic/Gauss–Bonnet closure factor (Family A,
+canonical), NOT a stray; see `Constants/GravitationalConstant.lean`. -/
 
 /-- **T6 → Canonical φ-Constants bridge certificate.**
 
-    T6's φ-forcing fixes every RS constant as a specific integer power
-    of `φ`, not as an existential. The bridge names the canonical
-    exponents (`ℏ = φ^(-5)`, `G = φ^5`), the unit conditions
-    (`c = 1`, `planck_length = 1`), the duality `G · ℏ = 1`, and the
-    Planck mass canonical form. -/
+    T6's φ-forcing fixes every RS constant, not as an existential. The
+    bridge names the canonical values (`ℏ = φ^(-5)`, `G·π = φ^5`), the
+    unit condition (`c = 1`), the duality `G · ℏ = 1/π`, and the
+    Planck length/mass canonical forms. -/
 structure T6_To_PhiConstants_Canonical_Bridge (h6 : T6_Phi_Forced) : Prop where
   /-- T6's φ uniqueness theorem is available. -/
   phi_unique_available : ∀ r : ℝ, 0 < r → r ^ 2 = r + 1 → r = PhiForcing.φ
@@ -9913,15 +9914,15 @@ structure T6_To_PhiConstants_Canonical_Bridge (h6 : T6_Phi_Forced) : Prop where
   c_rs_canonical : ConstantDerivations.c_rs = 1
   /-- Planck's reduced constant is exactly `φ^(-5)`. -/
   hbar_rs_canonical : ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)
-  /-- Newton's gravitational constant is exactly `φ^5`. -/
-  G_rs_canonical : ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ (5 : ℤ)
-  /-- The canonical exponents satisfy the duality `G · ℏ = 1`. -/
-  G_hbar_inverse : ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1
-  /-- The Planck length in RS units is exactly 1. -/
-  planck_length_canonical : ConstantDerivations.planck_length_rs = 1
-  /-- The Planck mass is exactly `φ^(-5)`. -/
+  /-- Newton's gravitational constant satisfies `G·π = φ^5` (i.e. `G = φ^5/π`). -/
+  G_rs_canonical : ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ (5 : ℤ)
+  /-- The canonical values satisfy the duality `G · ℏ = 1/π`. -/
+  G_hbar_inverse : ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 / Real.pi
+  /-- The Planck length in RS units is `√(1/π)`. -/
+  planck_length_canonical : ConstantDerivations.planck_length_rs = Real.sqrt (1 / Real.pi)
+  /-- The Planck mass is `√π·φ^(-5)`. -/
   planck_mass_canonical :
-    ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)
+    ConstantDerivations.planck_mass_rs = Real.sqrt Real.pi * ConstantDerivations.φ_val ^ (-5 : ℤ)
   /-- `ℏ` is positive. -/
   hbar_positive : ConstantDerivations.ℏ_rs > 0
   /-- `G` is positive. -/
@@ -9941,9 +9942,9 @@ theorem t6_to_phi_constants_canonical_bridge_holds (h6 : T6_Phi_Forced) :
   phi_unique_available := h6.phi_unique
   c_rs_canonical := ConstantDerivations.c_rs_eq_one
   hbar_rs_canonical := ConstantDerivations.ℏ_rs_eq
-  G_rs_canonical := by simp [ConstantDerivations.G_rs]
+  G_rs_canonical := ConstantDerivations.G_pi_eq_phi5
   G_hbar_inverse := ConstantDerivations.G_ℏ_product
-  planck_length_canonical := ConstantDerivations.planck_length_eq_one
+  planck_length_canonical := ConstantDerivations.planck_length_eq
   planck_mass_canonical := ConstantDerivations.planck_mass_eq
   hbar_positive := ConstantDerivations.ℏ_pos
   G_positive := ConstantDerivations.G_pos
@@ -10427,26 +10428,26 @@ structure Spine_To_Extras_Bridge : Prop where
       `t6_forces_hbar_canonical_exponent`). -/
   t6_forces_hbar_in_phi :
     ∃ n : ℤ, ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ n
-  /-- T6 forces Newton's constant to be an integer power of `φ` (legacy
-      existential surface; the canonical exponent is `5`, see
+  /-- T6 forces `G·π` to be an integer power of `φ` (legacy existential
+      surface; the canonical exponent is `5`, i.e. `G = φ^5/π`, see
       `t6_forces_G_canonical_exponent`). -/
   t6_forces_G_in_phi :
-    ∃ n : ℤ, ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ n
+    ∃ n : ℤ, ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ n
   /-- T6 fixes `ℏ` at the canonical exponent `-5`. -/
   t6_forces_hbar_canonical_exponent :
     ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)
-  /-- T6 fixes `G` at the canonical exponent `5`. -/
+  /-- T6 fixes `G` at `G·π = φ^5` (i.e. `G = φ^5/π`). -/
   t6_forces_G_canonical_exponent :
-    ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ (5 : ℤ)
-  /-- T6 fixes the duality `G · ℏ = 1`. -/
+    ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ (5 : ℤ)
+  /-- T6 fixes the duality `G · ℏ = 1/π`. -/
   t6_forces_G_hbar_inverse :
-    ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1
-  /-- T6 fixes the Planck length unit `planck_length = 1`. -/
+    ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 / Real.pi
+  /-- T6 fixes the Planck length `planck_length = √(1/π)`. -/
   t6_forces_planck_length_unit :
-    ConstantDerivations.planck_length_rs = 1
-  /-- T6 fixes the Planck mass at the canonical exponent `-5`. -/
+    ConstantDerivations.planck_length_rs = Real.sqrt (1 / Real.pi)
+  /-- T6 fixes the Planck mass at `√π·φ^(-5)`. -/
   t6_forces_planck_mass_canonical_exponent :
-    ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)
+    ConstantDerivations.planck_mass_rs = Real.sqrt Real.pi * ConstantDerivations.φ_val ^ (-5 : ℤ)
   /-- T5 (via `Jcost_unit0`) forces the existence of a consistent
       configuration at zero cost (`True`, ratio = 1). -/
   t5_forces_zero_cost_consistent :
@@ -10487,7 +10488,7 @@ theorem spine_to_extras_bridge_holds
     t5_forces_unique_existent := exist_canonical.unique_existent_legacy
     t6_forces_c_unit := phi_consts.c_rs_canonical
     t6_forces_hbar_in_phi := ConstantDerivations.ℏ_algebraic_in_φ
-    t6_forces_G_in_phi := ConstantDerivations.G_algebraic_in_φ
+    t6_forces_G_in_phi := ConstantDerivations.G_pi_algebraic_in_φ
     t6_forces_hbar_canonical_exponent := phi_consts.hbar_rs_canonical
     t6_forces_G_canonical_exponent := phi_consts.G_rs_canonical
     t6_forces_G_hbar_inverse := phi_consts.G_hbar_inverse
@@ -10840,25 +10841,26 @@ theorem godel_dissolved :
 
 /-- All constants derived from φ via the extras bridge. The exponents are
     surfaced existentially here for the legacy interface; the canonical
-    exponents (`ℏ = φ^(-5)`, `G = φ^5`) are exposed by
+    values (`ℏ = φ^(-5)`, `G·π = φ^5`) are exposed by
     `constants_from_phi_canonical` below. -/
 theorem constants_from_phi :
     ConstantDerivations.c_rs = 1 ∧
     (∃ n : ℤ, ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val^n) ∧
-    (∃ n : ℤ, ConstantDerivations.G_rs = ConstantDerivations.φ_val^n) :=
+    (∃ n : ℤ, ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val^n) :=
   let bridge := spine_to_extras_bridge_holds t0_holds t5_holds t6_holds
   ⟨bridge.t6_forces_c_unit, bridge.t6_forces_hbar_in_phi, bridge.t6_forces_G_in_phi⟩
 
-/-- All constants derived from φ at their canonical exponents. The
-    canonical bridge fixes `ℏ = φ^(-5)`, `G = φ^5`, `G · ℏ = 1`,
-    `planck_length = 1`, and `planck_mass = φ^(-5)` — no existentials. -/
+/-- All constants derived from φ at their canonical values. The
+    canonical bridge fixes `ℏ = φ^(-5)`, `G·π = φ^5` (`G = φ^5/π`),
+    `G · ℏ = 1/π`, `planck_length = √(1/π)`, and
+    `planck_mass = √π·φ^(-5)` — no existentials. -/
 theorem constants_from_phi_canonical :
     ConstantDerivations.c_rs = 1 ∧
     ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ (-5 : ℤ) ∧
-    ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
-    ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 ∧
-    ConstantDerivations.planck_length_rs = 1 ∧
-    ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ) :=
+    ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
+    ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 / Real.pi ∧
+    ConstantDerivations.planck_length_rs = Real.sqrt (1 / Real.pi) ∧
+    ConstantDerivations.planck_mass_rs = Real.sqrt Real.pi * ConstantDerivations.φ_val ^ (-5 : ℤ) :=
   let phi_consts := t6_to_phi_constants_canonical_bridge_holds t6_holds
   ⟨phi_consts.c_rs_canonical, phi_consts.hbar_rs_canonical,
    phi_consts.G_rs_canonical, phi_consts.G_hbar_inverse,
@@ -10881,7 +10883,7 @@ theorem ultimate_inevitability :
     -- Constants from φ
     (ConstantDerivations.c_rs = 1 ∧
      (∃ n : ℤ, ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val^n) ∧
-     (∃ n : ℤ, ConstantDerivations.G_rs = ConstantDerivations.φ_val^n)) ∧
+     (∃ n : ℤ, ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val^n)) ∧
     -- Logic from cost
     (∃ c : LogicFromCost.ConsistentConfig, LogicFromCost.consistent_cost c = 0) ∧
     -- Physics of Reference (The Algebra of Aboutness)
@@ -10902,9 +10904,9 @@ theorem ultimate_inevitability :
 /-- **ULTIMATE THEOREM (CANONICAL EXPONENT SURFACE)**
 
     The same content as `ultimate_inevitability`, but the φ-constants
-    conjunct is now expressed with canonical exponents: `ℏ = φ^(-5)`,
-    `G = φ^5`, `G · ℏ = 1`, `planck_length = 1`,
-    `planck_mass = φ^(-5)`. The existentials of the legacy surface are
+    conjunct is now expressed with canonical values: `ℏ = φ^(-5)`,
+    `G·π = φ^5` (`G = φ^5/π`), `G · ℏ = 1/π`, `planck_length = √(1/π)`,
+    `planck_mass = √π·φ^(-5)`. The existentials of the legacy surface are
     replaced with fixed values forced by T6 via the canonical
     `T6_To_PhiConstants_Canonical_Bridge`. -/
 theorem ultimate_inevitability_canonical :
@@ -10917,10 +10919,10 @@ theorem ultimate_inevitability_canonical :
     -- Constants from φ at canonical exponents
     (ConstantDerivations.c_rs = 1 ∧
      ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ (-5 : ℤ) ∧
-     ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
-     ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 ∧
-     ConstantDerivations.planck_length_rs = 1 ∧
-     ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)) ∧
+     ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
+     ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 / Real.pi ∧
+     ConstantDerivations.planck_length_rs = Real.sqrt (1 / Real.pi) ∧
+     ConstantDerivations.planck_mass_rs = Real.sqrt Real.pi * ConstantDerivations.φ_val ^ (-5 : ℤ)) ∧
     -- Logic from cost
     (∃ c : LogicFromCost.ConsistentConfig, LogicFromCost.consistent_cost c = 0) ∧
     -- Physics of Reference (The Algebra of Aboutness)
@@ -10958,10 +10960,10 @@ theorem ultimate_inevitability_extended :
     -- Constants from φ at canonical exponents
     (ConstantDerivations.c_rs = 1 ∧
      ConstantDerivations.ℏ_rs = ConstantDerivations.φ_val ^ (-5 : ℤ) ∧
-     ConstantDerivations.G_rs = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
-     ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 ∧
-     ConstantDerivations.planck_length_rs = 1 ∧
-     ConstantDerivations.planck_mass_rs = ConstantDerivations.φ_val ^ (-5 : ℤ)) ∧
+     ConstantDerivations.G_rs * Real.pi = ConstantDerivations.φ_val ^ (5 : ℤ) ∧
+     ConstantDerivations.G_rs * ConstantDerivations.ℏ_rs = 1 / Real.pi ∧
+     ConstantDerivations.planck_length_rs = Real.sqrt (1 / Real.pi) ∧
+     ConstantDerivations.planck_mass_rs = Real.sqrt Real.pi * ConstantDerivations.φ_val ^ (-5 : ℤ)) ∧
     -- Gap-45 = T(9)
     (DimensionForcing.gap_45 = 45 ∧
      Gap45.PhysicalMotivation.triangular 9 = 45 ∧
