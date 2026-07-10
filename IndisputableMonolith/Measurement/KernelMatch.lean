@@ -9,8 +9,8 @@ import IndisputableMonolith.Measurement.TwoBranchGeodesic
 This module proves the constructive kernel match from Local-Collapse Appendix D.
 
 The key lemma: for the profile
-  r(ϑ) = (1 + 2 tan ϑ) + √((1 + 2 tan ϑ)^2 − 1),
-we have J(r(ϑ)) = 2 tan ϑ pointwise, enabling the integral identity C = 2A.
+  r(ϑ) = (1 + 2 cot ϑ) + √((1 + 2 cot ϑ)^2 − 1),
+we have J(r(ϑ)) = 2 cot ϑ pointwise, enabling the integral identity C = 2A.
 -/
 
 namespace IndisputableMonolith
@@ -19,7 +19,7 @@ namespace Measurement
 open Real Cost
 
 /-- Recognition profile from eq (D.1) of Local-Collapse:
-    r(ϑ) solves J(r(ϑ)) = 2 tan ϑ. -/
+    r(ϑ) solves J(r(ϑ)) = 2 cot ϑ. -/
 noncomputable def recognitionProfile (ϑ : ℝ) : ℝ :=
   1 + 2 * Real.cot ϑ + Real.sqrt ((1 + 2 * Real.cot ϑ) ^ 2 - 1)
 
@@ -56,7 +56,7 @@ lemma recognitionProfile_pos (ϑ : ℝ) (hϑ : 0 ≤ ϑ ∧ ϑ ≤ π/2) :
   have hs : 0 ≤ Real.sqrt ((1 + 2 * Real.cot ϑ) ^ 2 - 1) := Real.sqrt_nonneg _
   exact add_pos_of_pos_of_nonneg hypos hs
 
-/-- Pointwise kernel matching: J(r(ϑ)) = 2 tan ϑ
+/-- Pointwise kernel matching: J(r(ϑ)) = 2 cot ϑ
     This is the core technical lemma enabling C = 2A -/
 theorem kernel_match_pointwise (ϑ : ℝ) (hϑ : 0 ≤ ϑ ∧ ϑ ≤ π/2) :
   Jcost (recognitionProfile ϑ) = 2 * Real.cot ϑ := by
@@ -101,12 +101,12 @@ theorem kernel_match_pointwise (ϑ : ℝ) (hϑ : 0 ≤ ϑ ∧ ϑ ≤ π/2) :
     _ = y - 1 := by simpa [hydiv]
     _ = 2 * Real.cot ϑ := hy_sub
 
-/-- Differential form of kernel match: J(r) dϑ = 2 tan ϑ dϑ -/
+/-- Differential form of kernel match: J(r) dϑ = 2 cot ϑ dϑ -/
 theorem kernel_match_differential (ϑ : ℝ) (hϑ : 0 ≤ ϑ ∧ ϑ ≤ π/2) :
   Jcost (recognitionProfile ϑ) = 2 * Real.cot ϑ :=
   kernel_match_pointwise ϑ hϑ
 
-/-- The integrand match: ∫ J(r(ϑ)) dϑ = 2 ∫ tan ϑ dϑ -/
+/-- The integrand match: ∫ J(r(ϑ)) dϑ = 2 ∫ cot ϑ dϑ -/
 theorem kernel_integral_match (θ_s : ℝ) (hθ : 0 < θ_s ∧ θ_s < π/2) :
   ∫ ϑ in (0)..(π/2 - θ_s), Jcost (recognitionProfile (ϑ + θ_s)) =
   2 * ∫ ϑ in (0)..(π/2 - θ_s), Real.cot (ϑ + θ_s) := by
