@@ -1,0 +1,30 @@
+---
+description: Gating for AI agents pushing to the public shape-of-logic core-theory repository
+alwaysApply: true
+---
+
+# Pushing to shape-of-logic is gated (PUBLIC repo)
+
+This repository is public. It contains only the machine-checked core theorem
+surface named in `README.md`. Read `AI_CONTRIBUTION_POLICY.md` before pushing.
+
+## Hard rules for any agent
+
+1. **Default is do-not-ship.** Push only the exact domains and files the user
+   explicitly requested. If unsure, ask; do not guess.
+2. **Run the gate before every push.** A `pre-push` hook runs
+   `scripts/ai_push_gate.sh` and fails closed against a private scope policy.
+   Authorized maintainers install the policy and then run
+   `bash scripts/install_push_gate.sh`. You can also check by hand:
+   `git diff --name-only origin/main..HEAD | bash scripts/ai_push_gate.sh -`.
+3. **Stay within the named public roots.** Existing private modules are not
+   candidates for shipping merely because they compile.
+4. **Prefer a branch over `main`;** let Jon merge after review.
+5. **Never weaken or bypass the gate.** If it fires, remove the offending file
+   from the push. Only Jon overrides, with `SOL_PUSH_OVERRIDE=1`, for a
+   specific vetted file.
+
+## Why
+
+Once an out-of-scope derivation is public it may remain in forks forever. A
+clean theorem can always be added later.
