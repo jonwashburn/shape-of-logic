@@ -1,0 +1,508 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\cm}{\mathrm{cm}_{4}}
+\newcommand{\CM}{\mathrm{CM}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Kmin}{K}
+\newcommand{\ltwo}{\ell^{2}_{a,\alpha}}
+\newcommand{\Wick}{W}
+
+\title{An admissible causal edge-length assignment on the minimal interior-hinge simplicial complex}
+
+\author{Jonathan Washburn\\[2pt]
+\small Recognition Physics Institute}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In Regge calculus the curvature of a four-dimensional simplicial spacetime is concentrated on triangular hinges, and a deficit angle is meaningful only at a hinge that is genuinely interior, fully surrounded by a closed cycle of 4-simplices. The smallest complex realizing such a hinge consists of three 4-simplices on six vertices, all sharing one triangle. We ask whether this minimal interior-hinge complex admits a globally consistent, causally admissible assignment of squared edge lengths in the sense of causal dynamical triangulations, and we answer affirmatively by explicit construction. Placing the hinge triangle $\{0,1,2\}$ on a time slice $t$ and the link vertices $\{3,4,5\}$ on slice $t+1$, we assign every same-slice edge the spacelike squared length $a^{2}$ and every cross-slice edge the timelike squared length $-\alpha a^{2}$, with $a>0$ and $\alpha>0$. We prove that each of the three pentachora pulls this single global function back to exactly the standard causal $(3,2)$ squared-edge tuple, so consistency on all shared faces holds structurally; that each pentachoron has signed Lorentzian Cayley--Menger determinant $\cm=-\bigl((12\alpha+7)a^{8}\bigr)<0$, the strict negativity of a nondegenerate Lorentzian simplex; that after the standard Wick rotation every pentachoron satisfies the Euclidean admissibility criterion $\cm=(12\alpha-7)a^{8}>0$ exactly on the sharp range $\alpha>7/12$; and that at $a=1$, $\alpha=1$ each pentachoron Euclideanizes to the regular unit 4-simplex with $\cm=5$. All computations are exact and finite. The result is an existence theorem for the symmetric standard slab assignment: it does not classify asymmetric assignments around the hinge cycle, and it computes no dihedral angle, deficit angle, or Lorentzian action, which constitute the next step this construction makes possible.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Regge's discretization of general relativity replaces a smooth spacetime by a piecewise-flat simplicial manifold in which the metric is encoded entirely in the edge lengths and the curvature is concentrated on codimension-2 hinges, triangles in four dimensions \cite{Regge}. The Regge action is a sum over hinges of the hinge area times the deficit angle, the amount by which the dihedral angles of the top-dimensional simplices meeting at the hinge fail to close to $2\pi$. This structure underlies a long line of work in classical and quantum simplicial gravity \cite{ReggeWilliams,HartleSorkin}, and it is the kinematical foundation of causal dynamical triangulations (CDT), in which the path sum runs over foliated Lorentzian triangulations built from a small set of causal simplex types and is rendered convergent by a Wick rotation acting on the timelike edge lengths \cite{AJL,Loll}.
+
+A deficit angle is meaningful only at a hinge that is genuinely interior. A single 4-simplex, or several 4-simplices sharing only boundary faces, carries hinges whose surrounding dihedral wedges do not close a cycle; no deficit is defined there, and the angular defect at such a hinge is a boundary datum, absorbed by the boundary term of Hartle and Sorkin \cite{HartleSorkin} rather than appearing as curvature. The smallest simplicial complex in which a triangular hinge is truly interior, surrounded by a closed cycle of 4-simplices, consists of three pentachora on six vertices, all containing the shared triangle. This combinatorial minimality is elementary and we recall it below (Lemma~\ref{lem:minimal}). The question addressed in this paper is metric rather than combinatorial: does this minimal interior-hinge complex admit a globally consistent assignment of causal (Lorentzian) squared edge lengths that makes every pentachoron an admissible causal simplex in the CDT sense, simultaneously and with exact agreement on every shared face?
+
+The question is not vacuous. In Lorentzian simplicial geometry, edge lengths carry causal character: squared lengths are positive for spacelike edges and negative for timelike ones, and naive size or shape bounds are ill-posed in the presence of indefinite lengths. Admissibility must therefore be formulated either through an allowed causal simplex class or after Wick rotation, and the standard criterion for a Euclideanized 4-simplex is Cayley--Menger positivity: the signed Cayley--Menger determinant is positive, equivalently the squared 4-volume is positive \cite{Menger,Blumenthal,Berger}. Around an interior hinge one must further verify that the per-simplex data glue consistently. Adjacent pentachora share tetrahedral faces, each containing the hinge triangle, and every shared edge must receive one and only one squared length; the gluing conditions run around a closed cycle, so one could imagine the cycle closing with a mismatch. Subtleties of Lorentzian dihedral angles and deficits, analyzed by Sorkin and by Barrett \cite{Sorkin1975,SorkinAngles,Barrett,BarrettFoxon}, make it worthwhile to have the underlying causal metric object pinned down exactly before any angle computation is attempted.
+
+This paper resolves the existence question positively and constructively. We define one global squared-length function on the fifteen unordered vertex pairs of the six-vertex complex, controlled by two positive parameters: a spatial scale $a$ and a causal slab parameter $\alpha$. Same-slice pairs are spacelike with squared length $a^{2}$; cross-slice pairs are timelike with squared length $-\alpha a^{2}$. We then prove, by exact finite algebra:
+
+\begin{enumerate}
+\item \emph{Consistency and identification.} Under the order-preserving vertex charts, each of the three pentachora pulls the global assignment back to exactly the standard CDT Lorentzian $(3,2)$ squared-edge tuple. The complex is literally three standard causal $(3,2)$ pentachora glued around the hinge, with structural (not solved-for) agreement on every shared face (Theorem~\ref{thm:identification}, Lemma~\ref{lem:sharedface}).
+\item \emph{Lorentzian Cayley--Menger negativity.} Each pentachoron has signed Cayley--Menger determinant $\cm=-\bigl((12\alpha+7)a^{8}\bigr)<0$ for $a>0$, $\alpha\ge 0$, the strict negativity characteristic of a nondegenerate Lorentzian simplex (Theorem~\ref{thm:lorentzcm}).
+\item \emph{Euclidean admissibility after Wick.} On the exact range $\alpha>7/12$, the Wick-rotated image of every pentachoron satisfies $\cm=(12\alpha-7)a^{8}>0$; all three Euclideanize simultaneously to nondegenerate 4-simplices, and the threshold $7/12$ is sharp and coincides with the standard Euclideanization bound for the $(3,2)$ type \cite{AJL} (Theorem~\ref{thm:wick}).
+\item \emph{Causal-type certificates.} The three hinge edges and the three link-cycle edges are spacelike; all nine cross edges are timelike; the link $3$-$4$-$5$-$3$ is a spacelike cycle on slice $t+1$ (Proposition~\ref{prop:types}).
+\item \emph{A regular physical point.} At $a=1$, $\alpha=1$ every pentachoron Wick-rotates to the regular unit 4-simplex with $\cm=5$, so the admissible range is nonempty and contains a maximally symmetric instance (Proposition~\ref{prop:regular}).
+\end{enumerate}
+
+These are packaged as a single headline statement (Theorem~\ref{thm:headline}): on the exact CDT range $a>0$, $\alpha>7/12$, one global assignment simultaneously presents all three pentachora as admissible causal $(3,2)$ simplices.
+
+The precise novelty claim is narrow. To our knowledge this is the first explicit, globally consistent, exactly verified causal edge-length assignment on the minimal genuine interior-hinge complex, with per-simplex Lorentzian Cayley--Menger negativity and exact Wick-Euclidean admissibility on the sharp range $\alpha>7/12$. It supplies the first concrete causal object on which an interior-hinge deficit angle and a Lorentzian action continuation can be attempted in a discrete-gravity program that introduces no adjustable gravitational coupling; the two parameters $a$ and $\alpha$ are the geometric scale and the causal slab parameter of the standard causal simplex, exactly as in CDT, not tunable couplings.
+
+Two honest walls bound the result and are stated up front. First, this is an existence theorem for the symmetric standard slab assignment, in which lengths depend only on whether a pair is same-slice or cross-slice; the space of asymmetric assignments around the hinge cycle, and any monodromy or obstruction theory for nonstandard per-pentachoron data, are not addressed here and remain open. Second, no dihedral angle, deficit angle, or Lorentzian action value is computed in this paper. The construction supplies the consistent admissible causal geometry on which those computations become well posed; the angle values around the hinge are the next step, not a claim of this paper. Section~\ref{sec:scope} states the scope in full.
+
+The paper is organized as follows. Section~\ref{sec:complex} defines the complex and recalls its minimality. Section~\ref{sec:prelim} collects the causal Regge and CDT preliminaries: causal simplex types, signed squared lengths, the Cayley--Menger determinant, Wick rotation, and admissibility. Section~\ref{sec:assignment} defines the global assignment and proves the consistency and identification results. Section~\ref{sec:certificates} proves the per-simplex certificates. Section~\ref{sec:scope} delimits what is established and what is not. Section~\ref{sec:discussion} discusses the consequences and the next step.
+
+\section{The minimal interior-hinge complex}
+\label{sec:complex}
+
+\begin{definition}[Vertex set and slices]
+\label{def:vertices}
+Let $V=\{0,1,2,3,4,5\}$. The \emph{slice function} $\tau\colon V\to\{t,t+1\}$ is $\tau(0)=\tau(1)=\tau(2)=t$ and $\tau(3)=\tau(4)=\tau(5)=t+1$. We call $\{0,1,2\}$ the \emph{hinge vertices} and $\{3,4,5\}$ the \emph{link vertices}. An edge $\{u,v\}$ is \emph{same-slice} if $\tau(u)=\tau(v)$ and \emph{cross-slice} otherwise.
+\end{definition}
+
+\begin{definition}[The complex $\Kmin$]
+\label{def:complex}
+Let $\Kmin$ be the four-dimensional simplicial complex generated by the three pentachora (4-simplices)
+\[
+A=\{0,1,2,3,4\},\qquad B=\{0,1,2,4,5\},\qquad C=\{0,1,2,3,5\},
+\]
+together with all their faces. All three pentachora contain the triangle $H=\{0,1,2\}$, the \emph{hinge}.
+\end{definition}
+
+The pentachora are glued pairwise along tetrahedra containing the hinge: $A\cap B=\{0,1,2,4\}$, $B\cap C=\{0,1,2,5\}$, $C\cap A=\{0,1,2,3\}$. The link of the hinge triangle in $\Kmin$ is the cycle $3$-$4$-$5$-$3$, a circle triangulated by three edges, so by the standard link criterion \cite{Munkres} the hinge is fully surrounded and a deficit angle at $H$ (the failure of the three dihedral angles of $A$, $B$, $C$ at $H$ to close to $2\pi$, or its Lorentzian analogue) is combinatorially meaningful.
+
+\begin{remark}[Face inventory]
+\label{rem:inventory}
+$\Kmin$ has $15$ edges: the three hinge edges $\{0,1\},\{0,2\},\{1,2\}$ on slice $t$; the three link edges $\{3,4\},\{4,5\},\{3,5\}$ on slice $t+1$; and the nine cross edges $\{i,k\}$ with $i\in\{0,1,2\}$, $k\in\{3,4,5\}$. Each hinge edge lies in all three pentachora, each link edge in exactly one, and each cross edge in exactly two, accounting for the $30$ pentachoron-edge incidences as $3\cdot 3+3\cdot 1+9\cdot 2$.
+\end{remark}
+
+\begin{lemma}[Minimality, recalled]
+\label{lem:minimal}
+In a four-dimensional simplicial complex, an interior triangular hinge, one whose link is a triangulated circle, requires at least three pentachora and at least six vertices. Equality in both bounds forces the configuration to be $\Kmin$ up to relabeling.
+\end{lemma}
+
+\begin{proof}
+Pentachora containing the hinge $H$ correspond bijectively to edges of the link of $H$, via $P=H\ast e$. A triangulated circle has $m\ge 3$ edges and $m$ vertices, and the link vertices are disjoint from the three hinge vertices, so at least three pentachora and at least $3+3=6$ vertices occur. If $m=3$ and no further vertices occur, the link is the $3$-cycle on $\{3,4,5\}$ and the three pentachora are $H\ast\{3,4\}$, $H\ast\{4,5\}$, $H\ast\{3,5\}$: this is $\Kmin$.
+\end{proof}
+
+This minimality is prior combinatorial structure; the new content of this paper is the causal metric assignment on $\Kmin$. Combinatorially $\Kmin$ is the simplicial join of the hinge triangle with the $3$-cycle on the link vertices, a triangulated 4-ball with the hinge in its interior, but only the hinge cycle matters for what follows.
+
+\section{Causal Regge and CDT preliminaries}
+\label{sec:prelim}
+
+We work in signature $(-,+,+,+)$: timelike squared lengths are negative, spacelike squared lengths are positive.
+
+\subsection{Signed squared lengths and causal simplex types}
+
+In Lorentzian (causal) Regge calculus each edge $e$ carries a real \emph{squared length} $q_{e}\ne 0$, with $q_{e}>0$ for spacelike edges and $q_{e}<0$ for timelike edges; null edges are excluded from the assignments considered here. In CDT the triangulation is foliated by spatial slices, every edge is either a same-slice (spacelike) edge or a cross-slice (timelike) edge, and every 4-simplex belongs to one of two causal types according to its vertex distribution across a pair of adjacent slices, $(4,1)$ or $(3,2)$ up to time reversal \cite{AJL,Loll}. A $(3,2)$ pentachoron has ten edges: three spacelike edges among the three same-slice vertices, one spacelike edge between the two vertices on the adjacent slice, and six timelike cross edges. In the standard CDT parametrization all spacelike edges have squared length $a^{2}$ and all timelike edges have squared length $-\alpha a^{2}$, with $a>0$ the lattice scale and $\alpha>0$ the asymmetry (slab) parameter \cite{AJL}.
+
+\begin{definition}[Standard $(3,2)$ tuple]
+\label{def:tuple32}
+Index the vertices of an abstract pentachoron by $\{0,1,2,3,4\}$, with $0,1,2$ on the lower slice and $3,4$ on the upper slice. The \emph{standard causal $(3,2)$ squared-edge tuple} with parameters $(a,\alpha)$ is the function $q$ on index pairs $i<j$ given by
+\[
+q_{01}=q_{02}=q_{12}=a^{2},\qquad q_{34}=a^{2},\qquad
+q_{03}=q_{04}=q_{13}=q_{14}=q_{23}=q_{24}=-\alpha a^{2}.
+\]
+\end{definition}
+
+\subsection{Cayley--Menger determinant and admissibility}
+
+\begin{definition}[Signed Cayley--Menger determinant]
+\label{def:cm}
+For a labelled 4-simplex with squared lengths $q_{ij}$, define the $6\times 6$ Cayley--Menger matrix
+\[
+M \;=\;
+\begin{pmatrix}
+0 & 1 & 1 & 1 & 1 & 1\\
+1 & 0 & q_{01} & q_{02} & q_{03} & q_{04}\\
+1 & q_{01} & 0 & q_{12} & q_{13} & q_{14}\\
+1 & q_{02} & q_{12} & 0 & q_{23} & q_{24}\\
+1 & q_{03} & q_{13} & q_{23} & 0 & q_{34}\\
+1 & q_{04} & q_{14} & q_{24} & q_{34} & 0
+\end{pmatrix},
+\]
+and the \emph{signed Cayley--Menger determinant} $\cm := -\det M$. This quantity is invariant under relabelling of the vertices.
+\end{definition}
+
+With this sign convention, for a Euclidean 4-simplex of 4-volume $V$ one has the classical identity
+\[
+\cm \;=\; 2^{4}(4!)^{2}\,V^{2} \;=\; 9216\,V^{2},
+\]
+so $\cm>0$ is exactly nondegeneracy.
+
+\begin{lemma}[Gram reduction]
+\label{lem:gram}
+Fix a base vertex $0$ and let $G$ be the $4\times 4$ matrix
+$G_{ij}=\tfrac12\bigl(q_{0i}+q_{0j}-q_{ij}\bigr)$ for $1\le i,j\le 4$. Then
+\[
+\cm \;=\; 2^{4}\det G \;=\; 16\det G
+\]
+as a polynomial identity in the squared lengths. In particular the identity remains valid for signed (Lorentzian) squared lengths.
+\end{lemma}
+
+\begin{proof}
+Subtract the row of vertex $0$ from the rows of vertices $1,\dots,4$ in $M$, and likewise for the columns; the bordered determinant then reduces to $(-1)^{5}\,2^{4}\det G$ by the standard computation \cite{Blumenthal}, so $-\det M=16\det G$. The row and column operations take place in the polynomial ring generated by the $q_{ij}$, so the signs of the $q_{ij}$ play no role.
+\end{proof}
+
+\begin{definition}[Admissibility]
+\label{def:admissible}
+A squared-edge tuple on a 4-simplex is \emph{Euclidean-admissible} if all $q_{ij}>0$ and $\cm>0$.
+\end{definition}
+
+The proved content of this paper concerning admissibility is always the inequality $\cm>0$ itself, an exact polynomial statement in $(a,\alpha)$. For the geometric reading we invoke, by citation, the classical realizability theorem of distance geometry: a symmetric array of positive squared distances on five points is realized by a nondegenerate isometric embedding in $\R^{4}$ if and only if the associated Cayley--Menger data satisfy the positivity criterion on the simplex and its faces \cite{Menger,Blumenthal,Berger}. We prove the positivity (and, in Remark~\ref{rem:subfaces}, verify that the sub-face chain is complete on the admissible range); we cite the embedding equivalence. No embedding of the entire glued six-vertex complex into a single copy of $\R^{4}$ is needed in Regge geometry or claimed here.
+
+For a Lorentzian $(3,2)$ tuple the determinant has the opposite sign: $\cm<0$ is the signature of a nondegenerate simplex whose Gram matrix has exactly one negative eigenvalue, the Lorentzian case \cite{AJL,SorkinAngles}. We will exhibit this negativity exactly, together with the inertia count.
+
+\subsection{Wick rotation}
+
+\begin{definition}[Wick map]
+\label{def:wick}
+The \emph{Wick rotation} $\Wick$ acts on causal squared-edge tuples by reversing the sign of every timelike squared length while fixing every spacelike one:
+\[
+\Wick(q_{e})=q_{e}\ \ \text{if } q_{e}>0,
+\qquad
+\Wick(-\alpha a^{2})=+\alpha a^{2}.
+\]
+On the standard causal tuple this is the continuation $\alpha\mapsto-\alpha$, the map used in CDT to pass from the Lorentzian to the Euclidean regime \cite{AJL,Loll}. It is an edge-level continuation; it does not by itself specify the continuation of Lorentzian dihedral angles or of the action.
+\end{definition}
+
+In CDT the Wick-rotated $(3,2)$ simplex is a nondegenerate Euclidean 4-simplex precisely when $\alpha>7/12$; the companion bound for the $(4,1)$ type is weaker, so $7/12$ is the binding threshold for triangulations containing $(3,2)$ simplices \cite{AJL}. Theorem~\ref{thm:wick} below recovers this bound exactly on our complex.
+
+\section{The global assignment and consistency}
+\label{sec:assignment}
+
+\subsection{The assignment}
+
+\begin{definition}[Symmetric slab assignment]
+\label{def:assignment}
+Fix $a>0$ and $\alpha>0$. Define the global squared-length function
+\[
+\ltwo:\binom{V}{2}\to\R,
+\qquad
+\ltwo(\{u,v\})=
+\begin{cases}
+a^{2} & \text{if } \tau(u)=\tau(v),\\[2pt]
+-\alpha a^{2} & \text{if } \tau(u)\neq\tau(v).
+\end{cases}
+\]
+\end{definition}
+
+There is exactly one squared length per edge of $\Kmin$: the function is defined on unordered global vertex pairs, prior to and independent of any decomposition into pentachora. Each pentachoron reads its ten edge lengths off this single function through its vertex chart.
+
+\begin{definition}[Charts]
+\label{def:charts}
+For $\sigma\in\{A,B,C\}$ let $\varphi_{\sigma}:\{0,1,2,3,4\}\to V$ be the unique order-preserving bijection onto the vertex set of $\sigma$:
+\[
+\varphi_{A}=(0,1,2,3,4),\qquad
+\varphi_{B}=(0,1,2,4,5),\qquad
+\varphi_{C}=(0,1,2,3,5).
+\]
+Each chart sends the chart slices $\{0,1,2\}$ and $\{3,4\}$ to the slices $t$ and $t+1$ of $\Kmin$. The \emph{pullback tuple} of $\sigma$ is $q^{\sigma}_{ij}:=\ltwo(\{\varphi_{\sigma}(i),\varphi_{\sigma}(j)\})$ for $0\le i<j\le 4$.
+\end{definition}
+
+\subsection{Shared-face consistency and the identification theorem}
+
+\begin{lemma}[Shared-face lemma]
+\label{lem:sharedface}
+Let $\sigma,\tau\in\{A,B,C\}$ and let $(i,j)$ and $(k,l)$ be edge index pairs with
+$\{\varphi_{\sigma}(i),\varphi_{\sigma}(j)\}=\{\varphi_{\tau}(k),\varphi_{\tau}(l)\}$
+as unordered global pairs. Then $q^{\sigma}_{ij}=q^{\tau}_{kl}$. In particular, on every shared face of two pentachora of $\Kmin$ (the tetrahedra $A\cap B$, $B\cap C$, $C\cap A$, and all their subfaces) the induced squared lengths agree, in either vertex order.
+\end{lemma}
+
+\begin{proof}
+Both sides equal $\ltwo$ evaluated at the same unordered global pair, and $\ltwo$ is a function on unordered pairs. There is no constraint to solve: consistency is structural, a consequence of routing all per-simplex data through one global assignment.
+\end{proof}
+
+\begin{theorem}[Consistency and identification]
+\label{thm:identification}
+For each $\sigma\in\{A,B,C\}$, the pullback tuple $q^{\sigma}$ equals the standard causal $(3,2)$ squared-edge tuple of Definition~\ref{def:tuple32} with parameters $(a,\alpha)$:
+\[
+q^{\sigma}_{01}=q^{\sigma}_{02}=q^{\sigma}_{12}=a^{2},\qquad
+q^{\sigma}_{34}=a^{2},\qquad
+q^{\sigma}_{ij}=-\alpha a^{2}\ \ \text{for } i\in\{0,1,2\},\ j\in\{3,4\}.
+\]
+Consequently $\Kmin$ with the assignment $\ltwo$ is exactly three standard CDT causal $(3,2)$ pentachora glued around the hinge $H$, consistent on all shared faces, and the three pentachora are pairwise isometric.
+\end{theorem}
+
+\begin{proof}
+Each chart $\varphi_{\sigma}$ is order preserving, sends chart indices $0,1,2$ to the hinge vertices on slice $t$, and sends chart indices $3,4$ to two link vertices on slice $t+1$ (namely $\{3,4\}$ for $A$, $\{4,5\}$ for $B$, $\{3,5\}$ for $C$). Hence pairs among chart indices $\{0,1,2\}$ map to same-slice pairs on slice $t$ and pull back $a^{2}$; the chart pair $\{3,4\}$ maps to a same-slice pair on slice $t+1$ and pulls back $a^{2}$; and each of the six cross pairs maps to a hinge-link pair and pulls back $-\alpha a^{2}$. This is Definition~\ref{def:tuple32}, identically for the three charts. Consistency on shared faces is Lemma~\ref{lem:sharedface}, and pairwise isometry follows because all three pullbacks are the same tuple.
+\end{proof}
+
+\begin{corollary}[Compatibility of the Wick map with restriction]
+\label{cor:wickcompat}
+The Wick rotation of $\ltwo$ is again a single global edge function, and for every $\sigma\in\{A,B,C\}$ the pullback of $\Wick\ltwo$ equals the Wick rotation of the pullback tuple $q^{\sigma}$.
+\end{corollary}
+
+\begin{proof}
+The causal type of an edge is determined by the global slice function $\tau$, so the Wick map assigns the same rotated value to an edge in every pentachoron containing it.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:identification} says more than that some consistent assignment exists: the three pentachora are not merely mutually compatible but are the same standard causal object in three charts. In particular, every per-simplex certificate proved in Section~\ref{sec:certificates} for the standard $(3,2)$ tuple applies verbatim to each of $A$, $B$, $C$.
+\end{remark}
+
+\section{Per-simplex certificates}
+\label{sec:certificates}
+
+By Theorem~\ref{thm:identification} all three pentachora carry the identical squared-edge tuple, so a single computation covers the whole complex. We first isolate the algebraic core.
+
+\begin{lemma}[Key determinant]
+\label{lem:keydet}
+Consider the 4-simplex tuple with spacelike squared length $a^{2}$ on the four same-slice edges and squared length $s\,a^{2}$, $s\in\R$, on the six cross edges, in the pattern of Definition~\ref{def:tuple32}. Then
+\[
+\cm \;=\; (12s-7)\,a^{8}.
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:gram}, $\cm=16\det G$ with $G_{ij}=\tfrac12(q_{0i}+q_{0j}-q_{ij})$, $1\le i,j\le 4$, taking vertex $0$ as base. For the stated data, $G=a^{2}g(s)$ with
+\[
+g(s)=
+\begin{pmatrix}
+1 & \tfrac12 & \tfrac12 & \tfrac12\\
+\tfrac12 & 1 & \tfrac12 & \tfrac12\\
+\tfrac12 & \tfrac12 & s & s-\tfrac12\\
+\tfrac12 & \tfrac12 & s-\tfrac12 & s
+\end{pmatrix}.
+\]
+Indeed, for $i,j\in\{1,2\}$ (same-slice with the base) the entry is $\tfrac12(a^{2}+a^{2}-q_{ij})$, giving $a^{2}$ on the diagonal and $a^{2}/2$ off it; for $i\in\{1,2\}$, $j\in\{3,4\}$ the entry is $\tfrac12(a^{2}+sa^{2}-sa^{2})=a^{2}/2$; and for $i,j\in\{3,4\}$ the entry is $\tfrac12(sa^{2}+sa^{2}-q_{ij})$, giving $sa^{2}$ on the diagonal and $(s-\tfrac12)a^{2}$ off it. Subtracting half of row 1 from rows 2, 3, 4 and expanding along the first column,
+\[
+\det g(s)=
+\det
+\begin{pmatrix}
+\tfrac34 & \tfrac14 & \tfrac14\\
+\tfrac14 & s-\tfrac14 & s-\tfrac34\\
+\tfrac14 & s-\tfrac34 & s-\tfrac14
+\end{pmatrix}
+=\frac{1}{64}
+\det
+\begin{pmatrix}
+3 & 1 & 1\\
+1 & 4s-1 & 4s-3\\
+1 & 4s-3 & 4s-1
+\end{pmatrix}.
+\]
+Expanding the last determinant along its first row gives
+\[
+3\bigl[(4s-1)^{2}-(4s-3)^{2}\bigr]-\bigl[(4s-1)-(4s-3)\bigr]+\bigl[(4s-3)-(4s-1)\bigr]
+=48s-28,
+\]
+so $\det g(s)=(12s-7)/16$ and $\cm=16\,a^{8}\det g(s)=(12s-7)a^{8}$. Every step is polynomial in the squared lengths, so the identity is valid for negative $s$ as well.
+\end{proof}
+
+\begin{theorem}[Lorentzian Cayley--Menger negativity]
+\label{thm:lorentzcm}
+For every $a>0$ and $\alpha\ge 0$, each pentachoron $A$, $B$, $C$ of $\Kmin$ with the assignment $\ltwo$ has
+\[
+\cm \;=\; -\bigl((12\alpha+7)\,a^{8}\bigr) \;<\; 0.
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:identification} each pentachoron carries the tuple of Lemma~\ref{lem:keydet} with $s=-\alpha$, giving $\cm=(12(-\alpha)-7)a^{8}=-(12\alpha+7)a^{8}$, strictly negative since $12\alpha+7\ge 7>0$ and $a^{8}>0$.
+\end{proof}
+
+\begin{remark}[Inertia check]
+\label{rem:inertia}
+The leading principal minors of the scaled Gram matrix $g(-\alpha)$ are
+\[
+1,\qquad \tfrac34,\qquad -\tfrac{3\alpha+1}{4},\qquad -\tfrac{12\alpha+7}{16},
+\]
+with exactly one sign change, so by Jacobi's inertia theorem the Gram matrix has signature $(3,1)$: three spacelike directions and one timelike, as expected of a genuine Lorentzian $(3,2)$ pentachoron \cite{AJL,SorkinAngles}. The negativity of $\cm$ holds uniformly in $\alpha\ge 0$, with no threshold; the causal tuple never degenerates on the Lorentzian side.
+\end{remark}
+
+\begin{theorem}[Euclidean admissibility after Wick, sharp threshold]
+\label{thm:wick}
+Fix $a>0$ and apply the Wick map of Definition~\ref{def:wick} to $\ltwo$, so that every cross-slice edge acquires squared length $+\alpha a^{2}$. Then each pentachoron of $\Kmin$ satisfies
+\[
+\cm \;=\; (12\alpha-7)\,a^{8},
+\]
+so the Cayley--Menger positivity criterion $\cm>0$ holds if and only if $\alpha>\tfrac{7}{12}$. On this range all three pentachora are simultaneously Euclidean-admissible, and by the classical realizability theorem each is realized by a nondegenerate 4-simplex in $\R^{4}$ \cite{Menger,Blumenthal,Berger}. The threshold is sharp: at $\alpha=7/12$ the Wick image is degenerate ($V=0$), and for $0<\alpha<7/12$ it is not realizable by any Euclidean 4-simplex.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{cor:wickcompat} the Wick image of each pullback tuple is that of Lemma~\ref{lem:keydet} with $s=+\alpha$, giving $\cm=(12\alpha-7)a^{8}$. For $a>0$ the sign of $\cm$ is the sign of $12\alpha-7$: positive exactly for $\alpha>7/12$, zero at $\alpha=7/12$, negative below. Since $\cm=9216\,V^{2}$ for Euclidean data, a negative value obstructs realization and a vanishing value forces $V=0$. All three pentachora carry the same tuple, so the criterion holds or fails for all of them at once; the geometric realization on $\alpha>7/12$ is the cited classical equivalence, whose sub-face hypotheses are verified in Remark~\ref{rem:subfaces}.
+\end{proof}
+
+\begin{remark}[The sub-face chain]
+\label{rem:subfaces}
+On $\alpha>7/12$ every lower-dimensional face of the Wick image is nondegenerate as well, so the top condition is the binding one. The faces of a Wick-rotated $(3,2)$ pentachoron are: same-slice triangles, equilateral of side $a$; mixed triangles with squared area $a^{4}(4\alpha-1)/16$, nondegenerate for $\alpha>1/4$; two $(3,1)$-profile tetrahedra with squared volume $a^{6}(3\alpha-1)/144$, nondegenerate for $\alpha>1/3$; and three $(2,2)$-profile tetrahedra with squared volume $a^{6}(2\alpha-1)/72$, nondegenerate for $\alpha>1/2$. Since $7/12$ exceeds $1/4$, $1/3$, and $1/2$, the strict positivity chain of the classical realizability theorem is complete on the admissible range. Equivalently, after Wick the leading minors of the scaled Gram matrix read $1$, $3/4$, $(3\alpha-1)/4$, $(12\alpha-7)/16$, all positive on $\alpha>7/12$, so the Gram matrix is positive definite by Sylvester's criterion.
+\end{remark}
+
+\begin{remark}
+The bound $\alpha>7/12$ is exactly the standard Euclideanization bound for the $(3,2)$ causal type in four-dimensional CDT \cite{AJL}. Its exact recovery on $\Kmin$ shows that the interior-hinge gluing imposes no constraint beyond the per-simplex ones for the symmetric slab assignment: the sharp per-simplex range survives the global consistency requirement unchanged.
+\end{remark}
+
+\begin{proposition}[Causal-type certificates]
+\label{prop:types}
+Under the assignment $\ltwo$ with $a>0$, $\alpha>0$:
+\begin{enumerate}
+\item the three hinge edges $\{0,1\},\{0,2\},\{1,2\}$ are spacelike with squared length $a^{2}$;
+\item the three link-cycle edges $\{3,4\},\{4,5\},\{3,5\}$ are spacelike with squared length $a^{2}$, so the link of the hinge, the cycle $3$-$4$-$5$-$3$, is a spacelike cycle on slice $t+1$;
+\item all nine hinge-to-link cross edges are timelike with squared length $-\alpha a^{2}$;
+\item each pentachoron $A$, $B$, $C$ is of causal type $(3,2)$ with respect to the slice structure of Definition~\ref{def:vertices}, with four spacelike and six timelike edges in the pattern of Definition~\ref{def:tuple32}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Items (1) through (3) read off Definition~\ref{def:assignment}: pairs within $\{0,1,2\}$ and within $\{3,4,5\}$ are same-slice, the nine mixed pairs are cross-slice. Item (4): each pentachoron contains the three hinge vertices on slice $t$ and exactly two link vertices on slice $t+1$, the vertex distribution defining the $(3,2)$ type, with the edge signs required of that type by items (1) through (3) and Theorem~\ref{thm:identification}.
+\end{proof}
+
+\begin{proposition}[Regular physical point]
+\label{prop:regular}
+At $a=1$, $\alpha=1$, the Wick image of every pentachoron of $\Kmin$ is the regular unit 4-simplex: all ten Euclidean squared lengths equal $1$, and
+\[
+\cm=(12\cdot 1-7)\cdot 1^{8}=5,
+\]
+so $V^{2}=5/9216$ and $V=\sqrt{5}/96$, the volume of the regular unit 4-simplex. In particular the admissible range of Theorem~\ref{thm:wick} is nonempty and contains a maximally symmetric, physically natural instance.
+\end{proposition}
+
+\begin{proof}
+At $a=\alpha=1$ the Wick map sends every squared length to $1$, so regularity is the equality of all ten lengths. The value $\cm=5$ is Theorem~\ref{thm:wick} at this point and matches the classical value for the regular unit 4-simplex, since $9216\,(\sqrt5/96)^{2}=5$.
+\end{proof}
+
+\begin{theorem}[Headline: admissible causal assignment on the minimal interior hinge]
+\label{thm:headline}
+Let $a>0$ and $\alpha>7/12$. Then the single global assignment $\ltwo$ of Definition~\ref{def:assignment} simultaneously presents all three pentachora $A$, $B$, $C$ of the minimal interior-hinge complex $\Kmin$ as admissible causal $(3,2)$ simplices. Precisely, per pentachoron:
+\begin{enumerate}
+\item the pullback tuple is exactly the standard causal $(3,2)$ tuple, with structural agreement on every shared face (Theorem~\ref{thm:identification}, Lemma~\ref{lem:sharedface});
+\item the causal-type certificates of Proposition~\ref{prop:types} hold;
+\item the Lorentzian signed Cayley--Menger determinant is $-\bigl((12\alpha+7)a^{8}\bigr)<0$, with Gram signature $(3,1)$ (Theorem~\ref{thm:lorentzcm}, Remark~\ref{rem:inertia});
+\item the Wick image satisfies the Euclidean admissibility criterion $\cm=(12\alpha-7)a^{8}>0$, with the Wick map compatible with restriction to every pentachoron (Theorem~\ref{thm:wick}, Corollary~\ref{cor:wickcompat}).
+\end{enumerate}
+The range is sharp in $\alpha$ and nonempty, containing the regular point $a=1$, $\alpha=1$ (Proposition~\ref{prop:regular}). In particular, a consistent, admissible causal edge-length assignment on the minimal genuine interior-hinge complex exists.
+\end{theorem}
+
+\begin{proof}
+Conjunction of the cited results.
+\end{proof}
+
+\section{What is established and what is not}
+\label{sec:scope}
+
+The claims of this paper are exact theorems of finite algebra, and their scope is deliberately narrow. We state the boundary explicitly.
+
+\paragraph{Established.}
+(i) The identification of each pentachoron of $\Kmin$ with the standard causal $(3,2)$ simplex under the symmetric slab assignment, with structural consistency on all shared faces (Theorem~\ref{thm:identification}, Lemma~\ref{lem:sharedface}). (ii) The exact Lorentzian Cayley--Menger value $\cm=-\bigl((12\alpha+7)a^{8}\bigr)$ and its strict negativity, with Gram signature $(3,1)$ (Theorem~\ref{thm:lorentzcm}). (iii) The exact Wick-Euclidean value $\cm=(12\alpha-7)a^{8}$ and the sharp admissibility range $\alpha>7/12$, degenerate at equality (Theorem~\ref{thm:wick}). (iv) The causal-type certificates (Proposition~\ref{prop:types}). (v) The regular nondegenerate point $a=1$, $\alpha=1$ with $\cm=5$ (Proposition~\ref{prop:regular}).
+
+\paragraph{Existence only, symmetric slab.}
+What is constructed is the symmetric standard CDT slab assignment: squared lengths depend only on whether a pair is same-slice or cross-slice. The theorem is that a consistent admissible causal assignment \emph{exists} on $\Kmin$. It is not a classification. The space of asymmetric assignments, in which the three pentachora carry distinct edge data around the hinge cycle subject to shared-face matching, is not analyzed here. One could instead begin with distinct local data on $A$, $B$, $C$, impose equality on their shared tetrahedra, and ask whether compatibility around the full link cycle $3$-$4$-$5$-$3$ produces an additional obstruction. No such monodromy obstruction is established here, and none is ruled out; the classification of these asymmetric systems remains open.
+
+\paragraph{No deficit angle and no action.}
+This paper computes no dihedral angle, no deficit angle at the hinge $H$, and no Regge or Lorentzian action value. The Lorentzian dihedral angles of causal simplices, their boost-like or complex character, and the correct notion of a Lorentzian deficit require the careful treatment of Sorkin and Barrett \cite{Sorkin1975,SorkinAngles,Barrett,BarrettFoxon}, including a consistent branch choice around the cycle, and the interior-hinge action-level continuation is precisely the computation this construction is intended to make well posed. Those angle values are future work, not implied claims.
+
+\paragraph{Admissibility means Cayley--Menger positivity.}
+Throughout, admissible after Wick means $\cm>0$, the exact 4D CDT regime, equivalently positive squared 4-volume. The proved content is the polynomial inequality, together with the sub-face chain of Remark~\ref{rem:subfaces}. The geometric reading, that positivity is equivalent to nondegenerate isometric embeddability in $\R^{4}$ for five points, is a classical theorem of distance geometry invoked by citation \cite{Menger,Blumenthal,Berger}, not reproved here. The claim is per pentachoron; no ambient realization of the glued complex is needed or asserted.
+
+\paragraph{No couplings introduced.}
+No adjustable gravitational coupling appears anywhere in the construction. The parameters $a$ and $\alpha$ are the geometric scale and the causal slab parameter of the standard causal simplex, the same kinematical parameters carried by every CDT triangulation \cite{AJL,Loll}; they are not tuned to make any theorem hold, and the theorems hold on the full stated ranges. The complex is fixed; no sum over triangulations is performed.
+
+\section{Discussion}
+\label{sec:discussion}
+
+The result of this paper is a small, sharp existence theorem, and its value lies in what it unblocks. In any Lorentzian Regge program the first genuine curvature observable is the deficit at an interior hinge, and before any angle can be computed one needs a concrete causal metric object: a complex with an interior hinge, a single-valued squared-length function, per-simplex causal class membership, and nondegeneracy certificates on both sides of the Wick rotation. Theorem~\ref{thm:headline} supplies exactly this object in its minimal instance, with every certificate exact and the admissibility range sharp.
+
+Four points deserve comment.
+
+\paragraph{The order in which consistency is imposed.}
+If three causal pentachora are specified independently, agreement of their shared tetrahedra becomes a constraint to be solved. Here the edge function is global from the outset. Local simplex data arise by restriction, so face compatibility, and compatibility of the Wick map with restriction, are immediate consequences of the definition. The nontrivial remaining questions then reduce to finite determinant and signature computations, which we carry out exactly.
+
+\paragraph{Relation to CDT slabs.}
+With the assignment $\ltwo$, the complex $\Kmin$ is exactly the star of a spacelike triangle in a four-dimensional CDT slab between slices $t$ and $t+1$ at which precisely three $(3,2)$ pentachora meet, the uniform case; it embeds as a local patch in any CDT configuration containing such a triangle, and the assignment is the restriction of the standard slab data to that patch \cite{AJL,Loll}. In a generic CDT geometry the number of pentachora around a spacelike triangle varies and carries the curvature; three is the smallest value compatible with an interior hinge (Lemma~\ref{lem:minimal}). That the sharp per-simplex Euclideanization bound $\alpha>7/12$ survives the interior-hinge gluing without modification is a consistency check on the CDT kinematics at the smallest curvature-bearing scale: for the symmetric assignment, interiority costs nothing beyond per-simplex admissibility. Whether the same is true for asymmetric data around the cycle is the open classification question of Section~\ref{sec:scope}.
+
+\paragraph{Why exactness matters here.}
+Deficit angles are differences of dihedral angles, and near degeneracy small errors in edge data produce uncontrolled errors in angles. The Lorentzian case is worse: dihedral angles at spacelike hinges of causal simplices involve boost-like and complex contributions \cite{Sorkin1975,SorkinAngles,Barrett,BarrettFoxon}, and the branch structure of the angle functions makes the nondegeneracy certificates (strict negativity before Wick, strict positivity after, uniformly on the stated ranges) the exact hypotheses under which the angle computation is well defined. The closed forms $\cm=-\bigl((12\alpha+7)a^{8}\bigr)$ and $\cm=(12\alpha-7)a^{8}$ give those hypotheses with no numerical slack.
+
+\paragraph{The next step and open problems.}
+With the causal geometry of $\Kmin$ fixed, the interior-hinge program proceeds: compute the three Lorentzian dihedral angles of $A$, $B$, $C$ at $H$ as functions of $\alpha$, select a consistent branch around the cycle, form the Lorentzian deficit, and carry the hinge contribution to the action through the Wick continuation, comparing the continued Lorentzian value with the Euclidean Regge value on $\alpha>7/12$ \cite{Regge,HartleSorkin,ReggeWilliams}. By the isometry of the three pentachora the three dihedral angles at $H$ coincide, so on the symmetric assignment the Euclidean deficit reduces to $2\pi-3\theta(a,\alpha)$ for a single $(3,2)$ dihedral shape $\theta$; evaluating $\theta$ and its continuation is a concrete computation on a concrete object, and it is future work. Since $\Kmin$ also has exterior boundary faces, a full local action analysis must keep the Hartle--Sorkin boundary term separate from the interior contribution \cite{HartleSorkin}. Beyond that: classify all admissible causal assignments on $\Kmin$, symmetric or not, a finite-dimensional question in fifteen edge variables; develop the gluing theory for per-pentachoron data around the hinge cycle, of which the global assignment here is the trivial class; and pose the same existence question for hinges surrounded by $(4,1)$ or mixed-type pentachora, where the Lorentzian angle subtleties are sharper.
+
+The present paper claims none of this. It claims, and proves, that the object on which these computations must be performed exists, is consistent, and is admissible on exactly the expected range. In a program that permits itself no adjustable coupling in the gravity sector, having the minimal curvature-bearing causal object pinned down exactly, rather than assumed, is the appropriate standard of progress.
+
+\appendix
+
+\section*{Appendix: Formalization}
+\label{app:formal}
+
+All results stated as theorems, lemmas, and propositions in this paper (the shared-face lemma, the identification of the three pullback tuples with the standard causal $(3,2)$ tuple, the Wick-restriction compatibility, the determinant identity of Lemma~\ref{lem:keydet}, the Lorentzian negativity $\cm=-\bigl((12\alpha+7)a^{8}\bigr)$ with the inertia count, the Wick-Euclidean positivity $\cm=(12\alpha-7)a^{8}>0$ on $\alpha>7/12$ with sharpness at the threshold and the sub-face bounds of Remark~\ref{rem:subfaces}, the causal-type certificates, the regular point $a=1$, $\alpha=1$ with $\cm=5$, and the packaged headline statement) have been formalized and machine-checked in an accompanying open-source library built on a proof assistant with a verified kernel. The certificates are symbolic in the parameters $(a,\alpha)$: the development works over exact rational and real arithmetic, so the determinant identities and inequalities are certified without floating-point or interval approximation. The formalization played no role in the mathematical content presented above, which is complete as stated; it serves as an independent verification that every claim holds as written. It does not claim a deficit-angle calculation, an asymmetric classification, or a Lorentzian action continuation, and the scope statements of Section~\ref{sec:scope} are mathematical prose, not formalized theorems.
+
+\begin{thebibliography}{99}
+
+\bibitem{Regge}
+T.~Regge,
+General relativity without coordinates,
+Nuovo Cimento \textbf{19} (1961) 558--571.
+
+\bibitem{ReggeWilliams}
+T.~Regge and R.~M.~Williams,
+Discrete structures in gravity,
+J. Math. Phys. \textbf{41} (2000) 3964--3984.
+
+\bibitem{HartleSorkin}
+J.~B.~Hartle and R.~D.~Sorkin,
+Boundary terms in the action for the Regge calculus,
+Gen. Relativ. Gravit. \textbf{13} (1981) 541--549.
+
+\bibitem{AJL}
+J.~Ambj{\o}rn, J.~Jurkiewicz, and R.~Loll,
+Dynamically triangulating Lorentzian quantum gravity,
+Nucl. Phys. B \textbf{610} (2001) 347--382.
+
+\bibitem{Loll}
+R.~Loll,
+Quantum gravity from causal dynamical triangulations: a review,
+Class. Quantum Grav. \textbf{37} (2020) 013002.
+
+\bibitem{Sorkin1975}
+R.~D.~Sorkin,
+Time-evolution problem in Regge calculus,
+Phys. Rev. D \textbf{12} (1975) 385--396;
+erratum Phys. Rev. D \textbf{23} (1981) 565.
+
+\bibitem{SorkinAngles}
+R.~D.~Sorkin,
+Lorentzian angles and trigonometry including lightlike vectors,
+arXiv:1908.10022 [gr-qc] (2019).
+
+\bibitem{Barrett}
+J.~W.~Barrett,
+The geometry of classical Regge calculus,
+Class. Quantum Grav. \textbf{4} (1987) 1565--1576.
+
+\bibitem{BarrettFoxon}
+J.~W.~Barrett and T.~J.~Foxon,
+Semiclassical limits of simplicial quantum gravity,
+Class. Quantum Grav. \textbf{11} (1994) 543--556.
+
+\bibitem{Menger}
+K.~Menger,
+Untersuchungen \"uber allgemeine Metrik,
+Math. Ann. \textbf{100} (1928) 75--163.
+
+\bibitem{Blumenthal}
+L.~M.~Blumenthal,
+\emph{Theory and Applications of Distance Geometry},
+2nd edition, Chelsea, New York, 1970.
+
+\bibitem{Berger}
+M.~Berger,
+\emph{Geometry I},
+Springer-Verlag, Berlin, 1987.
+
+\bibitem{Munkres}
+J.~R.~Munkres,
+\emph{Elements of Algebraic Topology},
+Addison-Wesley, Menlo Park, 1984.
+
+\end{thebibliography}
+
+\end{document}

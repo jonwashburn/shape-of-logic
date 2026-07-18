@@ -1,0 +1,1082 @@
+% =====================================================================
+% Recognition Science Quantum Gravity: The Full Program
+% Draft 2026-07-17 (physics-first rewrite of the formalization-first
+% paper QG_rewrite_20260708.pdf).
+%
+% INPUT SOURCES (for provenance; do not delete this header):
+%   1. QG program memory: QG/memory/ORIENTATION.txt, QG/memory/claims.txt
+%      (ledger head 6c0d2a81138f at drafting time).
+%   2. Content reservoir: ../QG_rewrite_20260708.pdf (Washburn &
+%      Beltracchi, "Formalizing RS quantum gravity with machine checked
+%      theorems: results and targets"), text-extracted 2026-07-17.
+%      All numerical tables in this file are copied from that extraction.
+%   3. Internal pre-arXiv review: ../QG_review_20260714.tex.  All MUST
+%      FIX items are applied here: d'Alembert substitution g(t)=F(e^t)+1
+%      with Aczel branch selection; admissibility alignat label fix;
+%      native_decide trust-tier disclosure in the methodology; Born
+%      weight stated as THE UNIQUE sector measure; amplitude-linearity
+%      theorem statement carries no justification; L_c defined in the
+%      CMS footnote.
+%   4. Wave 2 terminal accounting:
+%      plans/QG_Totality_Wave2_Terminal_Accounting_20260717.html.
+%   5. Machine-checked flag ledger:
+%      IndisputableMonolith/Gravity/SevenGaps/FullTheoryLedger.lean,
+%      plus the Wave 2 modules cited per theorem below.
+%   6. Frozen observational gate:
+%      plans/QG_Pillar3_CPL_Forecast_Gate_20260717.html.
+% Branch: qg-seven-gaps-20260714.
+% =====================================================================
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{longtable}
+
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% One consistent status box used throughout the paper.  The first
+% argument is the tier; the second is the evidence line.
+\newcommand{\statusbox}[2]{%
+\par\medskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{\small\textbf{Status: #1.}\ #2}}\par\medskip}
+
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\title{Recognition Science Quantum Gravity: The Full Program}
+\author{Jonathan Washburn$^{1}$\\[4pt]
+\small $^{1}$Recognition Physics Institute, Austin, Texas, USA\\
+\small \texttt{jon@recognitionphysics.org}}
+\date{July 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present the complete Recognition Science program for quantum gravity as a physics program: a discrete, parameter-free framework in which an information-bearing substrate carries a uniquely forced comparison cost, the gravitational action generalizes the Regge action by evaluating the forced cost gradient on deficit angles, quantum amplitudes arise from an eight-tick register whose tick phases force complexification once states of definite tick phase are demanded, and the cosmological sector produces a single falsifiable dark-energy point with no tunable coefficient. Every major result is derived at physics level in this paper. A separate evidence layer, a Lean~4 formalization with a machine-checked flag ledger, is reported alongside each result as a status tier: THEOREM where a kernel-checked proof exists (with module and theorem name), MEASURED where the evidence is numerical with convergence tables, DERIVED-UNFORMALIZED where the derivation is in this paper and the formalization is pending, MODEL where a named constitutive premise enters, and OPEN where a gap remains, in several cases with a machine-checked blocker theorem that names the exact missing premise. The classical chapter is anchored by a new continuum-limit theorem: the finite Regge transverse-traceless Bloch symbol per momentum squared converges to the raw TT moment (\lean{canonicalFiniteH\_div\_momentumNormSq\_tendsto}), with the isotropy value $-1/4$ established numerically on fourteen preregistered directions and open analytically. The cosmology chapter states the discriminating prediction $(w_0,w_a)=(-1+\varphi^{-4}J(\varphi),\,-\varphi^{-4}J(\varphi))$ under a frozen preregistered observational gate. The closing chapter reports what no other quantum gravity program offers: a kernel-checked map of exactly what remains unproved, in which each of seven benchmark flags is either open or blocked by a certified theorem naming its missing premise, and the master self-audit \lean{full\_theory\_not\_yet\_closed} remains provable until every flag flips.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\part{Foundations}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Quantum gravity}
+
+The Einstein field equation
+\begin{equation}
+R_{\mu\nu}-\tfrac{1}{2}Rg_{\mu\nu}+\Lambda g_{\mu\nu}=\kappa T_{\mu\nu}
+\label{eq:efe}
+\end{equation}
+relates the spacetime curvature terms in the Einstein tensor $G_{\mu\nu}=R_{\mu\nu}-\tfrac12 R g_{\mu\nu}$ on the left hand side to the matter content terms in the energy-momentum tensor $T_{\mu\nu}$ (the cosmological constant term $\Lambda g_{\mu\nu}$ is also frequently interpreted as a form of energy-momentum, specifically vacuum energy) through the constant $\kappa=8\pi G/c^{4}$. All known matter fields entering $T_{\mu\nu}$ have quantum behavior, so it is logical to try to determine how quantum effects can be interpreted in the context of the spacetime curvature terms. The singularity theorems \cite{Penrose1965,HawkingPenrose1970} show that, for various sets of conditions particular to each theorem, singularities develop and the classical geometric picture becomes invalid.
+
+In practice, the problem of reconciling general relativity with quantum mechanics has been extremely difficult. There are several families of approaches, each with strengths and weaknesses:
+\begin{itemize}
+\item \textbf{Spin-2 fields.} It is well known textbook material \cite{Wald,Carroll} that linearized general relativity can be interpreted as a massless spin-2 field with universal coupling to the other sectors, and universal coupling is in fact forced if certain pathologies are to be avoided \cite{Weinberg1965}. The straightforward generalizations of standard quantization procedures fail for these field theories due to lack of renormalizability and divergences once nonlinearity and matter coupling are included \cite{tHooftVeltman,GoroffSagnotti}, although a nontrivial fixed point has been proposed in the asymptotic safety program \cite{Weinberg1979,Eichhorn}. String theory (see \cite{Mukhi} for a review) is the best known member of this family.
+\item \textbf{Regge calculus approaches.} Regge showed how to approximate the smooth manifolds of general relativity with simplex meshes, where the effective curvature is concentrated on $d-2$ dimensional ``bones'' or ``hinges'' and the simplex interiors are flat \cite{Regge}. The Regge action is
+\begin{equation}
+S_{\mathrm{Regge}}=\frac{1}{\kappa}\sum_{\sigma}A_{\sigma}\,\delta_{\sigma},
+\label{eq:regge}
+\end{equation}
+where $A_{\sigma}$ is the size of hinge $\sigma$, $\delta_{\sigma}$ the deficit angle at $\sigma$, and the sum runs over all hinges. The idea of building quantum gravity on Regge calculus has a long history \cite{RocekWilliams,Williams1992,WilliamsTuckey}. The spin foams of loop quantum gravity (see e.g.\ \cite{RovelliVidotto}) reproduce the Regge action in the large-spin limit \cite{BarrettWilliams,BianchiModesto,ConradyFreidel}. Causal dynamical triangulations (see \cite{Loll} for a review) sums over admissible triangulations $T$, schematically
+\begin{equation}
+Z=\sum_{T}\frac{1}{C_{T}}\,e^{iS_{\mathrm{Regge}}(T)},
+\label{eq:cdt}
+\end{equation}
+or a Wick rotated version, with $C_{T}$ a symmetry factor; this parallels the lattice path-sum approach used when perturbative expansion fails, as in lattice QCD \cite{Wilson}. The program developed in this paper is closely related to Regge calculus and conceptually similar to CDT.
+\item \textbf{Substructured or emergent spacetime.} These approaches treat spacetime as a large-scale approximation to some discrete structure. The most conventional example is causal set theory \cite{CausalSets}, where spacetime is a set of points distributed through a Poisson process, compatible with the emergence of Lorentz symmetry \cite{BombelliHensonSorkin}. The iterative hypergraph approach \cite{Wolfram,Gorard} arguably also belongs here.
+\item \textbf{Stochastic coupling.} It has long been thought impossible to consistently couple a fully classical field to a quantum field, but a recent proposal \cite{Oppenheim} shows a stochastic, rather than fully deterministic, coupling can be consistent, keeping geometry classical while matter stays quantum, with testable decoherence consequences \cite{OppenheimTest}.
+\end{itemize}
+
+This paper states the Recognition Science (RS) quantum gravity program in full. RS treats an information-bearing substrate (the ``ledger''), on which matter fields are identified with information patterns, governed by a uniquely forced cost of comparison between entities \cite{uniqueness,DAlembertInevitability}; the ledger axiomatics and its discrete dynamics are developed in \cite{CoherentComparisonLedger}. The ledger resembles the substructured-emergent family (the original ledger dynamics used a graph isomorphic to a hypercube lattice \cite{CoherentComparisonLedger}), but the gravitational program as developed here is a Regge-calculus program conceptually close to CDT, with one decisive difference: no adjustable coupling is introduced anywhere in the gravity sector. We state the cost of that posture up front: the entropy--action balance that CDT purchases with its bare coupling $k_{4}$ must here be purchased by the oscillatory tail of a substrate-derived phase, which is proved necessary but not yet proved to exist (Section~\ref{sec:measure}); if that phase ultimately required tuning, the parameter-free posture would fail with it.
+
+The previous paper in this series \cite{QGrewrite} was formalization-first: it reported what had been machine-checked and listed targets. This paper inverts the presentation. Each chapter states the physics claim and gives the physics-level derivation or computation in full; a compact status box then reports the formal tier of that claim in the machine-checked evidence layer. Nothing in this paper waits for the formalization, and nothing claims machine-checked status it does not have.
+
+\subsection{Methodology and the evidence layer}
+\label{sec:method}
+
+Recognition Science formalizes its chains of reasoning as theorems in the Lean~4 proof assistant \cite{Lean4}. This reduces the probability of reasoning errors in derivations and tracks exactly what has and has not been proven under which hypotheses.
+
+The evidence layer reported in the status boxes uses five tiers, and the weakest link in a chain sets the tier of the chain:
+\begin{itemize}
+\item \textbf{THEOREM}: a kernel-checked Lean proof exists. The box names the module and theorem. Unless stated otherwise, the axiom audit of the named theorem returns exactly \lean{[propext, Classical.choice, Quot.sound]}, with zero \lean{sorry}. A small number of finite arithmetic identities are discharged by \lean{native\_decide} and therefore additionally trust Lean's compiled evaluator (\lean{Lean.ofReduceBool}, \lean{Lean.trustCompiler}); every such use is disclosed at the point of citation and tracked as a separate trust tier.
+\item \textbf{MEASURED}: the evidence is numerical, with convergence tables and stated refinement behavior. Numbers in this tier are computations, not proofs.
+\item \textbf{DERIVED-UNFORMALIZED}: the physics derivation appears in this paper; the Lean formalization is pending. The derivation stands or falls on its own steps.
+\item \textbf{MODEL}: a named constitutive premise enters that is not derived from the substrate. The box names the premise.
+\item \textbf{OPEN}: a gap remains. Where a machine-checked \emph{blocker theorem} exists, the box cites it: a blocker theorem proves that the target does not follow from the currently available structure and names the exact missing premise. Part~\ref{part:frontier} explains why we treat these certificates as results.
+\end{itemize}
+One further tier, \textbf{HYPOTHESIS}, is used for a claim with a named falsifier whose supporting premise is neither derived nor refuted; it appears in the cosmology chapter.
+
+Two grammar rules keep the boxes consistent with the weakest-link principle. First, when a box lists tiers for several \emph{separately stated} claims (for instance a proved blocker next to an open target), each tier governs only its named claim; no composite claim is being tagged. Second, when a kernel-checked theorem proves a conclusion \emph{from} a named MODEL or HYPOTHESIS premise, the physical chain as a whole carries the premise's tier, and the box records the conditional explicitly in the form ``tier of the chain (a kernel-checked conditional theorem proves the conclusion from the named premise).'' A conditional theorem is a genuine formal asset (it pins the reasoning between premise and conclusion and proves no freedom hides between them), but it does not lift the chain above its weakest premise, and no box in this paper is to be read as claiming otherwise.
+
+Wherever possible the relevant Lean files are public at \url{https://github.com/jonwashburn/shape-of-logic}. Some modules depend on upstream files in the private database and are marked as reference-only where cited. The full-theory flag ledger and the Wave 2 blocker modules cited in this paper live on the development branch \texttt{qg-seven-gaps-20260714} of the private tree; their headline theorems and axiom audits are quoted verbatim.
+
+A note on parameters. Competing programs typically carry free parameters: the Barbero--Immirzi parameter in LQG, the $k_0$ and $k_4$ couplings in CDT, the moduli of string vacua. The RS gravity sector adds no tunable coupling of its own. The one boundary datum it inherits (the fine-structure constant, Section~\ref{sec:audit}) is shared with the Standard-Model sector rather than introduced for gravity.
+
+\section{The recognition cost functional and its uniqueness}
+\label{sec:cost}
+
+\begin{definition}[Recognition cost]
+For a positive ratio $x>0$, the recognition cost is
+\begin{equation}
+J(x)=\tfrac{1}{2}\left(x+x^{-1}\right)-1=\cosh(\log x)-1.
+\label{eq:jcost}
+\end{equation}
+\end{definition}
+
+The cost measures how far a ratio sits from unity. In log-coordinates $t=\log x$ it is $\cosh t-1$: even, non-negative, convex, vanishing only at $t=0$.
+
+The minimal derivation of the recognition cost assumes the Recognition Composition Law (RCL): when two local comparisons with defects compose, the resulting defect satisfies
+\begin{equation}
+F(xy)+F(x/y)=P\bigl(F(x),F(y)\bigr)=2F(x)F(y)+2F(x)+2F(y),
+\label{eq:rcl}
+\end{equation}
+together with the calibration
+\begin{equation}
+\left.\frac{d^{2}F(e^{t})}{dt^{2}}\right|_{t=0}=1.
+\label{eq:cal}
+\end{equation}
+Then $F(x)=J(x)$: the substitution $g(t)=F(e^{t})+1$ brings \eqref{eq:rcl} into d'Alembert's functional equation
+\begin{equation}
+g(s+t)+g(s-t)=2\,g(s)\,g(t),
+\label{eq:dalembert}
+\end{equation}
+whose continuous solutions are classified by Acz\'el \cite{Aczel} as $\cosh(\mu t)$, $\cos(\mu t)$, and the constants $0,1$. Non-negativity of the cost excludes every nonconstant cosine branch (each dips below 1) and the zero solution; the trivial solution $g\equiv 1$ (zero cost everywhere) survives non-negativity and is excluded only by the unit calibration \eqref{eq:cal}, which also fixes $\mu=1$.
+
+The choice of the RCL is not arbitrary. The combiner family $P(u,v)=c\,uv+2u+2v$ is the unique continuous non-constant polynomial of degree at most two compatible with argument symmetry and $F(1)=0$ \cite{DAlembertInevitability}. Fixing $c=2$ recovers the RCL exactly; real values $c\neq 0$ still lead to the d'Alembert equation with the substitution $H(t)=1+\tfrac{c}{2}F(e^{t})$ \cite{DAlembertInevitability}. We state the residual freedom plainly: for every $c>0$ the rescaled cost $F_{c}(e^{t})=\tfrac{2}{c}\bigl[\cosh\bigl(\sqrt{c/2}\,t\bigr)-1\bigr]$ is non-negative, satisfies the unit calibration, and obeys the degree-two combiner with coefficient $c$, so symmetry, degree, non-negativity, and calibration alone do not select $c=2$. The value $c=2$ is the RCL normalization, a named premise identifying the combiner with the recognition composition law rather than a consequence of the surrounding axioms; every appearance of $J$ downstream carries that normalization. Uniqueness of the cost, with necessity of each hypothesis and a stability estimate, is proved in \cite{uniqueness}; the degree-$\ge 3$ exclusion and the forced combiner family are proved in \cite{DAlembertInevitability}. Both results are externally refereed, so the mathematical layer of this section is published mathematics applied here, not in-house formalism.
+
+\statusbox{THEOREM}{\lean{Cost/FunctionalEquation.lean} (\lean{law\_of\_logic\_forces\_jcost}); \lean{Foundation/DAlembert/Inevitability.lean} (\lean{axiom\_bundle\_necessary}, \lean{symmetry\_and\_normalization\_constrain\_P}, \lean{polynomial\_form\_forced}); \lean{Foundation/JCostCoshIdentity.lean}. Two inputs are disclosed and not derived: the identification of each defining predicate with a law of logic is an interpretive bridge, and the route-independence combiner is restricted to polynomials of degree $\le 2$, a regularity assumption inherited from the inevitability theorem. Externally refereed statements: \cite{uniqueness,DAlembertInevitability}.}
+
+\section{The substrate: golden ratio, three dimensions, eight ticks}
+\label{sec:substrate}
+
+The chain from the cost functional to the physical substrate is a sequence:
+\begin{equation}
+\text{Laws of Logic}\;\Longrightarrow\;J\ \text{unique}\;\Longrightarrow\;\varphi\ \text{forced}\;\Longrightarrow\;D=3\;\Longrightarrow\;\text{8-tick}=2^{3}.
+\label{eq:chain}
+\end{equation}
+Each arrow is a Lean implication, and each carries additional structural hypotheses stated below. The chain contains no axiom declaration, but the $D=3$ step rests on the linking premise \lean{SupportsNontrivialLinking} and on the $\mathbb{Z}^{D}$ lattice taken as given in \lean{Foundation/WindingCharges.lean}.
+
+\paragraph{From the laws of logic to $J$.} In \lean{Foundation/LogicAsFunctionalEquation.lean} a comparison operator $C(x,y)$ is constrained by four predicates identified with the classical laws (identity $A=A$ versus $C(x,x)=0$; non-contradiction $\neg(P\wedge\neg P)$ versus $C(x,y)=C(y,x)$; excluded middle $A\vee\neg A$ versus continuity and well-definedness of $C$ over its domain; route-independence) together with scale invariance. These imply the hypotheses of the d'Alembert inevitability theorem and of cost uniqueness, yielding the RCL and $J$ (\lean{law\_of\_logic\_forces\_canonical\_cost}). The identification of each predicate with a law of logic is an interpretive bridge, disclosed as such.
+
+\paragraph{Emergence of $\varphi=(1+\sqrt{5})/2$.} Consider a sequence $c_{0},c_{1},c_{2},\dots$. If the sequence is geometric, $c_{n+1}=r\,c_{n}$ for fixed $r$. If it also obeys additive closure $c_{n+1}=c_{n}+c_{n-1}$, then $r=1+1/r$, i.e.\ $r^{2}=r+1$, the golden equation, whose positive root is $\varphi$ (\lean{Foundation/PhiForcingDerived.lean}: \lean{closure\_forces\_golden\_equation}, \lean{closed\_ratio\_is\_phi}; \lean{Foundation/PhiForcing.lean}: \lean{phi\_forced}). The mathematical content forcing $\varphi$ is the simultaneous geometric and additive closure of a sequence; the additive behavior of $J$ at $J(a)=J(b)=0$ motivates additive closure but does not prove its necessity.
+
+\paragraph{$D=3$.} The ledger is codified as a graph isomorphic to a $\mathbb{Z}^{D}$ lattice undergoing discrete tick-based updates \cite{CoherentComparisonLedger}. $D=3$ spatial dimensions is the only choice for which graph cycles on the ledger can link nontrivially without intersecting (\lean{Foundation/DimensionForcing.lean}: \lean{linking\_requires\_D3}, \lean{dimension\_forced}); the linking requirement for cycles is the load-bearing assumption.
+
+\paragraph{Eight ticks.} Once the dimension theorem gives three spatial directions on a cubic lattice, the minimal temporal cadence is $2^{3}=8$: the minimum cycle length capable of visiting all vertices of a single cubic cell. The $2^{d}$-tick minimal period on hypercube graphs, with $d=3$ explicit, is proved via cyclic Gray codes in \cite{CoherentComparisonLedger}, together with the atomic-tick and double-entry results the ledger definition relies on.
+
+The contingencies deserve emphasis:
+\begin{enumerate}
+\item Dimension 3 is contingent on the assumption that the information-bearing substrate supports nontrivial cycle linking.
+\item The lattice behavior of the substrate is, at this moment, a choice. Other lattices, quasicrystals, or irregular patterns could be compatible with a discrete graph substrate under tick-based updates.
+\item Once the substrate is a $\mathbb{Z}^{3}$ spatial lattice with discrete tick updates, the cycle length $2^{3}=8$ is set.
+\end{enumerate}
+
+\statusbox{MODEL (chain tier, set by the lattice premise), carrying kernel-checked conditional theorems}{Full chain: \lean{Foundation/UnifiedForcingChain.lean} (\lean{complete\_forcing\_chain}). $\varphi$: \lean{phi\_forced}, \lean{golden\_constraint\_unique}, conditional on \lean{SelfSimilar} + \lean{isClosed}. $D=3$: \lean{dimension\_forced}, \lean{linking\_requires\_D3}, conditional on \lean{SupportsNontrivialLinking}. Eight ticks: \lean{eight\_tick\_is\_2\_cubed}. The $\mathbb{Z}^{D}$ lattice (\lean{Foundation/WindingCharges.lean}) is a MODEL premise, presupposed rather than derived. Externally refereed cadence result: \cite{CoherentComparisonLedger}.}
+
+\section{RS native units and the zero-parameter audit}
+\label{sec:units}
+
+Most of the Lean files in the database use a specific unit convention\footnote{A few modules that compare against external results instead work in geometrized units ($c=G=\hbar=k_{B}=1$), e.g.\ the Hawking-temperature modules of Section~\ref{sec:bh1}; these are unit choices for comparison, not a second convention for the native constants.}
+\begin{equation}
+c=1,\qquad \hbar_{\mathrm{RS}}=\varphi^{-5},\qquad G_{\mathrm{RS}}=\frac{\varphi^{5}}{\pi},\qquad \kappa_{\mathrm{RS}}=8\pi G_{\mathrm{RS}}=8\varphi^{5}.
+\label{eq:native}
+\end{equation}
+Two product identities then hold exactly:
+\begin{equation}
+\kappa_{\mathrm{RS}}\,\hbar_{\mathrm{RS}}=8,\qquad G_{\mathrm{RS}}\,\hbar_{\mathrm{RS}}=\frac{1}{\pi}.
+\label{eq:octave}
+\end{equation}
+The first says one octave of Einstein coupling per inverse quantum of action: $\kappa_{\mathrm{RS}}/8=1/\hbar_{\mathrm{RS}}$. The second fixes the Planck area at $G\hbar/c^{3}=1/\pi$ in native units. Neither identity survives if either constant is adjusted independently.
+
+The exponent 5 is the configuration dimension $D+2$ of a recognition event (three spatial, one temporal, one ledger-balance), under the modeling rule of one factor $\varphi^{-1}$ per degree of freedom (\lean{Foundation/GapDerivation.lean}, \lean{configDim\_at\_D3}). The $\pi$ in $G_{\mathrm{RS}}$ is a Gauss--Bonnet closure factor of the substrate cell (\lean{Unification/QuantumGravityOctaveDuality.lean}, \lean{G\_hbar\_gauss\_bonnet}).
+
+\subsection{The SI bridge}
+
+$G$ and $\kappa$ are exactly proportional, so \eqref{eq:octave} leaves three independent constants, providing base units for mass, length, and time. Using $\hbar_{\mathrm{RS}}G_{\mathrm{RS}}/c_{\mathrm{RS}}^{3}=1/\pi$ and solving for the base units gives
+\begin{align}
+\ell_{\mathrm{sub}}&=\sqrt{\pi}\,\ell_{\mathrm{Pl}}=2.865\times 10^{-35}\ \mathrm{m}, &
+\tau_{\mathrm{sub}}&=\ell_{\mathrm{sub}}/c=9.556\times 10^{-44}\ \mathrm{s},
+\label{eq:si1}\\
+m_{\mathrm{sub}}&=\frac{\varphi^{5}}{\sqrt{\pi}}\,M_{\mathrm{Pl}}=1.362\times 10^{-7}\ \mathrm{kg}, &
+E_{\mathrm{sub}}&=m_{\mathrm{sub}}c^{2}=7.64\times 10^{19}\ \mathrm{GeV}.
+\label{eq:si2}
+\end{align}
+Beyond being a unit convention, $\ell_{\mathrm{sub}}$ and $\tau_{\mathrm{sub}}$ carry the interpretation of the length and time between substrate nodes and ticks.
+
+\subsection{The parameter audit}
+\label{sec:audit}
+
+Each dimensionless gravity-sector quantity is classified by origin:
+\begin{enumerate}
+\item \textbf{Forced}: provably fixed by $J$, $\varphi$, $8$, $D$, or the composition law.
+\item \textbf{Unit conversion}: a dimensional factor restoring SI.
+\item \textbf{Observational comparison}: data a prediction is compared against, not a fitted coefficient.
+\item \textbf{Open input}: an explicitly listed target in the closure audit of Part~\ref{part:frontier}.
+\end{enumerate}
+We stress that ``traceable'' and ``forced'' are not synonyms. The Lean development forces structure (the cost family; the golden equation given additive closure; $D=3$ given the linking requirement) and a few exponents modulo a modeling step, but it does not force every numerical value downstream. Some sector numbers are definitional or asserted rather than derived (for example the $\varphi^{-4}$ attenuation in \lean{Cosmology/DarkEnergyStrongClosure.lean}, and $\Omega_{\Lambda}=11/16-\alpha/\pi$, owned by a module separate from the dynamic kernel; both reappear with their honest tiers in Part~\ref{part:cosmo}). The zero-free-parameter posture is itself formalized structurally, as the statement that the framework's parameter record is a singleton (\lean{Verification/Exclusivity/ParameterSurface.lean}); it is not a sensitivity analysis $\partial Q/\partial\lambda=0$ of individual predictions.
+
+\paragraph{One named exception.} The fine-structure constant is not derived. Within RS the exact value of $\alpha^{-1}$ is a free boundary datum, the $U(1)$ kinetic normalization $\kappa_{\gamma}$, not fixed by the forcing chain (\lean{Constants/AlphaGenesis.lean}, \lean{KappaGammaIrreducibility}). An earlier closed-form ``derivation'' was withdrawn because it disagreed with the measured value at more than $30{,}000\sigma$ (\lean{AlphaGenesis.MeasurementVerdict}); see also the withdrawal note in \lean{Foundation/ConstantDerivations.lean}. The exclusion applies to the first-order point value. Two further formalized results scope what survives. First, the exponential dressing form and the $\varphi$-ladder pattern feeding $w_{8}$ are forced by factorization and self-similarity arguments rather than chosen, so no continuous parameter was available to tune (\lean{Constants/AlphaGenesis/LoopCertificate.lean}). Second, the measured residual is confined to a single second-order load, which provably exists and is unique (\lean{Constants/AlphaGenesis/ResidualTarget.lean}, \lean{existsUnique\_closingLoad}). The standing falsifier is sharp: a derivation of that load from the seam geometry of the recognition lattice, carried out blind to the measured value, either closes the residual at experimental precision or refutes the channel-budget identification; by a binding anti-epicycle rule, no candidate load may be admitted on numerical proximity alone. Because $\Omega_{\Lambda}$ above uses $\alpha$, that quantity inherits this boundary datum.
+
+How competing programs fare: the Immirzi parameter absorbs one datum; selecting a string vacuum absorbs at minimum the observed cosmological constant; the asymptotic safety trajectory absorbs at least two data; the $w_{0}$-$w_{a}$ dark-energy parameterization fits two coefficients. The RS gravity sector adds no tunable coupling of its own. If any future measurement forces a new adjustable parameter into the gravity sector, the audit fails and the framework fails with it.
+
+\statusbox{THEOREM (identities) / MODEL (exponent rule)}{Native identities: \lean{Unification/QuantumGravityOctaveDuality.lean} (\lean{kappa\_hbar\_octave}, \lean{G\_eq\_phi\_fifth\_over\_pi}, \lean{planck\_area\_eq\_inv\_pi}); \lean{Foundation/ConstantDerivations.lean} (\lean{c\_rs\_eq\_one}, \lean{all\_constants\_from\_phi}). The one-$\varphi^{-1}$-per-degree-of-freedom rule behind the exponent 5 is a MODEL premise. Alpha exclusion: THEOREM (\lean{AlphaGenesis.MeasurementVerdict}); the seam derivation of the residual load is OPEN with the named falsifier above.}
+
+\part{Classical gravity}
+\label{part:classical}
+
+\section{The discrete recognition action}
+\label{sec:action}
+
+The cost theorem forces $J(x)=\cosh(\log x)-1$ as the comparison cost. The natural signed quantity derived from $J$ is the recognition gradient:
+\begin{equation}
+\left.\frac{d}{dt}J(e^{t})\right|_{t=\log x}=\sinh(\log x)=\frac{x-x^{-1}}{2}.
+\label{eq:gradient}
+\end{equation}
+On a simplicial manifold $\mathcal{T}_{h}$ with mesh scale $h$, define the recognition action
+\begin{equation}
+S_{\mathrm{RS}}[\mathcal{T}_{h}]=\frac{1}{\kappa}\sum_{\sigma}A_{\sigma}\,\sinh(\delta_{\sigma}),
+\label{eq:rsaction}
+\end{equation}
+where $A_{\sigma}$ is the area of the codimension-2 hinge $\sigma$ and $\delta_{\sigma}$ the signed deficit angle. This generalizes the Regge action \eqref{eq:regge} through the $\sinh$. Expanding $\sinh\delta=\delta+\delta^{3}/6+\delta^{5}/120+\cdots$:
+\begin{equation}
+S_{\mathrm{RS}}=\underbrace{\frac{1}{\kappa}\sum_{\sigma}A_{\sigma}\delta_{\sigma}}_{=S_{\mathrm{Regge}}}+\frac{1}{6\kappa}\sum_{\sigma}A_{\sigma}\delta_{\sigma}^{3}+O(\delta^{5}).
+\label{eq:sinhexp}
+\end{equation}
+The leading term is exactly the Regge action.
+
+As in CDT, we define a sum over admissible triangulations,
+\begin{equation}
+Z_{\mathrm{RS}}[\partial T]=\sum_{T:\,\partial T\ \text{fixed}}\mu(T)\,\exp\!\left(\frac{i}{\hbar_{\mathrm{RS}}}S_{\mathrm{RS}}(T)\right).
+\label{eq:pathsum}
+\end{equation}
+The measure $\mu(T)$ on triangulations is to be determined by the substrate; its current status, including the machine-checked theorems that pin down exactly what is derived and what is missing, is the subject of Section~\ref{sec:measure}.
+
+\begin{remark}
+In the path-sum framework the stationary-phase argument and the emergence of classical configurations rest on cancellation from rapid oscillations. For triangulated Lorentzian manifolds the Regge action is complex in general and the stationary-phase argument is no longer trivial; CDT handles this through its causal simplex class and Wick rotation. The RS treatment of the Lorentzian continuation is an action-level Wick program over causal simplex types; its current state (hinge-data continuation complete for both causal 4-simplex types, interior-hinge continuation open) is reported in Part~\ref{part:frontier}.
+\end{remark}
+
+In the Euclidean case there are well-posedness rules on triangulations:
+
+\begin{definition}[Admissible triangulation family]
+A triangulation $\mathcal{T}_{h}\to(M,g)$ is admissible if it satisfies
+\begin{alignat}{3}
+&\text{Mesh:} &\quad& \max_{e\in\mathcal{T}_{h}}\ell(e)\le h, \nonumber\\
+&\text{Shape:} && \mathrm{shape}(\mathcal{T}_{h})\le C_{\mathrm{sh}}, \nonumber\\
+&\text{Curvature:} && |\delta_{\sigma}|\le C_{\mathcal{K}}\,h^{2}, \nonumber\\
+&\text{Recognition ratio:} && \log x_{\sigma}=\lambda_{\sigma}\,\delta_{\sigma}+O(h^{3}),
+\label{eq:admissibility}
+\end{alignat}
+uniformly for $g$ in the compact metric class $\mathcal{K}(k,C)$ defined by the admissibility norm
+\begin{equation}
+\|g\|_{\mathrm{Ad}_{k}}=\sum_{j=0}^{k}\|\nabla^{j}\mathrm{Rm}(g)\|_{L^{\infty}}+\mathrm{inj}(g)^{-1}+\|\partial g\|_{C^{k}(\partial M)}.
+\label{eq:adnorm}
+\end{equation}
+\end{definition}
+
+In plain terms: the mesh constraint bounds edge lengths by $h$; the shape constraint requires all simplices to be sufficiently fat (inradius bounded away from zero); the curvature bound makes deficit angles shrink as the mesh refines, so the $\sinh$ expansion converges; and the recognition-ratio condition links the substrate's comparison data $x_{\sigma}$ to the geometric deficit $\delta_{\sigma}$. In \eqref{eq:adnorm}, the sum bounds the first $k$ covariant derivatives of the Riemann tensor, $\mathrm{inj}(g)^{-1}$ is the inverse injectivity radius, and the boundary term bounds metric derivatives on $\partial M$.
+
+Two caveats. First, the family above makes sense in the Riemannian or Euclideanized case; Lorentzian manifolds can feature null edges and indefinite lengths, making naive size and shape bounds ill-posed, so the Lorentzian version must specify an allowed causal simplex class or work after Wick rotation. Second, the recognition-ratio condition is a bridge condition: it asserts that the substrate comparison variable $x_{\sigma}$ assigned to a hinge agrees with the geometric deficit to the stated order. (The proportionality is written $\lambda_{\sigma}$ to avoid collision with the gravitational coupling $\kappa=8\pi G/c^{4}$.) In this paper it is an admissibility hypothesis; the machine-checked account of why it cannot be derived from a bare ledger, and what named coupling closes it, is given in Section~\ref{sec:bridge}. A further disclosure attaches to the constant: the forced cost gradient is $\sinh(\log x_{\sigma})=\sinh(\lambda_{\sigma}\delta_{\sigma}+O(h^{3}))$, so the hinge action $\sinh(\delta_{\sigma})$ of \eqref{eq:rsaction} additionally requires unit proportionality $\lambda_{\sigma}=1$; a varying or non-unit $\lambda_{\sigma}$ would rescale even the leading Regge coefficient. Unit proportionality is part of the same bridge premise, not a separate derivation. More generally, cost uniqueness forces the function $J$ but not by itself the identification of its gradient evaluated on deficits as \emph{the} hinge action; any odd function with unit derivative at zero yields the same Regge leading term, and the selection of $\sinh$ is exactly as strong as the bridge premise that routes the action through the forced cost.
+
+\begin{remark}[UV finiteness of the recognition path sum]
+The substrate mesh is bounded below by $\ell_{\mathrm{sub}}>0$: no triangulation in the sum has mesh finer than the substrate scale. This structural ultraviolet cutoff eliminates a large class of triangulations, though it alone does not prove finiteness of the number of terms; that would require a specified admissible triangulation class and a precise equivalence relation on triangulations. As for the individual terms, $\sinh\delta$ is finite whenever $\delta$ is, and the curvature bound (or its Lorentzian analogue) supplies this. The quantum gravity envisioned here takes the continuum Einstein--Hilbert action as an approximation to the discrete action valid at $\ell\gg\ell_{\mathrm{sub}}$, not the other way around; the continuum perturbative divergence from sending the mesh to zero is absent because the physical substrate never takes that limit.
+\end{remark}
+
+\statusbox{THEOREM (structure) / MODEL (bridge condition)}{Regge baseline and Hessian--Dirichlet identity: \lean{Geometry/ReggeActionConcrete.lean} (\lean{canonicalReggeHessian\_quadratic\_eq\_dirichlet}). Structural UV cutoff: \lean{Gravity/PathSumUVBound.lean} (\lean{uv\_finiteness\_structural}). Recognition ledger structure: \lean{Gravity/RecognitionLedger.lean}. The recognition-ratio admissibility row is a MODEL premise here; see Section~\ref{sec:bridge} for its certified blocker and conditional closure.}
+
+\section{Recovery of general relativity: action convergence}
+\label{sec:recovery}
+
+Classical recovery is the load-bearing sector. A quantum gravity proposal that fails to recover the Einstein field equations in the long-wavelength limit is a discrete model, not a theory of gravity. Recovery must hold at three strengths: action convergence, operator convergence, and constraint-algebra convergence. This section and the two after it treat the action strength, where the program now has an anchor theorem; Section~\ref{sec:operator} treats the operator and constraint strengths, where the program has certified blockers and named targets. The same cost-first framework also has a peer-reviewed weak-field record: the Newton--Poisson response emerges from the same ledger variational structure, independent of the Regge route developed here \cite{EntropyGalaxy}.
+
+The full general relativity action contains a Hilbert term, a cosmological constant term, the Gibbons--Hawking--York boundary term, and a matter action:
+\begin{equation}
+S_{\mathrm{GR}}=\int_{M}\left(\frac{1}{2\kappa}(R-2\Lambda)+\mathcal{L}_{M}\right)\sqrt{|g|}\,d^{4}x+\frac{1}{\kappa}\int_{\partial M}\epsilon\,K_{\gamma}\sqrt{|\gamma|}\,d^{3}x.
+\label{eq:sgr}
+\end{equation}
+The Regge action \eqref{eq:regge} corresponds to the Hilbert term. On Riemannian manifolds the worst-case convergence of the Regge action on a suitable triangulation to the Hilbert action is effectively\footnote{Specifically, \cite{CMS} considers a smooth compact manifold subspace $U$ with boundary $\partial U$ and the tubular neighborhood $T_{r}(\partial U)$ of width $r$ around the boundary. For an approximation made of sufficiently fat $n$-dimensional simplices of maximum side length $h$, there exists a constant $c$ such that
+\[
+\Bigl|\sum_{\sigma\in U}L_{\sigma}\delta_{\sigma}-\frac{1}{2}\int_{U}R\sqrt{g}\,d^{n}x\Bigr|\le c\left(\sqrt{\frac{h}{L_{c}}}\,\mathrm{Vol}(U)+\mathrm{Vol}\bigl(T_{\sqrt{hL_{c}}}(\partial U)\bigr)\right),
+\]
+where $L_{c}$ is a curvature length scale of $(M,g)$, $\mathrm{Vol}$ is a generalized volume, and $\sigma$ labels the $n-2$ dimensional hinges.} $h^{1/2}$ \cite{CMS}. A strict convergence proof for Lorentzian manifolds does not appear to be known and past work has raised questions about validity there \cite{Brewin2000}, but numerical simulations support some version of the convergence \cite{Miller,BrewinGentle}. We therefore work with a Riemannian or Euclideanized target and state that the Lorentzian analogue requires a causal simplex class or a Wick-rotation argument. The GHY term becomes, in Regge calculus, the Hartle--Sorkin term \cite{HartleSorkin}
+\begin{equation}
+S_{\mathrm{HS}}=\frac{1}{\kappa}\sum_{\sigma\in\partial M}A_{\sigma}\,\psi_{\sigma},\qquad \psi=\pi-\sum_{i}\theta_{i},
+\label{eq:hs}
+\end{equation}
+with $\psi$ the boundary dihedral deficit. We have no formalized or computed results on the Hartle--Sorkin term yet; the bulk results follow.
+
+From a dimensional argument, the $\sinh$ action \eqref{eq:rsaction} converges to the Regge action at small $h$. The number of hinges scales as $V/h^{D}$ times a constant, hinge sizes scale as $h^{D-2}$, and the curvature admissibility bound gives $\delta\sim h^{2}$, so
+\begin{equation}
+S_{\mathrm{RS}}=\underbrace{\frac{1}{\kappa}\sum_{\sigma}A_{\sigma}\delta_{\sigma}}_{V h^{-D}\times h^{D-2}\times h^{2}\ \to\ \mathrm{const}}\;+\;\underbrace{\frac{1}{6\kappa}\sum_{\sigma}A_{\sigma}\delta_{\sigma}^{3}}_{V h^{-D}\times h^{D-2}\times(h^{2})^{3}\ \to\ h^{4}}\;+\;O(h^{8}).
+\label{eq:scaling}
+\end{equation}
+This scaling shows the $\sinh$ correction is subleading, i.e.\ $S_{\mathrm{RS}}\to S_{\mathrm{Regge}}$; the separate and harder statement $S_{\mathrm{Regge}}\to S_{\mathrm{EH}}$ (the Regge--Cheeger convergence or its hypothetical Lorentzian extension) carries the geometric content.
+
+\subsection{Study on the Freudenthal triangulated torus}
+\label{sec:torus}
+
+As a controlled setting for formalization, consider an $N_{x}\times N_{y}\times N_{z}$ lattice of cubes with periodic boundary conditions, each cube triangulated in the Freudenthal (Kuhn) manner: six tetrahedra per cube, all sharing the body diagonal. Deformations are generated by assigning a potential $\xi_{a}$ to each vertex $a$ and applying the conformal edge deformation
+\begin{equation}
+\delta\ell_{ab}=\ell_{ab}\,(\xi_{a}+\xi_{b})/2,
+\label{eq:conformal}
+\end{equation}
+with $\ell_{ab}$ the unperturbed distance.
+
+The properties and limits of the setup, upfront. The torus topology removes boundary terms. The ambient geometry is 3D Euclidean, so hinge measures are nonnegative, the deficit angles and action are real, and the background curvature and action vanish. In 3D the codimension-2 hinges are edges and the hinge measures are edge lengths. Beyond the obvious limitation that physics is 4D Lorentzian, the deformation \eqref{eq:conformal} cannot generate arbitrary deformations: a rectangle/shear mode with unequal horizontal and vertical conformal log-strains has no vertex-conformal realization, a fact proved in \lean{Gravity/TensorShearSector.lean} (\lean{nontrivial\_rectangle\_shear\_not\_vertexConformal}). Probing the full transverse-traceless sector therefore requires the edge-level machinery of Section~\ref{sec:continuum}.
+
+For a weakly deformed lattice, the flat background and the Schl\"afli identity reduce the lowest surviving order of the Regge action to \cite{RocekWilliams}
+\begin{equation}
+\frac{1}{\kappa}\sum_{n}L_{n}\delta_{n}=\frac{1}{\kappa}\sum_{n}\sum_{p,q}\left(\frac{1}{2}\frac{\partial L_{n}}{\partial\ell_{p}}\frac{\partial\delta_{n}}{\partial\ell_{q}}\right)d\ell_{p}\,d\ell_{q},
+\label{eq:quadratic}
+\end{equation}
+and substituting \eqref{eq:conformal} and collecting by vertex pairs $\langle a,b\rangle$ gives
+\begin{equation}
+\frac{1}{\kappa}\sum_{n}L_{n}\delta_{n}\approx\frac{1}{\kappa}\sum_{\langle a,b\rangle}M_{ab}\,\xi_{a}\xi_{b}.
+\label{eq:matrixform}
+\end{equation}
+If $M$ is symmetric with zero row sums, \eqref{eq:matrixform} reduces to a Dirichlet form on the vertex potentials:
+\begin{equation}
+\frac{1}{\kappa}\sum_{\sigma}L_{\sigma}\delta_{\sigma}\approx-\frac{1}{2\kappa}\sum_{\langle i,j\rangle}M_{ij}\,(\xi_{i}-\xi_{j})^{2}.
+\label{eq:dirichlet}
+\end{equation}
+We have shown explicitly that the expanded Regge action, computed from the tetrahedral dihedral angles, equals a symmetric zero-row-sum graph Laplacian with the axis stencil on a $5\times5\times5$ torus, in \lean{Gravity/FreudenthalAxisStencilCoeffCert.lean} (\lean{fullResidualCoeffCert}, packaged into \lean{canonicalPeriodicMixedHingeDeficitAxisStencilTargetAtN5}). The proof checks translation invariance and computes the 125 origin-row coefficients.\footnote{The finite origin-row vanishing is closed by \lean{native\_decide} (\lean{originResidualCoeffsZero\_eq\_true}), as is the axis-stencil translation-invariance check, rather than the standard \lean{decide}. The identity is machine-verified but compiler-trusted at the finite step, per the trust-tier disclosure of Section~\ref{sec:method}.} The certificate applies to this specific setup and should not be read as an equivalence for general deformations, dimensions, backgrounds, lattice sizes, or higher orders.
+
+\paragraph{Extensions.} The higher-order influence has been reduced to a one-variable cubic Taylor estimate: the canonical nonlinear remainder is smooth at the flat configuration and vanishes there, and a Lagrange-remainder argument bounds it by $C\|\xi\|^{3}$ once a uniform third-derivative bound along each conformal line is supplied; the flat configuration is discharged outright, while the nonflat bound remains contingent on that supplied bound (\lean{Geometry/ReggeActionCubicTaylorBound.lean}, packaged for finite probes in \lean{Gravity/Track1BCStructural.lean} and \lean{Gravity/Track1BCPhysicalResidual.lean}). These pieces assemble into a reduction rather than a closed recovery. The step to a continuum Einstein--Hilbert statement requires (i) convergence of the hinge-sum quadrature to the continuum Dirichlet integral and (ii) uniform vanishing of the Regge-minus-quadrature residual; the implication from those two inputs to the limit is proved as a genuine reduction (\lean{Gravity/D2ScopingAudit.lean}, \lean{d2\_reduction}), with the two inputs recorded as named hypotheses. Reference-tier modules target both inputs (\lean{Gravity/D2ScalarDirichletQuadratureLimit.lean}, \lean{Gravity/D2DampedScheduleClosure.lean}, \lean{Gravity/CorrectedTaylorHigherCardinality.lean}); they are machine-checked only relative to private imports.
+
+\statusbox{THEOREM (finite certificates and reduction) / OPEN (continuum inputs)}{\lean{fullResidualCoeffCert} at $N=5$ (\lean{native\_decide} tier disclosed above); shear obstruction \lean{nontrivial\_rectangle\_shear\_not\_vertexConformal}; cubic Taylor reduction \lean{nonlinearReggeCubicTaylorTheorem\_of\_lineTaylorData}; \lean{d2\_reduction} with hypotheses \lean{quadrature\_tendsto}, \lean{uniform\_residual} OPEN in the buildable tree.}
+
+\section{The continuum-limit theorem for the TT symbol}
+\label{sec:continuum}
+
+This section states the anchor theorem of the classical chapter. It is the first genuine continuum limit in the program's action-recovery lane: not a finite certificate, not a reduction with named hypotheses, but a proved limit of the actual finite Regge object as the lattice grows.
+
+The object is the transverse-traceless (TT) Bloch symbol of the Regge action on the periodic Freudenthal torus. Fix an integer wave vector $m\in\mathbb{Z}^{3}$, $m\neq 0$, and a polarization matrix $E$. On the side-$N$ torus the commensurate momentum is $k_{N}=2\pi m/N$, and the plane-wave edge perturbation with midpoint phase convention is
+\begin{equation}
+\ell^{2}_{e}(t)=\ell^{2}_{\mathrm{flat}}+t\,(E\cdot D_{d}\otimes D_{d})\cos\!\bigl(k_{N}\cdot(x+D_{d}/2)\bigr),
+\label{eq:planewave}
+\end{equation}
+where $D_{d}$ is the displacement class of edge $e$ at base point $x$. The second difference of the true nonlinear Regge action along this family, per unit cell, defines the finite Bloch symbol $H_{N}(E,m)$; dividing by the squared momentum norm $|k_{N}|^{2}$ gives the normalized symbol. In continuum language, this object is the discrete analogue of the TT part of the classical linearized wave operator: its $N\to\infty$ limit at fixed direction $\hat{m}$ is the coefficient with which the linearized action propagates a TT wave in that direction.
+
+\begin{theorem}[TT symbol continuum limit; physics statement]
+\label{thm:continuum}
+For every polarization matrix $E$ and every nonzero integer mode $m$, the finite Regge TT Bloch symbol per momentum squared converges as $N\to\infty$ to the raw TT moment evaluated at the normalized direction $\hat{m}$:
+\begin{equation}
+\lim_{N\to\infty}\frac{H_{N}(E,m)}{|k_{N}|^{2}}
+=\mathcal{M}_{\mathrm{TT}}\bigl(\hat{m},E\bigr),
+\label{eq:ttlimit}
+\end{equation}
+where $\mathcal{M}_{\mathrm{TT}}$ is the finite hinge-bucket sum of the quadratic phase weights $\bigl(\sum_{i}x_{i}u_{i}/2\bigr)^{2}$ against the bucket amplitudes determined by $E$.
+\end{theorem}
+
+The proof structure is worth recording because it is where the formal and the physical derivations coincide. Exact Bloch orthogonality removes the cell sum, reducing the symbol to a finite fold over hinge buckets. The scale-zero fold vanishes by the assembled zero-mode theorem (a hinge-aware cancellation, not a stencil-only one). The local centered-second-difference bridge then supplies the cosine second jet: each bucket contributes $\cos(q\,\phi_{b})$ with $\phi_{b}$ the literal midpoint-displacement phase, and the two-jet limit of $(1-\cos(q\phi_{b}))/q^{2}$ produces the quadratic moment. Composing with $q_{N}=2\pi/N$ and the exact factorization $|k_{N}|^{2}=q_{N}^{2}|m|^{2}$ gives \eqref{eq:ttlimit}.
+
+\statusbox{THEOREM}{\lean{Gravity/Analysis/ReggeTTContinuumLimit.lean}, theorem \lean{canonicalFiniteH\_div\_momentumNormSq\_tendsto}, with \lean{rawCosineFoldAtScale\_zero} and \lean{rawCosineFold\_scale\_tendsto}; built on the finite Bloch assembly \lean{ReggeTTBlochAssembly} (Elmo build exit 0, 7893 jobs, adversarial review passed). Axiom audit: exactly \lean{[propext, Classical.choice, Quot.sound]}; no \lean{native\_decide} in this chain.}
+
+\paragraph{The isotropy value.} The limit \eqref{eq:ttlimit} exists for every direction; the physics question is its value. Linearized Einstein--Hilbert theory requires the normalized TT symbol to be isotropic with the coefficient $-1/4$ in these conventions. Because the continuum theorem reduces the limit to a finite hinge-bucket sum with lattice-rational data, the value is decidable in exact arithmetic, and the exact contraction has been carried out. All thirty-six normalized bucket weights are rational (the radicals cancel), and the limit symbol admits the closed form
+\begin{equation}
+K(x,E)=\tfrac12\,x^{\mathsf{T}}\,\mathrm{adj}(E)\,x
+\label{eq:adjclosed}
+\end{equation}
+identically for every symmetric $E$ and every direction $x$, before any TT reduction; the symbol is therefore $O(3)$-covariant outright, and its cubic-anisotropy component (which cubic lattice symmetry alone would permit) is identically zero. On the TT constraint surface ($\operatorname{tr}E=0$, $Ex=0$) the direction is a null eigenvector of $E$, so $\mathrm{adj}(E)x=\lambda_{1}\lambda_{2}x$ with $\lambda_{1}+\lambda_{2}=0$, giving $\lambda_{1}\lambda_{2}=-\langle E,E\rangle/2$ and
+\begin{equation}
+K(x,E)=-\tfrac14\,|x|^{2}\,\langle E,E\rangle
+\label{eq:isotropyexact}
+\end{equation}
+exactly, for all directions, not only the fourteen preregistered ones; a Gr\"obner-basis reduction modulo the TT constraint ideal confirms the identity symbolically, and an independent refit of the fourteen-direction numerical data onto the full cubic-invariant basis bounds the anisotropy ratio at $|c/a|\le 1.5\times10^{-19}$. The exact certificate is a symbolic computation (exact rational and radical arithmetic, script-gated by re-run), one tier below a kernel-checked proof: the corresponding Lean statement remains the named open target \lean{ReggeTTContinuumIsotropyTarget} in \lean{Gravity/Analysis/ReggeTTSymbolPreflight.lean} with status flag \lean{false}, and the adjugate closed form \eqref{eq:adjclosed} turns that target into a short algebra formalization rather than an open analysis problem.
+
+\statusbox{MEASURED, exact-symbolic (isotropy value, all directions) / OPEN (kernel-checked value)}{Exact certificate: \lean{state/qg\_full\_theory/isotropy\_contraction} (closed form \eqref{eq:adjclosed}, Gr\"obner TT reduction to \eqref{eq:isotropyexact}, cubic coefficients exactly zero, weights cross-checked against the kernel-checked bucket theorems; gate is script re-run). Prior numerical evidence: the C10 preregistered probe (\lean{state/qg\_full\_theory/true\_regge\_tt\_probe}, commit \texttt{f1d44266e5}, critic sign-off with independent reproduction at \texttt{1e38531ee2}); fourteen directions, value $-1/4$; refit anisotropy bound $|c/a|\le 1.5\times10^{-19}$. Analytic target: \lean{ReggeTTContinuumIsotropyTarget}, OPEN; flag \lean{gap\_action\_recovery} in the full-theory ledger remains \lean{false} until the closed form is formalized.}
+
+\section{Numerical convergence studies}
+\label{sec:numerics}
+
+This section tracks action convergence explicitly on curved backgrounds. All numbers below are computations (MEASURED tier); they are reproduced verbatim from the convergence campaign of \cite{QGrewrite}.
+
+\subsection{Euclidean Schwarzschild}
+\label{sec:schw}
+
+We consider Euclidean Schwarzschild with period $\beta=8\pi GM$:
+\begin{equation}
+ds^{2}=\Bigl(1-\frac{r_{s}}{r}\Bigr)d\tau^{2}+\Bigl(1-\frac{r_{s}}{r}\Bigr)^{-1}dr^{2}+r^{2}d\Omega_{2}^{2},
+\label{eq:schw}
+\end{equation}
+capped smoothly at the horizon in the cigar coordinate $\rho=2\sqrt{r_{s}(r-r_{s})}$. The triangulated region is a box centered at $(\tau,r,\theta,\phi)=(0,r_{0},\pi/2,0)$ with coordinate extents chosen so the proper extent at the center is $s=0.8\,r_{s}$ in every direction.\footnote{Strictly, the box uses the midpoint value of the metric functions rather than a full integration: $r\in[r_{0}-0.4\sqrt{g_{rr}}\,dr|_{r=r_{0}},\,r_{0}+0.4\sqrt{g_{rr}}\,dr|_{r=r_{0}}]$ rather than solving $\int_{a}^{r_{0}}\sqrt{g_{rr}}\,dr=0.4$, $\int_{r_{0}}^{b}\sqrt{g_{rr}}\,dr=0.4$.} Refinement holds the box fixed and refines the grid, $h=s/n$ with $n=4,6,8,10,12,14,16$ (up to $2.1\times10^{6}$ interior hinges). The mesh is a uniform $n^{4}$ grid of 4-cells, each split into 24 four-simplices by the Kuhn--Freudenthal triangulation, compatible across neighboring cells. Edge lengths are proper lengths of the coordinate segments (6-point Gauss quadrature); each 4-simplex is embedded isometrically in $\mathbb{R}^{4}$ from its ten edge lengths (Gram matrix, Cholesky); dihedral angles at a hinge are read from the embedding; and the deficit $\delta_{\sigma}=2\pi-\sum_{\mathrm{star}}\theta$ is evaluated only at hinges whose full star lies inside the grid. Each 4-simplex donates $V/10$ to each of its ten hinges, so both action densities are ratios over the same interior-hinge set.
+
+We track three convergence parameters, with $\kappa=8\pi$ and $G=c=1$:
+\begin{equation}
+C_{1}=\frac{|S_{\mathrm{Regge}}|}{V}=\frac{\bigl|\sum_{\sigma}A_{\sigma}\delta_{\sigma}\bigr|}{\kappa V},\qquad
+C_{2}=\frac{|S_{\mathrm{Regge}}-S_{\mathrm{RS}}|}{V}=\frac{\bigl|\sum_{\sigma}A_{\sigma}(\sinh\delta_{\sigma}-\delta_{\sigma})\bigr|}{\kappa V},\qquad
+C_{3}=\frac{\sum_{\sigma}A_{\sigma}\,|\sinh\delta_{\sigma}-\delta_{\sigma}|}{\kappa V},
+\label{eq:cdefs}
+\end{equation}
+plus the median and maximum dihedral deficits.\footnote{To minimize numerical error, $\sinh(\delta)-\delta$ is computed from the Taylor series $\sinh(\delta)-\delta\approx(\delta^{3}/6)(1+\delta^{2}/20)$ at small $\delta$ rather than from $\sinh$ directly.} Euclidean Schwarzschild is vacuum, so the continuum Einstein--Hilbert density vanishes and $C_{1}$ doubles as the Regge-minus-EH residual. $C_{2}$ tracks convergence of the $\sinh$ action to the Regge action; $C_{3}$ is an all-positive effective bound on the same difference.
+
+A surrogate deficit tracks the expected magnitude of the geometric deficits. For parallel transport around a small loop of area bivector $A^{\lambda\sigma}$ (with $A^{\lambda\sigma}A_{\lambda\sigma}=2A^{2}$), the loop deficit satisfies
+\begin{equation}
+\delta=\tfrac{1}{4}R_{\mu\nu\alpha\beta}\,\hat{n}^{\mu\nu}\hat{n}^{\alpha\beta}\,2A+O(h^{3}A_{\sigma})
+\quad\Longrightarrow\quad
+\delta=\tfrac{1}{2}R_{\mu\nu\alpha\beta}\,\hat{n}^{\mu\nu}\hat{n}^{\alpha\beta}A+O(h^{3}A_{\sigma}),
+\label{eq:loopdeficit}
+\end{equation}
+with $\hat{n}$ a normalized plane bivector \cite{Hamber}. Rather than construct $\hat{n}$ per hinge, we use a Kretschmann surrogate: with $K=12r_{s}^{2}/r^{6}$,
+\begin{equation}
+\delta_{\mathrm{sur}}=\sqrt{K(r_{\sigma})}\,A_{\sigma}/2=\frac{\sqrt{3}\,r_{s}\,A}{r_{\sigma}^{3}},
+\label{eq:surrogate}
+\end{equation}
+where $r_{\sigma}$ is the mean $r$ coordinate of the hinge vertices. Since $A\propto h^{2}$, $\max\delta_{\mathrm{sur}}$ realizes the curvature admissibility bound of \eqref{eq:admissibility}.
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{rrrrrrrrrr}
+\toprule
+$n$ & $h/r_{s}$ & $N_{\mathrm{int}}$ & $\mathrm{med}\,|\delta|$ & $\max|\delta|$ & $\mathrm{med}\,\delta_{\mathrm{sur}}$ & $\max\delta_{\mathrm{sur}}$ & $C_{1}$ & $C_{2}$ & $C_{3}$\\
+\midrule
+4 & 0.2 & 1232 & 7.882e-4 & 1.667e-2 & 1.343e-2 & 2.227e-2 & 9.009e-5 & 2.037e-7 & 2.863e-7\\
+6 & 0.1333 & 16064 & 3.307e-4 & 8.081e-3 & 6.126e-3 & 1.082e-2 & 2.779e-5 & 3.555e-8 & 4.948e-8\\
+8 & 0.1 & 75600 & 1.919e-4 & 4.757e-3 & 3.503e-3 & 6.384e-3 & 1.334e-5 & 1.073e-8 & 1.487e-8\\
+10 & 0.08 & 230144 & 1.213e-4 & 3.131e-3 & 2.293e-3 & 4.208e-3 & 7.808e-6 & 4.292e-9 & 5.930e-9\\
+12 & 0.0667 & 549200 & 8.474e-5 & 2.216e-3 & 1.610e-3 & 2.982e-3 & 5.124e-6 & 2.040e-9 & 2.813e-9\\
+14 & 0.0571 & 1121472 & 6.162e-5 & 1.650e-3 & 1.180e-3 & 2.225e-3 & 3.620e-6 & 1.091e-9 & 1.502e-9\\
+16 & 0.05 & 2054864 & 4.775e-5 & 1.277e-3 & 9.087e-4 & 1.723e-3 & 2.693e-6 & 6.351e-10 & 8.737e-10\\
+\bottomrule
+\end{tabular}
+\caption{Schwarzschild results for the inner window (centered at $r_{0}=1.5r_{s}$, $r\in[1.27,1.73]\,r_{s}$). The $\delta_{\mathrm{sur}}$ columns are Kretschmann surrogates from the continuous metric, not from dihedral angles.}
+\label{tab:schwinner}
+\end{table}
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{rrrrrrrrrr}
+\toprule
+$n$ & $h/r_{s}$ & $N_{\mathrm{int}}$ & $\mathrm{med}\,|\delta|$ & $\max|\delta|$ & $\mathrm{med}\,\delta_{\mathrm{sur}}$ & $\max\delta_{\mathrm{sur}}$ & $C_{1}$ & $C_{2}$ & $C_{3}$\\
+\midrule
+4 & 0.2 & 1232 & 2.406e-4 & 6.599e-3 & 5.711e-3 & 9.389e-3 & 3.590e-5 & 1.430e-8 & 2.069e-8\\
+6 & 0.1333 & 16064 & 1.033e-4 & 3.165e-3 & 2.602e-3 & 4.496e-3 & 1.122e-5 & 2.479e-9 & 3.571e-9\\
+8 & 0.1 & 75600 & 5.729e-5 & 1.852e-3 & 1.482e-3 & 2.630e-3 & 5.413e-6 & 7.451e-10 & 1.071e-9\\
+10 & 0.08 & 230144 & 3.683e-5 & 1.214e-3 & 9.545e-4 & 1.724e-3 & 3.179e-6 & 2.971e-10 & 4.267e-10\\
+12 & 0.0667 & 549200 & 2.501e-5 & 8.571e-4 & 6.702e-4 & 1.217e-3 & 2.089e-6 & 1.409e-10 & 2.023e-10\\
+14 & 0.0571 & 1121472 & 1.862e-5 & 6.371e-4 & 4.939e-4 & 9.048e-4 & 1.477e-6 & 7.520e-11 & 1.079e-10\\
+16 & 0.05 & 2054864 & 1.408e-5 & 4.921e-4 & 3.802e-4 & 6.990e-4 & 1.100e-6 & 4.373e-11 & 6.272e-11\\
+\bottomrule
+\end{tabular}
+\caption{Schwarzschild results for the outer window (centered at $r_{0}=2r_{s}$, $r\in[1.717,2.283]\,r_{s}$).}
+\label{tab:schwouter}
+\end{table}
+
+\paragraph{Analysis.} From the scaling arguments we expect (i) surrogate deficits $\propto A\sim h^{2}$; (ii) actual deficits scaling like the surrogates; (iii) $C_{2}$ and $C_{3}$ scaling as $h^{4}$ at small $h$ from the Taylor structure \eqref{eq:scaling}; (iv) $C_{1}\to 0$ at least as $h^{1/2}$ by the CMS bound, possibly faster given the symmetry. Local power laws are read from log secant lines,
+\begin{equation}
+\mathrm{LogSec}(y_{2},y_{1};x_{2},x_{1})=\frac{\log y_{2}-\log y_{1}}{\log x_{2}-\log x_{1}}.
+\label{eq:logsec}
+\end{equation}
+Across the refinements in Tables~\ref{tab:schwinner} and \ref{tab:schwouter}: the deficit statistics (median and maximum, dihedral and surrogate) all track exponent $\approx 2$; the residuals $C_{2}$ and $C_{3}$ track exponent $\approx 4$, with the coarsest refinement pair showing the expected higher-order contamination above 4; and $C_{1}$ converges substantially faster than the CMS worst case, trending toward $h^{2}$ in the small-mesh limit, as has been observed elsewhere for symmetric configurations.
+
+\subsection{A de Sitter test}
+\label{sec:desitter}
+
+To test convergence with nonzero Ricci curvature, Euclidean de Sitter in static-patch coordinates was triangulated in the same manner:
+\begin{equation}
+ds^{2}=(1-kr^{2})\,dt^{2}+\frac{dr^{2}}{1-kr^{2}}+r^{2}d\Omega^{2},
+\label{eq:desitter}
+\end{equation}
+with Riemann components $R_{trtr}=R_{t\theta t\theta}=R_{t\phi t\phi}=R_{\theta\phi\theta\phi}=R_{\phi r\phi r}=R_{r\theta r\theta}=k$ (up to index symmetries), Ricci scalar $12k$, and Kretschmann scalar $24k^{2}$. The runs use $k=1/9$, horizon at $R_{\Lambda}=3$, the same refinement levels and proper half-width $s=0.8$ as Schwarzschild, and windows centered at $r_{0}=1.5$ and $r_{0}=2.0$ ($R_{\Lambda}/2$ and $2R_{\Lambda}/3$). Homogeneity of de Sitter means the two windows probe the same physics; most statistics agree well between them, the exception being the median deficit, where a small population of high-deficit hinges dominates the action while a large population of small, error-prone deficits skews the median.
+
+Here $C_{1}$ tracks Regge versus continuum Einstein--Hilbert: with $R=12k=4/3$ the target bulk density is $S_{\mathrm{EH}}/V=R/(16\pi)=1/(12\pi)\approx 2.65\times10^{-2}$. The Kretschmann surrogate uses the constant $K=24k^{2}$.
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{rrrrrrrrrr}
+\toprule
+$n$ & $h$ & $N_{\mathrm{int}}$ & $\mathrm{med}\,|\delta|$ & $\max|\delta|$ & $\mathrm{med}\,\delta_{\mathrm{sur}}$ & $\max\delta_{\mathrm{sur}}$ & $C_{1}$ & $C_{2}$ & $C_{3}$\\
+\midrule
+4 & 0.2 & 1232 & 5.974e-4 & 5.738e-3 & 7.525e-3 & 1.211e-2 & 3.797e-2 & 1.167e-7 & 1.175e-7\\
+6 & 0.1333 & 16064 & 2.600e-4 & 2.806e-3 & 3.367e-3 & 5.586e-3 & 3.272e-2 & 2.024e-8 & 2.046e-8\\
+8 & 0.1 & 75600 & 1.474e-4 & 1.649e-3 & 1.900e-3 & 3.200e-3 & 3.076e-2 & 6.088e-9 & 6.168e-9\\
+10 & 0.08 & 230144 & 9.323e-5 & 1.082e-3 & 1.221e-3 & 2.071e-3 & 2.974e-2 & 2.428e-9 & 2.464e-9\\
+12 & 0.0667 & 549200 & 6.535e-5 & 7.639e-4 & 8.477e-4 & 1.450e-3 & 2.912e-2 & 1.152e-9 & 1.170e-9\\
+14 & 0.0571 & 1121472 & 4.786e-5 & 5.677e-4 & 6.243e-4 & 1.073e-3 & 2.869e-2 & 6.150e-10 & 6.252e-10\\
+16 & 0.05 & 2054864 & 3.662e-5 & 4.383e-4 & 4.784e-4 & 8.264e-4 & 2.839e-2 & 3.577e-10 & 3.638e-10\\
+\bottomrule
+\end{tabular}
+\caption{de Sitter results for the inner window (centered at $r_{0}=R_{\Lambda}/2=1.5$, $r\in[1.154,1.846]$).}
+\label{tab:dsinner}
+\end{table}
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{rrrrrrrrrr}
+\toprule
+$n$ & $h$ & $N_{\mathrm{int}}$ & $\mathrm{med}\,|\delta|$ & $\max|\delta|$ & $\mathrm{med}\,\delta_{\mathrm{sur}}$ & $\max\delta_{\mathrm{sur}}$ & $C_{1}$ & $C_{2}$ & $C_{3}$\\
+\midrule
+4 & 0.2 & 1232 & 3.283e-4 & 5.218e-3 & 7.456e-3 & 1.170e-2 & 3.794e-2 & 1.181e-7 & 1.182e-7\\
+6 & 0.1333 & 16064 & 1.405e-4 & 2.450e-3 & 3.354e-3 & 5.340e-3 & 3.270e-2 & 2.018e-8 & 2.021e-8\\
+8 & 0.1 & 75600 & 7.661e-5 & 1.417e-3 & 1.899e-3 & 3.047e-3 & 3.074e-2 & 6.025e-9 & 6.034e-9\\
+10 & 0.08 & 230144 & 4.787e-5 & 9.224e-4 & 1.220e-3 & 1.968e-3 & 2.973e-2 & 2.392e-9 & 2.396e-9\\
+12 & 0.0667 & 549200 & 3.312e-5 & 6.479e-4 & 8.481e-4 & 1.375e-3 & 2.911e-2 & 1.132e-9 & 1.134e-9\\
+14 & 0.0571 & 1121472 & 2.422e-5 & 4.799e-4 & 6.241e-4 & 1.014e-3 & 2.869e-2 & 6.028e-10 & 6.039e-10\\
+16 & 0.05 & 2054864 & 1.831e-5 & 3.697e-4 & 4.783e-4 & 7.793e-4 & 2.839e-2 & 3.500e-10 & 3.507e-10\\
+\bottomrule
+\end{tabular}
+\caption{de Sitter results for the outer window (centered at $r_{0}=2R_{\Lambda}/3\approx 2.0$, $r\in[1.702,2.298]$).}
+\label{tab:dsouter}
+\end{table}
+
+\paragraph{de Sitter convergence.} The deficits and surrogates again track $h^{2}$, and $C_{2},C_{3}$ track $h^{4}$. Because the Ricci scalar is nonzero, $C_{1}$ itself does not go to zero; the quantity that should vanish is $C_{1}-1/(12\pi)$, and it does, with the LogSec trending toward $\sim 1$: slower than the vacuum Schwarzschild case but still faster than the CMS worst case.
+
+\subsection{Flat-space control}
+
+On flat space $ds^{2}=dt^{2}+dx^{2}+dy^{2}+dz^{2}$, a run at the $n=6$ level gives a maximum deficit angle $\max|\delta|=7.99\times10^{-15}$, consistent with numerical roundoff and many orders of magnitude below the computed deficits for even the finest curved meshes. The deficit angles in the curved runs are measuring curvature, not mesh artifacts.
+
+\statusbox{MEASURED}{Tables~\ref{tab:schwinner}--\ref{tab:dsouter} and the flat control, from the Python convergence campaign of \cite{QGrewrite} (\texttt{qg\_regge\_schwarzschild.py}, \texttt{qg\_regge\_desitter.py}). Observed rates: deficits $h^{2}$, $\sinh$ residuals $h^{4}$, Regge-vs-EH better than the CMS worst case in both geometries. No Lean owner; these are computations.}
+
+\section{Operator recovery and constraint closure}
+\label{sec:operator}
+
+Action convergence alone does not establish classical recovery. The Hessian of $S_{\mathrm{RS}}$ must converge in operator norm to the Hessian of $S_{\mathrm{EH}}$, so that the discrete spectrum (quasi-normal frequencies included) converges to the spectrum of the Lichnerowicz operator; and the discrete constraint algebra must converge to the Dirac algebra of general relativity, which by the Hojman--Kucha\v{r}--Teitelboim theorem \cite{HKT} pins the classical theory down as GR.
+
+\subsection{Operator strength}
+
+Because $\sinh\delta=\delta+O(\delta^{3})$, the quadratic fluctuation operator of $S_{\mathrm{RS}}$ coincides with that of the Regge action, and the transverse-traceless sector carries the two propagating polarizations: at $D=3$ the count is $D(D+1)/2-1-D=2$. The framework contains no propagating spin-two quantum; gravity is ledger bookkeeping, not particle exchange, and the two classical wave polarizations survive as TT modes of the recovered action.
+
+The current formal reach of the operator lane, stated exactly. A certified spectrum theorem exists for axis modes of the componentwise flat lattice Laplacian, with its continuum Lichnerowicz value introduced definitionally from the flat reduction $\Delta_{L}=-\Delta$. That theorem contains no Riemann-curvature endomorphism, and the reach gap is itself now a theorem rather than a status flag: on the actual lattice tensor-field type, two explicit zeroth-order curvature-coupled operator families are constructed which agree with each other and with $-\Delta$ on the entire flat sector for every field and every resolution, yet differ on a concrete nonzero TT polarization at every nonzero curvature, while both eigenvalue branches satisfy the same flat theorem and both possess certified continuum limits with different curved limits. The flat spectrum therefore cannot fix the curved curvature coupling. The same module isolates the exact missing analytic premise: relative to the flat convergence theorem, convergence of a curved eigenvalue family is equivalent to convergence of its curvature correction, and a quantitative $C/N^{2}$ correction bound is a sufficient discretization-consistency certificate.
+
+\statusbox{THEOREM (blocker) / OPEN (target)}{Blocker: \lean{Gravity/SevenGaps/CurvedOperatorUnderdetermination.lean} (\lean{gap4\_curvature\_coupling\_blocker}), re-exported in the flag ledger as \lean{gap4\_curvature\_coupling\_blocker\_certified}; standard axiom trio. Target: \lean{discrete\_tt\_spectrum\_converges\_curved} + \lean{quasinormal\_mode\_spectrum}; flag \lean{gap4\_operator\_recovery} is \lean{false}. The closing construction must derive the genuine curvature endomorphism from curved discrete geometry.}
+
+\subsection{Constraint strength}
+
+Standard quantum mechanics uses a globally defined time; general relativity does not always supply one \cite{Isham}. Some spacetimes admit the ADM 3+1 split \cite{ADM,ReyesADM}, with metric
+\begin{equation}
+ds^{2}=-N^{2}dt^{2}+q_{ij}\,(dx^{i}+N^{i}dt)(dx^{j}+N^{j}dt),
+\label{eq:adm}
+\end{equation}
+where $q_{ij}$ is the induced metric on constant-$t$ hypersurfaces, $N$ the lapse, $N^{i}$ the shift. Ignoring boundary terms, the Hilbert plus cosmological action becomes
+\begin{equation}
+S=\int\!\!\int_{\Sigma}\frac{N\sqrt{|q|}}{2\kappa}\left(K^{ij}K_{ij}-(K^{i}_{\ i})^{2}+{}^{3}R-2\Lambda\right)dt\,d^{3}x,
+\label{eq:admaction}
+\end{equation}
+with conjugate momentum $\pi^{ij}=\frac{\sqrt{|q|}}{2\kappa}(K^{ij}-q^{ij}K^{l}_{\ l})$ and Hamiltonian $H_{\mathrm{ADM}}=H[N]+D[N^{i}]$, where
+\begin{align}
+H[N]&=\int_{\Sigma}N\left(\frac{2\kappa}{\sqrt{q}}\Bigl(\pi_{ij}\pi^{ij}-\tfrac12\pi^{2}\Bigr)-\frac{\sqrt{q}}{2\kappa}\bigl({}^{3}R-2\Lambda\bigr)\right)d^{3}x,
+\label{eq:hconstraint}\\
+D[N^{i}]&=-2\int_{\Sigma}N^{i}q_{ik}\nabla_{j}\pi^{jk}\,d^{3}x.
+\label{eq:dconstraint}
+\end{align}
+With the canonical Poisson bracket, $H$ and $D$ satisfy the Dirac algebra
+\begin{equation}
+\begin{aligned}
+\{D[\vec{N}],D[\vec{M}]\}&=D[[\vec{N},\vec{M}]],\\
+\{H[N],D[\vec{M}]\}&=H[\mathcal{L}_{\vec{M}}N],\\
+\{H[N],H[M]\}&=D[q^{ij}(N\partial_{j}M-M\partial_{j}N)].
+\end{aligned}
+\label{eq:dirac}
+\end{equation}
+The first bracket says spatial diffeomorphisms form a Lie algebra; the second says the Hamiltonian constraint transforms as a scalar; the third, decisively, has the dynamical field $q^{ij}$ as its structure function. The chain can be traversed backwards: a theory of $q_{ij},\pi^{ij}$ whose constraints close in this algebra recovers the Einstein--Hilbert action plus cosmological constant \cite{HKT}. A quantum theory recovering the Dirac algebra in the continuum limit therefore pins the classical theory down as GR.
+
+The RS program's current formal reach here, stated exactly. A background-weighted hypersurface bracket exists as an exact lattice identity, with $w=1$ recovery and a quadrature continuum limit for its smearing shape (\lean{gap5} weighted-bracket theorems, standard trio). But that construction keeps the weight fixed as the phase-space point varies, and the blocker is now a theorem: a fixed background weight represents a phase-space-dependent inverse metric at every phase point only if that metric is phase-space constant, and a concrete positive dynamic inverse metric escapes every fixed background. The weighted-bracket route to constraint recovery therefore requires a genuinely dynamic structure function, whose substrate derivation remains open.
+
+\statusbox{THEOREM (partial + blocker) / OPEN (target)}{Partial: background-weighted bracket with $w=1$ recovery and quadrature continuum limit (\lean{WeightedHypersurfaceBracket}, commit \texttt{4aef91516d}). Blocker: \lean{Gravity/SevenGaps/DynamicStructureFunctionBlocker.lean} (\lean{gap5\_background\_weight\_blocker}), re-exported as \lean{gap5\_structure\_function\_blocker\_certified}; standard trio. Target: \lean{dirac\_algebra\_continuum\_limit} + \lean{hojman\_pins\_general\_relativity}; flag \lean{gap5\_constraint\_recovery} is \lean{false}. A discrete contracted-Bianchi interface exists via the Schl\"afli identity (\lean{Geometry/DiscreteBianchi.lean}).}
+
+\part{Quantum amplitude}
+\label{part:amplitude}
+
+\section{The amplitude limit: the eight-tick register}
+\label{sec:register}
+
+The previous chapters built a bridge from deformed triangulated substrate geometries through Regge calculus toward general relativity at scales far above the triangulation. The same substrate connects to quantum mechanics.
+
+Recall the cubic lattice graph undergoing tick-based updates as an information ledger \cite{CoherentComparisonLedger}. For spatial dimension 3, the minimal period for a closed cycle to visit all vertices of a single cube is 8. This cadence can be formalized. Assume a state $\psi$ and a tick operator $T$ with
+\begin{equation}
+T^{8}\psi=\psi.
+\label{eq:t8}
+\end{equation}
+For an eigenvector $\psi_{E}$ of $T$ with $T\psi_{E}=\lambda_{E}\psi_{E}$,
+\begin{equation}
+\lambda_{E}^{8}=1,\qquad \lambda_{E}=e^{-i\pi k/4},\qquad k=0,\ldots,7.
+\label{eq:eigen}
+\end{equation}
+The forcing statement must be made with care, because real representations of $T^{8}=I$ exist: the cyclic shift is a real orthogonal $8\times 8$ matrix, and real-vector-space quantum mechanics is a consistent (if awkward) formalism. What is forced unconditionally is negative: the eigenvalue $\omega_{8}^{2}=i$ has no real representative ($x^{2}+1>0$ on $\mathbb{R}$), so $T$ cannot be diagonalized over the reals; the best a real state space affords is a block decomposition into two-dimensional rotation planes, in which the tick phases are inseparable from pairs of real directions. Complexification becomes forced once one physical demand is added: that the register admit a complete basis of one-dimensional tick eigenstates, states of definite tick phase that evolution merely multiplies. Under that spectral-completeness demand, the minimal scalar extension in which $T$ diagonalizes with simple spectrum is $\mathbb{C}$, and the state space is
+\begin{equation}
+|\psi\rangle=(\psi_{0},\ldots,\psi_{7})\in\mathbb{C}^{8}.
+\label{eq:c8}
+\end{equation}
+The $\mathrm{DFT}_{8}$ is the canonical unitary that diagonalizes the shift (in its eigenbasis $T$ is the diagonal matrix of eighth roots of unity), and $T$ is unitary: $T^{\dagger}T=TT^{\dagger}=I$. Tick evolution of a state preserves inner products.
+
+\statusbox{THEOREM (non-real-diagonalizability, eigenvalue structure, unitarity, spectral-completeness boundary) / MODEL (spectral-completeness demand)}{\lean{Foundation/ComplexStructureForcing.lean} (\lean{shift\_period\_8}, \lean{complexification\_forced}, \lean{dft8\_preserves\_norm}, \lean{complex\_structure\_certificate}). What is kernel-checked: $T^{8}=I$, the eigenvalue $i$ with no real representative, DFT-8 unitarity, phase invariance of the mode cost, and now the exact boundary of the demand itself (\lean{spectral\_completeness\_boundary}): no real basis of the 8-register consists of one-dimensional tick eigenstates (\lean{no\_real\_tick\_eigenbasis}; every real eigenvector is two-periodic, so the real eigenvector span is a proper subspace), while over $\mathbb{C}$ the DFT family is such a basis (\lean{dftTickBasis}). The demand that tick eigenstates be physical states (which converts non-real-diagonalizability into complexification) remains the named premise; the boundary theorem shows it is exactly the step that fails over $\mathbb{R}$.}
+
+\section{The discrete Schr\"odinger equation}
+\label{sec:schrodinger}
+
+The tick operator is unitary and acts as a discrete time advance. In the Schr\"odinger picture the generator of time translations is the Hamiltonian,
+\begin{equation}
+\hat{H}|\psi(t)\rangle=i\hbar\frac{d}{dt}|\psi(t)\rangle,\qquad |\psi(t)\rangle=\hat{U}(t)|\psi(0)\rangle,\qquad \hat{U}(t)=e^{-i\hat{H}t/\hbar}.
+\label{eq:schr}
+\end{equation}
+For time-independent Hamiltonians the eigenvectors of $\hat{H}$ and $\hat{U}$ coincide and carry an energy spectrum, and $\hat{U}(t)|\psi\rangle=\sum_{k}a_{k}e^{-iE_{k}t/\hbar}|\psi_{k}\rangle$.
+
+Reconsider the tick operator: Fourier modes are its eigenvectors with eigenvalues $\omega_{8}^{k}=e^{-i\pi k/4}$, and writing the eigenvalue as $e^{-iE_{k}\tau_{0}/\hbar_{\mathrm{RS}}}$ identifies the energy spectrum
+\begin{equation}
+E_{k}=\frac{\hbar\,\pi k}{4\,\tau_{0}},\qquad k=0,\ldots,7.
+\label{eq:spectrum}
+\end{equation}
+Since the eigenvalues are eighth roots of unity, \eqref{eq:spectrum} is the principal-branch identification; the energies are defined modulo $2\pi\hbar/\tau_{0}$, and statements built on the register spectrum are invariant under this aliasing. The evolution over $n$ ticks is
+\begin{equation}
+|\psi(n\tau_{0})\rangle=T^{n}|\psi(0)\rangle=\sum_{k}a_{k}\,e^{-iE_{k}n\tau_{0}/\hbar}\,|\psi_{k}\rangle=e^{-i\bar{H}n\tau_{0}/\hbar}|\psi(0)\rangle,
+\label{eq:tickevo}
+\end{equation}
+with $\bar{H}$ diagonal in the Fourier basis with entries \eqref{eq:spectrum}. Tick evolution is a discrete-in-time Schr\"odinger equation. The finite-register version of Stone's theorem holds: the discrete unitary group extends to a continuous one-parameter unitary group whose generator restricts to $\bar{H}$ on tick times, so a continuum Schr\"odinger equation arises as an interpolating reading of the tick advance. Two disclosures attach: the interpolation is not unique (any generator differing by multiples of $2\pi\hbar/\tau_{0}$ on the spectrum interpolates the same discrete group, the aliasing already noted below \eqref{eq:spectrum}), and the tick times $n\tau_{0}$ are not dense in the continuum, so the continuous group is an extension chosen for its minimal principal-branch generator, not a forced object.
+
+The spectrum \eqref{eq:spectrum} is linear in $k$, as the shift requires; curvature of the dispersion enters only through recognition corrections at higher order in the tick step. Nothing in this section or the previous one mentions gravity: the amplitude limit is generic, and gravity enters through which channel the ledger exposes (Section~\ref{sec:channel}).
+
+\statusbox{THEOREM}{\lean{Foundation/SchrodingerDerivation.lean} (\lean{schrodinger\_equation\_from\_RS}, \lean{schrodingerEquationCert}); Hamiltonian emergence \lean{Foundation/HamiltonianEmergence.lean} (\lean{quadratic\_emergence}); the operator-level finite-dimensional Stone generator is in the reference-tier module \lean{Foundation/HamiltonianEmergenceOperator.lean}.}
+
+\section{The Born rule as a uniqueness theorem}
+\label{sec:born}
+
+\begin{theorem}[Born weight uniqueness, mode-local class]
+\label{thm:born}
+Call a sector measure \emph{mode-local} if it has the form $\mu_{\psi}(S)=\sum_{k\in S}g\bigl(\|\psi_{k}\|\bigr)$ for a single weight function $g$ independent of the rest of the state. On normalized registers, the Born measure $\mu_{\psi}(S)=\sum_{k\in S}\|\psi_{k}\|^{2}$ over mode sets $S\subseteq\{0,\ldots,7\}$ is the unique mode-local sector measure satisfying
+\begin{enumerate}
+\item[(i)] total measure one on the full mode set;
+\item[(ii)] invariance under independent phase rotation of every mode;
+\item[(iii)] additivity on disjoint mode sets;
+\item[(iv)] two-branch calibration: on the rotation family $\psi_{\theta}=(\cos\theta)\,\psi_{a}+(\sin\theta)\,\psi_{b}$, the measure of the $\cos\theta$ mode is $\cos^{2}\theta$ and of the $\sin\theta$ mode is $\sin^{2}\theta$.
+\end{enumerate}
+\end{theorem}
+
+Mode-locality is load-bearing and is not a consequence of (i)--(iv). Without it the four conditions admit non-Born measures: with $p_{k}=\|\psi_{k}\|^{2}$, the assignment $q_{k}=p_{k}^{2}/\sum_{j}p_{j}^{2}$ on states with three or more occupied modes (and $q_{k}=p_{k}$ on one- and two-mode states) is normalized, phase-invariant, additive on disjoint mode sets, and agrees with $\cos^{2}\theta,\sin^{2}\theta$ on every two-branch rotation, yet it is not the Born measure. Mode-locality is the register form of measurement noncontextuality: the weight carried by a mode depends on that mode's amplitude alone, not on which other modes happen to be occupied. We state it as a named premise rather than bury it. A noncontextuality-free derivation (a Gleason-type argument over all register frames, available in principle at dimension eight) is the open strengthening of this theorem.
+
+The proof shape, given mode-locality: normalization gives (i); phase invariance (ii) makes $g$ a function of the modulus alone; additivity (iii) is automatic for the mode-local form; the two-branch calibration (iv) fixes $g$ as squaring (\lean{born\_weight\_forced}). The formal layer proves exactly this conditional: \lean{born\_weight\_forced} shows that any weight function calibrated by (iv) on the rotation family is $r\mapsto r^{2}$ on $(0,1)$, and \lean{dft8\_sector\_forcing} shows that the Born measure satisfies (i)--(iv); the mode-local form is the shape of the hypothesis, not a derived fact.
+
+What the theorem does and does not do, exactly. It does not by itself identify measurement probabilities $|\langle\phi_{\lambda}|\psi\rangle|^{2}$ for an arbitrary operator $\hat{O}$; it is a statement about normalization and mode splitting on the register. The calibration clause (iv) is itself the subject of a formalized chain in the Measurement folder. \lean{PathAction.lean} defines
+\begin{equation}
+C(\gamma)=\int_{0}^{T}J(r(t))\,dt,\qquad w(\gamma)=e^{-C(\gamma)},\qquad A(\gamma,\phi)=e^{-C(\gamma)/2}e^{i\phi}.
+\label{eq:pathaction}
+\end{equation}
+\lean{TwoBranchGeodesic} takes the rotated state with $|a_{1}|^{2}=\cos^{2}\theta$, $|a_{2}|^{2}=\sin^{2}\theta$ and defines the rate action $\mathcal{A}=-\ln(\sin\theta)$. \lean{KernelMatch} defines the profile
+\begin{equation}
+r(\vartheta)=1+2\cot\vartheta+\sqrt{\left(1+2\cot\vartheta\right)^{2}-1},
+\label{eq:profile}
+\end{equation}
+and proves the kernel identity $J(r(\vartheta))=2\cot\vartheta$, so that
+\begin{equation}
+\int_{0}^{\pi/2-\theta_{s}}J\bigl(r(\vartheta+\theta_{s})\bigr)\,d\vartheta
+=2\int_{0}^{\pi/2-\theta_{s}}\cot(\vartheta+\theta_{s})\,d\vartheta
+=2\Bigl[\ln\sin(\vartheta+\theta_{s})\Bigr]_{0}^{\pi/2-\theta_{s}}
+=-2\ln(\sin\theta_{s})=2\mathcal{A},
+\label{eq:kernelint}
+\end{equation}
+which \lean{C2ABridge.lean} identifies with $C=2\mathcal{A}$. \lean{BornRule} then defines a two-state system with Gibbs weights $p_{i}=e^{-C_{i}}/(e^{-C_{1}}+e^{-C_{2}})$ and shows that with the rate action for the second state the Gibbs factors recover $\cos^{2}\theta,\sin^{2}\theta$.
+
+An honest scope note on the calibration chain: the mathematics of \eqref{eq:pathaction}--\eqref{eq:kernelint} is verified, but the profile \eqref{eq:profile} and the rate action are definitions selected so the chain closes; a derivation of that profile from substrate dynamics, rather than its definition, is the open strengthening of this section.
+
+\statusbox{MODEL (mode-locality premise and calibration profile), carrying a kernel-checked conditional theorem and a kernel-checked counterexample witness}{The conditional (mode-locality $\Rightarrow$ squaring is forced) is kernel-checked: \lean{Foundation/BornRuleForcing.lean} (\lean{born\_weight\_forced}, \lean{dft8\_sector\_forcing}; reference tier). Both halves of the load-bearing claim are now kernel objects in the same module: \lean{modeLocal\_born\_unique} (within the mode-local class, normalization and two-branch calibration force the Born sector measure on every normalized register) and \lean{mode\_locality\_load\_bearing} (the hybrid $q_{k}=p_{k}^{2}/\sum_{j}p_{j}^{2}$ measure of the prose counterexample formalized as \lean{contextualMeasure}: it satisfies (i)--(iv) yet differs from Born at an explicit three-mode witness and admits no mode-local witness). Chain: \lean{Measurement/PathAction.lean} (\lean{amplitude\_mod\_sq\_eq\_weight}), \lean{Measurement/TwoBranchGeodesic.lean} (\lean{born\_weight\_from\_rate}), \lean{Measurement/KernelMatch.lean} (\lean{kernel\_match\_pointwise}, \lean{kernel\_integral\_match}), \lean{Measurement/C2ABridge.lean} (\lean{measurement\_bridge\_C\_eq\_2A}), \lean{Measurement/BornRule.lean} (\lean{born\_rule\_from\_C}). Named premises: mode-locality (noncontextuality) and the profile \eqref{eq:profile}. The weakest link sets the tier.}
+
+\section{The recognition ledger and the physical channel}
+\label{sec:channel}
+
+\begin{definition}[Recognition ledger]
+\label{def:ledger}
+Given a finite substrate lattice $\Lambda$, the recognition ledger is the function $L:\Lambda\times\Lambda\to[0,\infty)$ assigning to each pair of substrate cells $(i,j)$ the accumulated recognition cost $J(x_{ij})$ of the comparison between them, satisfying (i) symmetry $L(i,j)=L(j,i)$; (ii) diagonal zero $L(i,i)=0$; (iii) non-negativity; (iv) RCL subadditivity $L(i,k)\le R(L(i,j),L(j,k))$ with $R(u,v)=2uv+2u+2v$ for every intermediate cell $j$. The total ledger cost is $\Sigma=\sum_{i,j}L(i,j)$; the ledger deficit at cell $i$ is $\Delta_{i}=\sum_{j}L(i,j)$; the ledger is flat iff $L\equiv 0$, equivalently $\Sigma=0$.
+\end{definition}
+
+Conceptually, flat spacetimes arise from zero-cost ledgers, the event horizon is the induced spacetime image of an information boundary partition on the ledger, and vacuum energy corresponds to a ground state. These are concepts guiding the program, not theorems: the bridge between the informational ledger and the induced geometric spacetime is exactly the substrate-to-geometry bridge whose certified status is given in Section~\ref{sec:bridge}, and the identification of $\Delta_{i}$ with a local curvature scalar in the continuum limit is part of that open bridge.
+
+The channel question is sharper and is settled. Define three properties of a response $R$ on register states:
+\begin{align}
+\text{density-only:}\quad & R(c\,|\psi\rangle)=R(|\psi\rangle)\ \text{for every}\ |c|=1;
+\label{eq:densityonly}\\
+\text{amplitude-linear:}\quad & R(|\psi\rangle)=\hat{L}|\psi\rangle\ \text{for a linear}\ \hat{L};
+\label{eq:amplinear}\\
+\text{phase-equivariant:}\quad & R(c|\psi\rangle)=c\,R(|\psi\rangle).
+\label{eq:phaseequi}
+\end{align}
+
+\begin{lemma}
+Amplitude-linear maps are phase-equivariant.
+\end{lemma}
+\begin{proof}
+Scalars commute with linear operators: $(c\hat{L}-\hat{L}c)|\psi\rangle=0$ gives $\hat{L}(c|\psi\rangle)=c(\hat{L}|\psi\rangle)$.
+\end{proof}
+
+\begin{lemma}
+The only phase-equivariant density-only response is multiplication by 0.
+\end{lemma}
+\begin{proof}
+Both conditions together give $c\,R(|\psi\rangle)=R(|\psi\rangle)$ for all $|c|=1$; choosing $c\neq 1$ forces $R(|\psi\rangle)=0$.
+\end{proof}
+
+\begin{theorem}[Amplitude linearity]
+\label{thm:amplinear}
+Every channel satisfying the substrate semantic conditions (the channel response is a nonzero matter-section readout of a complex-linear joint operator; see \lean{PhysicalChannelAmplitudeLinear.lean}) is complex-linear. A density-only response that is also amplitude-linear is identically zero. Consequently no nontrivial density-only \emph{universal} mediator exists on the substrate, where universal means a single fixed response serving every admissible substrate update.
+\end{theorem}
+
+The first claim holds because the joint substrate dynamics is complex-linear and linear extraction preserves that structure. The universality qualifier in the third claim is load-bearing and we state its boundary exactly. For any one \emph{fixed} unitary update $U$, the density-level map $\Psi_{U}(\rho)=U\rho U^{\dagger}$ is nonzero, phase-insensitive, and reproduces the amplitude dynamics on pure states; a mediator permitted to depend on the specific update is not excluded by the algebra alone. What the theorem excludes is a mediator in the classical sense: a single channel, fixed once, through which every admissible update must factor. That is the physically relevant reading (a classical mediating field does not get to reconfigure itself per unitary), and it is the reading under which the obstruction below is exact. A stronger no-go of the BMV type, with explicit locality, mediator-observable, interaction, and initial-state premises replacing the universality premise, is the open strengthening of this section.
+
+\begin{theorem}[Many-body lift]
+\label{thm:manybody}
+The forcing extends sitewise to the macroscopic ledger: on the tensor product over lattice sites, the channel response built from per-site linear witnesses is amplitude-linear, and pure product states evolve sitewise. The exclusion of density-only mediation holds for the many-body gravitational ledger, not only for a single register.
+\end{theorem}
+
+\paragraph{The algebraic obstruction in detail.} Write the amplitude update as $U:\mathcal{H}_{\mathrm{RS}}\to\mathcal{H}_{\mathrm{RS}}$ and the density projection as $\pi(\psi)=|\psi\rangle\langle\psi|$ (pure states; the general case uses the trace-out map). A factorization $\Psi\circ\pi=\pi\circ U$ requires $\Psi(|\psi\rangle\langle\psi|)=|U\psi\rangle\langle U\psi|$ for every $\psi$. Take $|\psi\rangle=(1/\sqrt{2})(|\psi_{0}\rangle+e^{i\theta}|\psi_{1}\rangle)$ with $\theta$ arbitrary:
+\begin{equation}
+\pi(\psi)=\tfrac12\bigl(|\psi_{0}\rangle\langle\psi_{0}|+|\psi_{1}\rangle\langle\psi_{1}|+e^{-i\theta}|\psi_{0}\rangle\langle\psi_{1}|+e^{i\theta}|\psi_{1}\rangle\langle\psi_{0}|\bigr).
+\label{eq:density}
+\end{equation}
+If $U$ introduces different phases on the two components ($U\psi_{0}=e^{i\alpha}\psi_{0}'$, $U\psi_{1}=e^{i\beta}\psi_{1}'$), the output density depends on $\theta+(\alpha-\beta)$, so $\Psi$ must map off-diagonal elements $|\psi_{0}\rangle\langle\psi_{1}|$ to $e^{i(\alpha-\beta)}|\psi_{0}'\rangle\langle\psi_{1}'|$: it must know the phase difference of the specific update $U$. But the factorization requires one $\Psi$ for all admissible $U$, and different updates carry different phase differences. No single $\Psi$ can track them all. The obstruction is exact, not approximate, and independent of the dimension of $\mathcal{H}_{\mathrm{RS}}$, the specific updates, or environmental degrees of freedom. In dilation language: every completely positive map has an isometric dilation, but here the isometry is the primitive and the density-level channel is derived; a theory that starts from the density-level master equation and reconstructs the isometry afterward has reversed the order of explanation, and the no-go says the reversed order cannot reproduce the comparison pairing.
+
+\paragraph{Gravitons.} Within spin-2 frameworks it is natural to picture quantized excitations of the field as force-carrying bosons. That picture does not extend here: there is no separate propagating spin-two quantum field in the framework, and the question ``is the graviton massless?'' is, on this account, a category error. The physical question that remains is whether the channel is amplitude-bearing, and that question is experimentally decidable.
+
+\statusbox{THEOREM (vector-level exclusion, under the universality premise) / MODEL (universality premise)}{\lean{Gravity/QuantumChannel/AmplitudeLinearForced.lean} (\lean{eq\_zero\_of\_isAmplitudeLinear\_isDensityOnly}, \lean{not\_exists\_nontrivial\_isAmplitudeLinear\_and\_isDensityOnly}); \lean{Gravity/QuantumChannel/PhysicalChannelAmplitudeLinear.lean} (\lean{physicalChannelResponse\_isAmplitudeLinear}, \lean{manyBodyPhysicalChannelResponse\_isAmplitudeLinear}); \lean{Gravity/QuantumChannel/NoClassicalMediator.lean} (\lean{no\_classical\_mediator\_under\_T0T8}). The premise that a classical mediator is a single fixed channel serving all admissible updates is the named MODEL input; a mediator permitted to depend on the update ($\rho\mapsto U\rho U^{\dagger}$) is not excluded and is not classical in the intended sense. The boundary is now itself kernel-checked: \lean{Gravity/QuantumChannel/MediatorUniversalityBoundary.lean} (\lean{mediator\_universality\_boundary}) proves both that every fixed update admits a density-level mediator reproducing the amplitude dynamics on pure states (\lean{conjugationChannel\_reproduces}, trace-preserving under unitarity) and that no single fixed density-level map implements all unitary updates simultaneously (\lean{no\_universal\_density\_mediator}: the identity and the $0$--$1$ swap already clash on one input density). The latter is a quantifier-order fact about the strongest reading of universality, not a new density-level obstruction; weaker readings remain covered by the named premise.}
+
+\section{The Bose--Marletto--Vedral discriminator}
+\label{sec:bmv}
+
+Many direct predictions of specific quantum gravity theories involve experimentally unreachable conditions. The Bose--Marletto--Vedral discriminator \cite{Bose,MarlettoVedral}, while not specific to any individual theory, may be feasible.
+
+Place two masses $A,B$ in spatial superposition (mass $A$ over positions $1,2$; mass $B$ over positions $3,4$):
+\begin{equation}
+|\psi_{A}(0)\rangle=\tfrac{1}{\sqrt2}(|A,1\rangle+|A,2\rangle),\qquad
+|\psi_{B}(0)\rangle=\tfrac{1}{\sqrt2}(|B,3\rangle+|B,4\rangle),
+\label{eq:bmvinit}
+\end{equation}
+with $|\psi_{\mathrm{tot}}(0)\rangle=|\psi_{A}(0)\rangle\otimes|\psi_{B}(0)\rangle$. Under Newtonian coupling and unitary evolution,
+\begin{equation}
+|\psi_{\mathrm{tot}}(t)\rangle=\frac{1}{2}\sum_{a\in\{1,2\}}\sum_{b\in\{3,4\}}
+e^{\,i\,\frac{Gm_{A}m_{B}\,t}{\hbar\,|x_{a}-x_{b}|}}\;|A,a\rangle|B,b\rangle.
+\label{eq:bmvevo}
+\end{equation}
+A product state would require phase ratios such as $e^{i\phi_{13}}/e^{i\phi_{14}}=e^{i\phi_{23}}/e^{i\phi_{24}}$, not satisfiable in general, so $|\psi_{\mathrm{tot}}\rangle$ is typically entangled. A purely classical field cannot induce the entanglement \cite{Bose,MarlettoVedral}, which implies a quantum nature for the gravitational interaction;\footnote{The alternatives frequently involve gravitationally induced collapse, where evolution under gravity is no longer purely unitary and \eqref{eq:bmvevo} does not apply.} relativistic extensions preserve the basic behavior \cite{ChristodoulouRovelli}.
+
+For RS the stakes are structural. A clean witness of gravitationally induced entanglement supports amplitude-channel gravity and excludes density-only mediation at the tested scale; a positive result does not uniquely select this framework, since any quantum mediator predicts entanglement. A clean null under controlled decoherence pressures the substrate proposal at that scale with no parameter available to soften the result: it would falsify not a model choice but the framework's central theorem about gravity (Theorem~\ref{thm:amplinear}). The stochastic-coupling theory of \cite{Oppenheim} predicts no entanglement in this experiment, which is why BMV discriminates against it.
+
+\statusbox{THEOREM (structural positivity) / OPEN (experiment)}{\lean{Gravity/QuantumChannel/BMVPositive.lean} (\lean{bmvPositiveTheorem}); entanglement witness \lean{Quantum/PureTwoQubit/EntropyConcurrence.lean} (\lean{pure\_two\_qubit\_entropy\_positive\_unconditional}). The laboratory test is future work by the experimental community.}
+
+\section{The path-sum measure and the continuum program}
+\label{sec:measure}
+
+The path sum \eqref{eq:pathsum} needs two objects the substrate must supply: a measure $\mu(T)$ on triangulation classes, and a phase structure whose oscillation makes the regulated sum converge as the regulator is removed. This section states what is derived, what is proved impossible, and what single object remains, in each case with the machine-checked certificate. This is the sector where the certified-blocker architecture of Part~\ref{part:frontier} does the most work.
+
+\subsection{The measure from gauge counting}
+
+The physics proposal is that $\mu$ counts substrate configurations per gauge orbit: on the quotient of bounded complexes by relabeling, the class measure is
+\begin{equation}
+\mu([K])=\frac{1}{|\mathrm{Aut}\,K|},
+\label{eq:measure}
+\end{equation}
+the standard symmetry-factor weighting of \eqref{eq:cdt}. Formally, a Gauge Counting Principle characterizes exactly this measure: normalized gauge counting is equivalent to \eqref{eq:measure}, and a natural decoy (the quotient-uniform mass) provably fails it on a concrete two-point class. What is not derived is the principle itself: no theorem yet produces normalized gauge counting from named recognition-ledger axioms. An invariance no-go sharpens this: relabeling-invariance axioms alone underdetermine the path-sum measure, with explicit witness measures.
+
+\statusbox{MODEL (counting principle) / THEOREM (characterization and blockers)}{Characterization and decoy failure: \lean{gap2\_measure\_selection\_blocker\_certified} in \lean{FullTheoryLedger.lean}, re-exporting \lean{MeasureSubstrateBlocker.substrate\_measure\_blocker\_certificate}. Invariance no-go: \lean{C-p2-invariance-nogo} (commit \texttt{fce61fdcd1}). The Gauge Counting Principle is the named MODEL premise; deriving it from richer substrate structure is the OPEN measure target (flag \lean{gap2\_continuum\_and\_measure} is \lean{false}).}
+
+\subsection{The regulated sum and its carrier}
+
+The regulated object is the complexity-cutoff sum $Z_{\mathrm{cap}}(B)$ over triangulation classes of complexity at most $B$, with a phase assignment on exact complexity shells. Three structural results pin down its behavior. First, boundedness and conditional pairing-cancellation theorems exist for the phased fixed-cap structure, with a concrete $B=2$ witness. Second, the capped quotient carrier is equivalent to the disjoint union of exact shells, preserving $1/|\mathrm{Aut}|$ and the class measure; the canonical transported phase family satisfies the previously missing cap-shell compatibility condition. This discharges the finite-carrier obstruction that formerly blocked any statement connecting capped sums to shell decompositions. Third, the combinatorial quotient provably forgets metric data: one tetrahedron carries two admissible metric decorations with different edge-length and Cayley--Menger observables, so the forgetful map from metric-decorated complexes to the current quotient is not injective. A mesh-refinement continuum limit therefore needs a metric-refined carrier, whose interface (finite metric-decorated configuration spaces, a genuine mesh tending to zero, coarse projections, summable local action-step control) is specified but not yet constructed from the substrate.
+
+\statusbox{THEOREM (bridge and blockers)}{Cap-shell bridge: \lean{Gravity/SevenGaps/CapShellBridge.lean} (\lean{capShellEquiv}, \lean{capShellCompatibility}), re-exported as \lean{gap2\_capshell\_bridge\_discharged}; standard trio. Metric-carrier blocker: \lean{Gravity/SevenGaps/MetricRefinementCarrierBlocker.lean} (\lean{metricForget\_not\_injective}), re-exported as \lean{gap2\_metric\_carrier\_blocker\_certified}. Phased structure: \lean{C-p2-zq-structure} (commit \texttt{fce61fdcd1}). The metric-refined carrier construction is OPEN.}
+
+\subsection{Regulator removal: the oscillatory route is forced}
+
+Can the cutoff be removed? The convergence question is now exactly characterized: the capped sum $Z_{\mathrm{cap}}$ is Cauchy in the cutoff if and only if the phase satisfies an oscillatory tail condition (every sufficiently late contiguous block of exact shell amplitudes is small). The zero phase fails it: the unphased regulated sum provably does not converge, so regulator removal by brute positivity is refuted and the oscillatory route is the only route. The tail condition is itself certified sharp from below: it forces per-shell amplitude vanishing; no phase that changes only finitely many shells can satisfy it (so no finite-cap pairing certificate can imply it); and no phase constant within each shell can satisfy it, since the norm of such a shell amplitude is exactly the diverging positive shell mass. The single missing object in this lane is therefore a substrate-derived phase with genuine asymptotic intra-shell balance. We flag explicitly that all limits here concern the complexity cutoff; they are not mesh refinement and carry no geometric-continuum claim by themselves, which is why the metric-carrier interface above is a separate obligation.
+
+\statusbox{THEOREM (characterization, no-gos) / OPEN (phase witness)}{Cauchy iff oscillatory tail, zero-phase failure, and cap-shell equivalence transport: \lean{gap2\_cutoff\_limit\_blocker\_certified} (re-exporting \lean{ZqContinuumBlocker} theorems). Shell-balance sharpening: \lean{Gravity/SevenGaps/ZqShellBalanceBlocker.lean} (\lean{p24\_shell\_balance\_blocker\_certificate}), re-exported as \lean{gap2\_shell\_balance\_blocker\_certified}; standard trio. The \lean{OscillatoryTail} witness for a physically derived phase is OPEN.}
+
+\subsection{The substrate-to-geometry bridge}
+\label{sec:bridge}
+
+The recognition-ratio admissibility row of \eqref{eq:admissibility} asserts $\log x_{\sigma}=\lambda_{\sigma}\delta_{\sigma}+O(h^{3})$: substrate comparison data track geometric deficits. Can this be derived rather than assumed? The certified answer has two halves. Negatively: the bridge does not follow from a bare recognition ledger. Coboundary strains telescope to zero around every closed cycle; imposing the desired total-strain budget already assumes the ratio conclusion, so the constrained-budget route is circular; and one and the same bare two-cell $J$-ledger is induced by opposite signed source orientations, so no selector from bare ledgers can recover the signed source universally. Positively: supplying one named constitutive premise, a signed deficit-source coupling $c_{\sigma}=\lambda_{\sigma}\delta_{\sigma}$ coupled linearly to the total strain in the $J$-cost action, makes $J$-stationarity derive the recognition-ratio bridge with its cubic remainder, on a nontrivial uniformly admissible small-mesh family. The premise supplies only source data and its linear coupling; it does not mention the ratio, its logarithm, or the desired relation, so the positive result does not assume its conclusion. What remains open is the derivation of that coupling from richer substrate structure.
+
+\statusbox{THEOREM (blocker + conditional closure) / MODEL (coupling) / OPEN (derivation)}{\lean{Gravity/SevenGaps/RecognitionRatioSubstrateBlocker.lean} (\lean{recognition\_ratio\_derived\_bare\_ledger\_terminal}), re-exported as \lean{gap1\_bridge\_blocker\_certified}; standard trio. The premise \lean{DeficitSourceConstitutiveCoupling} is the named MODEL object. Flag \lean{gap1\_bridge\_derived} is \lean{false}.}
+
+\part{Black holes}
+\label{part:bh}
+
+\section{Temperature, entropy, and the leading log}
+\label{sec:bh1}
+
+The Euclidean path integral on the recognition action reproduces the standard thermodynamics. Smoothness of the cigar geometry at the horizon tip forces the Hawking temperature $T_{H}=\hbar c^{3}/(8\pi G k_{B}M)$, and the thermodynamic relation $S=\beta E-\ln Z$ gives the Bekenstein--Hawking entropy $S_{\mathrm{BH}}=k_{B}Ac^{3}/(4G\hbar)$. This chapter's saddle-point route inherits an undischarged dependency from the classical sector: the semiclassical evaluation of the Euclidean recognition action on the cigar uses the boundary (Hartle--Sorkin) term whose discrete analysis is part of the open Lorentzian-action lane (Part~\ref{part:frontier}), so the derivation here is standard semiclassical gravity applied to the recognition action, not a closed RS chain. Two further honesty notes attach to the formal layer. First, the $8\pi$ denominator is imported from the Hartle--Hawking semiclassical derivation (documented in the Lean), not forced by the RS chain; an RS-specific Euclidean calculation would be needed to change that status. Second, the SI lift is a presentation layer: the geometrized identity $T_{H}=1/(8\pi M)$ is connected to the SI formula through \lean{T\_hawking\_SI\_eq\_geom\_via\_bridge}, evaluated at $M_{\mathrm{geom}}=G_{\mathrm{SI}}M_{\mathrm{SI}}/c_{\mathrm{SI}}^{2}$ times $\hbar_{\mathrm{SI}}c_{\mathrm{SI}}/k_{B,\mathrm{SI}}$, consistent with the $\varphi$-native constants of Section~\ref{sec:units}.
+
+The entropy admits the subleading expansion
+\begin{equation}
+S(A)/k_{B}=\frac{Ac^{3}}{4G\hbar}+C\,\log\frac{c^{3}A}{G\hbar}+O(A^{-1}).
+\label{eq:logcorr}
+\end{equation}
+Different black holes and quantum gravity frameworks produce different $C$: common values are $-3/2$ \cite{KaulMajumdar,Carlip,Gour} or $-1/2$ \cite{JingYan,MukherjiPal,GhoshMitra}, with more complicated parameter-dependent forms known \cite{Sen}.
+
+\begin{proposition}[Leading-log coefficient, RS candidate]
+\label{prop:leadinglog}
+$C_{\mathrm{RS}}=-\tfrac12\log\varphi=-0.2406\ldots$, with separations from the competing values bounded away from zero: $C_{\mathrm{RS}}-(-\tfrac12)>\tfrac14$ and $C_{\mathrm{RS}}-(-\tfrac32)>\tfrac54$.
+\end{proposition}
+
+The honest status of this proposition is mixed and we state it plainly. The value $C_{\mathrm{RS}}$ is defined in the Lean, not derived: what is proved are its arithmetic bounds and its separations from the LQG and string values, plus the count tautology $S_{\mathrm{lead}}\log 2=\log N_{\mathrm{horizon}}$ and the band $C_{\mathrm{RS}}\in(-0.25,0)$. The emergence of $-\tfrac12\log\varphi$ from the golden-ratio comparison spectrum of the horizon ledger is narrative, and the ``empirical coefficient match'' is tagged HYPOTHESIS in the owning module. The correction is $\sim10^{-75}$ of the leading term for a solar-mass hole (with entropy taken dimensionless), so the coefficient is a theoretical discriminator rather than a direct observable; its indirect probe is the ringdown structure of Section~\ref{sec:echoes}, fixed by the same horizon ledger.
+
+\statusbox{THEOREM (identities, bounds) / HYPOTHESIS (coefficient emergence)}{SI and geometrized identities: \lean{Gravity/HawkingTemperatureSI.lean} (\lean{T\_hawking\_SI\_def}, \lean{T\_hawking\_SI\_eq\_geom\_via\_bridge}), \lean{Gravity/HawkingTemperatureFromRung.lean}; $8\pi$ imported (Hartle--Hawking). Entropy: \lean{Gravity/BlackHoleEntropySI.lean} (\lean{c\_RS\_LQG\_margin}, \lean{c\_RS\_string\_margin}); \lean{Gravity/BlackHoleEntropyFromLedger.lean} (\lean{c\_RS} definition, \lean{c\_RS\_neq\_LQG}, \lean{c\_RS\_neq\_string}); \lean{Gravity/BlackHoleHorizonStates.lean} (\lean{c\_RS\_band}). Derivation of $C_{\mathrm{RS}}$ from the horizon ledger spectrum: OPEN.}
+
+\section{The Page curve from the ledger}
+\label{sec:page}
+
+Unitarity requires the radiation entanglement entropy $S_{\mathrm{rad}}(u)$ to rise, peak, and return to zero as a black hole evaporates \cite{Page}. In RS the hypothesis is that the ledger supplies the bookkeeping: entanglement between interior and exterior cells is recorded tick by tick, and the radiation entropy is the entropy of the reduced state across the horizon cut.
+
+What is proven is a finite theorem with exactly the right shape, and we state its scope plainly.
+
+\begin{theorem}[Finite Page curve, nondegenerate]
+\label{thm:page}
+There is an evaporation process on a two-bulk, two-radiation ledger with a reversible tick and a tick budget $N\ge 2$, whose derived entropy curve starts at zero, rises strictly to an interior peak at half-evaporation with value exactly $\tfrac12 S_{\mathrm{BH}}$, falls strictly afterward, returns to zero at completion, and is monotone on both sides of the peak.
+\end{theorem}
+
+The formal decomposition: \lean{PageCurveStructural.lean} describes the triangular shape; \lean{PageCurveDynamical.lean} derives it from linear growth of radiation capacity, matching decline of bulk capacity, and $S_{\mathrm{rad}}=\min(\text{bulk},\text{radiation})$ capacity; \lean{PageCurveNontrivial.lean} exhibits the curve in a discrete tick-based system with two bulk and two radiation states. What this is not, and is not claimed to be, is an astrophysical evaporation model: the budget $S_{\mathrm{BH}}$ enters as an abstract capacity, and derivation of the capacity-transfer law from a microscopic recognition Hamiltonian on the joint ledger is the named open target of this sector. Solar-mass numbers therefore remain semiclassical estimates: with the greybody-weighted mass-loss law, the Page time sits at $t_{\mathrm{Page}}=(1-1/(2\sqrt2))\,t_{\mathrm{evap}}\approx 64.6\%$ of the lifetime, which for $M_{\odot}$ is $1.36\times10^{67}$ yr.
+
+The mechanism differs from the island formula \cite{AEMM,Penington,AMMZ} in origin and agrees with it in shape. The island prescription selects a quantum extremal surface inside the horizon; the RS ledger counts substrate cells at the horizon cut, exactly at the discrete level, with the late-time fall driven by the shrinking cell count. The two should not be claimed equivalent beyond the shape match until an astrophysical-scale evaporation ledger is in hand.
+
+\statusbox{THEOREM (finite curve) / OPEN (microscopic Hamiltonian)}{\lean{Gravity/PageCurveNontrivial.lean} (\lean{nontrivial\_page\_curve\_one\_statement}, \lean{pageCurve\_peak}); \lean{Gravity/PageCurveDynamical.lean} (\lean{pageCurveFromLedgerTicks}, \lean{capacity\_sum\_invariant}). Known degeneracies disclosed: the operator-entropy variant carries a supplied saturation hypothesis with a degenerate canonical witness, and \lean{BlackHoleInformationPreservation.lean} defines its joint entropy to be zero, so its invariance is trivial. The microscopic capacity-transfer Hamiltonian is OPEN.}
+
+\section{Ringdown echoes}
+\label{sec:echoes}
+
+This sector illustrates the program's self-correction working as designed. An earlier idea held that RS black holes resemble ``nucleus''-style black holes \cite{PoissonIsrael,FrolovMarkovMukhanov1,FrolovMarkovMukhanov2}, with a dense microscopic remnant replacing the singularity, and \lean{Gravity/BlackHoleEchoesFromBounce.lean} formalized ringdown echoes from scattering across that remnant surface. There is an obstruction: such an echo requires a signal to enter an event horizon, bounce, and re-emerge into the same exterior region, which is incompatible with the causal structure of a standard event horizon. The obstruction is itself now formalized (\lean{Gravity/EchoHorizonObstruction.lean}), and the bounce modules are retained as algebra only, explicitly deprecated as predictions. Physically viable echo pictures place a hypothetical scattering surface near, not inside, where the classical horizon would be \cite{CardosoPani}.
+
+What survives is a parameter-free signature. Self-similarity motivates a hypothesis, documented in \lean{Gravity/EchoReflectionCoefficient.lean}, postulating a horizon-consistent exterior scattering surface. Dividing $\varphi^{2}=\varphi+1$ by $\varphi^{2}$ gives
+\begin{equation}
+1=\varphi^{-1}+\varphi^{-2},
+\label{eq:partition}
+\end{equation}
+suggesting an energy partition into a transmitted fraction $\varphi^{-1}$ and reflected fraction $\varphi^{-2}$, hence amplitude ratio $\varphi^{-1}$ and phase increment $\log\varphi$ per rung. The template is
+\begin{equation}
+h_{\mathrm{echo}}(t)=\sum_{n\ge 0}A_{0}\,\varphi^{-n}\,q(t-t_{0}-n\Delta t)\,e^{in\log\varphi},\qquad
+\frac{A_{n+1}}{A_{n}}=\varphi^{-1}=0.6180\ldots,\quad \Delta\theta=\log\varphi=0.4812\ldots,
+\label{eq:echotemplate}
+\end{equation}
+with $q$ the primary quasinormal template and $\Delta t$ set by whatever future exterior mechanism supplies the propagation geometry. The golden ratio's defining equation fixes the algebraic pair $(\varphi^{-1},\log\varphi)$; it does not fix the missing causal geometry. The correct status: a parameter-free rung signature that a future horizon-consistent echo mechanism would have to carry. Current LIGO/Virgo non-detections do not falsify the RS core, because the observable echo mechanism is not a theorem of this paper.
+
+The statistical consequence is concrete. Generic echo searches scan a grid over damping and phase and pay the trials factor; a search at the fixed pair $(\varphi^{-1},\log\varphi)$ pays none, and stacking $N$ events grows the combined signal as $\sqrt{N}$ with no per-event parameters. Current data neither confirm nor exclude the prediction: the $2.9\sigma$ claim of \cite{Abedi} did not survive reanalysis \cite{Westerweck}, and morphology-independent searches report no significant evidence \cite{Tsang}. The O3/O4 bound on the amplitude ratio ($\lesssim 0.2$--$0.3$ at 90\% confidence for loud events) sits below the predicted $0.618$. Taken at face value, under those searches' waveform assumptions, the fixed template is already excluded for the loudest single events; what remains open is whether those bounds transfer to the rung template, since the published constraints are derived for specific echo waveform families and amplitude definitions whose equivalence to the fixed $(\varphi^{-1},\log\varphi)$ phase-and-delay structure has not been established. We state this tension rather than resolve it. If the bound-transfer analysis closes against the template, the signature is falsified at loud-event amplitudes and only the stacked sub-threshold regime survives; the fixed-template stacked search across the O4/O5 catalogs is in either case the decisive test, and its sensitivity calendar belongs to the observing collaborations.
+
+\statusbox{THEOREM (obstruction, algebra) / HYPOTHESIS (exterior mechanism)}{Obstruction: \lean{Gravity/EchoHorizonObstruction.lean} (\lean{bounce\_echo\_mechanism\_violates\_horizon\_causality}). Rung algebra: \lean{Gravity/EchoReflectionCoefficient.lean} (\lean{phi\_energy\_partition}, \lean{reflectionAmplitude\_sq}, \lean{phasePerRung}); channel separation \lean{Gravity/QGObservableSignalModels.lean} (\lean{all\_channels\_separated}). The bounce modules are deprecated algebra. A horizon-consistent observable echo mechanism is OPEN.}
+
+\part{Cosmology and the discriminating prediction}
+\label{part:cosmo}
+
+\section{The vacuum ledger and the 122-decade problem}
+\label{sec:vacuum}
+
+The Planck density is $\rho_{\mathrm{Pl}}=5.155\times10^{96}\ \mathrm{kg/m^{3}}$; the observed vacuum density is $5.878\times10^{-27}\ \mathrm{kg/m^{3}}$; the naive discrepancy spans 122.9 decades \cite{WeinbergCC}.
+
+The substrate assigns a rung address to every length scale: the number of $\varphi$-rungs between the Planck length and a horizon of size $L$ is $s=\ln(L/\ell_{\mathrm{Pl}})/\ln\varphi$. Holographic scaling (degrees of freedom on the boundary area, exponent $p=2$) gives
+\begin{equation}
+\rho_{\Lambda,\mathrm{RS}}=\rho_{\mathrm{Pl}}\cdot\varphi^{-2s},
+\label{eq:rungdensity}
+\end{equation}
+which simplifies to $\rho_{\Lambda,\mathrm{RS}}=\rho_{\mathrm{Pl}}\,\ell_{\mathrm{Pl}}^{2}/L^{2}$. The horizon is selected, not chosen: the ledger is defined on pairs of cells that have exchanged a comparison, which requires causal contact since the initial condition, and the maximal causally accumulated region is the particle horizon by definition. The Hubble radius is excluded because it is the instantaneous causal distance, not the accumulated total; the de Sitter event horizon is excluded because it is future-directed knowledge, and the ledger records only comparisons already made. For $L_{\mathrm{ph}}=4.38\times10^{26}$ m:
+\begin{equation}
+s=\log_{\varphi}(2.71\times10^{61})=294.0,\qquad n=2s=588,\qquad \varphi^{-588}=10^{-122.88},
+\label{eq:rungs}
+\end{equation}
+\begin{equation}
+\rho_{\Lambda,\mathrm{RS}}=\rho_{\mathrm{Pl}}\,\varphi^{-588}=6.7\times10^{-27}\ \mathrm{kg/m^{3}},
+\label{eq:vacresult}
+\end{equation}
+within 14\% (0.06 dex) of observation, against a 122.9-decade naive problem. The residual traces to the input cosmological parameters fixing $L_{\mathrm{ph}}$. The alternatives fail by construction and by magnitude: the Hubble radius gives exponent 583 and overshoots by an order of magnitude; the de Sitter horizon misses by a factor of several.
+
+Three cautions attach. The particle horizon depends on cosmic time while $\rho_{\Lambda}$ as used here does not; the formal treatment evaluates the horizon exponent once rather than re-evaluating it per epoch (the reading the cosmological principle requires of $\rho_{\Lambda}$), and this freezing is a modeling commitment with an internal tension we state rather than hide: the number in \eqref{eq:rungs} uses the \emph{present-day} particle horizon, so the freeze as computed is an evaluation at the present epoch, while a freeze at the vacuum's formation would require naming the formation epoch and solving the self-consistent problem $L_{\mathrm{ph}}[\rho_{\Lambda}]$ in which the horizon integral itself depends on the vacuum density it determines. That self-consistent solve is open; until it is done, \eqref{eq:vacresult} is a present-epoch consistency point, not a derivation of the vacuum's history. Second, in the holographic dark energy literature the particle-horizon choice is associated with a wrong equation of state for an evolving holographic fluid \cite{WangWangLi}; the RS object is a frozen vacuum density, not an evolving holographic fluid, and the two must not be conflated, but the tension is noted rather than resolved. Third, two structural contrasts: Weinberg's anthropic bound is consistent with observation but predicts no value, and string-vacuum statistics explain compatibility, not the number; equation \eqref{eq:vacresult} is a single number with no distribution behind it. If it is right, the multiverse machinery is unemployed; if it is wrong, the framework has no second draw.
+
+\statusbox{DERIVED-UNFORMALIZED (public tree) / reference-tier Lean}{Horizon selection and the $\varphi^{-2s}$ exponent are formalized in the reference-tier module \lean{Cosmology/VacuumHorizonForcing.lean} (\lean{causal\_accumulation\_selects\_particle\_horizon}, \lean{particleHorizonRungCount} $=294$), not independently verifiable in the public slice. The frozen-epoch reading is a MODEL commitment.}
+
+\section{Six objects, the static theorems, and the dynamic kernel}
+\label{sec:sixobjects}
+
+The dark-energy discussion keeps six objects separate, because they are logically distinct claims the literature routinely merges:
+\begin{enumerate}
+\item $\Omega_{\Lambda}=11/16-\alpha/\pi$, the present-day fraction;
+\item $\Lambda_{\mathrm{RS}}=3H_{0}^{2}\Omega_{\Lambda}$, the field-equation source at the Hubble scale;
+\item $\rho_{\mathrm{Pl}}\varphi^{-588}$, the horizon-exponent density track;
+\item $\rho_{\mathrm{vac}}=\Lambda_{\mathrm{RS}}/\kappa$, the vacuum-fluid density;
+\item $w=-1$, the static vacuum-fluid equation of state;
+\item $w(z)$, the dynamic observational kernel.
+\end{enumerate}
+Items 5 and 6 are different observables and must be compared against different data products; conflating them manufactures fake contradictions and fake confirmations alike. The separation has a sharp thermodynamic edge that we state explicitly rather than leave implicit: a covariantly conserved component with constant density has $w=-1$ identically, and no conserved fluid can simultaneously carry the CPL profile $w(a)=-1+A(1-a)$ with $A\neq 0$, since conservation would then force $\rho(a)=\rho_{0}e^{3A(1-a)}$, which is not constant. The kernel row is therefore not the equation of state of the vacuum fluid of row 5; it is the shape the framework forces on \emph{distance-inferred reconstructions}, in which recognition aging enters the observable comparison rather than the stress tensor. The effective distance-redshift map that carries a $w=-1$ vacuum onto the reconstruction \eqref{eq:kernel} is the open derivation joining the two rows; absent it, rows 5 and 6 are internally consistent only because they are claims about different measurement chains, and the paper flags their joint derivation as open rather than pretending one implies the other.
+
+\paragraph{The static theorems.} The fraction is stated as an identification, not a theorem: $11/16$ is identified as the passive-mode fraction of the substrate at $D=3$ with the eight-tick cadence and the ledger gap, and the correction is the same fine-structure constant the framework treats as a boundary datum. What the formal layer certifies is the arithmetic of the resulting expression (its interval, and that no continuous parameter enters); the passive-mode counting that produces $11/16$ is asserted by the owning module rather than derived from the forcing chain, and carries DERIVED-UNFORMALIZED status at best:
+\begin{equation}
+\Omega_{\Lambda}=\frac{11}{16}-\frac{\alpha}{\pi}\in(0.683,0.686),
+\label{eq:omegalambda}
+\end{equation}
+containing the Planck 2018 value $0.6847\pm0.0073$ \cite{Planck2018}. Because $\alpha$ enters, this quantity inherits the boundary-datum status of Section~\ref{sec:audit}. A structural caution, stated in the open: \eqref{eq:omegalambda} equates a present-day fraction, which changes with cosmic time, against a right side that does not change at all; the formal reading is that the identity holds at the present epoch, and the module owning it is separate from the dynamic kernel below, so their mutual consistency across epochs is an open audit item rather than a theorem. The static equation of state is exact: writing the cosmological term as a perfect fluid, $T^{\mathrm{vac}}_{\mu\nu}=-(\Lambda_{\mathrm{RS}}/\kappa)g_{\mu\nu}$ gives $p=-\rho$ and $w=-1$ identically, with covariant conservation by metric compatibility.
+
+\paragraph{The dynamic kernel.} Distance-inferred reconstructions of $w(z)$ are a different observable, and the framework forces their shape rather than leaving it free. The conserved cosmic-aging flow law $(1+z)\bigl(w(z)+1\bigr)=J(\varphi)$ has the unique solution
+\begin{equation}
+w(z)=-1+\frac{J(\varphi)}{1+z},\qquad J(\varphi)=\varphi-\tfrac32=0.1180\ldots,
+\label{eq:kernel}
+\end{equation}
+with no tunable coefficient. The raw present-day amplitude $J(\varphi)$ is attenuated by the recognition-aging dilution $\theta=\varphi^{-4}$, so the observable deviation today is
+\begin{equation}
+\delta w(0)=\varphi^{-4}J(\varphi)=0.0172\ldots
+\label{eq:deltaw}
+\end{equation}
+Mapped onto the standard two-parameter form $w(a)=w_{0}+w_{a}(1-a)$, the kernel with attenuation lands on the single point
+\begin{equation}
+(w_{0},w_{a})=\bigl(-1+\varphi^{-4}J(\varphi),\ -\varphi^{-4}J(\varphi)\bigr)\approx(-0.983,\,-0.017),
+\label{eq:cplpoint}
+\end{equation}
+close to the cosmological-constant corner and far from the large excursions some dataset combinations prefer. The kernel is not quintessence: no scalar field rolls; the deviation is recognition aging of the vacuum ledger; its shape is antitone in redshift with fixed amplitude; and a measured thawing or freezing trajectory of any other shape excludes it.
+
+Provenance, stated exactly. The flow law behind \eqref{eq:kernel} rests on a linear-accumulation shape premise that carries HYPOTHESIS provenance; the $\varphi^{-4}$ attenuation factor is forced relative to that premise (the occupancy-dilution factor is derived, with rigidity and an exact reparameterization, in the partial result of the dilution lane), but the shape premise itself is neither derived nor refuted. The DESI Y1 indication of evolving dark energy \cite{DESI} is therefore neither an automatic falsifier nor a confirmation: under the taxonomy above it must be compared against the kernel row \eqref{eq:kernel}, not the static row, and its current significance and sample dependence leave both rows viable. A stable reconstruction inconsistent with both rows kills the dark-energy sector outright; that is the sector's falsifier, and it is parameter-free on this side.
+
+\statusbox{THEOREM (static EoS, fraction interval arithmetic) / DERIVED-UNFORMALIZED (passive-mode identification of $11/16$) / HYPOTHESIS (shape provenance) / reference-tier (kernel forcing)}{Fraction interval: \lean{Cosmology/OmegaLambdaDerivation.lean} (\lean{omega\_lambda\_interval}, \lean{omega\_lambda\_zero\_free\_parameters}); the passive-mode counting behind $11/16$ is owned by that module as a definition, not derived from the forcing chain. Static EoS: \lean{Gravity/FullEFEWithDarkEnergy.lean} (\lean{vacuum\_eos}, \lean{vacuum\_stress\_conserved}). Kernel forcing: reference-tier \lean{Foundation/MaximalForcing/RSDarkEnergyShapeForcing.lean} (\lean{cosmicAgingFlow\_forces\_kernel}, \lean{w\_RS\_kernel\_eq\_CPL}); attenuation \lean{Cosmology/DarkEnergyStrongClosure.lean} (reference tier). Occupancy-dilution partial: THEOREM (commit \texttt{3b0525ec28}). Shape premise: HYPOTHESIS. The effective distance-redshift map joining rows 5 and 6 is OPEN.}
+
+\section{The discriminating prediction under a frozen gate}
+\label{sec:cplgate}
+
+The CPL point \eqref{eq:cplpoint} is the program's discriminating prediction, and its handling is preregistered. With $A_{\mathrm{RS}}=\varphi^{-4}J(\varphi)=(\varphi-\tfrac32)/(3\varphi+2)$, the target is
+\begin{equation}
+(w_{0},w_{a})_{\mathrm{RS}}=(-1+A_{\mathrm{RS}},\ -A_{\mathrm{RS}}).
+\label{eq:target}
+\end{equation}
+Three facts about the target are theorems. It lies exactly on the thawing sum rule
+\begin{equation}
+w_{0}+w_{a}=-1;
+\label{eq:sumrule}
+\end{equation}
+it lies in the certified coordinate window $-0.985<w_{0}<-0.982$, $-0.018<w_{a}<-0.015$; and it is distinct from the $\Lambda$CDM point $(-1,0)$. A fourth theorem is the exact local blocker: a physical equation of state realizes the target CPL curve throughout the physical redshift domain if and only if it has the named shape provenance (a ceiling profile obeying linear accumulation in the scale factor, with the observed deviation its forced $\varphi^{-4}$ occupancy image). The mathematical point is sharp; its physical identification is exactly as strong as the shape premise, no stronger and no weaker, and the theorem proves there is no additional freedom hiding between them.
+
+Confirmation is observational, never simulated. The observational test is frozen in a preregistered gate committed before any data examination: the sole primary dataset is the official DESI Year 3 joint two-parameter CPL confidence product for the collaboration combination DESI Y3 BAO + Planck CMB + Union3 supernovae, consumed as the published closed 95\% joint confidence region in the $(w_{0},w_{a})$ plane. PASS requires the exact RS point inside or on the boundary with $\Lambda$CDM strictly outside; FAIL is strict exclusion of the RS point, the frozen falsifier; both-inside is INCONCLUSIVE; and absence of the named product is WAITING, not a verdict. An instrument check requires the same contour-membership code to classify three fixed decoy points as outside before the RS result may be read. Even a PASS flips no ledger flag by itself: the formal shape-provenance gate must also close, and until both receipts exist the flag \lean{discriminating\_prediction\_confirmed} stays \lean{false}. As of this writing the gate is WAITING.
+
+\statusbox{THEOREM (target certification, blocker) / HYPOTHESIS (shape provenance) / OPEN (observation)}{\lean{Cosmology/Pillar3CPLForecastBlocker.lean}: \lean{target\_sum\_rule}, \lean{target\_coordinate\_window}, \lean{target\_distinct\_from\_LambdaCDM}, \lean{physicalForecast\_iff\_shapeProvenance}, \lean{discriminating\_prediction\_still\_awaits\_observation}; standard trio. Frozen gate: \texttt{plans/QG\_Pillar3\_CPL\_Forecast\_Gate\_20260717.html} (branch \texttt{qg-seven-gaps-20260714}); the freeze commit is the receipt.}
+
+\part{The frontier, machine-certified}
+\label{part:frontier}
+
+\section{The seven benchmark flags and the certified-blocker architecture}
+\label{sec:flags}
+
+Every quantum gravity program has a frontier. What distinguishes this one is that its frontier is machine-checked: a kernel-verified ledger records exactly which benchmarks are closed, and for most open benchmarks a certified blocker theorem proves that the target does not follow from the currently available structure and names the exact missing premise. A reader can verify not only what we claim to have proved but what we claim not to have proved, and why.
+
+\subsection{The flag ledger}
+
+The module \lean{Gravity/SevenGaps/FullTheoryLedger.lean} defines a structure of seven boolean benchmark flags, one per benchmark of the full theory in the strongest sense, organized under three pillars:
+\begin{enumerate}
+\item \textbf{Classical recovery} at all three strengths in the 4D Lorentzian continuum limit: flags \lean{gap\_action\_recovery}, \lean{gap4\_operator\_recovery}, \lean{gap5\_constraint\_recovery}, \lean{gap6\_lorentzian\_action}.
+\item \textbf{A well-defined quantum amplitude}: flags \lean{gap1\_bridge\_derived} (the substrate-to-geometry bridge) and \lean{gap2\_continuum\_and\_measure} (the path-sum measure with a proved limit).
+\item \textbf{A confirmed discriminating prediction}: flag \lean{discriminating\_prediction\_confirmed}.
+\end{enumerate}
+Every field documents the exact target theorem whose kernel-checked existence licenses flipping it. A flag flips only when that named theorem builds with a clean axiom audit and passes adversarial review. The closure criterion is a definition, $\lean{FullTheoryClosed}=\text{all three pillars closed}$, so the eventual closure claim cannot drift from the flags. The master self-audit,
+\begin{center}
+\lean{theorem full\_theory\_not\_yet\_closed :\ }$\neg$\,\lean{FullTheoryClosed fullTheoryBenchmarks},
+\end{center}
+is provable today and must fail to build the moment the flags flip: the ledger cannot silently coexist with a closure claim. As of this writing all seven flags are \lean{false}. The ledger also anchors to the campaign starting line (\lean{starting\_line\_anchored}), so it cannot contradict the machine-checked record it extends.
+
+\subsection{Flag-by-flag status}
+
+Table~\ref{tab:flags} is the complete accounting, current as of the Wave 2 terminal audit (2026-07-17). Every blocker cited built on the compute cluster with exit 0 and an axiom audit of exactly \lean{[propext, Classical.choice, Quot.sound]}, zero \lean{sorry}; the ledger wiring passed an adversarial review that specifically checked for circularity and flag undercounting.
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{p{0.26\linewidth}p{0.20\linewidth}p{0.46\linewidth}}
+\toprule
+Flag & Status & Certified content and named closing condition\\
+\midrule
+\lean{gap1\_bridge\_derived} & certified blocker & Bare ledger provably cannot select the signed deficit source; named coupling closes the ratio bridge conditionally (\lean{gap1\_bridge\_blocker\_certified}). Closing: \lean{recognition\_ratio\_derived} from substrate alone, plus Regge validation.\\
+\lean{gap2\_continuum\_and\_measure} & certified blockers, one sub-premise discharged & Measure characterization + decoy failure; Cauchy iff oscillatory tail; zero phase refuted; cap-shell bridge proved; shell-balance and metric-carrier blockers (five ledger theorems). Closing: \lean{Z\_RS\_continuum\_limit} with a substrate-derived measure.\\
+\lean{gap6\_lorentzian\_action} & open & Hinge-data Wick continuation complete for both causal 4-simplex types (commit \texttt{e61f9f4cce}); interior-hinge action-level continuation remains. Closing: \lean{CausalSimplex4D} + \lean{wick\_action\_continuation\_4d}.\\
+\lean{gap4\_operator\_recovery} & certified blocker & Flat spectrum underdetermines the curved coupling (\lean{gap4\_curvature\_coupling\_blocker\_certified}). Closing: \lean{discrete\_tt\_spectrum\_converges\_curved} + \lean{quasinormal\_mode\_spectrum}.\\
+\lean{gap5\_constraint\_recovery} & certified blocker & Fixed background weights represent only phase-space-constant structure functions (\lean{gap5\_structure\_function\_blocker\_certified}). Closing: \lean{dirac\_algebra\_continuum\_limit} + \lean{hojman\_pins\_general\_relativity}.\\
+\lean{gap\_action\_recovery} & open, first stage landed & Continuum TT symbol limit proved (Theorem~\ref{thm:continuum}); isotropy value $-1/4$ certified in exact symbolic arithmetic via the closed form \eqref{eq:adjclosed}, kernel formalization OPEN. Closing: \lean{edge\_tt\_decomposition} + \lean{S\_RS\_converges\_EH\_4d}.\\
+\lean{discriminating\_prediction\_confirmed} & prediction certified, observation pending & CPL target sum rule, window, $\Lambda$CDM separation, and exact provenance blocker are theorems; frozen observational gate WAITING (Section~\ref{sec:cplgate}).\\
+\bottomrule
+\end{tabular}
+\caption{The seven benchmark flags of \lean{FullTheoryLedger.lean}, all currently \lean{false}, with the certified content standing behind each and the named theorem whose existence flips it.}
+\label{tab:flags}
+\end{table}
+
+\subsection{Why a certified map of the unproved is a result}
+\label{sec:whyblockers}
+
+A blocker theorem is not a status flag and not an admission of defeat; it is a theorem, with the same kernel check as any other, whose content is an exact non-derivability statement: \emph{the target does not follow from structure $X$, and the missing premise is exactly $Y$}. This does three things no prose frontier list can do.
+
+First, it prevents circular closure. The single most dangerous failure mode of a formalization-assisted physics program is proving the target from an assumption that quietly contains it. The bridge blocker of Section~\ref{sec:bridge} is the model case: the tempting constrained-budget route is proved circular, and the named coupling premise is proved to not mention the conclusion, so the conditional closure that accompanies the blocker is guaranteed non-circular by construction.
+
+Second, it converts frontier work from search to specification. Each blocker reduces an open benchmark to a named object: one phase with an oscillatory tail; one gauge-counting derivation; one dynamic structure function; one curvature endomorphism; one shape-provenance derivation. A researcher, human or machine, attacking any of these knows exactly what would count as success, and the ledger will accept nothing less.
+
+Third, it makes the program falsifiable at the metalevel. The master theorem \lean{full\_theory\_not\_yet\_closed} is a standing, kernel-checked admission that the theory is not finished, published in the same repository as the results. When a future version of this program claims closure, the claim will be checkable by anyone who can run a build: the flag definitions cannot drift, the anchor theorem pins the starting line, and the closure criterion is a definition rather than prose. We are aware of no other quantum gravity program that publishes a machine-checked map of exactly what it has not yet proved. We offer the architecture itself, independent of RS, as a methodological contribution.
+
+\subsection{Honest summary of the distance to closure}
+
+Stated without decoration. Pillar 1 has one proved continuum limit (the TT symbol), strong numerics, and three certified blockers naming the missing curvature coupling, structure function, and Lorentzian interior continuation. Pillar 2 is fully blocker-certified: the bridge needs one named coupling derived, the measure needs one counting principle derived, and the regulator needs one phase witness; the carrier bridge sub-premise is discharged. Pillar 3 has a sharp certified target under a frozen gate, waiting on data and on one shape premise. The remaining OPEN premises, in the ledger's own words: the \lean{OscillatoryTail} substrate phase, the ledger-to-gauge-density coupling, the metric-refined carrier, the dynamic structure function, and observational CPL confirmation. Everything else in this paper stands independently of how those five resolve, and each of the five carries a machine-checked specification of exactly what resolving it requires.
+
+\section*{Data and code availability}
+The Lean modules cited in the status boxes are public at \url{https://github.com/jonwashburn/shape-of-logic} where marked buildable, with reference-tier modules included for review as described in Section~\ref{sec:method}; the full-theory ledger and Wave 2 blockers live on branch \texttt{qg-seven-gaps-20260714}. The numerical convergence scripts are \texttt{qg\_regge\_schwarzschild.py} and \texttt{qg\_regge\_desitter.py} (\url{https://recognitionphysics.org/gravity/regge}).
+
+\begin{thebibliography}{99}
+
+\bibitem{Penrose1965} R.~Penrose, Gravitational collapse and space-time singularities, \emph{Phys.\ Rev.\ Lett.} \textbf{14}, 57--59 (1965).
+\bibitem{HawkingPenrose1970} S.~W.~Hawking and R.~Penrose, The singularities of gravitational collapse and cosmology, \emph{Proc.\ Roy.\ Soc.\ Lond.\ A} \textbf{314}, 529--548 (1970).
+\bibitem{Wald} R.~M.~Wald, \emph{General Relativity}, University of Chicago Press (1984).
+\bibitem{Carroll} S.~M.~Carroll, \emph{Spacetime and Geometry: An Introduction to General Relativity}, Cambridge University Press (2019).
+\bibitem{Weinberg1965} S.~Weinberg, Photons and gravitons in perturbation theory: derivation of Maxwell's and Einstein's equations, \emph{Phys.\ Rev.} \textbf{138}, B988--B1002 (1965).
+\bibitem{tHooftVeltman} G.~'t~Hooft and M.~J.~G.~Veltman, One-loop divergencies in the theory of gravitation, \emph{Ann.\ Inst.\ H.\ Poincar\'e Phys.\ Theor.\ A} \textbf{20}, 69--94 (1974).
+\bibitem{GoroffSagnotti} M.~H.~Goroff and A.~Sagnotti, Quantum gravity at two loops, \emph{Phys.\ Lett.\ B} \textbf{160}, 81--86 (1985).
+\bibitem{Weinberg1979} S.~Weinberg, Ultraviolet divergences in quantum theories of gravitation, in \emph{General Relativity: An Einstein Centenary Survey}, eds.\ S.~W.~Hawking and W.~Israel, 790--831 (1979).
+\bibitem{Eichhorn} A.~Eichhorn, Asymptotically safe gravity, in \emph{57th International School of Subnuclear Physics: In Search for the Unexpected} (2020).
+\bibitem{Mukhi} S.~Mukhi, String theory: a perspective over the last 25 years, \emph{Class.\ Quant.\ Grav.} \textbf{28}, 153001 (2011).
+\bibitem{Regge} T.~Regge, General relativity without coordinates, \emph{Nuovo Cim.} \textbf{19}, 558--571 (1961).
+\bibitem{RocekWilliams} M.~Rocek and R.~M.~Williams, The quantization of Regge calculus, \emph{Z.\ Phys.\ C} \textbf{21}, 371 (1984).
+\bibitem{Williams1992} R.~M.~Williams, Discrete quantum gravity: the Regge calculus approach, \emph{Int.\ J.\ Mod.\ Phys.\ B} \textbf{6}, 2097--2108 (1992).
+\bibitem{WilliamsTuckey} R.~M.~Williams and P.~A.~Tuckey, Regge calculus: a brief review and bibliography, \emph{Class.\ Quant.\ Grav.} \textbf{9}, 1409 (1992).
+\bibitem{RovelliVidotto} C.~Rovelli and F.~Vidotto, \emph{Covariant Loop Quantum Gravity}, Cambridge University Press (2014).
+\bibitem{BarrettWilliams} J.~W.~Barrett and R.~M.~Williams, The asymptotics of an amplitude for the four simplex, \emph{Adv.\ Theor.\ Math.\ Phys.} \textbf{3}, 209--215 (1999).
+\bibitem{BianchiModesto} E.~Bianchi and L.~Modesto, The perturbative Regge-calculus regime of loop quantum gravity, \emph{Nucl.\ Phys.\ B} \textbf{796}, 581--621 (2008).
+\bibitem{ConradyFreidel} F.~Conrady and L.~Freidel, On the semiclassical limit of 4d spin foam models, \emph{Phys.\ Rev.\ D} \textbf{78}, 104023 (2008).
+\bibitem{Loll} R.~Loll, Quantum gravity from causal dynamical triangulations: a review, \emph{Class.\ Quant.\ Grav.} \textbf{37}, 013002 (2020).
+\bibitem{Wilson} K.~G.~Wilson, Confinement of quarks, \emph{Phys.\ Rev.\ D} \textbf{10}, 2445--2459 (1974).
+\bibitem{CausalSets} L.~Bombelli, J.~Lee, D.~Meyer, and R.~D.~Sorkin, Space-time as a causal set, \emph{Phys.\ Rev.\ Lett.} \textbf{59}, 521--524 (1987).
+\bibitem{BombelliHensonSorkin} L.~Bombelli, J.~Henson, and R.~D.~Sorkin, Discreteness without symmetry breaking: a theorem, \emph{Mod.\ Phys.\ Lett.\ A} \textbf{24}, 2579--2587 (2009).
+\bibitem{Wolfram} S.~Wolfram, A class of models with the potential to represent fundamental physics, \emph{Complex Syst.} \textbf{29}, 107--536 (2020).
+\bibitem{Gorard} J.~Gorard, Some relativistic and gravitational properties of the Wolfram model, \emph{Complex Syst.} \textbf{29}, 599--654 (2020).
+\bibitem{Oppenheim} J.~Oppenheim, A postquantum theory of classical gravity?, \emph{Phys.\ Rev.\ X} \textbf{13}, 041040 (2023).
+\bibitem{OppenheimTest} J.~Oppenheim, C.~Sparaciari, B.~\v{S}oda, and Z.~Weller-Davies, Gravitationally induced decoherence vs space-time diffusion: testing the quantum nature of gravity, \emph{Nature Commun.} \textbf{14}, 7910 (2023).
+\bibitem{uniqueness} J.~Washburn and M.~Zlatanovi\'c, Uniqueness of the canonical reciprocal cost, \emph{Mathematics} \textbf{14}(6), 935 (2026).
+\bibitem{DAlembertInevitability} J.~Washburn, M.~Zlatanovi\'c, and E.~Allahyarov, The d'Alembert inevitability theorem, \emph{Mathematics} \textbf{14}(8), 1386 (2026).
+\bibitem{CoherentComparisonLedger} S.~Pardo-Guerra, A.~Thapa, M.~Simons, and J.~Washburn, Coherent comparison as information cost: axiomatic foundations for discrete ledger dynamics, \emph{Foundations} \textbf{6}(2), 17 (2026), doi:10.3390/foundations6020017.
+\bibitem{EntropyGalaxy} M.~Simons, E.~Allahyarov, and J.~Washburn, A discrete informational framework for classical gravity: ledger foundations and galaxy rotation curve constraints, \emph{Entropy} \textbf{28}(4), 477 (2026).
+\bibitem{Lean4} L.~de~Moura and S.~Ullrich, The Lean 4 theorem prover and programming language, Springer-Verlag (2021).
+\bibitem{Aczel} J.~Acz\'el, \emph{Lectures on Functional Equations and Their Applications}, Academic Press, New York (1966).
+\bibitem{QGrewrite} J.~Washburn and P.~Beltracchi, Formalizing RS quantum gravity with machine checked theorems: results and targets, Recognition Physics Institute preprint (2026).
+\bibitem{CMS} J.~Cheeger, W.~M\"uller, and R.~Schrader, On the curvature of piecewise flat spaces, \emph{Commun.\ Math.\ Phys.} \textbf{92}, 405 (1984).
+\bibitem{Brewin2000} L.~Brewin, Is the Regge calculus a consistent approximation to general relativity?, \emph{Gen.\ Rel.\ Grav.} \textbf{32}, 897--918 (2000).
+\bibitem{Miller} M.~A.~Miller, Regge calculus as a fourth-order method in numerical relativity, \emph{Class.\ Quant.\ Grav.} \textbf{12}, 3037--3051 (1995).
+\bibitem{BrewinGentle} L.~C.~Brewin and A.~P.~Gentle, On the convergence of Regge calculus to general relativity, \emph{Class.\ Quant.\ Grav.} \textbf{18}, 517--525 (2001).
+\bibitem{ParattuNull} K.~Parattu, S.~Chakraborty, B.~R.~Majhi, and T.~Padmanabhan, A boundary term for the gravitational action with null boundaries, \emph{Gen.\ Rel.\ Grav.} \textbf{48}, 94 (2016).
+\bibitem{HartleSorkin} J.~B.~Hartle and R.~Sorkin, Boundary terms in the action for the Regge calculus, \emph{Gen.\ Rel.\ Grav.} \textbf{13}, 541--549 (1981).
+\bibitem{Hamber} H.~W.~Hamber, Quantum gravity on the lattice, \emph{Gen.\ Rel.\ Grav.} \textbf{41}, 817--876 (2009).
+\bibitem{Bose} S.~Bose et al., Spin entanglement witness for quantum gravity, \emph{Phys.\ Rev.\ Lett.} \textbf{119}, 240401 (2017).
+\bibitem{MarlettoVedral} C.~Marletto and V.~Vedral, Gravitationally-induced entanglement between two massive particles is sufficient evidence of quantum effects in gravity, \emph{Phys.\ Rev.\ Lett.} \textbf{119}, 240402 (2017).
+\bibitem{ChristodoulouRovelli} M.~Christodoulou and C.~Rovelli, On the possibility of laboratory evidence for quantum superposition of geometries, \emph{Phys.\ Lett.\ B} \textbf{792}, 64--68 (2019).
+\bibitem{KaulMajumdar} R.~K.~Kaul and P.~Majumdar, Logarithmic correction to the Bekenstein-Hawking entropy, \emph{Phys.\ Rev.\ Lett.} \textbf{84}, 5255--5257 (2000).
+\bibitem{Carlip} S.~Carlip, Logarithmic corrections to black hole entropy from the Cardy formula, \emph{Class.\ Quant.\ Grav.} \textbf{17}, 4175--4186 (2000).
+\bibitem{Gour} G.~Gour, Algebraic approach to quantum black holes: logarithmic corrections to black hole entropy, \emph{Phys.\ Rev.\ D} \textbf{66}, 104022 (2002).
+\bibitem{JingYan} J.~Jing and M.-L.~Yan, Statistical entropy of the static dilaton black holes from the Cardy formulas, \emph{Phys.\ Rev.\ D} \textbf{63}, 024003 (2001).
+\bibitem{MukherjiPal} S.~Mukherji and S.~S.~Pal, Logarithmic corrections to black hole entropy and AdS/CFT correspondence, \emph{JHEP} \textbf{05}, 026 (2002).
+\bibitem{GhoshMitra} A.~Ghosh and P.~Mitra, A bound on the log correction to the black hole area law, \emph{Phys.\ Rev.\ D} \textbf{71}, 027502 (2005).
+\bibitem{Sen} A.~Sen, Logarithmic corrections to Schwarzschild and other non-extremal black hole entropy in different dimensions, \emph{JHEP} \textbf{04}, 156 (2013).
+\bibitem{Page} D.~N.~Page, Information in black hole radiation, \emph{Phys.\ Rev.\ Lett.} \textbf{71}, 3743--3746 (1993).
+\bibitem{AEMM} A.~Almheiri, N.~Engelhardt, D.~Marolf, and H.~Maxfield, The entropy of bulk quantum fields and the entanglement wedge of an evaporating black hole, \emph{JHEP} \textbf{12}, 063 (2019).
+\bibitem{Penington} G.~Penington, Entanglement wedge reconstruction and the information paradox, \emph{JHEP} \textbf{09}, 002 (2020).
+\bibitem{AMMZ} A.~Almheiri, R.~Mahajan, J.~Maldacena, and Y.~Zhao, The Page curve of Hawking radiation from semiclassical geometry, \emph{JHEP} \textbf{03}, 149 (2020).
+\bibitem{PoissonIsrael} E.~Poisson and W.~Israel, Structure of the black hole nucleus, \emph{Class.\ Quant.\ Grav.} \textbf{5}, L201 (1988).
+\bibitem{FrolovMarkovMukhanov1} V.~P.~Frolov, M.~A.~Markov, and V.~F.~Mukhanov, Through a black hole into a new universe?, \emph{Phys.\ Lett.\ B} \textbf{216}, 272--276 (1989).
+\bibitem{FrolovMarkovMukhanov2} V.~P.~Frolov, M.~A.~Markov, and V.~F.~Mukhanov, Black holes as possible sources of closed and semiclosed worlds, \emph{Phys.\ Rev.\ D} \textbf{41}, 383--394 (1990).
+\bibitem{CardosoPani} V.~Cardoso and P.~Pani, Testing the nature of dark compact objects: a status report, \emph{Living Rev.\ Rel.} \textbf{22}, 4 (2019).
+\bibitem{Abedi} J.~Abedi, H.~Dykaar, and N.~Afshordi, Echoes from the abyss: tentative evidence for Planck-scale structure at black hole horizons, \emph{Phys.\ Rev.\ D} \textbf{96}, 082004 (2017).
+\bibitem{Westerweck} J.~Westerweck et al., Low significance of evidence for black hole echoes in gravitational wave data, \emph{Phys.\ Rev.\ D} \textbf{97}, 124037 (2018).
+\bibitem{Tsang} K.~W.~Tsang et al., A morphology-independent search for gravitational wave echoes in data from the first and second observing runs of Advanced LIGO and Advanced Virgo, \emph{Phys.\ Rev.\ D} \textbf{101}, 064012 (2020).
+\bibitem{WeinbergCC} S.~Weinberg, The cosmological constant problem, \emph{Rev.\ Mod.\ Phys.} \textbf{61}, 1--23 (1989).
+\bibitem{WangWangLi} S.~Wang, Y.~Wang, and M.~Li, Holographic dark energy, \emph{Phys.\ Rept.} \textbf{696}, 1--57 (2017).
+\bibitem{DESI} A.~G.~Adame et al.\ (DESI), DESI 2024 VI: cosmological constraints from the measurements of baryon acoustic oscillations, \emph{JCAP} \textbf{02}, 021 (2025).
+\bibitem{Planck2018} N.~Aghanim et al.\ (Planck), Planck 2018 results. VI. Cosmological parameters, \emph{Astron.\ Astrophys.} \textbf{641}, A6 (2020).
+\bibitem{ADM} R.~L.~Arnowitt, S.~Deser, and C.~W.~Misner, The dynamics of general relativity, \emph{Gen.\ Rel.\ Grav.} \textbf{40}, 1997--2027 (2008).
+\bibitem{ReyesADM} C.~M.~Reyes, C.~Riquelme, and M.~Schreck, The ABC of the ADM formulation in gravity, course notes, PhD Consortium Program School (UNAP-UBB), Iquique, Chile (2024).
+\bibitem{HKT} S.~A.~Hojman, K.~Kucha\v{r}, and C.~Teitelboim, Geometrodynamics regained, \emph{Annals Phys.} \textbf{96}, 88--135 (1976).
+\bibitem{Isham} C.~J.~Isham, Canonical quantum gravity and the problem of time, in \emph{Integrable Systems, Quantum Groups, and Quantum Field Theories}, Kluwer (1993).
+
+\end{thebibliography}
+
+\end{document}

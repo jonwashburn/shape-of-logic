@@ -1,0 +1,479 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\adjE}{adj}
+\DeclareMathOperator{\tr}{tr}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\TT}{\mathrm{TT}}
+\newcommand{\trans}{\mathsf{T}}
+
+\title{Exact continuum limit of the transverse-traceless Regge symbol:\\
+an adjugate closed form and the isotropic Einstein--Hilbert coefficient}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We prove a continuum limit for the transverse-traceless (TT) Bloch symbol of the Regge action on a periodic three-dimensional Euclidean lattice triangulated by the Kuhn--Freudenthal scheme. For every real polarization matrix $E$ and every nonzero integer wave vector $m\in\Z^{3}$, the second variation of the true nonlinear Regge action along a plane-wave edge perturbation, taken per unit cell and divided by the squared commensurate momentum $|k_N|^2$ with $k_N = 2\pi m/N$, converges as $N\to\infty$ to a finite hinge-bucket moment $\mathcal{M}_{\TT}(\hat m, E)$ evaluated at the fixed direction $\hat m = m/|m|$. This limit moment admits an exact closed form: for every symmetric $E$ and every direction $x$, before any transverse-traceless reduction, $K(x,E)=\tfrac12\, x^{\trans}\adjE(E)\,x$, where $\adjE(E)$ is the $3\times 3$ adjugate. The symbol is therefore $O(3)$-covariant outright, and the cubic-anisotropy component permitted by the lattice point group vanishes identically, not merely to some order. On the TT constraint surface ($\tr E = 0$, $Ex = 0$) the adjugate collapses and $K(x,E) = -\tfrac14\,|x|^2\,\langle E,E\rangle$ exactly, for all directions, so the normalized symbol equals the linearized Einstein--Hilbert TT coefficient $-1/4$ in these conventions. All three statements are theorems. The scope is three-dimensional Euclidean geometry at the strength of action convergence; the four-dimensional Lorentzian recovery, operator-strength recovery, and constraint-algebra recovery are open and are stated as such.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Regge's simplicial formulation of general relativity \cite{Regge} replaces the smooth metric by edge lengths on a triangulated manifold and the Ricci scalar by deficit angles concentrated on codimension-two hinges. The Regge action,
+\begin{equation}
+S \;=\; \frac{1}{\kappa}\sum_{\sigma} A_{\sigma}\,\delta_{\sigma},
+\label{eq:regge}
+\end{equation}
+with $A_\sigma$ the hinge measure and $\delta_\sigma$ the deficit angle, is the standard discrete stand-in for the Einstein--Hilbert action, and its relation to the continuum has been studied from several directions. Cheeger, M\"uller, and Schrader \cite{CMS} proved that on fat triangulations of a Riemannian manifold the Regge action converges to the Hilbert action, with a worst-case rate of order $h^{1/2}$ in the mesh size; the Lorentzian analogue is not known in comparable generality, and Brewin's analyses \cite{Brewin} counsel caution there, although numerical work supports some version of the statement. Ro\v{c}ek and Williams \cite{RocekWilliams} developed the flat-background quadratic expansion of the Regge action, showing that on a hypercubic lattice the second variation organizes into a graph-Laplacian quadratic form; this expansion is the closest technical antecedent of the Bloch-symbol structure used below. Hamber and collaborators \cite{Hamber, HamberWilliams} pursued quantum Regge calculus, including the lattice graviton propagator and the loop-deficit relation for curvature. Causal dynamical triangulations \cite{AJL, Loll} implement a Lorentzian simplicial path sum with a bare gravitational coupling to be tuned; the setting of the present paper is parameter free, which is a relevant contrast. In loop quantum gravity, spin-foam amplitudes reproduce the Regge action in the large-spin limit \cite{BarrettWilliams, ConradyFreidel, BianchiModesto}, providing the other principal route by which a discrete quantum theory of geometry meets simplicial classical gravity.
+
+Against this background, the contribution of the present paper is narrow and, we believe, sharp. It is not the statement that the Regge action has a continuum limit; that is known in several senses. It is the following chain, each link of which is a proved theorem.
+
+\begin{itemize}
+\item[(A)] The transverse-traceless Bloch symbol of the true nonlinear Regge action on the periodic Freudenthal-triangulated cubic torus, normalized by the squared momentum, converges as the lattice side $N\to\infty$ to a finite hinge-bucket moment at fixed mode direction. This is a genuine limit of the actual finite Regge object as the lattice grows, with no unproved hypotheses and no finite-size surrogate.
+\item[(B)] The limit moment has an exact algebraic closed form: for every symmetric polarization $E$ and every direction $x$, before any TT reduction,
+\begin{equation}
+K(x,E) \;=\; \tfrac12\, x^{\trans}\adjE(E)\, x,
+\label{eq:adjintro}
+\end{equation}
+with $\adjE(E)$ the adjugate (classical adjoint) of $E$. The right-hand side is a rotational invariant. The symbol is therefore $O(3)$-covariant outright, even though only the discrete octahedral point group was built into the lattice, and the cubic-anisotropy component that cubic symmetry alone would permit is identically zero, not merely small.
+\item[(C)] On the transverse-traceless constraint surface ($\tr E = 0$, $Ex = 0$) the adjugate collapses by an eigenvalue argument, giving
+\begin{equation}
+K(x,E) \;=\; -\tfrac14\,|x|^2\,\langle E,E\rangle
+\label{eq:isointro}
+\end{equation}
+exactly, for all directions. With unit-normalized data the normalized TT symbol equals exactly $-1/4$, the linearized Einstein--Hilbert coefficient in these conventions. The discrete action propagates a TT wave with precisely the Einstein--Hilbert strength, isotropically, as an identity.
+\end{itemize}
+
+This closes, as an exact statement, what earlier stages of this program had only as exact-symbolic and high-precision numerical evidence: a preregistered fourteen-direction probe found the value $-1/4$ with a refit cubic-anisotropy ratio bounded by $|c/a|\le 1.5\times 10^{-19}$. The theorem chain supersedes that evidence.
+
+The scope must be stated as plainly as the result. Everything proved here lives in three-dimensional Euclidean geometry, at the strength of action convergence. Physics is four-dimensional and Lorentzian, and recovering it requires further named ingredients (a four-dimensional transverse-traceless edge decomposition and the convergence of the relevant action to the Einstein--Hilbert action in the four-dimensional limit) that are open, together with recovery at operator strength and at constraint-algebra strength, which are also open. Section \ref{sec:scope} spells this out. We also disclose a finite-size aliasing caveat: the finite assembly identity feeding the limit holds at non-aliased side lengths, and the limit consumes it in eventual-filter form, which is all a limit requires.
+
+The paper is organized as follows. Section \ref{sec:setup} defines the discrete setup and the finite Bloch symbol. Section \ref{sec:limit} states and proves the continuum-limit theorem (Result A). Section \ref{sec:adjugate} presents the adjugate closed form (Result B), including the exact remainder for non-symmetric $E$. Section \ref{sec:isotropy} carries out the TT reduction to $-1/4$ (Result C). Section \ref{sec:scope} delimits what is established and what is not. Section \ref{sec:discussion} discusses significance and the path to four dimensions, and Section \ref{sec:conclusion} concludes. An appendix records a formalization remark.
+
+\section{The discrete setup and the finite Bloch symbol}
+\label{sec:setup}
+
+\subsection{Lattice, triangulation, and conventions}
+
+We work on the periodic cubic lattice $(\Z/N\Z)^3$ with unit lattice spacing, triangulated by the Kuhn--Freudenthal scheme \cite{Freudenthal, Kuhn}: for each base point $x$ and each permutation $\pi$ of $\{0,1,2\}$, one tetrahedron has vertices
+\[
+x,\qquad x+e_{\pi(0)},\qquad x+e_{\pi(0)}+e_{\pi(1)},\qquad x+e_0+e_1+e_2,
+\]
+so each unit cube is split into six simplices along a fixed body diagonal in a translation-consistent way. The torus topology removes boundary terms. The ambient geometry is three-dimensional Euclidean, so hinge measures are nonnegative, deficit angles and the action are real, and the flat-background action and curvature vanish identically. In three dimensions the codimension-two hinges are edges and the hinge measures are edge lengths, so the Regge action \eqref{eq:regge} is $\kappa^{-1}\sum_n L_n \delta_n$ over hinge edges $n$, with $\delta_n = 2\pi - \sum_{T\supset n}\theta_{n,T}$ built from the tetrahedral dihedral angles.
+
+Two limitations of the setting are flagged at once. First, physics is ultimately four-dimensional and Lorentzian; the present results are three-dimensional and Euclidean, and Section \ref{sec:scope} treats the gap. Second, a pure vertex-conformal deformation of the lattice cannot reach the full transverse-traceless sector: a rectangle or shear mode with unequal horizontal and vertical conformal log-strains has no vertex-conformal realization. Probing the TT sector therefore requires deformations specified at the level of edges, which is exactly what the plane-wave family below provides.
+
+Indices of matrix and vector entries run over $0,1,2$ throughout. For $x\in\R^3$ and a real $3\times 3$ matrix $E$ we write $x^{\trans} E x = \sum_{i,j} E_{ij}\, x_i x_j$, and $\langle E, E\rangle = \sum_{i,j} E_{ij}^2$ denotes the squared Frobenius norm. The adjugate $\adjE(E)$ is the transpose of the cofactor matrix, characterized by $E\,\adjE(E) = \adjE(E)\,E = (\det E)\,I$; it is defined for singular as well as invertible matrices.
+
+Every edge of the triangulation is specified by a base point $x\in(\Z/N\Z)^3$ and a displacement class $D_d\in\{0,1\}^3\setminus\{0\}$: three axis classes with $|D_d|^2=1$, three face-diagonal classes with $|D_d|^2=2$, and one body-diagonal class with $|D_d|^2=3$. The flat background assigns to each edge the Euclidean length $\ell_{\mathrm{flat}}(D_d)=|D_d|$.
+
+\subsection{The plane-wave edge perturbation}
+
+Fix an integer wave vector $m\in\Z^3$, $m\neq 0$, and a real polarization matrix $E$; the physically relevant case is $E$ symmetric. On the side-$N$ torus the commensurate momentum is $k_N = 2\pi m / N$, and we write $q_N = 2\pi/N$, so that $|k_N|^2 = q_N^2\,|m|^2$ exactly. The plane-wave edge perturbation with the midpoint phase convention is the one-parameter family of squared edge lengths
+\begin{equation}
+\ell^{2}_{e}(t) \;=\; \ell^{2}_{\mathrm{flat}} \;+\; t\,\bigl(E\cdot D_d\otimes D_d\bigr)\,\cos\!\bigl(k_N\cdot(x + D_d/2)\bigr),
+\label{eq:planewave}
+\end{equation}
+where $E\cdot D_d\otimes D_d = \sum_{i,j} E_{ij}\,(D_d)_i (D_d)_j = D_d^{\trans}E\,D_d$. The midpoint $x + D_d/2$ makes the phase assignment symmetric under edge reversal, which is what a metric perturbation $h_{ij}\cos(k\cdot y)$ sampled along an edge would produce at leading order. Since $D_d\otimes D_d$ is symmetric, the family \eqref{eq:planewave} sees only the symmetric part of $E$; we nonetheless track general $E$ through the algebra of Section \ref{sec:adjugate}, because the unrestricted identity is stronger and makes the origin of isotropy transparent. For sufficiently small $|t|$ every squared length is positive and every Cayley--Menger determinant remains positive, so the family is a genuine Euclidean piecewise-flat geometry with real action.
+
+\subsection{The finite Bloch symbol}
+
+Let $S_N(t)$ denote the true nonlinear Regge action of the deformed torus, computed from the exact simplicial dihedral angles of the perturbed edge lengths \eqref{eq:planewave}. On the flat background every deficit angle vanishes, so $S_N(0)=0$; the first variation also vanishes, term by term through the Schl\"afli identity \cite{RocekWilliams, CMS}, so the first nontrivial data is the second variation.
+
+\begin{definition}[Finite Bloch symbol]
+\label{def:symbol}
+The finite Bloch symbol of the Regge action at polarization $E$ and mode $m$ on the side-$N$ torus is the centered second difference of the action along the family \eqref{eq:planewave}, per unit cell:
+\begin{equation}
+H_N(E,m) \;=\; \frac{1}{N^3}\,\lim_{t\to 0}\frac{S_N(t)-2S_N(0)+S_N(-t)}{t^2}
+\;=\;\frac{1}{N^3}\,S_N''(0),
+\end{equation}
+the second equality holding because $S_N$ is analytic in $t$ near $0$. The normalized symbol is $H_N(E,m)/|k_N|^2$.
+\end{definition}
+
+The continuum reading is as follows. For a metric perturbation $h_{ij} = t\,E_{ij}\cos(k\cdot y)$ the linearized Einstein--Hilbert action per unit volume is a quadratic form in $E$ with an overall factor $|k|^2$; on the transverse-traceless surface $\tr E = 0$, $E\hat k = 0$, the quadratic form is isotropic with coefficient $-\tfrac14\,\langle E,E\rangle$ in the conventions of \eqref{eq:planewave} and Definition \ref{def:symbol}. The normalized finite symbol $H_N(E,m)/|k_N|^2$ is the discrete analogue of this coefficient: its $N\to\infty$ limit at fixed direction $\hat m$ is the strength with which the linearized discrete action propagates a TT wave in that direction. Isotropy of the limit, with the value $-1/4$, is the linearized Einstein--Hilbert benchmark. The overall coupling $\kappa$ is common to both sides of the comparison and is removed throughout.
+
+For weak deformations the reduction of the Regge action to a quadratic form is classical. The flat background and the Schl\"afli identity reduce the lowest surviving order to \cite{RocekWilliams}
+\begin{equation}
+\frac{1}{\kappa}\sum_{n} L_n \delta_n \;=\; \frac{1}{\kappa}\sum_n \sum_{p,q}\left(\frac12\,\frac{\partial L_n}{\partial \ell_p}\,\frac{\partial \delta_n}{\partial \ell_q}\right) d\ell_p\, d\ell_q,
+\label{eq:quadratic}
+\end{equation}
+and on the periodic Freudenthal torus this quadratic form, evaluated on the plane-wave family, organizes by translation invariance into a Bloch symbol depending only on $(E, k_N)$. The theorems below concern the exact finite object $H_N$ and its limit; the expansion \eqref{eq:quadratic} explains why a single quadratic symbol captures the leading physics. All derivatives in \eqref{eq:quadratic} are evaluated on the flat Freudenthal tetrahedra, so no independently postulated quadratic lattice action enters: the nonlinear lengths and dihedral angles determine every coefficient.
+
+\section{Result A: the continuum-limit theorem}
+\label{sec:limit}
+
+The limit object is a finite sum over \emph{hinge buckets}: equivalence classes of hinge contributions under lattice translation, indexed by the finitely many local coupling configurations $b$ of the Freudenthal scheme around a hinge. Each bucket carries an amplitude $A_b(E)$, a homogeneous quadratic form in $E$ determined by the flat-background second-variation data of \eqref{eq:quadratic}, and a connector vector $u_b\in\Z^3$, twice the half-integer difference of the coupled edge midpoints. The bucket data are independent of $N$.
+
+\begin{definition}[Raw TT moment]
+\label{def:moment}
+For a direction $x\in\R^3$ and polarization $E$, the raw TT moment is the finite hinge-bucket sum of the quadratic phase weights against the bucket amplitudes,
+\begin{equation}
+\mathcal{M}_{\TT}(x,E) \;=\; -\frac12\sum_{b}\, A_b(E)\,\Bigl(\tfrac12 \textstyle\sum_i x_i (u_b)_i\Bigr)^{2},
+\label{eq:moment}
+\end{equation}
+the prefactor being the cosine second jet of Lemma \ref{lem:jet} below.
+\end{definition}
+
+\begin{definition}[Non-aliased side length]
+\label{def:nonaliased}
+An integer $N\ge 2$ is \emph{non-aliased} for a mode $m\in\Z^3$ if there exists a coordinate index $i\in\{0,1,2\}$ such that $N$ does not divide $2m_i$.
+\end{definition}
+
+\begin{lemma}[Finite Bloch assembly]
+\label{lem:assembly}
+Suppose $N$ is non-aliased for $m$. Then, with $\phi_b = \tfrac12\, m\cdot u_b$,
+\begin{equation}
+H_N(E,m) \;=\; \sum_{b} A_b(E)\,\cos(q_N\,\phi_b).
+\label{eq:fold}
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Translation invariance of the flat background block-diagonalizes the quadratic form \eqref{eq:quadratic} by torus momentum. Inserting the plane-wave variation into the assembled Hessian, each pair of coupled edges contributes a product of two cosines at momentum $k_N$ with class-dependent midpoint phases. Such a product decomposes into a constant part carrying the midpoint-difference phase and an oscillatory part at momentum $2k_N$; summing over the $N^3$ translates of each hinge class, the oscillatory part is the real part of a nontrivial torus character sum, which vanishes exactly under the non-aliasing condition of Definition \ref{def:nonaliased}. The cell sum collapses, and grouping equal connector vectors $u_b$ gives \eqref{eq:fold}, with $k_N\cdot(u_b/2)=q_N\phi_b$ the literal midpoint-displacement phase. When $N$ divides every $2m_i$ the momentum is self-conjugate and the character sum does not vanish; at those aliased side lengths the identity is not asserted.
+\end{proof}
+
+\begin{lemma}[Assembled zero mode]
+\label{lem:zeromode}
+For every real $E$, the scale-zero fold vanishes: $\sum_b A_b(E) = 0$.
+\end{lemma}
+
+\begin{proof}
+Consider the constant squared-edge variation $\ell_e^2(t) = |D_d|^2 + t\,D_d^{\trans}E\,D_d$, which is the $m=0$ instance of \eqref{eq:planewave}. It depends only on the symmetric part $E^{\mathrm s}$ of $E$ and is exactly the squared length of the vector $D_d$ in the constant Euclidean metric $I + tE^{\mathrm s}$. The periodic identifications are unchanged and translations remain isometries, so for every $t$ in the nondegeneracy range the deformed complex is a flat torus: every deficit angle vanishes identically along the family, and $S_N(t)\equiv 0$. Its per-cell second variation is the scale-zero fold, hence $\sum_b A_b(E)=0$. The cancellation is hinge-aware: it is the exact dihedral-angle cancellation of the assembled action, realized across each full hinge star with its actual measure, and it is stronger than any stencil-only identity read off from a single coefficient table.
+\end{proof}
+
+\begin{lemma}[Cosine two-jet]
+\label{lem:jet}
+For every real $\phi$,
+$\displaystyle\lim_{q\to 0}\frac{\cos(q\phi)-1}{q^{2}} = -\frac{\phi^{2}}{2}$,
+with uniform convergence on bounded sets of $\phi$.
+\end{lemma}
+
+\begin{proof}
+Taylor expansion of $\cos$ with remainder.
+\end{proof}
+
+\begin{theorem}[TT symbol continuum limit]
+\label{thm:limit}
+For every real polarization matrix $E$ and every nonzero integer mode $m\in\Z^3$,
+\begin{equation}
+\lim_{N\to\infty}\;\frac{H_N(E,m)}{|k_N|^{2}} \;=\; \mathcal{M}_{\TT}\bigl(\hat m,\, E\bigr),
+\qquad \hat m = m/|m|.
+\label{eq:ttlimit}
+\end{equation}
+The limit is taken through the actual finite nonlinear Regge actions.
+\end{theorem}
+
+\begin{proof}
+Set $N_0 = 2\max_i |m_i|$ and let $N > N_0$. Choose $i$ with $m_i\neq 0$; then $0 < |2m_i| < N$, so $N\nmid 2m_i$ and Lemma \ref{lem:assembly} applies. Subtracting the vanishing scale-zero fold of Lemma \ref{lem:zeromode},
+\[
+H_N(E,m) \;=\; \sum_{b} A_b(E)\,\bigl(\cos(q_N\phi_b) - 1\bigr).
+\]
+Using the exact factorization $|k_N|^2 = q_N^2\,|m|^2$,
+\[
+\frac{H_N(E,m)}{|k_N|^2} \;=\; \frac{1}{|m|^2}\sum_b A_b(E)\,\frac{\cos(q_N\phi_b)-1}{q_N^2}.
+\]
+The bucket set is finite and independent of $N$, so Lemma \ref{lem:jet} applies term by term as $q_N\to 0$:
+\[
+\lim_{N\to\infty}\frac{H_N(E,m)}{|k_N|^2}
+\;=\; -\frac{1}{2|m|^2}\sum_b A_b(E)\,\phi_b^2
+\;=\; -\frac12\sum_b A_b(E)\,\Bigl(\tfrac12\,\hat m\cdot u_b\Bigr)^2
+\;=\; \mathcal{M}_{\TT}(\hat m, E),
+\]
+since $\phi_b/|m| = \tfrac12\,\hat m\cdot u_b$. Changing finitely many terms of a sequence does not alter its limit, so the aliased side lengths below $N_0$ require no separate finite formula.
+\end{proof}
+
+\begin{remark}[Aliasing]
+\label{rem:alias}
+The finite assembly identity of Lemma \ref{lem:assembly} is proved at non-aliased side lengths only. At the finitely many aliased small $N$ for a given $m$, the finite reduced symbol is not identified with the bucket fold, and no repair is attempted or needed. The limit \eqref{eq:ttlimit} consumes the identity in eventual-filter form, valid for all sufficiently large $N$, which is exactly what a limit statement requires. We state this plainly because the finite-$N$ identity, as a claim about every $N$, would be false as written.
+\end{remark}
+
+\begin{remark}
+Theorem \ref{thm:limit} is a limit of the actual finite Regge object, computed from the exact nonlinear simplicial geometry, as the lattice grows. It is neither a finite-size certificate at some fixed $N$ nor a conditional reduction resting on unproved hypotheses. The limit exists for every direction $\hat m$; the physics question is its value, and that question is decided algebraically in the next two sections.
+\end{remark}
+
+\section{Result B: the adjugate closed form}
+\label{sec:adjugate}
+
+Theorem \ref{thm:limit} reduces the continuum symbol to the finite lattice-rational sum \eqref{eq:moment}, so its value is decidable in exact arithmetic. Carrying out the contraction exactly yields a closed form that is considerably more structured than lattice symmetry alone would suggest. This is the central surprise of the paper.
+
+\begin{theorem}[Adjugate closed form]
+\label{thm:adjugate}
+Write $K(x,E) \coloneqq \mathcal{M}_{\TT}(x,E)$.
+\begin{enumerate}
+\item[(i)] For every symmetric $3\times 3$ real matrix $E$ and every $x\in\R^3$,
+\begin{equation}
+K(x,E) \;=\; \tfrac12\, x^{\trans}\,\adjE(E)\,x,
+\label{eq:adjclosed}
+\end{equation}
+identically, before any transverse-traceless reduction.
+\item[(ii)] For a general (not necessarily symmetric) real $3\times 3$ matrix $E$, the exact discrepancy is a single rotational square:
+\begin{equation}
+K(x,E) \;-\; \tfrac12\, x^{\trans}\adjE(E)\,x
+\;=\; -\tfrac18\bigl(E_{01}x_2 - E_{02}x_1 - E_{10}x_2 + E_{12}x_0 + E_{20}x_1 - E_{21}x_0\bigr)^{2},
+\label{eq:remainder}
+\end{equation}
+which vanishes when $E$ is symmetric.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Both sides of \eqref{eq:adjclosed} are bihomogeneous polynomials of bidegree $(2,2)$ in $(x;E)$: the bucket amplitudes $A_b(E)$ are quadratic in the entries of $E$, the phase weights are quadratic in $x$, and the adjugate of a $3\times 3$ matrix is quadratic in its entries. The identity is therefore decided by a finite comparison of coefficients over $\mathbb{Q}$, and a finite check is a proof.
+
+\emph{(i) Exact contraction.} Every coefficient in \eqref{eq:quadratic} follows from the flat Gram matrices of the Freudenthal tetrahedra: dihedral angles are ratios built from the inverse Gram matrix, their derivatives with respect to squared edge lengths are Cayley--Menger cofactor expressions, and the Schl\"afli identity assembles them into the hinge Hessian. Refining the hinge buckets by tetrahedral incidence yields thirty-six normalized weights, all rational: the radical flat lengths $\sqrt2$ and $\sqrt3$ of the face- and body-diagonal hinges cancel, because each hinge measure $\ell$ entering an amplitude is matched by a factor $\ell^{-1}$ from the derivative of the same hinge's deficit angle. Writing the symmetric part of $E$ as
+\begin{equation}
+E^{\mathrm s} \;=\;
+\begin{pmatrix}
+a & b & c\\
+b & d & e\\
+c & e & f
+\end{pmatrix},
+\end{equation}
+exact evaluation of the finite hinge sum gives
+\begin{align}
+2K(x,E^{\mathrm s})
+\;=\;{}& (df-e^2)\,x_0^2 + (af-c^2)\,x_1^2 + (ad-b^2)\,x_2^2
+\nonumber\\
+&+ 2(ce-bf)\,x_0x_1 + 2(be-cd)\,x_0x_2 + 2(bc-ae)\,x_1x_2,
+\label{eq:expanded}
+\end{align}
+which is entry by entry the quadratic form of
+\begin{equation}
+\adjE(E^{\mathrm s}) \;=\;
+\begin{pmatrix}
+df-e^2 & ce-bf & be-cd\\
+ce-bf & af-c^2 & bc-ae\\
+be-cd & bc-ae & ad-b^2
+\end{pmatrix}.
+\end{equation}
+No limiting approximation enters this contraction. A Gr\"obner-basis reduction of the difference of the two sides in the polynomial ring over $\mathbb{Q}$ returns zero, confirming the identity by an independent route.
+
+\emph{(ii) Non-symmetric remainder.} The edge contraction $D^{\trans}ED$ sees only $E^{\mathrm s}$, so $K(x,E)=K(x,E^{\mathrm s})$. Set
+\[
+\alpha \;=\; \tfrac12\bigl(E_{12}-E_{21},\; E_{20}-E_{02},\; E_{01}-E_{10}\bigr),
+\]
+the axial vector of the antisymmetric part of $E$. A cofactor expansion gives the polynomial identity
+\[
+\tfrac12\,x^{\trans}\adjE(E^{\mathrm s})\,x \;=\; \tfrac12\,x^{\trans}\adjE(E)\,x \;-\; \tfrac12\,(\alpha\cdot x)^2,
+\]
+and $2\,\alpha\cdot x$ is exactly the six-term combination displayed in \eqref{eq:remainder}. Combining with part (i) proves \eqref{eq:remainder}.
+\end{proof}
+
+\begin{lemma}[Adjugate equivariance]
+\label{lem:equivariance}
+For every $R\in O(3)$ and every real $3\times3$ matrix $E$, $\adjE(RER^{\trans}) = R\,\adjE(E)\,R^{\trans}$.
+\end{lemma}
+
+\begin{proof}
+For invertible $E$, $\adjE(E)=\det(E)\,E^{-1}$; substituting $E\mapsto RER^{\trans}$ and using $\det(R)^2=1$ gives the identity on invertible matrices. Both sides are polynomial in the entries of $E$, so the identity extends to all $E$.
+\end{proof}
+
+\begin{corollary}[Exact emergent $O(3)$ covariance]
+\label{cor:o3}
+For every $R\in O(3)$, every direction $x$, and every symmetric $E$,
+\begin{equation}
+K(Rx,\,RER^{\trans}) \;=\; K(x,E).
+\end{equation}
+The limit symbol transforms as a rotational scalar outright, before any TT reduction, although only the octahedral point group of the cubic lattice was built into the construction.
+\end{corollary}
+
+\begin{corollary}[Identically vanishing cubic anisotropy]
+\label{cor:cubic}
+The invariant theory of the octahedral group acting on bidegree-$(2,2)$ polynomials in $(x;E)$ admits, alongside the $O(3)$-invariant channel, a genuinely cubic channel aligned with the lattice axes (for instance combinations of the shape $\sum_i x_i^2\,(E^2)_{ii}$ relative to the isotropic projection). Writing the symbol as $a\cdot(\text{isotropic}) + c\cdot(\text{anisotropic})$ in this basis, the closed form \eqref{eq:adjclosed} gives $c = 0$ as a polynomial identity: the cubic-anisotropy part of the symbol is identically zero, not merely small.
+\end{corollary}
+
+This is the strong form of emergent rotational invariance. It is not that anisotropies are suppressed by powers of the lattice spacing, or bounded by a small measured coefficient; the algebra of the discrete action forces them to cancel exactly in the limit symbol. To our knowledge this exactness has no antecedent in the Regge-calculus literature at the level of the graviton symbol, where prior work established convergence of the action \cite{CMS} or the quadratic expansion structure \cite{RocekWilliams, HamberWilliams} without an exact closed form of this kind.
+
+\begin{remark}[Scope of the closed form]
+The scope of \eqref{eq:adjclosed} is matrix symmetry of $E$; the remainder \eqref{eq:remainder} quantifies the failure exactly for non-symmetric $E$. Since a metric perturbation is symmetric, the symmetric case is the physically relevant one, and the antisymmetric remainder, being a perfect square of a rotational contraction, is itself an $O(3)$-covariant object.
+\end{remark}
+
+\begin{remark}[Where the adjugate comes from]
+In dimension three, the variations of a tetrahedron's dihedral angles with respect to squared edge lengths are ratios of Cayley--Menger cofactors; the first variation is classical \cite{CMS}. Contracting two such variations against the polarization $E$ produces quadratic-in-$E$ cofactors, that is, entries of $\adjE(E)$. The closed form \eqref{eq:adjclosed} is the global shadow of this local cofactor geometry.
+\end{remark}
+
+\section{Result C: the isotropy value $-1/4$ on the constraint surface}
+\label{sec:isotropy}
+
+\begin{theorem}[Isotropy value]
+\label{thm:isotropy}
+Let $E$ be a real symmetric $3\times3$ matrix with $\tr E = 0$ and let $x\neq 0$ satisfy $Ex = 0$. Then
+\begin{equation}
+K(x,E) \;=\; -\tfrac14\,|x|^{2}\,\langle E, E\rangle
+\label{eq:isotropyexact}
+\end{equation}
+exactly. In particular, with unit normalization $|x|^2 = 1$ and $\langle E,E\rangle = 1$, the normalized TT symbol equals exactly $-1/4$, for every direction $x$ on the constraint surface.
+\end{theorem}
+
+\begin{proof}
+Since $E$ is symmetric it is orthogonally diagonalizable, and $Ex = 0$ makes $x$ a null eigenvector. Choose an orthonormal eigenbasis $\{v_1, v_2, \hat x\}$ with eigenvalues $\lambda_1, \lambda_2, 0$. The trace constraint forces $\lambda_1 + \lambda_2 = 0$. On each eigenvector the adjugate carries the product of the complementary eigenvalues, so
+\[
+\adjE(E)\,x \;=\; \lambda_1\lambda_2\, x.
+\]
+The Frobenius norm is $\langle E,E\rangle = \lambda_1^2 + \lambda_2^2 + 0^2 = 2\lambda_1^2$, hence
+\[
+\lambda_1\lambda_2 \;=\; -\lambda_1^2 \;=\; -\tfrac12\,\langle E,E\rangle.
+\]
+Substituting into \eqref{eq:adjclosed},
+\[
+K(x,E) \;=\; \tfrac12\, x^{\trans}\adjE(E)\,x \;=\; \tfrac12\,\lambda_1\lambda_2\,|x|^2 \;=\; -\tfrac14\,|x|^{2}\,\langle E,E\rangle.
+\]
+The argument is basis-independent: if $x$ is a null eigenvector of a traceless symmetric $E$, then $\adjE(E)x = (\det E_\perp)\,x$ with $E_\perp$ the restriction of $E$ to $x^\perp$, and $\det E_\perp = -\langle E,E\rangle/2$ by the same elementary symmetric computation.
+\end{proof}
+
+Combining Theorems \ref{thm:limit}, \ref{thm:adjugate}, and \ref{thm:isotropy}: for every nonzero mode $m$ and every TT polarization $E$ relative to $\hat m$,
+\begin{equation}
+\lim_{N\to\infty}\frac{H_N(E,m)}{|k_N|^{2}} \;=\; -\tfrac14\,\langle E,E\rangle,
+\end{equation}
+independent of the direction $\hat m$. With $x = \hat m$, the conditions $\tr E = 0$ and $Ex = 0$ are precisely the linearized traceless and transverse conditions for a gravitational plane wave propagating along $\hat m$. The discrete Regge action on the Freudenthal torus propagates a transverse-traceless wave with exactly the linearized Einstein--Hilbert coefficient, isotropically, as a proved identity holding for all directions on the constraint surface.
+
+\begin{remark}[The identity holds on the whole constraint variety]
+Theorem \ref{thm:isotropy} has an algebraic strengthening. In the polynomial ring over $\mathbb{Q}$ in the six independent entries of the symmetric $E$ and the three entries of $x$, the difference
+\[
+\tfrac12\,x^{\trans}\adjE(E)\,x + \tfrac14\,|x|^2\,\langle E,E\rangle
+\]
+lies in the TT constraint ideal generated by $\tr E$ and the three components of $Ex$: a Gr\"obner-basis reduction modulo that ideal returns zero. The value $-1/4$ is accordingly an exact identity holding simultaneously across the entire constraint surface.
+\end{remark}
+
+This supersedes the earlier evidence within this program: a preregistered probe at fourteen directions measured the value $-1/4$, and an independent refit of that data onto the full cubic-invariant basis bounded the anisotropy ratio at $|c/a|\le 1.5\times 10^{-19}$. Those computations pointed at the right answer; the present theorems replace a bound of order $10^{-19}$ with an exact zero and fourteen directions with all of them.
+
+\section{What is established and what is not}
+\label{sec:scope}
+
+Honesty about scope carries this paper's claims, so we collect them in one place with explicit grading.
+
+\paragraph{Established (theorems).}
+(i) The continuum limit of the normalized TT Bloch symbol of the Regge action on the periodic three-dimensional Euclidean Freudenthal torus exists for every polarization and every nonzero integer mode, and equals the raw TT moment at the fixed direction (Theorem \ref{thm:limit}). (ii) The limit symbol equals $\tfrac12\,x^{\trans}\adjE(E)\,x$ for all symmetric $E$ and all $x$, with the exact non-symmetric remainder \eqref{eq:remainder} (Theorem \ref{thm:adjugate}). (iii) On the TT constraint surface the value is exactly $-\tfrac14\,|x|^2\langle E,E\rangle$ (Theorem \ref{thm:isotropy}). These three statements, and the exact $O(3)$ covariance and vanishing cubic anisotropy they entail, are proved. The strength is classical, three-dimensional, Euclidean, and at the level of the \emph{action}: the proved convergence is convergence of the second variation of the action along plane-wave families.
+
+\paragraph{Not established (open).}
+The proved results do not by themselves establish any of the following, and we state each as open rather than as a near-certain corollary.
+\begin{itemize}
+\item \emph{The four-dimensional Lorentzian recovery.} Two named ingredients are required and are not proved here. First, a transverse-traceless edge decomposition in four dimensions: hinges are then triangles with area measures, and the TT sector of a plane wave must be decomposed into edge data compatible with a four-dimensional analogue of the scheme used here. Second, convergence of the relevant (sinh-corrected) discrete action to the Einstein--Hilbert action in the four-dimensional limit, including control of the Lorentzian deficit angles. The Lorentzian side carries known additional difficulties: even the Cheeger--M\"uller--Schrader convergence has no general Lorentzian analogue \cite{CMS, Brewin}. Both ingredients are open problems, and any composite claim that includes them inherits their open status.
+\item \emph{Operator-strength recovery.} Convergence of the quadratic form of the action does not by itself give convergence of the associated discrete operator to the linearized Einstein operator in any operator topology (norm-resolvent, strong-resolvent, or spectral sense). That is a strictly stronger statement and is open.
+\item \emph{Constraint-algebra recovery.} Nothing here addresses the recovery of the hypersurface-deformation algebra or the closure of discrete constraints. That would require a canonical formulation and control of discrete brackets, none of which is attempted. Open.
+\end{itemize}
+
+\paragraph{Aliasing disclosure.}
+As stated in Remark \ref{rem:alias}, the finite assembly identity holds at non-aliased side lengths (there exists a coordinate $i$ with $N\nmid 2m_i$); at the finitely many aliased small $N$ the finite reduced symbol is not identified with the bucket fold, and no repair is attempted. The continuum limit consumes the identity in eventual-filter form, for all sufficiently large $N$, which is all the limit needs.
+
+\paragraph{Relation to the program's full action.}
+The gravity program in which this result sits uses a parameter-free action whose exact form is a hyperbolic-sine function of a cost gradient; the Regge action is its leading term. The theorems of this paper concern the Regge action's TT symbol. The sinh correction enters at higher order in the deformation and does not affect the second-variation symbol studied here, but the statement that the sinh-corrected action converges appropriately in four dimensions is part of the open frontier named above, not a consequence of the present results.
+
+\section{Discussion}
+\label{sec:discussion}
+
+Three points seem worth drawing out.
+
+\emph{Exactness of emergent isotropy.} Discrete approaches to gravity generically face the worry that lattice artifacts, in particular cubic anisotropy, survive into the continuum limit or are only suppressed at some rate. The adjugate closed form shows that for this action and this triangulation the worry is empty at the level of the TT symbol: the limit is a rotational invariant identically, with the octahedral-only components of the symbol vanishing as polynomials. The mechanism is algebraic cancellation across the hinge buckets of the Freudenthal scheme, not a symmetry restoration by averaging or tuning. A discrete action can therefore carry exact continuum symmetry in its quadratic fluctuations, a statement stronger than asymptotic restoration, and one that can in principle be tested in other discretizations by the same method: compute the symbol, then ask whether it admits a closed form.
+
+\emph{The adjugate as the organizing object.} That the full symbol, before any TT reduction, is $\tfrac12\,x^{\trans}\adjE(E)\,x$ is more information than the isotropy value alone. The adjugate of the perturbation matrix is exactly the structure through which the linearized Einstein tensor in three dimensions contracts a plane-wave metric perturbation against its propagation direction, so the closed form identifies the discrete symbol with the correct continuum bilinear structure off the constraint surface as well as on it. The reduction to $-1/4$ on the constraint surface is then a short eigenvalue argument (Theorem \ref{thm:isotropy}), which is how a correct discretization ought to behave: the hard content sits in the exact limit and closed form, and the physical coefficient falls out.
+
+\emph{The parameter-free posture and the path to four dimensions.} Unlike lattice approaches with a bare coupling to tune \cite{AJL, Loll, Hamber}, the setting here has no adjustable coupling; the coefficient $-1/4$ is computed, not fit. Any deformation of the action that alters the TT symbol would be visible as a deviation from an exact rational number, which makes the coefficient a clean comparison target across discrete gravity programs. It also makes the four-dimensional question sharp. The two named open ingredients (a 4D TT edge decomposition and 4D convergence of the sinh-corrected action, in the Lorentzian setting) are exactly where the difficulty of Lorentzian simplicial convergence \cite{Brewin} lives, and we make no prediction that they will be routine. What the present result contributes to that frontier is a template: identify the finite Bloch symbol of the true action, prove its limit as a finite bucket moment, and contract the moment exactly. In three Euclidean dimensions that template terminates in an adjugate identity and the Einstein--Hilbert coefficient. Whether it does in four Lorentzian dimensions is the right next question.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+On the periodic Kuhn--Freudenthal torus, the transverse-traceless Bloch symbol of the Regge action has a proved continuum limit (Theorem \ref{thm:limit}). The limit equals the adjugate form $\tfrac12\,x^{\trans}\adjE(E)\,x$ exactly for every symmetric polarization (Theorem \ref{thm:adjugate}), hence is $O(3)$-covariant outright with identically vanishing cubic anisotropy. On the TT constraint surface it equals $-\tfrac14\,|x|^2\langle E,E\rangle$ in every direction, the linearized Einstein--Hilbert coefficient (Theorem \ref{thm:isotropy}). The scope of these results is three-dimensional, Euclidean, and at the strength of action convergence. The four-dimensional Lorentzian recovery is open, with the two named ingredients, a TT edge decomposition in four dimensions and convergence of the sinh-corrected action, marking the precise frontier; operator-strength and constraint-algebra recovery are open as well.
+
+\appendix
+
+\section{Appendix: Formalization}
+\label{app:formal}
+
+The results of this paper (Theorems \ref{thm:limit}, \ref{thm:adjugate}, and \ref{thm:isotropy}, together with the finite assembly identity with its aliasing side condition, the assembled zero-mode cancellation, the exact hinge-bucket contraction, and the non-symmetric remainder) are machine-checked in an accompanying open-source formalization library, with the limit theorem's dependency audit confined to the standard classical axioms. The mathematical content of the paper stands on the proofs and proof sketches given in the body, and no step of the body relies on the machine development; this appendix records the existence of the formalization for readers who wish to verify the results mechanically. The library contains no replacement for the four-dimensional open ingredients identified in Section \ref{sec:scope}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Regge}
+T.~Regge,
+General relativity without coordinates,
+\emph{Nuovo Cimento} \textbf{19} (1961) 558--571.
+
+\bibitem{RocekWilliams}
+M.~Ro\v{c}ek and R.~M.~Williams,
+Quantum Regge calculus,
+\emph{Phys. Lett. B} \textbf{104} (1981) 31--37;
+The quantization of Regge calculus,
+\emph{Z. Phys. C} \textbf{21} (1984) 371--381.
+
+\bibitem{CMS}
+J.~Cheeger, W.~M\"uller, and R.~Schrader,
+On the curvature of piecewise flat spaces,
+\emph{Commun. Math. Phys.} \textbf{92} (1984) 405--454.
+
+\bibitem{Brewin}
+L.~Brewin,
+The Riemann and extrinsic curvature tensors in the Regge calculus,
+\emph{Class. Quantum Grav.} \textbf{5} (1988) 1193--1203;
+L.~Brewin and A.~P.~Gentle,
+On the convergence of Regge calculus to general relativity,
+\emph{Class. Quantum Grav.} \textbf{18} (2001) 517--526.
+
+\bibitem{Hamber}
+H.~W.~Hamber,
+\emph{Quantum Gravitation: The Feynman Path Integral Approach},
+Springer, Berlin, 2009.
+
+\bibitem{HamberWilliams}
+H.~W.~Hamber and R.~M.~Williams,
+Simplicial gravity coupled to scalar matter,
+\emph{Nucl. Phys. B} \textbf{415} (1994) 463--496;
+Gauge invariance in simplicial gravity,
+\emph{Nucl. Phys. B} \textbf{487} (1997) 345--408.
+
+\bibitem{AJL}
+J.~Ambj{\o}rn, J.~Jurkiewicz, and R.~Loll,
+Dynamically triangulating Lorentzian quantum gravity,
+\emph{Nucl. Phys. B} \textbf{610} (2001) 347--382.
+
+\bibitem{Loll}
+R.~Loll,
+Quantum gravity from causal dynamical triangulations: a review,
+\emph{Class. Quantum Grav.} \textbf{37} (2020) 013002.
+
+\bibitem{BarrettWilliams}
+J.~W.~Barrett and R.~M.~Williams,
+The asymptotics of an amplitude for the 4-simplex,
+\emph{Adv. Theor. Math. Phys.} \textbf{3} (1999) 209--215.
+
+\bibitem{ConradyFreidel}
+F.~Conrady and L.~Freidel,
+Semiclassical limit of 4-dimensional spin foam models,
+\emph{Phys. Rev. D} \textbf{78} (2008) 104023.
+
+\bibitem{BianchiModesto}
+E.~Bianchi and L.~Modesto,
+The perturbative Regge-calculus regime of loop quantum gravity,
+\emph{Nucl. Phys. B} \textbf{796} (2008) 581--621.
+
+\bibitem{Freudenthal}
+H.~Freudenthal,
+Simplizialzerlegungen von beschr\"ankter Flachheit,
+\emph{Ann. of Math.} \textbf{43} (1942) 580--582.
+
+\bibitem{Kuhn}
+H.~W.~Kuhn,
+Some combinatorial lemmas in topology,
+\emph{IBM J. Res. Develop.} \textbf{4} (1960) 518--524.
+
+\end{thebibliography}
+
+\end{document}
