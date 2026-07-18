@@ -1,0 +1,640 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% Lean listings setup (pdflatex + UTF-8 via literate)
+\definecolor{leankw}{rgb}{0.0,0.35,0.55}
+\definecolor{leancomment}{rgb}{0.35,0.45,0.35}
+\lstdefinelanguage{Lean}{
+  keywords={theorem,def,structure,noncomputable,where,fun,by,open,namespace,import,instance,lemma,abbrev,alias,Prop,Type,section,end,variable,intro,exact,match,with,let,set,have},
+  sensitive=true,
+  comment=[l]{--},
+  morecomment=[s]{/-}{-/},
+}
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{leankw}\bfseries,
+  commentstyle=\color{leancomment}\itshape,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  showstringspaces=false,
+  frame=single,
+  framerule=0.3pt,
+  rulecolor=\color{black!30},
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+  literate={ℕ}{{$\mathbb{N}$}}1
+           {ℤ}{{$\mathbb{Z}$}}1
+           {ℝ}{{$\mathbb{R}$}}1
+           {ℚ}{{$\mathbb{Q}$}}1
+           {∉}{{$\notin$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∀}{{$\forall$}}1
+           {∧}{{$\wedge$}}1
+           {∨}{{$\vee$}}1
+           {¬}{{$\neg$}}1
+           {→}{{$\to$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {↦}{{$\mapsto$}}1
+           {≤}{{$\le$}}1
+           {≠}{{$\ne$}}1
+           {≅}{{$\cong$}}1
+           {↥}{{$\uparrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {∩}{{$\cap$}}1
+           {∪}{{$\cup$}}1
+           {⧸}{{$/$}}1
+           {φ}{{$\varphi$}}1
+           {₀}{{$_0$}}1
+           {₁}{{$_1$}}1
+           {₂}{{$_2$}}1
+           {₃}{{$_3$}}1
+           {¹}{{$^1$}}1
+           {²}{{$^2$}}1
+           {³}{{$^3$}}1
+           {𝟙}{{$\mathbf{1}$}}1
+           {≫}{{$\ggg$}}1
+           {ᶜ}{{$^{c}$}}1
+}
+
+% theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Sph}[1]{S^{#1}}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\title{The Unique Dimension in Which an Embedded Circle Links:\\
+A Machine-Checked Proof that Complement $H_1$ Forces $D=3$}
+\author{Jonathan Washburn\\
+\small Recognition Physics Institute, Austin, Texas\\
+\small \texttt{washburn@recognitionphysics.org}}
+\date{July 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Say that a natural number $D$ \emph{detects nontrivial linking} if some topological embedding $f\colon S^1 \to S^D$ has a complement whose first singular homology with integer coefficients is nonzero. We report a machine-checked proof, in Lean~4 over Mathlib, of the two halves of a dimension-forcing statement: $D=3$ detects nontrivial linking, and every $D$ that detects nontrivial linking equals $3$. The uniqueness half is uniform over all $D \in \N$ and holds for arbitrary topological embeddings; no smoothness, PL structure, or tameness is assumed anywhere, so wild circles such as those of Antoine and Fox--Artin are covered. The proof does not pass through full Alexander duality. It combines an explicit retraction for existence at $D=3$ with a Mayer--Vietoris reduction of circle complements to arc complements and a compact-support bisection proof that embedded arcs in $\Sph{D}$ have $H_1$-acyclic complements in every dimension (the arc case of Hatcher's Proposition~2B.1). The target proposition is content-typed on Mathlib's singular homology of the actual complement space, a design forced by two failed earlier formulations that were inhabitable by arithmetic encodings; a standing gate script audits the statement's type-level content against the known cheat shapes. All results carry zero \lean{sorry} and depend only on the three standard Lean axioms (\lean{propext}, \lean{Classical.choice}, \lean{Quot.sound}). A physical interpretation within the Recognition Science program is stated separately and explicitly quarantined from the mathematical claims.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Circles can link in three dimensions. In the plane an embedded circle separates its complement, and in dimension four and higher the complement-$H_1$ linking obstruction of an embedded circle vanishes. The classical explanation runs through Alexander duality: for a circle $K \subset \Sph{D}$ one has $\widetilde{H}_1(\Sph{D} \smallsetminus K) \cong \widetilde{H}^{D-2}(K) \cong \widetilde{H}^{D-2}(S^1)$, which is nonzero exactly when $D - 2 = 1$. This paper reports a complete formalization, in Lean~4 \cite{lean4} over the Mathlib library \cite{mathlib}, of the resulting dimension-forcing statement, proved without invoking full Alexander duality and valid for arbitrary topological embeddings.
+
+Fix the following convention throughout: $\Sph{D}$ denotes the unit sphere in $\R^{D+1}$, and $H_n(X)$ denotes singular homology with $\Z$ coefficients, taken in the formal development as Mathlib's \lean{singularHomologyFunctor} applied to the honest subspace $X$.
+
+\begin{definition}[detection predicate, informal rendering of Definition~\ref{def:detects-lean}]
+\label{def:detects}
+For $D \in \N$, say \emph{$D$ detects nontrivial linking} if there exists a topological embedding $f \colon S^1 \to \Sph{D}$ such that
+\[
+H_1\bigl(\Sph{D} \smallsetminus f(S^1);\ \Z\bigr) \neq 0 .
+\]
+\end{definition}
+
+\begin{theorem}[existence; \lean{detectsNontrivialLinking\_three}]
+\label{thm:existence}
+$D = 3$ detects nontrivial linking.
+\end{theorem}
+
+\begin{theorem}[uniqueness; \lean{PublicSpineLinkingClosure.forces\_D3}]
+\label{thm:uniqueness}
+For every $D \in \N$: if $D$ detects nontrivial linking, then $D = 3$.
+\end{theorem}
+
+In Lean the two statements read, verbatim from the source:
+
+\begin{lstlisting}
+theorem detectsNontrivialLinking_three : DetectsNontrivialLinking 3
+
+theorem forces_D3 :
+    ∀ D, PublicSpine.DetectsNontrivialLinking D → D = 3
+\end{lstlisting}
+
+Both are proved with zero \lean{sorry}, and \lean{\#print axioms} on each reports exactly \lean{[propext, Classical.choice, Quot.sound]}, the three standard axioms of classical Lean.
+
+\subsection{What is new}
+
+Several features distinguish this formalization from a routine transcription of a textbook argument.
+
+\emph{Machine-checked and uniform over all $D$.} The uniqueness half is a single theorem quantified over every natural number $D$, including the degenerate dimensions $0$ and $1$, the plane case $D=2$, and all $D \geq 4$ at once. To our knowledge no previous formalization in any proof assistant establishes the linking dichotomy across all dimensions against a general-purpose singular homology library.
+
+\emph{No smoothness, PL structure, or tameness assumed anywhere.} The embedding $f$ in Definition~\ref{def:detects} is an arbitrary continuous injection that is a homeomorphism onto its image. Wild circles, such as embeddings whose complement has non-finitely-generated fundamental group \cite{foxartin} or circles passing through an Antoine's necklace \cite{antoine}, satisfy no smoothness or local flatness condition, and the theorem covers them. This is a strength inherited from the singular-homology method: the compact-support bisection argument of Section~\ref{sec:arc} never uses a tubular neighborhood, a collar, or a triangulation.
+
+\emph{No full Alexander duality.} The formal development proves exactly the corridor it needs: complements of embedded arcs and circles in $\Sph{D}$, in homological degree one. The general duality isomorphism $\widetilde{H}_i(\Sph{n} \smallsetminus X) \cong \widetilde{H}^{n-i-1}(X)$ is not formalized and is not claimed.
+
+\emph{A content-typed target immune to encoding cheats.} The statement of Definition~\ref{def:detects-lean} is pinned to Mathlib's singular homology functor applied to the literal complement subspace. Section~\ref{sec:binder} documents two earlier formulations of the same intended theorem that were formally provable for the wrong reason, and the specification-integrity discipline (a fixed content-typed predicate plus a standing audit script) that repaired them. We believe this failure mode, a true theorem guarding a vacuous statement, deserves attention as a correctness-engineering problem in its own right.
+
+\subsection{What is not claimed}
+\label{sec:nonclaims}
+
+To prevent over-reading, we state the boundaries explicitly, up front.
+
+\begin{itemize}
+\item The theorems are about the stated predicate: nonvanishing of $H_1$ of circle-complement subspaces of $\Sph{D}$. They are not a proof that physical space is three-dimensional. A physical interpretation exists within the Recognition Science program and is presented in Section~\ref{sec:interpretation}, labeled as interpretation and kept out of every mathematical claim.
+\item Full Alexander duality is not formalized. Only the circle and arc complement computations in degree one (plus the sphere homology needed to run them) are proved.
+\item The gate script of Section~\ref{sec:binder} proves nothing. It is an auditing tool that rejects a class of known statement-level cheats; the mathematics is carried entirely by the Lean kernel.
+\item The development is classical. It uses \lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}; no constructivity claim is made.
+\item The combinatorial period bound of Section~\ref{sec:main} (\lean{cubePeriodEight\_holds}) is a statement about walks on the vertices of the $3$-cube. It is not a claim about physical time.
+\end{itemize}
+
+\subsection{Outline}
+
+Section~\ref{sec:binder} recounts the two failed formulations and the repair; this history explains the otherwise unusual shape of the formal statements. Section~\ref{sec:predicate} presents the formal predicate. Sections~\ref{sec:existence} through~\ref{sec:arc} present the mathematics: existence at $D=3$, nonexistence at $D \in \{0,1\}$, the Mayer--Vietoris reduction for $D=2$ and $D \geq 4$, and arc-complement acyclicity in every dimension. Section~\ref{sec:main} assembles the main theorems and gives a translation table between Lean identifiers and mathematical statements. Section~\ref{sec:interpretation} states the quarantined interpretation. Sections~\ref{sec:limitations} and~\ref{sec:artifact} give limitations and the artifact receipts.
+
+The supporting homology infrastructure (barycentric subdivision, the small-simplices theorem, the Mayer--Vietoris long exact sequence on Mathlib singular homology, and the computation of $H_*(\Sph{n})$) is described in a companion paper, in preparation \cite{companion}. The present paper restates only the interfaces it consumes (Section~\ref{sec:highdim}).
+
+\section{The failed binder and the repair}
+\label{sec:binder}
+
+A proof assistant guarantees that a proof is correct relative to a statement. It offers no protection against a statement that fails to say what its author intends. This project hit that failure mode twice, in escalating subtlety, before arriving at the formulation of Section~\ref{sec:predicate}. We recount the history because the repair, not the initial mistake, is the transferable lesson.
+
+\subsection{First failure: the arithmetic encoding}
+
+An early layer of the library defined linking through a predicate that reads, verbatim:
+
+\begin{lstlisting}
+def CircleReducedCohomologyNontrivial (k : ℤ) : Prop := k = 1
+
+def SphereAdmitsCircleLinking (D : ℕ) : Prop :=
+  CircleReducedCohomologyNontrivial ((D : ℤ) - 2)
+\end{lstlisting}
+
+The names speak of reduced cohomology; the definition is the equation $(D:\Z) - 2 = 1$. Every downstream ``theorem'' about \lean{SphereAdmitsCircleLinking}, including a formally verified equivalence with $D = 3$, is integer arithmetic wearing a topological costume. When a target proposition of the form ``some non-encoding linking statement forces $D=3$'' was first posted as an open goal, it was inhabited in three lines by plugging in this predicate. The proof was accepted by the kernel because the kernel had been asked the wrong question. A review panel identified the problem in July 2026 and the inhabitation was retracted. The library retains the predicate together with a permanent audit theorem that names the encoding for what it is:
+
+\begin{lstlisting}
+theorem linking_still_encoding (D : ℕ) :
+    SphereAdmitsCircleLinking D ↔ (D : ℤ) - 2 = 1
+\end{lstlisting}
+
+\subsection{Second failure: the abstract field and the name firewall}
+
+The first repair attempt replaced the concrete predicate with an abstract one. The target became a structure carrying a field \lean{detects} of type $\N \to \lean{Prop}$, an axiom-like list of properties it should satisfy, and a ``firewall'' field \lean{not\_encoding} asserting that \lean{detects} is not equal to the encoding predicate. This formulation is broken in both directions, and both breaks were verified mechanically.
+
+First, the empty detector \lean{fun \_ => False} inhabits the structure trivially: a predicate that never holds satisfies any implication of the form $\lean{detects}\ D \to D = 3$ vacuously. A probe file exercising exactly this cheat compiled green on 2026-07-08.
+
+Second, and more damning, the firewall excludes precisely the honest instantiation. In Lean's propositional logic, \lean{funext} and \lean{propext} together identify any two predicates that agree in truth value pointwise. Since the intended honest detector holds exactly at $D = 3$, and the encoding predicate also holds exactly at $D=3$, the two are \emph{equal} as terms of $\N \to \lean{Prop}$. A disequality field therefore rejects the real bridge and only the real bridge. In propositional extensionality there is no such thing as a name-level firewall: two predicates cannot be distinguished by identity if they cannot be distinguished by truth value.
+
+\subsection{The repair: content-typing plus a standing gate}
+
+The stable fix abandons predicate identity entirely and moves the honesty requirement into the \emph{type} of the statement. The detection predicate is a single fixed definition whose body applies Mathlib's singular homology functor to the literal complement subspace of the embedding (Definition~\ref{def:detects-lean}). A proof of \lean{DetectsNontrivialLinking 3} must produce an embedding and a nonvanishing homology fact about its actual complement; no arithmetic identity has that type. The comparison in Figure~\ref{fig:cheat} is the heart of the design.
+
+\begin{figure}[ht]
+\begin{minipage}[t]{0.46\textwidth}
+\centering{\small\textbf{The cheat (banned)}}
+\begin{lstlisting}
+-- "linking" as integer arithmetic
+def SphereAdmitsCircleLinking
+    (D : ℕ) : Prop :=
+  (D : ℤ) - 2 = 1
+  -- (after unfolding)
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.50\textwidth}
+\centering{\small\textbf{The honest binder}}
+\begin{lstlisting}
+-- linking as complement homology
+def DetectsNontrivialLinking
+    (D : ℕ) : Prop :=
+  ∃ f : C(TopCat.sphere.{0} 1,
+          TopCat.sphere.{0} D),
+    Topology.IsEmbedding f ∧
+      ¬ CategoryTheory.Limits.IsZero
+        (linkingComplementH1 D f)
+\end{lstlisting}
+\end{minipage}
+\caption{Side by side: the old encoding predicate against the content-typed detector. The left proposition is decided by \lean{omega}; the right one requires computing the first singular homology of an actual complement space.}
+\label{fig:cheat}
+\end{figure}
+
+Content-typing is enforced by a standing gate script, \lean{scripts/public\_spine\_gate.py}, run in continuous integration. Reading the script, it rejects, concretely:
+
+\begin{itemize}
+\item any definition of \lean{DetectsNontrivialLinking} that does not route through \lean{linkingComplementH1} and state nonvanishing via \lean{IsZero};
+\item any definition of \lean{linkingComplementH1} that does not use Mathlib's \lean{singularHomologyFunctor};
+\item any reappearance of an abstract detector field (the pattern \lean{detects} $: \N \to \lean{Prop}$) or of a name firewall (\lean{not\_encoding}) inside the bridge structure;
+\item any change of the target from a \lean{def} equal to \lean{Nonempty AlexanderLinkingBridge}, so the target's statement cannot drift while its inhabitation status changes;
+\item an eight-tick target that degenerates to the reflexivity-true equation $8 = 2^3$ (an earlier vacuous form);
+\item deletion or weakening of a permanent must-fail witness file, \lean{K1CheatMustFail.lean}, which spells out both historical cheats as Lean terms and is deliberately kept out of the build graph. The gate checks that this file is present and still carries its expected markers (the \lean{DO\_NOT\_BUILD} annotation and the recorded cheat terms); it does not compile the file. Confirming that the file fails to compile, which would signal that the binder had been weakened, is a separate manual check (Section~\ref{sec:artifact}).
+\end{itemize}
+
+The division of labor is strict and worth stating plainly. The gate audits the \emph{statement}: it is a regular-expression check on source text, it proves nothing, and a sufficiently creative future cheat could evade it. The Lean kernel checks the \emph{proof}: given the content-typed statement, the kernel's verdict is the mathematical fact. Specification integrity is an engineering practice layered on top of, never a substitute for, mathematical review of the statement by human readers. Section~\ref{sec:limitations} returns to this point.
+
+\section{The formal predicate}
+\label{sec:predicate}
+
+The linking object is defined once, in \lean{IndisputableMonolith/Foundation/PublicSpine.lean}, and restated verbatim (same universes, same implicit arguments) in each leaf module that contributes a case.
+
+\begin{definition}[the linking object; Lean source, quoted exactly]
+\label{def:h1-lean}
+\begin{lstlisting}
+noncomputable def linkingComplementH1 (D : ℕ)
+    (f : C(TopCat.sphere.{0} 1, TopCat.sphere.{0} D)) : ModuleCat ℤ :=
+  ((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) 1).obj
+    (ModuleCat.of ℤ ℤ)).obj
+    (TopCat.of {x : TopCat.sphere.{0} D // x ∉ Set.range f})
+\end{lstlisting}
+\end{definition}
+
+Unpacking: \lean{TopCat.sphere.\{0\} D} is the unit sphere of $\R^{D+1}$ as a topological space at universe zero; the subtype \lean{\{x // x $\notin$ Set.range f\}} is the complement of the image of $f$ with the subspace topology; and the double functor application is Mathlib's first singular homology with coefficients in the $\Z$-module $\Z$, valued in the category of $\Z$-modules. In standard notation, $\lean{linkingComplementH1}\ D\ f = H_1\bigl(\Sph{D} \smallsetminus f(S^1);\ \Z\bigr)$.
+
+\begin{definition}[the detection predicate; Lean source, quoted exactly]
+\label{def:detects-lean}
+\begin{lstlisting}
+def DetectsNontrivialLinking (D : ℕ) : Prop :=
+  ∃ f : C(TopCat.sphere.{0} 1, TopCat.sphere.{0} D),
+    Topology.IsEmbedding f ∧
+      ¬ CategoryTheory.Limits.IsZero (linkingComplementH1 D f)
+\end{lstlisting}
+\end{definition}
+
+\lean{Topology.IsEmbedding f} says $f$ is a homeomorphism onto its image; since $S^1$ is compact and spheres are Hausdorff, this is equivalent to continuity plus injectivity, but the definition asks for the embedding property directly. Nonvanishing is phrased categorically (\lean{IsZero} in \lean{ModuleCat} $\Z$), which for modules is equivalent to the underlying module being trivial.
+
+The two proved halves are bundled, together with the circle homology computation they lean on, in a structure named for the classical theorem whose corridor it replaces:
+
+\begin{definition}[the bridge; Lean source, quoted exactly, docstrings elided]
+\label{def:bridge-lean}
+\begin{lstlisting}
+structure AlexanderLinkingBridge : Prop where
+  h1 : MathlibCohomologyBridge.circleH1ZIsoInt
+  d3_detects : DetectsNontrivialLinking 3
+  forces_D3 : ∀ D, DetectsNontrivialLinking D → D = 3
+
+def target_D3_from_nonencoding_linking : Prop :=
+  Nonempty AlexanderLinkingBridge
+\end{lstlisting}
+\end{definition}
+
+Here \lean{circleH1ZIsoInt} asserts $H_1(S^1;\Z) \cong \Z$ for Mathlib singular homology; it was proved earlier in the same library by an explicit winding-number analysis (integer winding classifies cycles; zero-winding cycles bound), and enters the bridge as a consumed theorem, not a hypothesis. The target stays a \lean{def} for the gate reason explained in Section~\ref{sec:binder}; its inhabitation, previously open, is now the theorem \lean{PublicSpineLinkingClosure.target\_D3}.
+
+\subsection{Why $H_1$ of the complement}
+
+Three natural candidate formalizations were considered and rejected in favor of complement $H_1$.
+
+An \emph{integer linking number} of two disjoint circles is the classical invariant, but defining it requires either a choice of Seifert surface, intersection theory, or degree theory for maps to $S^2$, each of which presupposes smooth or PL machinery unavailable for wild embeddings, and each of which would import a large formal apparatus. Complement homology needs none of that.
+
+The \emph{fundamental group} $\pi_1$ of the complement is a finer invariant, but finer is worse here: $\pi_1$ of a wild circle complement can be nontrivial in ways unrelated to linking (the Fox--Artin arc already shows complement $\pi_1$ is not tame for arcs \cite{foxartin}), and no Seifert--van Kampen infrastructure at this generality existed in the target library. Decisively, the uniqueness half would be false for $\pi_1$: nonvanishing $\pi_1$ of the complement does not force $D=3$.
+
+$H_1$ of the complement is the exact level at which the dichotomy is clean. It is the abelianized, homotopy-invariant shadow that Alexander duality computes, it vanishes for arc and circle complements in the off dimensions for every topological embedding, and it is nonzero for the unknot complement in $\Sph{3}$. The predicate quantifies existentially over embeddings, so the existence half needs one witness and the uniqueness half must beat all of them; complement $H_1$ makes both halves true and provable.
+
+\section{Existence in dimension 3}
+\label{sec:existence}
+
+The witness is the flat unknot. Write points of $\R^4$ as $(y_0, y_1, y_2, y_3)$ and embed
+\[
+u \colon S^1 \to \Sph{3}, \qquad u(x_0, x_1) = (x_0, x_1, 0, 0).
+\]
+This is a linear isometric inclusion restricted to spheres, hence continuous and injective; compactness of $S^1$ and Hausdorffness of $\Sph{3}$ upgrade it to an embedding (\lean{unknot\_isEmbedding}).
+
+The complement $C = \Sph{3} \smallsetminus u(S^1)$ contains the dual core circle $c(z_0, z_1) = (0, 0, z_0, z_1)$: a point of the image of $u$ has last two coordinates zero, while a point of the image of $c$ has first two coordinates zero and norm one, so the two circles are disjoint. Define
+\[
+r \colon C \to S^1, \qquad r(y) = \frac{(y_2, y_3)}{\lVert (y_2, y_3) \rVert}.
+\]
+The map $r$ is well defined because a point of $\Sph{3}$ with $y_2 = y_3 = 0$ lies on the image of $u$, hence outside $C$ (\lean{part23\_ne\_zero}), and it is continuous. A direct computation gives $r \circ c = \mathrm{id}_{S^1}$ (\lean{retract\_core}): the composite scales a unit vector by the inverse of its norm.
+
+Functoriality finishes the argument. Applying the functor $H_1(-;\Z)$ to $r \circ c = \mathrm{id}$ gives $H_1(r) \circ H_1(c) = \mathrm{id}$ on $H_1(S^1;\Z)$, so $H_1(S^1;\Z) \cong \Z$ is a retract of $H_1(C;\Z)$. Were $H_1(C;\Z)$ the zero module, the identity of $\Z$ would factor through zero, forcing $1 = 0$ in $\Z$. Hence $H_1(C;\Z) \neq 0$ (\lean{unknotComplementH1\_ne\_zero}), and the pair $(u, \text{this nonvanishing})$ witnesses Theorem~\ref{thm:existence}.
+
+\begin{remark}
+This half needs no homotopy invariance. In the standard treatment the complement of the unknot deformation-retracts to a torus-complement picture; the formal proof uses only that $H_1$ is a functor, and functors preserve section--retraction pairs. The entire existence half, from linear algebra to the homology conclusion, lives in one self-contained module (\lean{UnknotComplementRetract.lean}, 308 lines) importing only Mathlib.
+\end{remark}
+
+\section{Nonexistence in dimensions 0 and 1}
+\label{sec:lowdim}
+
+These cases are elementary but must still be proved; the uniqueness quantifier runs over all of $\N$.
+
+\textbf{Dimension 0.} $\Sph{0}$ is the two-point space $\{\pm 1\} \subset \R$. Every subspace of a finite discrete space is totally disconnected, and Mathlib provides that singular homology of a totally disconnected space vanishes in every positive degree. Whatever a continuous map $f\colon S^1 \to \Sph{0}$ may be (no embedding exists here; the proof never needs that fact), its complement is a subspace of a two-point space, so $H_1 = 0$ (\lean{not\_detects\_zero}).
+
+\textbf{Dimension 1.} Here the complement is empty. The formal argument shows that a continuous injection $g \colon S^1 \to S^1$ is surjective. Suppose $g$ misses a point $p$. Stereographic projection from $p$ is a homeomorphism $S^1 \smallsetminus \{p\} \cong \R$, so composing yields a continuous injection $h \colon S^1 \to \R$. Pick three points of $S^1$ with distinct $h$-values and let $x_0$ be the one whose value is strictly in the middle. Removing $x_0$ leaves $S^1 \smallsetminus \{x_0\}$ connected (stereographic projection again), so its image under $h$ is a connected subset of $\R$ attaining values on both sides of $h(x_0)$; by the intermediate value property that image contains $h(x_0)$, contradicting injectivity (\lean{no\_continuous\_injective\_circle\_to\_real}). An embedded circle in $\Sph{1}$ therefore fills it, the complement is the empty space, and $H_1(\varnothing) = 0$ (\lean{not\_detects\_one}).
+
+\section{Nonexistence in dimension 2 and dimensions 4 and above}
+\label{sec:highdim}
+
+For $D \geq 2$ with $D \neq 3$ the argument is the circle case of Hatcher's Proposition~2B.1 \cite{hatcher}: cut the circle into two arcs, handle each arc by the acyclicity theorem of Section~\ref{sec:arc}, and glue with Mayer--Vietoris. This section describes the reduction; it consumes three interfaces from the banked homology infrastructure of the companion paper \cite{companion}, restated here as consumed:
+
+\begin{itemize}
+\item \emph{Homotopy invariance:} a homotopy equivalence $X \simeq Y$ induces isomorphisms $H_n(X) \cong H_n(Y)$ (\lean{hgrpIso}).
+\item \emph{Sphere homology:} $H_k(\Sph{n}) = 0$ for $1 \le k$ with $k \neq n$ (\lean{sphere\_homology\_vanish}), together with vanishing of positive-degree homology of contractible spaces.
+\item \emph{Mayer--Vietoris exactness:} for open $U, V$ with $U \cup V = X$, the sequence $H_2(X) \to H_1(U \cap V) \to H_1(U) \oplus H_1(V)$ is exact at the middle (\lean{mv\_exact}$_1$). If the two outer groups vanish, so does the middle (\lean{isZero\_h1\_inter}).
+\end{itemize}
+
+\subsection{The two-point complement}
+
+Let $p \neq q$ be any two points of $\Sph{n}$ with $n \geq 1$. Stereographic projection from $p$ identifies $\Sph{n} \smallsetminus \{p\}$ with a hyperplane $\R^{n}$; translating the image of $q$ to the origin and passing to polar coordinates identifies $\Sph{n} \smallsetminus \{p, q\}$ with $\Sph{n-1} \times (0, \infty)$, whose interval factor is contractible. Hence there is a homotopy equivalence
+\[
+\Sph{n} \smallsetminus \{p, q\} \ \simeq\ \Sph{n-1}
+\qquad (\lean{twoPointComplHEquiv}),
+\]
+valid for arbitrary point pairs, with every step an explicit homeomorphism except the final collapse of the contractible factor. Consequently, for $n \geq 1$ and $n \neq 3$,
+\[
+H_2\bigl(\Sph{n} \smallsetminus \{p, q\}\bigr) \cong H_2(\Sph{n-1}) = 0
+\qquad (\lean{isZero\_h2\_twoPointCompl}),
+\]
+since $2 \neq n - 1$ exactly when $n \neq 3$. This inequality is the single point where the hypothesis $D \neq 3$ enters the entire uniqueness proof.
+
+\subsection{The semicircle cover and the reduction}
+
+Parametrize the closed upper and lower semicircles of $S^1$ as explicit embeddings $a_\pm \colon [0,1] \to S^1$, $t \mapsto \bigl(1 - 2t,\ \pm\sqrt{1 - (1-2t)^2}\bigr)$. Their ranges cover $S^1$ and meet exactly in the east and west points $(\pm 1, 0)$ (\lean{range\_arcPlus\_inter\_arcMinus}).
+
+Now let $g \colon S^1 \to \Sph{D}$ be any topological embedding, $D \geq 2$, $D \neq 3$. Write $K_\pm = g(a_\pm([0,1]))$, two compact (hence closed) sets with $K_+ \cup K_- = g(S^1)$ and $K_+ \cap K_- = \{g(e), g(w)\}$, the images of the east and west points. Work inside the open set $W = \Sph{D} \smallsetminus \{g(e), g(w)\}$ and cover it by
+\[
+U = \Sph{D} \smallsetminus K_+ , \qquad V = \Sph{D} \smallsetminus K_- ,
+\]
+both open in $W$, with $U \cup V = W$ and $U \cap V = \Sph{D} \smallsetminus g(S^1)$, the circle complement we care about. The three inputs line up:
+\[
+H_2(W) = 0 \ \text{(two-point complement, $D \neq 3$)}, \qquad
+H_1(U) = H_1(V) = 0 \ \text{(arc-complement acyclicity)},
+\]
+and Mayer--Vietoris exactness at $H_1(U \cap V)$ forces
+\[
+H_1\bigl(\Sph{D} \smallsetminus g(S^1)\bigr) = 0
+\qquad (\lean{isZero\_h1\_complement\_of\_embedding}).
+\]
+The maps $g \circ a_\pm$ are embeddings of $[0,1]$ into $\Sph{D}$ (composites of embeddings), so the $H_1(U) = H_1(V) = 0$ inputs are exactly instances of Theorem~\ref{thm:arc} below. A bookkeeping layer (\lean{flattenComplHomeo}) mediates between ``complement taken inside $W$'' and ``complement taken inside $\Sph{D}$,'' using that both arcs contain both punctures.
+
+\begin{remark}[the $D = 2$ surprise]
+Classically, the planar case of the Jordan separation circle of results is treated with its own tools, and one might expect the formalization of $D = 2$ to require a Jordan--Schoenflies development. It does not. The reduction above is uniform: for $D = 2$ the two-point complement is homotopy equivalent to $\Sph{1}$, and $H_2(\Sph{1}) = 0$ holds for the same dimension-comparison reason as $H_2(\Sph{D-1}) = 0$ for $D \geq 4$. The only special dimensions in the whole proof are $0$ and $1$, where the statement itself degenerates. What the argument does \emph{not} give for $D=2$ is separation into two components with the circle as common boundary; it gives exactly $H_1 = 0$ of the complement, which is all the theorem needs.
+\end{remark}
+
+\section{Arc-complement acyclicity in every dimension}
+\label{sec:arc}
+
+The load-bearing theorem is the arc case of Hatcher's Proposition~2B.1, formalized for arbitrary topological embeddings.
+
+\begin{theorem}[\lean{ArcComplementAcyclic.arcComplementsAcyclic}]
+\label{thm:arc}
+For every $D \in \N$ and every topological embedding $a \colon [0,1] \to \Sph{D}$,
+\[
+H_1\bigl(\Sph{D} \smallsetminus a([0,1]);\ \Z\bigr) = 0 .
+\]
+\end{theorem}
+
+In Lean, the statement (a fixed predicate consumed by Section~\ref{sec:highdim}) reads:
+
+\begin{lstlisting}
+def ArcComplementsAcyclic (D : ℕ) : Prop :=
+  ∀ a : C(unitInterval, ↥(Sph D)), Topology.IsEmbedding a →
+    CategoryTheory.Limits.IsZero
+      (Hgrp (TopCat.of {y : ↥(Sph D) // y ∉ Set.range a}) 1)
+\end{lstlisting}
+
+The interval $[0,1]$ carries no structure the argument could exploit beyond compactness and connectedness of its subintervals; in particular the image $a([0,1])$ may be wild. The proof is a compact-support bisection, run by contradiction, and it is where most of the formal effort of this paper lives (870 lines on top of the banked infrastructure). We describe its four moving parts.
+
+\subsection{Elementwise homology classes}
+
+Mathlib's homology of a chain complex is defined categorically, which is the right generality for functoriality but awkward for an argument that manipulates individual cycles. A small toolkit (\lean{classOf}, \lean{classOf\_eq\_zero\_iff}, \lean{exists\_classOf}, \lean{classOf\_natural}) realizes the homology of a complex of $\Z$-modules concretely as kernel modulo image: every homology element is the class of a cycle, a class vanishes exactly when its cycle bounds, and classes push forward along chain maps. With it, the target ``$H_1$ of the arc complement is zero'' becomes: \emph{every} $1$-cycle $z$ in the complement of $a([0,1])$ bounds. Suppose, for contradiction, that some $z$ does not.
+
+\subsection{The bisection step}
+
+For a parameter subinterval $[u, v] \subseteq [0,1]$ write $z_{[u,v]}$ for the pushforward of $z$ into the (larger) complement of $a([u,v])$, and call $[u,v]$ \emph{bad} if $z_{[u,v]}$ does not bound there. By assumption $[0,1]$ is bad. Let $m$ be the midpoint of a bad $[u,v]$ and suppose both halves $[u,m]$ and $[m,v]$ are good, meaning both pushforwards bound. The complements of $a([u,m])$ and $a([m,v])$ form an open cover of the complement of $a([u,m]) \cap a([m,v]) = \{a(m)\}$, a punctured sphere, which is contractible by stereographic projection, so its $H_2$ vanishes. Exactness of the Mayer--Vietoris sequence at $H_1$ of the intersection then makes the pair map injective there: a cycle in the complement of $a([u,v])$ whose images bound in both half-arc complements already bounds in the complement of $a([u,v])$ (\lean{bounds\_of\_halves}). That contradicts badness of $[u,v]$, so at least one half is bad (\lean{bad\_step}).
+
+\subsection{The nested-interval limit}
+
+Iterating produces nested bad intervals $[u_k, v_k]$ of width $2^{-k}$. Let $t^\ast = \sup_k u_k$, a point of every $[u_k, v_k]$. The complement of the single point $a(t^\ast)$ is contractible, so the pushforward of $z$ into it bounds: there is a singular $2$-chain $w$ with $\partial w = z$ there.
+
+\subsection{Compact support closes the trap}
+
+The chain $w$ is a finite $\Z$-linear combination of singular $2$-simplices, so the union $K$ of their images is compact (\lean{suppOf}), and $K$ avoids $a(t^\ast)$ by construction. Since $a$ is continuous, the preimage $a^{-1}(K)$ is closed in $[0,1]$ and misses $t^\ast$, so some $\varepsilon$-ball around $t^\ast$ avoids it. Choose $k$ with $2^{-k} < \varepsilon$: then the entire subarc $a([u_k, v_k])$ misses $K$. The bounding chain $w$ therefore lifts to a chain in the complement of $a([u_k, v_k])$ (\lean{exists\_chain\_lift}), exhibiting $z_{[u_k, v_k]}$ as a boundary and contradicting badness of $[u_k, v_k]$. This completes the proof of Theorem~\ref{thm:arc}.
+
+The pattern deserves a name: homology cannot see a point, and compactness of chains converts ``cannot see a point'' into ``cannot see a sufficiently small subarc.'' No tameness of the embedding is consulted at any step; the only properties of $a$ ever used are continuity, injectivity, and compactness of subarc images.
+
+\section{Main theorems}
+\label{sec:main}
+
+The closure module glues the pieces. Quoting the two capstone declarations exactly:
+
+\begin{lstlisting}
+theorem forces_D3 :
+    ∀ D, PublicSpine.DetectsNontrivialLinking D → D = 3 :=
+  PublicSpineLinkingAssembly.forces_D3_of_arcAcyclic
+    (fun D _ _ => ArcComplementAcyclic.arcComplementsAcyclic D)
+
+theorem target_D3 : PublicSpine.target_D3_from_nonencoding_linking :=
+  PublicSpineLinkingAssembly.target_of_arcAcyclic
+    (fun D _ _ => ArcComplementAcyclic.arcComplementsAcyclic D)
+\end{lstlisting}
+
+The proof term of \lean{forces\_D3} displays the architecture: the assembly theorem case-splits on $D$ (dimensions $0$ and $1$ by Section~\ref{sec:lowdim}, dimensions $2$ and $\geq 4$ by the reduction of Section~\ref{sec:highdim}), and the reduction's one hypothesis parameter, arc-complement acyclicity, is discharged by Theorem~\ref{thm:arc}. \lean{target\_D3} then packages $H_1(S^1;\Z) \cong \Z$, Theorem~\ref{thm:existence}, and \lean{forces\_D3} into an inhabitant of \lean{AlexanderLinkingBridge}. Notably, the closure makes no appeal to the legacy encoding predicate or to the axiom-tier shortcut (\lean{DimensionForcing.linking\_requires\_D3}) that the library previously carried for this fact; the bridge replaces that axiom, and it consumes no part of it.
+
+\subsection{The combinatorial period bound}
+
+Downstream of $D = 3$, the library states one further target, pure combinatorics on $\mathrm{Fin}\ 3 \to \mathrm{Bool}$, quoted exactly:
+
+\begin{lstlisting}
+def CubePeriodEight : Prop :=
+  ∀ (walk : ℕ → (Fin 3 → Bool)) (p : ℕ), 0 < p →
+    (∀ n, walk (n + p) = walk n) →
+    Function.Surjective walk → 8 ≤ p
+
+def target_eight_tick_from_D3 : Prop :=
+  target_D3_from_nonencoding_linking ∧ CubePeriodEight
+\end{lstlisting}
+
+\begin{theorem}[\lean{cubePeriodEight\_holds}]
+\label{thm:cube}
+Every periodic walk on the vertices of the $3$-cube that visits all $2^3 = 8$ vertices has period at least $8$.
+\end{theorem}
+
+The proof is a pigeonhole count: periodicity confines the range of the walk to its first $p$ values, so surjectivity onto the $8$ vertices yields an injection from an $8$-element type into $\mathrm{Fin}\ p$, whence $8 \leq p$. The statement is phrased as an inequality about surjective periodic walks precisely because the naive form ``$\mathrm{eight\_tick} = 2^3$'' was reflexivity-true under the library's definitions and hence vacuous; the gate of Section~\ref{sec:binder} bans that degenerate form. The conjunction \lean{target\_eight\_tick\_from\_D3} is assembled as a corollary of \lean{target\_D3} and Theorem~\ref{thm:cube} (\lean{Skeleton.guidepost\_public\_eight\_tick}).
+
+\subsection{Translation table}
+
+Table~\ref{tab:translation} translates each principal Lean declaration into mathematical notation. Every row is proved with zero \lean{sorry} and standard axioms.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}p{0.40\textwidth}p{0.54\textwidth}@{}}
+\toprule
+\textbf{Lean declaration} & \textbf{Mathematical statement} \\
+\midrule
+\lean{circleH1ZIsoInt\_holds} & $H_1(S^1;\Z) \cong \Z$ (Mathlib singular homology) \\
+\lean{detectsNontrivialLinking\_three} & $\exists$ embedding $f\colon S^1 \to \Sph{3}$ with $H_1(\Sph{3} \smallsetminus f(S^1);\Z) \neq 0$ \\
+\lean{not\_detects\_zero}, \lean{not\_detects\_one} & no embedded circle in $\Sph{0}$ or $\Sph{1}$ has $H_1$-nontrivial complement \\
+\lean{arcComplementsAcyclic} & $\forall D$, $\forall$ embedding $a \colon [0,1] \to \Sph{D}$: $H_1(\Sph{D} \smallsetminus a([0,1]);\Z) = 0$ \\
+\lean{isZero\_h1\_complement\_of\_embedding} & $D \geq 1$, $D \neq 3$, arcs acyclic $\Rightarrow$ every embedded circle in $\Sph{D}$ has $H_1$-acyclic complement \\
+\lean{PublicSpineLinkingClosure.forces\_D3} & $\forall D \in \N$: $\bigl(\exists$ embedding $f\colon S^1 \to \Sph{D}$, $H_1(\Sph{D}\smallsetminus f(S^1);\Z) \neq 0\bigr) \Rightarrow D = 3$ \\
+\lean{PublicSpineLinkingClosure.target\_D3} & the conjunction: circle homology, existence at $3$, uniqueness (an inhabited \lean{AlexanderLinkingBridge}) \\
+\lean{cubePeriodEight\_holds} & every surjective $p$-periodic walk on $\{0,1\}^3$ has $p \geq 8$ \\
+\lean{guidepost\_public\_eight\_tick} & \lean{target\_D3} $\wedge$ \lean{CubePeriodEight} \\
+\bottomrule
+\end{tabular}
+\caption{Lean-to-mathematics translation of the principal declarations.}
+\label{tab:translation}
+\end{table}
+
+\section{Interpretation, quarantined}
+\label{sec:interpretation}
+
+Everything in this section is interpretation. It adds no mathematical content to Sections~\ref{sec:predicate} through~\ref{sec:main}, and nothing in those sections depends on it. Readers interested only in the topology and the formalization can stop at Section~\ref{sec:limitations} without loss.
+
+The Recognition Science program \cite{rs-cost, rs-geometry, rs-convex, rs-coherent, rs-hessian} studies a parameter-free framework in which physical structure is modeled as forced by consistency conditions on a cost functional, organized as a chain of results labeled T0 through T8. The theorems of this paper close the chain's two topological rungs on their honest, non-encoding formulations: T8 (spatial dimension) and T7 (the minimal cycle).
+
+The reading of Theorems~\ref{thm:existence} and~\ref{thm:uniqueness} within that program is this. A one-dimensional record (a loop) placed in a $D$-dimensional spatial substrate leaves a trace in the topology of its surroundings: the first homology of its complement. Call that trace \emph{linking memory}: the substrate registers, at the level of $H_1$, that something one-dimensional is present and cannot be forgotten by any deformation of an ambient probe loop. The theorems say linking memory exists in dimension $3$ and in no other dimension. Below $3$ there is no room (the complement is degenerate or empty); above $3$ there is too much room (every probe unlinks); $D = 3$ is the unique dimension in which embedded circles can hold a homological record of one another. Within the program, this is the content of the T8 rung: a substrate supporting stable mutual registration of one-dimensional records must be three-dimensional.
+
+Theorem~\ref{thm:cube} is then read as the T7 rung. With three binary distinctions available (one per spatial dimension in the program's reading), a complete traversal of all $2^3 = 8$ states takes at least eight steps; the program calls this minimal complete traversal the eight-tick recognition cycle. The formal statement is, and remains, a pigeonhole bound on walks on the $3$-cube.
+
+Table~\ref{tab:separation} keeps the ledger explicit.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}p{0.46\textwidth}p{0.48\textwidth}@{}}
+\toprule
+\textbf{Formal theorem (proved, machine-checked)} & \textbf{Interpretation (not a mathematical claim)} \\
+\midrule
+$\exists$ embedded circle in $\Sph{3}$ with $H_1$-nontrivial complement & three-dimensional space admits linking memory \\
+nontrivial linking detection forces $D = 3$ & spatial dimension is the unique $D$ admitting linking memory \\
+surjective periodic walks on $\{0,1\}^3$ have period $\geq 8$ & the recognition cycle over three distinctions is eight ticks \\
+$H_1(S^1;\Z) \cong \Z$ & a loop is the minimal nontrivial record \\
+\bottomrule
+\end{tabular}
+\caption{Separation ledger. The left column is what the Lean kernel certifies. The right column is a reading supplied by the Recognition Science program; it is not derived, not machine-checked, and not asserted as physics.}
+\label{tab:separation}
+\end{table}
+
+Two boundaries bear repeating. First, no empirical claim is derived here: the theorems constrain a mathematical predicate, and the passage from ``the predicate forces $3$'' to ``physical space is three-dimensional'' is a modeling choice of the program, open to challenge on physical grounds independent of anything in this paper. Second, the prior peer-reviewed publications of the program \cite{rs-cost, rs-geometry, rs-convex, rs-coherent, rs-hessian} are cited as continuity of a research line, not as validation of the interpretation.
+
+\section{Limitations and scope}
+\label{sec:limitations}
+
+\textbf{A corridor, not a duality.} The development proves complement-$H_1$ facts for embedded arcs and circles in $\Sph{D}$, which is the corridor the dichotomy needs. Full Alexander duality, even for these spaces, is not formalized; neither is any statement about $H_i$ for $i \geq 2$ of the complements, nor about complements of higher-dimensional embedded spheres or general compacta.
+
+\textbf{No knot theory.} At $D = 3$ the theorem is existential and its witness is the flat unknot, which suffices: the existence half needs one embedding, and the uniqueness half constrains dimensions, not embeddings. Nothing is proved about which circles in $\Sph{3}$ have which complement homology beyond the witness (classically all of them have $H_1 \cong \Z$; that refinement is future work), and nothing distinguishes knot types.
+
+\textbf{Classical foundations.} Every theorem depends on \lean{propext}, \lean{Classical.choice}, and \lean{Quot.sound}. The bisection argument uses choice through Mathlib's topology and through the extraction of bad halves; no attempt at a constructive development was made.
+
+\textbf{The gate is engineering.} The audit script rejects the two historical cheat shapes and their near variants at the level of source text. It does not and cannot certify that \lean{DetectsNontrivialLinking} formalizes the reader's intended notion of linking; that judgment remains with human review of Definitions~\ref{def:h1-lean} and~\ref{def:detects-lean}, which is why the paper quotes them exactly and gives no paraphrase in their place. A statement-level cheat outside the gate's pattern class would need to survive that same review.
+
+\textbf{Library coupling.} The proofs are pinned to a specific Mathlib snapshot (see Section~\ref{sec:artifact}); the singular homology API there is young, and identifier names may drift in future Mathlib versions even as the mathematics stands.
+
+\section{Artifact receipts}
+\label{sec:artifact}
+
+\textbf{Theorem names.} The principal declarations, in namespace \lean{IndisputableMonolith.Foundation}:
+\lean{PublicSpine.detectsNontrivialLinking\_three},
+\lean{PublicSpine.not\_detectsNontrivialLinking\_zero},
+\lean{PublicSpine.not\_detectsNontrivialLinking\_one},
+\lean{ArcComplementAcyclic.arcComplementsAcyclic},
+\lean{LinkingVanishingHighDim.isZero\_h1\_complement\_of\_embedding},
+\lean{PublicSpineLinkingClosure.forces\_D3},
+\lean{PublicSpineLinkingClosure.target\_D3},
+\lean{PublicSpine.cubePeriodEight\_holds}, and
+\lean{Skeleton.guidepost\_public\_eight\_tick}.
+The case modules are \lean{UnknotComplementRetract.lean} (308 lines), \lean{LinkingVanishingLowDim.lean} (249), \lean{LinkingVanishingHighDim.lean} (629), \lean{ArcComplementAcyclic.lean} (870), and the assembly pair \lean{PublicSpineLinkingAssembly.lean} / \lean{PublicSpineLinkingClosure.lean}. The supporting homology layers (prism operators, barycentric subdivision and small simplices, the Mayer--Vietoris long exact sequence, sphere homology) total roughly six thousand further lines and are the subject of the companion paper \cite{companion}.
+
+\textbf{Axiom audit.} \lean{\#print axioms} on \lean{detectsNontrivialLinking\_three}, \lean{arcComplementsAcyclic}, \lean{forces\_D3}, and \lean{target\_D3} reports, for each:
+\begin{center}
+\lean{[propext, Classical.choice, Quot.sound]}
+\end{center}
+No \lean{sorry}, no \lean{native\_decide}, no project-local axiom appears in any transitive dependency of these declarations.
+
+\textbf{Gate transcript.} Running the statement audit at the closure commit:
+\begin{center}
+\lean{\$ python3 scripts/public\_spine\_gate.py} \\
+\lean{OK: public\_spine\_gate}
+\end{center}
+
+\textbf{Repository and commit.} The public mirror is
+\begin{center}
+\url{https://github.com/jonwashburn/shape-of-logic}, \quad commit \lean{360669280a2a84f28b67f2a0edd99756fba7c9fc},
+\end{center}
+carrying the fourteen modules of the bridge byte-identical to the development tree, the gate script, and the must-fail cheat witness.
+
+\textbf{How to check.} Install \lean{elan} (the Lean toolchain manager), clone the repository at the commit above, fetch the Mathlib cache (\lean{lake exe cache get}), and build the closure target:
+\begin{center}
+\lean{lake build IndisputableMonolith.Foundation.PublicSpineLinkingClosure}
+\end{center}
+A successful build kernel-checks every theorem in this paper. To reproduce the axiom audit, open any file importing the closure and run \lean{\#print axioms} on the declarations named above; to reproduce the gate transcript, run the script from the repository root. The must-fail witness can be checked negatively: attempting to compile \lean{Foundation/PublicSpine/K1CheatMustFail.lean} must produce a type error on the first cheat and an unknown-field error on the second.
+
+\section*{Acknowledgments}
+
+The formalization builds on the Mathlib community's category theory, topology, and algebraic topology libraries, and in particular on the singular homology development. The two failed formulations of Section~\ref{sec:binder} were identified by adversarial review panels; the design lesson recorded there is theirs as much as the author's.
+
+\begin{thebibliography}{99}
+
+\bibitem{alexander}
+J.~W. Alexander,
+\emph{A proof and extension of the Jordan--Brouwer separation theorem},
+Trans. Amer. Math. Soc. \textbf{23} (1922), 333--349.
+
+\bibitem{antoine}
+L.~Antoine,
+\emph{Sur l'hom\'eomorphie de deux figures et de leurs voisinages},
+J. Math. Pures Appl. \textbf{4} (1921), 221--325.
+
+\bibitem{foxartin}
+R.~H. Fox and E.~Artin,
+\emph{Some wild cells and spheres in three-dimensional space},
+Ann. of Math. \textbf{49} (1948), 979--990.
+
+\bibitem{hatcher}
+A.~Hatcher,
+\emph{Algebraic Topology},
+Cambridge University Press, 2002.
+
+\bibitem{lean4}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean 4 theorem prover and programming language},
+in: Automated Deduction (CADE 28), Lecture Notes in Computer Science \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{companion}
+J.~Washburn,
+\emph{A verified excision spine for singular homology in Lean 4: prisms, subdivision, Mayer--Vietoris, and the homology of spheres},
+companion paper, in preparation, 2026.
+
+\bibitem{rs-geometry}
+J.~Washburn et al.,
+\emph{Recognition geometry},
+Axioms \textbf{15}(2) (2026), 90.
+
+\bibitem{rs-cost}
+J.~Washburn et al.,
+\emph{Uniqueness of the canonical reciprocal cost},
+Mathematics \textbf{14}(6) (2026), 935.
+
+\bibitem{rs-convex}
+J.~Washburn et al.,
+\emph{Reciprocal convex costs for ratio matching},
+Axioms \textbf{15}(2) (2026), 151.
+
+\bibitem{rs-coherent}
+J.~Washburn et al.,
+\emph{Coherent comparison as information cost},
+Axioms \textbf{15}(5) (2026), 378.
+
+\bibitem{rs-hessian}
+J.~Washburn et al.,
+\emph{Golden and metallic structures on Hessian manifolds},
+Mathematics \textbf{14}(14) (2026), 2483.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,1217 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{microtype}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\emergencystretch=1.5em
+
+% Unicode characters that appear inside \texttt{} identifiers in prose.
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}   % δ
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}    % ι
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}   % α
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}    % β
+\DeclareUnicodeCharacter{2080}{\ensuremath{_0}}       % ₀
+\DeclareUnicodeCharacter{2081}{\ensuremath{_1}}       % ₁
+\DeclareUnicodeCharacter{2082}{\ensuremath{_2}}       % ₂
+\DeclareUnicodeCharacter{2083}{\ensuremath{_3}}       % ₃
+
+\definecolor{leankw}{RGB}{0,32,96}
+\definecolor{leancomment}{RGB}{96,96,96}
+
+\lstdefinelanguage{lean}{
+  morekeywords={theorem,lemma,def,noncomputable,abbrev,structure,where,fun,
+    match,with,by,intro,exact,refine,obtain,attribute,local,instance,import,
+    namespace,end,open,variable,haveI,have,set,let,show,rintro,apply},
+  sensitive=true,
+  morecomment=[l]{--},
+  morecomment=[s]{/-}{-/},
+}
+\lstset{
+  language=lean,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{leankw}\bfseries,
+  commentstyle=\color{leancomment}\itshape,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  showstringspaces=false,
+  xleftmargin=1em,
+  literate=
+    {ℤ}{{\ensuremath{\mathbb{Z}}}}1
+    {ℕ}{{\ensuremath{\mathbb{N}}}}1
+    {ℝ}{{\ensuremath{\mathbb{R}}}}1
+    {×}{{\ensuremath{\times}}}1
+    {⟶}{{\ensuremath{\longrightarrow}}}2
+    {→}{{\ensuremath{\rightarrow}}}1
+    {↦}{{\ensuremath{\mapsto}}}1
+    {≫}{{\ensuremath{\gg}}}1
+    {≅}{{\ensuremath{\cong}}}1
+    {⊞}{{\ensuremath{\boxplus}}}1
+    {∩}{{\ensuremath{\cap}}}1
+    {∪}{{\ensuremath{\cup}}}1
+    {∀}{{\ensuremath{\forall}}}1
+    {∃}{{\ensuremath{\exists}}}1
+    {∈}{{\ensuremath{\in}}}1
+    {∉}{{\ensuremath{\notin}}}1
+    {⊆}{{\ensuremath{\subseteq}}}1
+    {∨}{{\ensuremath{\lor}}}1
+    {∧}{{\ensuremath{\land}}}1
+    {¬}{{\ensuremath{\neg}}}1
+    {≠}{{\ensuremath{\neq}}}1
+    {≤}{{\ensuremath{\le}}}1
+    {α}{{\ensuremath{\alpha}}}1
+    {β}{{\ensuremath{\beta}}}1
+    {δ}{{\ensuremath{\delta}}}1
+    {ι}{{\ensuremath{\iota}}}1
+    {σ}{{\ensuremath{\sigma}}}1
+    {λ}{{\ensuremath{\lambda}}}1
+    {ε}{{\ensuremath{\varepsilon}}}1
+    {φ}{{\ensuremath{\varphi}}}1
+    {ψ}{{\ensuremath{\psi}}}1
+    {π}{{\ensuremath{\pi}}}1
+    {Δ}{{\ensuremath{\Delta}}}1
+    {∂}{{\ensuremath{\partial}}}1
+    {∑}{{\ensuremath{\textstyle\sum}}}1
+    {∐}{{\ensuremath{\coprod}}}1
+    {₀}{{\ensuremath{_0}}}1
+    {₁}{{\ensuremath{_1}}}1
+    {₂}{{\ensuremath{_2}}}1
+    {₃}{{\ensuremath{_3}}}1
+    {↥}{{\ensuremath{\uparrow}}}1
+    {⇑}{{\ensuremath{\Uparrow}}}1
+    {•}{{\ensuremath{\cdot}}}1
+    {−}{{\ensuremath{-}}}1
+    {≃}{{\ensuremath{\simeq}}}1
+    {∘}{{\ensuremath{\circ}}}1
+    {ᶜ}{{\ensuremath{^{c}}}}1
+    {🄯}{{}}1
+    {⁻¹}{{\ensuremath{^{-1}}}}2
+    {𝟙}{{\ensuremath{\mathbf{1}}}}1
+    {ₗ}{{\ensuremath{_l}}}1
+    {→₀}{{\ensuremath{\rightarrow_0}}}2
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\leanname}[1]{\texttt{#1}}
+
+\title{Formalizing Singular Homology in Lean 4:\\
+Homotopy Invariance, Subdivision, Mayer--Vietoris,\\
+and the Homology of Spheres}
+
+\author{Jonathan Washburn\\
+\small Recognition Physics Institute, Austin, Texas\\
+\small \texttt{washburn@recognitionphysics.org}}
+
+\date{July 18, 2026}
+
+\begin{document}
+
+\sloppy
+
+\maketitle
+
+\begin{abstract}
+Mathlib, the mathematical library of the Lean 4 proof assistant, defines
+singular homology of topological spaces through the singular simplicial set
+and the alternating face map complex, and it proves essentially no theorems
+about the resulting functor. This paper reports a formalization, in Lean 4
+over Mathlib, of the classical computational layer of singular homology with
+integer coefficients: the prism-operator proof of homotopy invariance, the
+long exact sequence of a pair, barycentric subdivision with its diameter
+estimate, the small-simplices and small-chains theorems, the Mayer--Vietoris
+long exact sequence with honest space-level induced maps, the homology of
+spheres (vanishing in the intermediate range and nonvanishing in the top
+degree), and the corollary that spheres of different dimensions are never
+homotopy equivalent. On top of this layer we formalize applications about
+complements of embedded circles and arcs in $S^D$ for arbitrary topological
+embeddings, with no smoothness, PL, or tameness hypotheses: the complement of
+the unknot in $S^3$ has nonvanishing first homology, and the complement of an
+embedded arc in $S^D$ has vanishing first homology in every dimension, a
+formalized case of Hatcher's Theorem~2B.1. These combine into a client
+theorem: an embedded circle in $S^D$ with homologically nontrivial complement
+exists exactly when $D = 3$. The development comprises about 8{,}400 lines
+across twelve modules, builds with zero \texttt{sorry}, and every capstone
+reports the axiom footprint \texttt{[propext, Classical.choice, Quot.sound]}.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Singular homology is the first genuinely computable invariant that a student
+of algebraic topology meets, and its computational core is remarkably
+stable across textbooks: homotopy invariance by the prism operator, the long
+exact sequence of a pair, barycentric subdivision and the small-simplices
+argument, excision or Mayer--Vietoris, and then the homology of spheres with
+its classical corollaries (invariance of dimension, Brouwer's fixed point
+theorem, separation theorems). Mathlib~\cite{mathlib}, the library of the
+Lean~4 proof assistant~\cite{lean4}, recently acquired the definition:
+\leanname{AlgebraicTopology.singularHomologyFunctor} sends a topological
+space to the homology of the alternating face map complex of its singular
+simplicial set, with coefficients in a module. What Mathlib does not have is
+the computational layer. At the time of writing there is essentially no
+theorem in Mathlib about the values of this functor: no homotopy invariance,
+no exact sequences, no subdivision, no computation of $H_*(S^n)$.
+
+This paper reports a development that builds that layer, working directly
+against Mathlib's own definition of singular homology. No project-local
+surrogate stands in between. Every
+statement below about $H_n(X)$ is a statement about
+\leanname{singularHomologyFunctor} applied to the coefficient module $\Z$,
+so anything proved here composes with future Mathlib development without
+translation. The development goes far enough to support theorems of genuinely
+geometric content. Its final applications concern arbitrary topological
+embeddings of circles and arcs into spheres, with no smoothness, PL, or
+local flatness assumptions: the wild cases are included, and this is a
+strength of the homological method that the formalization preserves. As a
+single sentence of motivation beyond topology: the client theorem in
+Section~\ref{sec:client} (nontrivial linking of embedded circles forces
+ambient dimension three) is consumed by a physics program, described in a
+companion paper~\cite{companion}, that derives spatial dimensionality from
+information-theoretic axioms; nothing in the present paper depends on that
+program.
+
+\subsection{Contributions}
+
+All results are formalized in Lean 4 over Mathlib, build with zero
+\texttt{sorry}, and are stated for singular homology with $\Z$ coefficients.
+
+\begin{itemize}
+\item \textbf{Homotopy invariance} (954 lines). The prism operator, its five
+  face identities, the chain homotopy identity
+  $\partial P + P\partial = g_\# - f_\#$, and the packaged consequences:
+  homotopic maps induce equal maps on homology, and homotopy equivalences
+  induce isomorphisms (Hatcher Theorem~2.10, Corollary~2.11).
+\item \textbf{The long exact sequence of a pair} (239 lines). For an
+  injective continuous map $A \to X$, the short exact sequence of singular
+  chain complexes and its homology long exact sequence, with the connecting
+  homomorphism (Hatcher Theorem~2.16, for pairs presented by injections).
+\item \textbf{Barycentric subdivision} (1{,}587 lines). A reusable
+  combinatorial theory of affine chains with cone recursions for the
+  subdivision operator $S$ and the homotopy $T$, the identities
+  $\partial S = S \partial$ and $\partial T + T\partial = 1 - S$, transport
+  to the singular chain complex, the $\tfrac{n}{n+1}$ diameter contraction,
+  and the small-simplices theorem \leanname{exists\_sdOpIter\_small}
+  (the geometric heart of Hatcher's proof of excision, pp.~119--124).
+\item \textbf{Mayer--Vietoris} (1{,}791 lines). The small-chains subcomplex
+  $C^{U,V}_*(X)$, the small-chains theorem (the inclusion induces an
+  isomorphism on homology; Hatcher Proposition~2.21), the Mayer--Vietoris
+  short exact sequence of chain complexes (which needs no openness), and the
+  Mayer--Vietoris long exact sequence with induced maps that are honestly the
+  space-level maps (openness enters only here).
+\item \textbf{Homology of spheres} (745 + 694 lines). The augmentation
+  apparatus, $H_0(X) \cong \Z$ for path-connected $X$ (as invertibility of
+  the augmentation), vanishing of positive-degree homology for contractible
+  spaces, the suspension isomorphism
+  $H_{k+2}(S^{n+1}) \cong H_{k+1}(S^{n})$ obtained from the Mayer--Vietoris
+  connecting map, and the two dimension detectors: $H_k(S^n) = 0$ for
+  $1 \le k \ne n$ and $H_n(S^n) \ne 0$ for $n \ge 1$. Corollary: spheres of
+  different dimensions are never homotopy equivalent.
+\item \textbf{Complement topology for wild embeddings} (308 + 249 + 629 +
+  870 lines). The complement of the flat unknot in $S^3$ has nonvanishing
+  $H_1$; no embedded circle in $S^0$ or $S^1$ has homologically nontrivial
+  complement; for $D \ge 2$, $D \ne 3$, the circle-complement question
+  reduces by Mayer--Vietoris to arcs; and embedded arcs in $S^D$ have
+  $H_1$-acyclic complements in every dimension $D$, by a compact-support
+  bisection argument (the arc case of Hatcher Theorem~2B.1, in degree one,
+  for arbitrary topological embeddings).
+\item \textbf{The client theorem} (311 + 42 lines). The detector
+  \leanname{DetectsNontrivialLinking}~$D$ (some embedded circle in $S^D$
+  has complement with nonvanishing $H_1$) holds if and only if $D = 3$;
+  packaged as a content-typed binder with an anti-cheat gate.
+\end{itemize}
+
+Table~\ref{tab:contrib} maps modules to their classical references. All
+twelve modules live in the directory
+\path{IndisputableMonolith/Foundation/} of the source repository; a public
+mirror is available (Section~\ref{sec:artifact}).
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Module & Content & Classical reference \\
+\midrule
+\leanname{SingularPrism} & prism operator, homotopy invariance & Hatcher Thm.~2.10, Cor.~2.11 \\
+\leanname{SingularPair} & chain SES, LES of a pair & Hatcher Thm.~2.16 \\
+\leanname{SingularSubdivision} & barycentric subdivision, small simplices & Hatcher pp.~119--124 \\
+\leanname{SingularMayerVietoris} & small chains, MV sequence & Hatcher Prop.~2.21, \S 2.2 \\
+\leanname{SingularSphere} & $H_0$, contractible vanishing, MV tools & Hatcher Prop.~2.6, Cor.~2.11 \\
+\leanname{SingularSphereGeometry} & sphere homology, dimension detectors & Hatcher Cor.~2.14 \\
+\leanname{UnknotComplementRetract} & unknot complement, $H_1 \ne 0$ & retraction argument \\
+\leanname{LinkingVanishingLowDim} & no detection in $S^0$, $S^1$ & point-set topology \\
+\leanname{LinkingVanishingHighDim} & reduction of circles to arcs & Hatcher \S 2.2, \S 2.B \\
+\leanname{ArcComplementAcyclic} & arc complements $H_1$-acyclic, all $D$ & Hatcher Thm.~2B.1 (arc case) \\
+\leanname{PublicSpine} & detector, binder, anti-cheat gate & --- \\
+\leanname{PublicSpineLinkingClosure} & \leanname{forces\_D3}, \leanname{target\_D3} & --- \\
+\bottomrule
+\end{tabular}
+\caption{The twelve modules and their classical anchors. Line counts by
+\texttt{wc -l}: 954, 239, 1587, 1791, 745, 694, 308, 249, 629, 870, 311, 42
+(total 8{,}419).}
+\label{tab:contrib}
+\end{table}
+
+\subsection{Related work}
+
+Singular homology has been formalized before, in other systems and with
+other designs. Harrison developed singular homology in HOL
+Light~\cite{harrison-homology}, reaching the Eilenberg--Steenrod axioms and
+consequences including Brouwer's fixed point theorem and Jordan--Brouwer
+separation; Paulson ported that development (about 11{,}400 lines) to
+Isabelle/HOL, where it ships with the distribution as
+\texttt{HOL-Homology}~\cite{paulson-porting}. Those developments use a
+simple-type-theoretic encoding of spaces and hand-rolled free abelian
+groups. In the dependently typed world, the homotopy type theory community
+computes homotopy and cohomology groups synthetically: Brunerie's
+$\pi_4(S^3) \simeq \Z/2$~\cite{brunerie}, cellular cohomology in
+HoTT~\cite{buchholtz-favonia}, and machine computation of the Brunerie
+number in cubical Agda~\cite{ljungstrom-mortberg}. Synthetic results speak
+about types with path structure; the singular homology of general topological
+spaces studied here is a different object, so the two do not directly overlap. In
+Lean, Murphy formalized the Brouwer fixed point theorem via a singular
+homology apparatus built for that purpose, before Mathlib's
+\leanname{singularHomologyFunctor} existed~\cite{birs-cohomology}. Mathlib
+itself has extensive simplicial machinery (simplicial sets, Dold--Kan,
+simplicial homotopy), group and Galois cohomology, and de Rham cohomology in
+the geometry library, but the singular homology functor arrived bare. The
+present development differs from all of the above in one design decision:
+it proves theorems about Mathlib's own functor, in Mathlib's category
+language (\leanname{TopCat}, \leanname{ModuleCat} $\Z$, homological complexes),
+so that the layer can be upstreamed statement by statement
+(Section~\ref{sec:conclusion}).
+
+\section{Background and the target object}\label{sec:background}
+
+\subsection{Singular homology in Mathlib}
+
+Mathlib defines the singular simplicial set of a space $X$ as the restricted
+Yoneda presheaf of the standard simplices: an $n$-simplex is a continuous map
+$\Delta^n \to X$, where $\Delta^n$ is \leanname{stdSimplex} $\R$
+\leanname{(Fin (n+1))}. Applying the free-module functor levelwise and taking
+the alternating face map complex produces the singular chain complex functor
+\leanname{singularChainComplexFunctor}; its homology is
+\leanname{singularHomologyFunctor}. The development fixes coefficients once
+and for all:
+
+\begin{lstlisting}
+noncomputable abbrev SC (X : TopCat.{0}) : ChainComplex (ModuleCat.{0} ℤ) ℕ :=
+  ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat.{0} ℤ)).obj
+    (ModuleCat.of ℤ ℤ)).obj X
+
+noncomputable abbrev Hgrp (X : TopCat.{0}) (n : ℕ) : ModuleCat.{0} ℤ :=
+  (SC X).homology n
+\end{lstlisting}
+
+Both are reducible abbreviations, so $\leanname{Hgrp}\ X\ n$ \emph{is} the
+value of Mathlib's singular homology functor at $X$ with $\Z$ coefficients;
+there is no project-local homology theory to reconcile. Throughout the paper
+$H_n(X)$ abbreviates this object and $C_n(X)$ the degree-$n$ chain group.
+
+A recurring working presentation: with $\Z$ coefficients the degree-$n$
+chain group is the coproduct $\coprod_{\sigma} \Z$ in
+$\leanname{ModuleCat}\ \Z$, indexed by the singular $n$-simplices. The
+development names the index type \leanname{Idx}~$X$~$n$, the coproduct
+\leanname{Cgrp}, and the generator inclusion \leanname{gen}~$X$~$n$~$\sigma$.
+Two normal-form lemmas (\leanname{gen\_d} for the boundary,
+\leanname{gen\_map} for functoriality) reduce every chain-level computation
+to signed sums over generators. This presentation is set up once in
+\leanname{SingularPrism} and reused by every later module.
+
+\subsection{Design choices}
+
+The development is classical. Choice and excluded middle are used freely, as
+is customary in Mathlib's topology and category theory; there is no attempt
+at constructive content, and none of the results are claimed constructively.
+There is also no synthetic homotopy theory: spaces are topological spaces,
+homotopies are continuous maps $I \times X \to Y$, and the results are about
+the classical singular functor. Universe level is pinned to
+\leanname{TopCat.\{0\}}, which is where Mathlib's spheres live.
+
+Every capstone theorem in the development reports the axiom footprint
+\begin{center}
+\texttt{[propext, Classical.choice, Quot.sound]}
+\end{center}
+under \texttt{\#print axioms}: the three standard Lean axioms, and nothing
+else. No result depends on any project-local axiom.
+
+\section{Homotopy invariance: the prism operator}\label{sec:prism}
+
+The module \leanname{SingularPrism} (954 lines) formalizes the textbook
+prism-operator proof of homotopy invariance, following Hatcher's proof of
+Theorem~2.10 but reorganized so that the combinatorial cancellation is a
+standalone abstract lemma.
+
+\subsection{Topological prisms and face identities}
+
+The prism decomposition writes $\Delta^n \times I$ as a union of $(n+1)$
+simplices of dimension $n+1$. Rather than triangulate literally, the
+formalization works with the $(n+1)$ affine maps
+$\leanname{prism}\ i : \Delta^{n+1} \to \Delta^n \times I$ for
+$i : \leanname{Fin}\ (n+1)$, and proves the five face identities that the
+cancellation argument needs: the composites of $\leanname{prism}\ i$ with
+the topological face inclusions
+$\leanname{face}\ j : \Delta^n \to \Delta^{n+1}$ satisfy
+\leanname{prism\_comp\_face\_top}, \leanname{prism\_comp\_face\_bot},
+\leanname{prism\_comp\_face\_cancel}, \leanname{prism\_comp\_face\_of\_le},
+and \leanname{prism\_comp\_face\_of\_gt}. These are proved by direct
+computation with the affine coordinates of \leanname{stdSimplex}.
+
+Given a homotopy $H : C(I \times X, Y)$ and a singular $n$-simplex $\sigma$
+of $X$, each prism map produces a singular $(n+1)$-simplex of $Y$
+(\leanname{prismSimplex}), and the prism operator is the signed sum over the
+decomposition, extended to chains by the universal property of the
+coproduct:
+
+\begin{lstlisting}
+noncomputable def prismOp {X Y : TopCat.{0}} (H : C(I × X, Y)) (n : ℕ)
+    (prisms : Fin (n + 1) →
+      C(stdSimplex ℝ (Fin (n + 2)), stdSimplex ℝ (Fin (n + 1)) × I)) :
+    Cgrp X n ⟶ Cgrp Y (n + 1) :=
+  Sigma.desc (Pgen H n prisms)
+\end{lstlisting}
+
+\subsection{The chain homotopy}
+
+The heart of the proof is an abstract double-sum cancellation
+(\leanname{prism\_sum\_cancellation}): for coefficients in any abelian
+group, the alternating double sum over faces of prisms collapses to the top
+and bottom faces once the diagonal terms cancel in pairs. The five face
+identities feed exactly this lemma, transported through the generator normal
+forms. The result is the chain homotopy identity, stated in positive degrees
+and in degree zero:
+
+\begin{theorem}[prism chain homotopy;
+\leanname{prism\_chain\_homotopy\_succ}, \leanname{\dots\_zero}]
+\label{thm:prism}
+Let $F_0, F_1 : X \to Y$ be continuous and $H$ a homotopy from $F_0$ to
+$F_1$. Writing $P$ for the prism operator of $H$ and $f_\#$ for the induced
+chain map, on degree $n+1$ chains
+\[
+\partial \circ P + P \circ \partial = (F_1)_\# - (F_0)_\#,
+\qquad\text{and on degree } 0,\quad
+\partial \circ P = (F_1)_\# - (F_0)_\#.
+\]
+\end{theorem}
+
+\begin{lstlisting}
+lemma prism_chain_homotopy_succ (Ho : ContinuousMap.Homotopy F₀.hom F₁.hom) (n : ℕ) :
+    bnd X n ≫ prismOp Ho.toContinuousMap n prism +
+        prismOp Ho.toContinuousMap (n + 1) prism ≫ bnd Y (n + 1) =
+      chainMap F₁ (n + 1) - chainMap F₀ (n + 1)
+\end{lstlisting}
+
+Packaging the two identities as a Mathlib \leanname{Homotopy} of chain
+complex morphisms yields the module's exports.
+
+\begin{theorem}[homotopy invariance;
+\leanname{homotopic\_maps\_induce\_same\_homology}]\label{thm:hinv}
+Homotopic continuous maps $f, g : X \to Y$ induce equal maps
+$H_n(X) \to H_n(Y)$ for every $n$, where $H_n$ is Mathlib's
+\leanname{singularHomologyFunctor} with $\Z$ coefficients.
+\end{theorem}
+
+\begin{theorem}[homotopy equivalence;
+\leanname{homotopyEquiv\_homology\_iso}]\label{thm:heq}
+A homotopy equivalence $X \simeq Y$ induces an isomorphism
+$H_n(X) \cong H_n(Y)$ for every $n$, and the map induced by the forward
+direction is an isomorphism in $\leanname{ModuleCat}\ \Z$
+(\leanname{isIso\_homology\_map\_of\_homotopyEquiv}).
+\end{theorem}
+
+These are Hatcher Theorem~2.10 and Corollary~2.11. Every downstream module
+consumes homotopy invariance only through Theorem~\ref{thm:heq}.
+
+\section{Relative homology and the long exact sequence of a pair}
+\label{sec:pair}
+
+The module \leanname{SingularPair} (239 lines) is short because it delegates
+the homological algebra to Mathlib's \leanname{ShortComplex.ShortExact} API.
+The geometric input is one lemma: for an \emph{injective} continuous map
+$f : A \to X$, the induced chain map is a split monomorphism in every degree
+(\leanname{chainMap\_mono}, \leanname{sChainMap\_mono}). Injectivity
+suffices, no embedding hypothesis is needed, because a singular simplex of
+$X$ that factors through the image factors uniquely through $A$ at the level
+of index types, and the retraction \leanname{genRetract} is defined on
+generators by that factorization.
+
+The relative complex is a cokernel, and the pair sequence is short exact:
+
+\begin{lstlisting}
+noncomputable def relSC (f : A ⟶ X) : ChainComplex (ModuleCat.{0} ℤ) ℕ :=
+  cokernel (sChainMap f)
+
+lemma pairSES_shortExact (f : A ⟶ X) (hf : Function.Injective f.hom) :
+    (pairSES f).ShortExact
+\end{lstlisting}
+
+\begin{theorem}[LES of a pair; \leanname{pairδ},
+\leanname{pair\_les\_exact₁}, \leanname{pair\_les\_exact₂},
+\leanname{pair\_les\_exact₃}]\label{thm:les}
+For injective continuous $f : A \to X$ there is a connecting homomorphism
+$\partial : H_{n+1}(X, A) \to H_n(A)$, and the sequence
+\[
+\cdots \to H_{n+1}(X) \to H_{n+1}(X, A) \xrightarrow{\ \partial\ }
+H_n(A) \to H_n(X) \to H_n(X, A) \to \cdots
+\]
+is exact at every position, in all degrees including zero.
+\end{theorem}
+
+This is Hatcher Theorem~2.16 for pairs presented by injections. A sanity
+theorem closes the module: $H_n(X, X) = 0$
+(\leanname{relative\_homology\_id\_isZero}). The same split-mono lemma is
+reused in Section~\ref{sec:mv} for the Mayer--Vietoris columns.
+
+\section{Barycentric subdivision and small simplices}\label{sec:subdivision}
+
+The module \leanname{SingularSubdivision} (1{,}587 lines) is the technical
+center of the development. The excision-grade input that Mayer--Vietoris
+needs is: any singular chain can be subdivided, without changing its
+homology class, until every simplex lands in $U$ or in $V$. Textbooks prove
+this with about four pages of formulas (Hatcher pp.~119--124); the
+formalization's main design decision is to do all the algebra on a
+combinatorial layer where the formulas become structural recursions.
+
+\subsection{The affine chain layer}
+
+An affine $n$-simplex in a type $\alpha$ is just a vertex tuple, and an
+affine chain is a finitely supported $\Z$-linear combination of tuples:
+
+\begin{lstlisting}
+abbrev AC (α : Type) (n : ℕ) : Type := (Fin (n + 1) → α) →₀ ℤ
+\end{lstlisting}
+
+Faces are tuple reindexings along \leanname{Fin.succAbove}; the cone with
+apex $b$ is \leanname{Fin.cons}~$b$; the boundary \leanname{abnd} is the
+alternating sum of faces; the augmentation \leanname{eps} sums coefficients.
+No topology appears at this layer, and, importantly, no geometry either: the
+barycenter enters as an \emph{abstract apex function}
+$\leanname{bary} : (\leanname{Fin}\ (m+1) \to \alpha) \to \alpha$, a
+parameter of the constructions. The subdivision operator and its chain
+homotopy are the classical cone recursions
+\[
+S\lambda = b_\lambda \cdot S(\partial\lambda),
+\qquad
+T\lambda = b_\lambda \cdot (\lambda - T(\partial\lambda)),
+\]
+implemented as \leanname{asub} and \leanname{atee} by structural recursion
+on degree. All chain identities hold at this level for \emph{any} apex
+function (degree zero needs only $\leanname{bary}\ 0\ w = w\ 0$): the cone
+boundary identity, $\partial\partial = 0$, the chain-map property
+$\partial S = S\partial$ (\leanname{abnd\_comp\_asub}), and the homotopy
+identity:
+
+\begin{theorem}[affine chain homotopy; \leanname{abnd\_comp\_atee}]
+\label{thm:atee}
+For every apex function \leanname{bary} and every degree $n$,
+$\partial \circ T + T \circ \partial = \mathrm{id} - S$ on affine
+$(n+1)$-chains, where $S = \leanname{asub}$ and $T = \leanname{atee}$.
+\end{theorem}
+
+\begin{lstlisting}
+theorem abnd_comp_atee (bary : ∀ {m : ℕ}, (Fin (m + 1) → α) → α) :
+    ∀ n, (abnd (n + 1)).comp (atee bary (n + 1)) + (atee bary n).comp (abnd n)
+      = LinearMap.id - asub bary (n + 1)
+\end{lstlisting}
+
+The iterates $S^k$ come with a telescoped homotopy
+(\leanname{ateeIter}, \leanname{abnd\_comp\_ateeIter}):
+$\partial T_k + T_k \partial = 1 - S^k$. Proving these identities by
+structural recursion over a two-line grammar of generators is where the
+formalization gains the most over a literal transcription of the textbook,
+which manipulates the same content through nested summation indices.
+
+\subsection{Geometry: the honest barycenter and the diameter estimate}
+
+Stage 5b instantiates the abstract layer on
+$\alpha = \leanname{stdSimplex}\ \R\ (\leanname{Fin}\ (d+1))$: the
+realization \leanname{affineMap} of a vertex tuple as a continuous affine
+map, and the honest barycenter \leanname{sbary}, with its equivariance
+\leanname{sbary\_affineMap} under affine maps. Equivariance is what lets
+the abstract identities transport: pushforward \leanname{amap} along a
+barycenter-preserving map commutes with \leanname{asub} and
+\leanname{atee}.
+
+The quantitative content is Stage 6. The lemma
+\leanname{asub\_support\_bound} tracks supports through the cone recursion:
+each piece of a subdivided simplex has vertex spread at most
+$\tfrac{n}{n+1}$ times the original, by the convex-hull maximum principle.
+Iterating
+(\leanname{asubIter\_support\_bound}) gives the geometric decay
+$\bigl(\tfrac{n}{n+1}\bigr)^k$, and therefore:
+
+\begin{theorem}[uniform smallness; \leanname{exists\_asubIter\_small}]
+\label{thm:small-affine}
+For every $\varepsilon > 0$ and every vertex tuple $w$ on the standard
+simplex, there is an iterate $k$ such that every tuple in the support of
+$S^k(w)$ has all pairwise vertex distances below $\varepsilon$.
+\end{theorem}
+
+\subsection{Transport and the small-simplices theorem}
+
+Stage 5c transports the operators to the singular chain complex. On a
+generator $\sigma$, the singular subdivision \leanname{sdOp} is the
+pushforward along $\sigma$ of the subdivision of the identity tuple; the
+homotopy \leanname{tOp} is transported the same way. The chain-map property
+(\leanname{sdOp\_comp\_bnd}), the homotopy identities
+(\leanname{tOp\_chain\_homotopy\_succ}, \leanname{tOp\_chain\_homotopy\_zero}),
+naturality in the space (\leanname{sdOp\_natural}, \leanname{tOp\_natural}),
+and the iterated versions (\leanname{sdOpIter}, \leanname{tOpIter},
+\leanname{tOpIter\_chain\_homotopy\_succ}) all descend from the affine layer
+through the generator normal forms.
+
+The capstone combines Theorem~\ref{thm:small-affine} with the Lebesgue
+number lemma on the compact metric space $\Delta^n$:
+
+\begin{theorem}[small-simplices theorem; \leanname{exists\_sdOpIter\_small}]
+\label{thm:small-simplices}
+Let $U, V$ be open with $U \cup V = X$ and let $s$ be a singular
+$n$-simplex of $X$. Then there is an iterate $k$ such that every piece of
+$\leanname{sdOpIter}\ X\ n\ k$ applied to the generator of $s$ has range
+contained in $U$ or contained in $V$.
+\end{theorem}
+
+\begin{lstlisting}
+theorem exists_sdOpIter_small {n : ℕ} (U V : Set X) (hU : IsOpen U) (hV : IsOpen V)
+    (hUV : U ∪ V = Set.univ) (s : Idx X n) :
+    ∃ k, ∀ u ∈ ((asubIter (baryFn n) k n) (asimplex (idTuple n))).support,
+      Set.range ⇑(simplexEquiv X n (pushSimplex (simplexEquiv X n s) u)) ⊆ U ∨
+        Set.range ⇑(simplexEquiv X n (pushSimplex (simplexEquiv X n s) u)) ⊆ V
+\end{lstlisting}
+
+Together with the homotopy witness $1 - S^k = \partial T_k + T_k \partial$,
+this is exactly the input the Mayer--Vietoris layer consumes: subdivision
+reaches the small subcomplex, and the reached chain is homologous to the
+original.
+
+\section{Mayer--Vietoris}\label{sec:mv}
+
+The module \leanname{SingularMayerVietoris} (1{,}791 lines) assembles the
+subdivision layer into the Mayer--Vietoris long exact sequence. Fix
+$U, V \subseteq X$ (arbitrary subsets at first).
+
+\subsection{The small-chains subcomplex and the small-chains theorem}
+
+A singular simplex is \leanname{Small}~$U$~$V$ if its range lies in $U$ or
+in $V$; the small chains $C^{U,V}_n(X)$ are the span of the small
+generators, assembled into a subcomplex \leanname{SSC}~$U$~$V$ with
+inclusion \leanname{smallι}. The main theorem of the first half is
+Hatcher's Proposition~2.21 specialized to two-set covers:
+
+\begin{theorem}[small-chains theorem; \leanname{smallι\_isIso\_homologyMap},
+\leanname{smallChainsHomologyIso}]\label{thm:small-chains}
+For open $U, V$ with $U \cup V = X$, the inclusion
+$C^{U,V}_*(X) \to C_*(X)$ induces an isomorphism on homology in every
+degree.
+\end{theorem}
+
+The proof is elementwise, through a concrete surjectivity-and-injectivity
+criterion for homology maps of complexes of $\Z$-modules
+(\leanname{isIso\_homologyMap\_of\_elementwise}): every cycle of $C_*(X)$
+subdivides into the subcomplex (Theorem~\ref{thm:small-simplices}, with the
+iterate $k$ uniformized over the finitely many generators of the chain by
+taking the maximum), and the homotopy operator $T_k$, which preserves the
+subcomplex by naturality, witnesses that nothing is lost. Hatcher proves
+more (a chain homotopy inverse); the homology-level isomorphism is what
+Mayer--Vietoris needs, and it is what the formalization exports.
+
+\subsection{The Mayer--Vietoris sequence}
+
+The short exact sequence lives at the chain level and needs no openness at
+all:
+
+\begin{lstlisting}
+noncomputable def mvα :
+    SC (TopCat.of (U ∩ V : Set X)) ⟶ SC (TopCat.of U) ⊞ SC (TopCat.of V) :=
+  biprod.lift (sChainMap (mvInclU U V)) (-(sChainMap (mvInclV U V)))
+
+noncomputable def mvβ :
+    SC (TopCat.of U) ⊞ SC (TopCat.of V) ⟶ SSC U V :=
+  biprod.desc (smallU U V) (smallV U V)
+
+theorem mvSES_shortExact : (mvSES U V).ShortExact
+\end{lstlisting}
+
+The observation that
+$0 \to C_*(U \cap V) \to C_*(U) \oplus C_*(V) \to C^{U,V}_*(X) \to 0$
+is exact for \emph{arbitrary} subsets, openness entering only when the small
+subcomplex is compared to the full complex, is standard but easy to blur in
+informal treatments; the formal statement keeps the hypotheses honest.
+Degreewise exactness in the middle
+(\leanname{mv\_middle\_exact}) is a direct combinatorial argument on
+coproduct coordinates: a pair of chains agreeing after inclusion must come
+from the intersection, generator by generator.
+
+Combining with Theorem~\ref{thm:small-chains} and the homology LES of a
+short exact sequence of complexes gives the space-level sequence. The maps
+matter: \leanname{mvPair} is (induced by) the two inclusions
+$U \cap V \to U$, $U \cap V \to V$ with a sign, \leanname{mvSum} is the sum
+of the maps induced by $U \to X$, $V \to X$, and the connecting map
+\leanname{mvδ} is the LES connecting map conjugated by the small-chains
+isomorphism. All three are honest space-level maps of Mathlib's homology
+functor, so downstream users can compose them with arbitrary induced maps.
+
+\begin{theorem}[Mayer--Vietoris LES; \leanname{mvδ},
+\leanname{mv\_exact₁}, \leanname{mv\_exact₂}, \leanname{mv\_exact₃},
+\leanname{mvSum\_epi\_zero}]\label{thm:mv}
+For open $U, V$ with $U \cup V = X$, the sequence
+\[
+\cdots \to H_{n+1}(X) \xrightarrow{\ \partial\ } H_n(U \cap V)
+\to H_n(U) \oplus H_n(V) \to H_n(X) \to \cdots
+\]
+is exact at every position; in degree zero the final map is an epimorphism.
+\end{theorem}
+
+\begin{remark}[engineering: the $\leanname{ModuleCat}\ \Z$ instance diamond]
+\label{rem:diamond}
+One engineering lesson deserves a highlighted place, because it will affect
+anyone who does elementwise arguments in complexes of
+$\leanname{ModuleCat}\ \Z$. The elements of a chain group carry a
+$\Z$-module structure through two unification paths: the categorical
+instance of $\leanname{ModuleCat}\ \Z$, and the generic chain
+$\leanname{AddCommGroup.toIntModule}$ (with its
+$\leanname{SubNegMonoid.toZSMul}$ scalar action). The two are propositionally
+but not definitionally equal, and Lean's elaborator will happily pick
+different paths in different subterms of one goal, producing goals that look
+identical and refuse to close. Sixteen hundred lines of
+\leanname{Finsupp} and span manipulation became feasible only after pinning
+the priorities locally:
+\begin{lstlisting}
+attribute [local instance 0] AddCommGroup.toIntModule
+attribute [local instance 0] SubNegMonoid.toZSMul
+\end{lstlisting}
+Demoting the two generic instances to the lowest priority makes elaboration
+choose the categorical instance uniformly. The same two lines are repeated
+in every downstream module that computes with elements
+(\leanname{SingularSphere}, \leanname{SingularSphereGeometry},
+\leanname{LinkingVanishingHighDim}, \leanname{ArcComplementAcyclic}).
+\end{remark}
+
+\section{The homology of spheres}\label{sec:spheres}
+
+Two modules compute sphere homology: \leanname{SingularSphere} (745 lines)
+builds the abstract tools, \leanname{SingularSphereGeometry} (694 lines)
+supplies the geometry. The sphere model is
+$\leanname{Sph}\ n = \leanname{Metric.sphere}\ (0 : \R^{n+1})\ 1$ as an
+object of \leanname{TopCat}.
+
+\subsection{Degree zero and contractible spaces}
+
+The augmentation \leanname{augTo} sends every $0$-simplex to
+$1 \in \Z$; on homology it gives $\leanname{augH} : H_0(X) \to \Z$, and a
+choice of point gives a section $\leanname{ptH}$.
+
+\begin{theorem}[$H_0$ of a path-connected space;
+\leanname{isIso\_augH\_of\_pathConnected}]\label{thm:h0}
+For a path-connected space $X$, the augmentation
+$H_0(X) \to \Z$ is an isomorphism in $\leanname{ModuleCat}\ \Z$.
+\end{theorem}
+
+This is Hatcher Proposition~2.6, stated as invertibility of a specific map so
+that later arguments can chase the augmentation through induced maps; a bare
+isomorphism statement would not support that chase. Positive degrees of a point vanish by
+inspection of the complex
+(\leanname{isZero\_homology\_of\_totallyDisconnected} handles any totally
+disconnected space), and homotopy invariance transports this:
+
+\begin{theorem}[contractible vanishing;
+\leanname{isZero\_homology\_of\_contractible}]\label{thm:contractible}
+For contractible $X$ and $m \ne 0$, the object $H_m(X)$ is a zero object.
+\end{theorem}
+
+The module also proves the abstract Mayer--Vietoris induction tools: if
+$U, V$ are open, cover $X$, and have contractible-like vanishing, the
+connecting map is an isomorphism in the relevant range
+(\leanname{isIso\_mvδ}, \leanname{isIso\_mvδ\_of\_contractible}), plus the
+degree-one edge cases (\leanname{isZero\_h1\_of\_contractible},
+\leanname{mono\_mvPair\_zero}).
+
+\subsection{Geometry: covers, stereographic projection, and suspension}
+
+The geometric module covers $S^{n+1}$ by the complements
+$U = S^{n+1} \setminus \{\text{south}\}$ and
+$V = S^{n+1} \setminus \{\text{north}\}$. Each is contractible: the
+formalization proves
+\leanname{contractibleSpace\_compl\_singleton\_sphere} through Mathlib's
+stereographic projection. The intersection deformation-retracts to the
+equator: \leanname{interHomeoPunctured} identifies $U \cap V$ with a
+punctured hyperplane, polar coordinates \leanname{puncturedPolar} split it
+as $S^n \times (0,\infty)$-like data, and
+\leanname{hequivProdContractible} collapses the contractible factor,
+producing the homotopy equivalence \leanname{interHomotopyEquiv} between
+$U \cap V$ and $S^n$. Feeding these into the abstract Mayer--Vietoris
+induction yields the suspension isomorphism as a composite of the
+connecting map and the equator identification:
+
+\begin{lstlisting}
+noncomputable def suspensionIso (n k : ℕ) :
+    Hgrp (Sph (n + 1)) (k + 2) ≅ Hgrp (Sph n) (k + 1)
+\end{lstlisting}
+
+\subsection{The dimension detectors}
+
+Induction on $n$ with base cases $S^0$ (two points; homology vanishes in
+positive degrees by total disconnectedness) and $S^1$ (where the degree-one
+case is handled by exactness with both cover pieces contractible) gives the
+two exports that all applications consume:
+
+\begin{theorem}[vanishing; \leanname{sphere\_homology\_vanish}]
+\label{thm:vanish}
+For all $n$ and all $k$ with $1 \le k$ and $k \ne n$, the object
+$H_k(S^n)$ is a zero object.
+\end{theorem}
+
+\begin{theorem}[nonvanishing; \leanname{h1\_s1\_ne\_zero},
+\leanname{sphere\_top\_ne\_zero}]\label{thm:nonvanish}
+$H_1(S^1)$ is not a zero object, and for every $n \ge 1$, $H_n(S^n)$ is
+not a zero object.
+\end{theorem}
+
+A remark on honesty of scope: the development exports vanishing and
+nonvanishing, and does not export an isomorphism $H_n(S^n) \cong \Z$ for
+general $n$. Nonvanishing is proved by chasing a nonzero connecting map down
+the suspension ladder to $H_1(S^1) \ne 0$; the exactness bookkeeping for
+that chase does not require identifying the group. For $n = 1$ specifically,
+a separate, earlier module of the same repository
+(\leanname{CircleWindingChain}, 7{,}753 lines, predating this campaign)
+proves the isomorphism
+$H_1(S^1) \cong \Z$ as \leanname{circleH1ZIsoInt\_holds}, by an explicit
+winding-chain computation; Section~\ref{sec:applications} uses it. Deriving
+$H_n(S^n) \cong \Z$ for all $n$ from \leanname{suspensionIso} and the
+$n = 1$ case is a short induction left for the upstreaming pass
+(Section~\ref{sec:conclusion}).
+
+The classical corollary follows by comparing detectors across a homotopy
+equivalence:
+
+\begin{theorem}[spheres detect dimension;
+\leanname{spheres\_not\_homotopyEquivalent}]\label{thm:spheres-detect}
+For $m \ne n$ there is no homotopy equivalence between $S^m$ and $S^n$;
+equivalently, a homotopy equivalence between $S^m$ and $S^n$ forces
+$m = n$ (\leanname{sphere\_dim\_eq\_of\_homotopyEquiv}).
+\end{theorem}
+
+\begin{lstlisting}
+theorem spheres_not_homotopyEquivalent {m n : ℕ} (hmn : m ≠ n) :
+    IsEmpty (ContinuousMap.HomotopyEquiv ↥(Sph m) ↥(Sph n))
+\end{lstlisting}
+
+\section{Applications: complements of wild circles and arcs}
+\label{sec:applications}
+
+The application layer studies, for each ambient dimension $D$, whether some
+embedded circle in $S^D$ has a complement with nonvanishing first homology.
+Everything in this section works with arbitrary
+\leanname{Topology.IsEmbedding} maps. No smoothness, PL structure, local
+flatness, or tameness is assumed anywhere, so wild embeddings (Antoine,
+Fox--Artin, and worse) are within scope of every statement. This generality
+costs nothing extra, because the method is homological throughout; it is a
+concrete payoff of formalizing the singular theory itself, which a tame
+surrogate would not deliver. The scope is deliberately narrow in a different direction: the
+development proves a corridor of Alexander-type complement control
+(complements of arcs in degree one, plus the specific circle statements
+below), and does not prove, or claim, full Alexander duality.
+
+\subsection{Dimension three: the unknot has nontrivial complement}
+
+The module \leanname{UnknotComplementRetract} (308 lines) proves existence
+at $D = 3$ with a self-contained retraction argument. The flat unknot is
+$z \mapsto (z, 0, 0)$; the core circle of its complement is
+$w \mapsto (0, 0, w)$; and the retraction normalizes the last two
+coordinates:
+
+\begin{theorem}[unknot complement; \leanname{unknotComplementH1\_ne\_zero}]
+\label{thm:unknot}
+Assume $H_1(S^1) \cong \Z$. Then the first singular homology of the
+complement of the flat unknot in $S^3$ is not a zero object.
+\end{theorem}
+
+\begin{lstlisting}
+theorem unknotComplementH1_ne_zero
+    (h1 : Nonempty ((((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) 1).obj
+      (ModuleCat.of ℤ ℤ)).obj (TopCat.sphere.{0} 1)) ≅ ModuleCat.of ℤ ℤ)) :
+    ¬ CategoryTheory.Limits.IsZero
+      (((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) 1).obj
+        (ModuleCat.of ℤ ℤ)).obj
+        (TopCat.of {x : TopCat.sphere.{0} 3 // x ∉ Set.range unknot}))
+\end{lstlisting}
+
+Functoriality alone finishes: \leanname{retract\_core} shows the composite
+$S^1 \to \mathrm{complement} \to S^1$ is the identity, so $H_1(S^1) \cong \Z$
+is a retract of $H_1(\mathrm{complement})$, which therefore cannot be zero.
+The hypothesis is discharged by \leanname{circleH1ZIsoInt\_holds}
+(Section~\ref{sec:spheres}) when the statement is consumed in
+Section~\ref{sec:client}. Notably, this existence half uses no homotopy
+invariance, no subdivision, and no Mayer--Vietoris: it is a 308-line
+functoriality argument available even before the computational layer.
+
+\subsection{Low dimensions: no room for linking}
+
+The module \leanname{LinkingVanishingLowDim} (249 lines) disposes of
+$D = 0$ and $D = 1$ by point-set topology.
+
+\begin{theorem}[low-dimensional vanishing; \leanname{not\_detects\_zero},
+\leanname{not\_detects\_one}]\label{thm:lowdim}
+No embedded circle in $S^0$ or in $S^1$ has a complement with nonvanishing
+$H_1$.
+\end{theorem}
+
+For $D = 0$ there is no embedded circle at all: $S^0$ is a two-point
+discrete space and homology of any subspace is concentrated in degree zero,
+by \leanname{isZero\_homology\_of\_totallyDisconnected} again. For $D = 1$,
+a continuous injection from $S^1$ to itself is surjective, by
+\leanname{continuous\_injective\_circle\_self\_surjective}. That proof
+runs through the intermediate value theorem, via
+\leanname{no\_continuous\_injective\_circle\_to\_real}. So the complement
+of an embedded circle in $S^1$ is empty and its homology vanishes.
+
+\subsection{High dimensions: reduction to arcs}
+
+The module \leanname{LinkingVanishingHighDim} (629 lines) handles all
+$D \ge 2$, $D \ne 3$ at once, conditionally on one clean frontier
+hypothesis:
+
+\begin{lstlisting}
+def ArcComplementsAcyclic (D : ℕ) : Prop :=
+  ∀ a : C(unitInterval, ↥(Sph D)), Topology.IsEmbedding a →
+    CategoryTheory.Limits.IsZero
+      (Hgrp (TopCat.of {y : ↥(Sph D) // y ∉ Set.range a}) 1)
+\end{lstlisting}
+
+The reduction is Mayer--Vietoris. Split the embedded circle into two closed
+semicircular arcs meeting in two points. The complements of the two arcs
+form an open cover of the two-point complement
+$S^D \setminus \{p, q\}$, their intersection is the circle complement, and
+the sequence
+\[
+H_2\bigl(S^D \setminus \{p,q\}\bigr) \to H_1(\text{circle complement})
+\to H_1(\text{arc complement}) \oplus H_1(\text{arc complement})
+\]
+traps the middle term. The two outer terms vanish: the arcs by hypothesis,
+and the left term because $S^D \setminus \{p, q\}$ is homotopy equivalent to
+$S^{D-1}$ (\leanname{twoPointComplHEquiv}, built from stereographic
+projection, a translation homeomorphism, and the polar splitting), whose
+$H_2$ vanishes for $D \ne 3$ by Theorem~\ref{thm:vanish}
+(\leanname{isZero\_h2\_twoPointCompl}). A pleasant surprise fell out of the
+uniform treatment: the case $D = 2$ needs no Jordan--Schoenflies theorem and
+no separation theory whatsoever, because the argument only ever consults
+$H_2(S^1)$, which vanishes. The classical intuition that dimension two is
+special (complements of circles in $S^2$ disconnect) is real but
+irrelevant to this statement.
+
+\begin{theorem}[high-dimensional reduction;
+\leanname{forces\_D3\_of\_arcAcyclic}]\label{thm:highdim}
+Fix $D$ with $1 \le D$ and $D \ne 3$, and assume
+$\leanname{ArcComplementsAcyclic}\ D$. Then every embedded circle in $S^D$
+has $H_1$-acyclic complement
+(\leanname{isZero\_h1\_complement\_of\_embedding}). Consequently, granting the arc hypothesis for
+all $D \ge 2$, $D \ne 3$: if some embedded circle in $S^D$ has
+homologically nontrivial complement, then $D = 3$.
+\end{theorem}
+
+\subsection{Arc complements are acyclic in every dimension}
+
+The module \leanname{ArcComplementAcyclic} (870 lines) discharges the
+hypothesis unconditionally, in all dimensions including $D = 3$. This is the
+arc case of Hatcher's Theorem~2B.1, in degree one, for arbitrary topological
+embeddings.
+
+\begin{theorem}[arc complements; \leanname{arcComplementsAcyclic}]
+\label{thm:arc}
+For every $D$ and every topological embedding
+$a : [0,1] \to S^D$, the object
+$H_1\bigl(S^D \setminus a([0,1])\bigr)$ is a zero object.
+\end{theorem}
+
+The proof is the classical bisection. Suppose some $1$-cycle $z$ in the
+complement of the arc is not a boundary. The module first builds an
+elementwise toolkit for homology classes of complexes of $\Z$-modules
+(\leanname{classOf}, \leanname{classOf\_eq\_zero\_iff},
+\leanname{classOf\_natural}) and its topological wrappers
+(\leanname{cls}, \leanname{exists\_nonbounding},
+\leanname{bounds\_of\_isZero}). Splitting the arc at its midpoint, the
+complements of the two half-arcs cover the complement of their common point;
+Mayer--Vietoris exactness at $H_1(U \cap V)$
+(\leanname{bounds\_of\_mv}), with $H_2$ and $H_1$ of the punctured sphere
+vanishing by Section~\ref{sec:spheres} (the punctured sphere is
+contractible), shows $z$ must fail to bound in one of the two half-arc
+complements (\leanname{bounds\_of\_halves}). Iterating produces a nested
+sequence of parameter intervals (\leanname{badSeq}) converging to a single
+point $t^*$. The complement of the point $a(t^*)$ is contractible, so $z$
+bounds there; a bounding chain is a finite object, its compact support
+avoids $a(J)$ for a small enough interval $J \ni t^*$ around the limit
+(\leanname{exists\_chain\_lift}, the compact-support lifting lemma), and
+that contradicts badness of the interval $J$. The limit step is where
+formalization pressure was highest: ``a chain lives in a finite subcomplex''
+is a triviality on paper and a genuine lemma
+(\leanname{cPush}, \leanname{cLift}, \leanname{exists\_chain\_lift}) about
+filtered behavior of \leanname{Finsupp}-supported chains here.
+
+Theorem~\ref{thm:arc} states degree one only, which is exactly what
+Theorem~\ref{thm:highdim} consumes. The full Theorem~2B.1 (all reduced
+degrees, and disk complements in all codimensions) remains open in this
+development; the bisection scaffolding is degree-generic and should extend.
+
+\section{The client theorem}\label{sec:client}
+
+The module \leanname{PublicSpine} (311 lines) states the campaign-facing
+definitions. The 42-line module \leanname{PublicSpineLinkingClosure}
+closes them. The detector is content-typed: it is defined on Mathlib's homology
+object itself, so no proxy re-statement can satisfy it.
+
+\begin{lstlisting}
+def DetectsNontrivialLinking (D : ℕ) : Prop :=
+  ∃ f : C(TopCat.sphere.{0} 1, TopCat.sphere.{0} D),
+    Topology.IsEmbedding f ∧
+      ¬ CategoryTheory.Limits.IsZero (linkingComplementH1 D f)
+\end{lstlisting}
+
+\begin{theorem}[the client theorem, in two halves;
+\leanname{detectsNontrivialLinking\_three}, \leanname{forces\_D3}]
+\label{thm:client}
+Existence at three: $\leanname{DetectsNontrivialLinking}\ 3$ holds
+(\leanname{detectsNontrivialLinking\_three}), which is Theorem~\ref{thm:unknot}
+with the hypothesis discharged by \leanname{circleH1ZIsoInt\_holds}.
+Uniqueness: for every $D$, $\leanname{DetectsNontrivialLinking}\ D$ implies
+$D = 3$ (\leanname{forces\_D3}), assembled from Theorems~\ref{thm:lowdim},
+\ref{thm:highdim} and \ref{thm:arc}. Together the two halves give
+$\leanname{DetectsNontrivialLinking}\ D$ if and only if $D = 3$. No single Lean
+theorem states that biconditional; it is the conjunction of the two named
+declarations.
+\end{theorem}
+
+The two halves are packaged for the consuming program by a separate bridge
+declaration \leanname{target\_D3}, described below.
+
+\begin{lstlisting}
+theorem forces_D3 :
+    ∀ D, PublicSpine.DetectsNontrivialLinking D → D = 3 :=
+  PublicSpineLinkingAssembly.forces_D3_of_arcAcyclic
+    (fun D _ _ => ArcComplementAcyclic.arcComplementsAcyclic D)
+\end{lstlisting}
+
+One paragraph on the packaging, with details in the companion
+paper~\cite{companion}. The consuming program requires the result
+as a binder, \leanname{AlexanderLinkingBridge}, a structure whose fields are
+the $H_1(S^1) \cong \Z$ isomorphism, the detection statement at $D = 3$, and
+the uniqueness implication; \leanname{target\_D3} inhabits it
+unconditionally. Because autonomous provers contributed to this campaign,
+the repository enforces an anti-cheat discipline. A CI gate script inspects
+the source file \texttt{PublicSpine.lean}: it checks that the target stays a
+\leanname{def}, rejects a \texttt{theorem target\_D3} declaration in that
+file, and flags known drift patterns in the guidepost \texttt{Skeleton}
+module. The gate is a source-text check on those files and does not scan the
+whole repository. The binder fields are content-typed against Mathlib's own
+objects (a homology object of a concrete subspace of a concrete sphere), so
+the target cannot be ``satisfied'' by redefining the statement, weakening the
+detector, or introducing a parallel homology theory. The conditional assembly
+(\leanname{PublicSpineLinkingAssembly}, 49 lines) was kept as a separate
+module so that the exact logical distance between the Mayer--Vietoris
+reduction and the unconditional closure stayed visible while the arc lemma
+was still open.
+
+\section{Artifact and reproducibility}\label{sec:artifact}
+
+\subsection{Repository and build}
+
+The development lives in the \texttt{IndisputableMonolith} Lean library;
+the twelve modules of this paper are under
+\texttt{IndisputableMonolith/Foundation/}. A public mirror of the campaign
+modules is available at
+\begin{center}
+\url{https://github.com/jonwashburn/shape-of-logic},
+commit \texttt{3606692}\,(\texttt{80a2a84f28b67f2a0edd99756fba7c9fc}).
+\end{center}
+The library builds with Lake against a pinned Mathlib. Each module builds as
+a single target, for example:
+
+\begin{lstlisting}[language={}]
+$ lake build IndisputableMonolith.Foundation.SingularMayerVietoris
+$ lake build IndisputableMonolith.Foundation.PublicSpineLinkingClosure
+\end{lstlisting}
+
+All twelve modules build green with zero \texttt{sorry}. The axiom audit on
+the capstones (\leanname{arcComplementsAcyclic}, \leanname{forces\_D3},
+\leanname{target\_D3}, and the exports of every section above) reports
+exactly:
+
+\begin{lstlisting}[language={}]
+#print axioms IndisputableMonolith.Foundation.PublicSpineLinkingClosure.target_D3
+-- 'IndisputableMonolith.Foundation.PublicSpineLinkingClosure.target_D3'
+--   depends on axioms: [propext, Classical.choice, Quot.sound]
+\end{lstlisting}
+
+\subsection{Theorem index}
+
+Table~\ref{tab:index} maps every numbered statement of this paper to its
+Lean declaration and module.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Paper statement & Lean declaration(s) & Module \\
+\midrule
+Thm.~\ref{thm:prism} & \leanname{prism\_chain\_homotopy\_succ}, \leanname{\dots\_zero} & \leanname{SingularPrism} \\
+Thm.~\ref{thm:hinv} & \leanname{homotopic\_maps\_induce\_same\_homology} & \leanname{SingularPrism} \\
+Thm.~\ref{thm:heq} & \leanname{homotopyEquiv\_homology\_iso}, & \leanname{SingularPrism} \\
+ & \leanname{isIso\_homology\_map\_of\_homotopyEquiv} & \\
+Thm.~\ref{thm:les} & \leanname{pairδ}, \leanname{pair\_les\_exact₁}/\leanname{₂}/\leanname{₃} & \leanname{SingularPair} \\
+$H_n(X,X)=0$ & \leanname{relative\_homology\_id\_isZero} & \leanname{SingularPair} \\
+Thm.~\ref{thm:atee} & \leanname{abnd\_comp\_atee}, \leanname{abnd\_comp\_ateeIter} & \leanname{SingularSubdivision} \\
+Thm.~\ref{thm:small-affine} & \leanname{asubIter\_support\_bound}, & \leanname{SingularSubdivision} \\
+ & \leanname{exists\_asubIter\_small} & \\
+Thm.~\ref{thm:small-simplices} & \leanname{exists\_sdOpIter\_small} & \leanname{SingularSubdivision} \\
+Thm.~\ref{thm:small-chains} & \leanname{smallι\_isIso\_homologyMap}, & \leanname{SingularMayerVietoris} \\
+ & \leanname{smallChainsHomologyIso} & \\
+MV chain SES & \leanname{mvSES\_shortExact} & \leanname{SingularMayerVietoris} \\
+Thm.~\ref{thm:mv} & \leanname{mvδ}, \leanname{mv\_exact₁}/\leanname{₂}/\leanname{₃}, \leanname{mvSum\_epi\_zero} & \leanname{SingularMayerVietoris} \\
+Thm.~\ref{thm:h0} & \leanname{isIso\_augH\_of\_pathConnected} & \leanname{SingularSphere} \\
+Thm.~\ref{thm:contractible} & \leanname{isZero\_homology\_of\_contractible} & \leanname{SingularSphere} \\
+Suspension iso & \leanname{suspensionIso} & \leanname{SingularSphereGeometry} \\
+Thm.~\ref{thm:vanish} & \leanname{sphere\_homology\_vanish} & \leanname{SingularSphereGeometry} \\
+Thm.~\ref{thm:nonvanish} & \leanname{h1\_s1\_ne\_zero}, \leanname{sphere\_top\_ne\_zero} & \leanname{SingularSphereGeometry} \\
+Thm.~\ref{thm:spheres-detect} & \leanname{spheres\_not\_homotopyEquivalent}, & \leanname{SingularSphereGeometry} \\
+ & \leanname{sphere\_dim\_eq\_of\_homotopyEquiv} & \\
+Thm.~\ref{thm:unknot} & \leanname{unknotComplementH1\_ne\_zero} & \leanname{UnknotComplementRetract} \\
+Thm.~\ref{thm:lowdim} & \leanname{not\_detects\_zero}, \leanname{not\_detects\_one} & \leanname{LinkingVanishingLowDim} \\
+Thm.~\ref{thm:highdim} & \leanname{isZero\_h1\_complement\_of\_embedding}, & \leanname{LinkingVanishingHighDim} \\
+ & \leanname{not\_detects\_of\_arcAcyclic}, & \\
+ & \leanname{forces\_D3\_of\_arcAcyclic} & \\
+Thm.~\ref{thm:arc} & \leanname{arcComplementsAcyclic} & \leanname{ArcComplementAcyclic} \\
+Detector & \leanname{DetectsNontrivialLinking} & \leanname{PublicSpine} \\
+Thm.~\ref{thm:client} ($\Leftarrow$) & \leanname{detectsNontrivialLinking\_three} & \leanname{PublicSpine} \\
+Thm.~\ref{thm:client} ($\Rightarrow$) & \leanname{forces\_D3}, \leanname{target\_D3} & \leanname{PublicSpineLinkingClosure} \\
+$H_1(S^1)\cong\Z$ (imported) & \leanname{circleH1ZIsoInt\_holds} & \leanname{CircleWindingChain} \\
+\bottomrule
+\end{tabular}
+\caption{Theorem index. All declarations are in namespace
+\leanname{IndisputableMonolith.Foundation}, in the sub-namespace matching
+the module name.}
+\label{tab:index}
+\end{table}
+
+\section{Conclusion and upstreaming}\label{sec:conclusion}
+
+The classical computational layer of singular homology now exists in Lean 4
+over Mathlib's own definitions: homotopy invariance, the LES of a pair,
+barycentric subdivision with its metric estimate, small chains,
+Mayer--Vietoris, sphere homology detectors, and a set of complement theorems
+strong enough to characterize an ambient dimension. Three formalization
+lessons stand out. First, doing the subdivision algebra on an abstract
+affine-chain layer with a parametric apex turned the hardest textbook pages
+into structural recursions, and the geometry entered exactly once, through
+the barycenter's equivariance and the diameter bound. Second, elementwise
+arguments in $\leanname{ModuleCat}\ \Z$ complexes are entirely feasible at
+this scale, but only after the instance diamond of
+Remark~\ref{rem:diamond} is pinned. Third, hypotheses stayed more honest
+than the textbook default: injectivity (not embedding) drives the pair
+sequence, openness is absent from the Mayer--Vietoris short exact sequence
+and enters only at the small-chains comparison, and compact support became
+a named lemma where the textbook offers only a shrug.
+
+Several layers are natural Mathlib upstreaming candidates, in dependency
+order: the generator normal forms for the singular chain complex
+(\leanname{Idx}/\leanname{gen}/\leanname{gen\_d}/\leanname{gen\_map}); the
+prism operator and Theorems~\ref{thm:hinv} and \ref{thm:heq}, which are
+stated against Mathlib declarations already; the affine-chain subdivision
+theory, which is self-contained combinatorics; the small-chains theorem and
+the Mayer--Vietoris sequence; and the augmentation apparatus with the sphere
+detectors. No part of this development has been merged into Mathlib, and no
+claim of that kind is made here; adaptation to Mathlib's evolving simplicial
+API, and generalization from $\Z$ to arbitrary coefficients where the proofs
+allow it, is the main anticipated work. Beyond upstreaming, two mathematical
+continuations are within reach of the existing scaffolding: the isomorphism
+$H_n(S^n) \cong \Z$ by induction from the winding-chain base case through
+\leanname{suspensionIso}, and the extension of Theorem~\ref{thm:arc} to all
+degrees and to disk complements, which would move the development from a
+corridor of Alexander-type control toward duality proper.
+
+\subsection*{Acknowledgments}
+
+The author thanks the Lean and Mathlib communities for the foundations this
+work builds on.
+
+\begin{thebibliography}{99}
+
+\bibitem{companion}
+J.~Washburn.
+\newblock \emph{The Unique Dimension in Which an Embedded Circle Links: A
+  Machine-Checked Proof that Complement $H_1$ Forces $D = 3$}.
+\newblock In preparation, 2026.
+
+\bibitem{hatcher}
+A.~Hatcher.
+\newblock \emph{Algebraic Topology}.
+\newblock Cambridge University Press, 2002.
+
+\bibitem{mathlib}
+The mathlib Community.
+\newblock The Lean mathematical library.
+\newblock In \emph{Proceedings of the 9th ACM SIGPLAN International
+  Conference on Certified Programs and Proofs (CPP 2020)}, pages 367--381.
+  ACM, 2020.
+
+\bibitem{lean4}
+L.~de~Moura and S.~Ullrich.
+\newblock The Lean 4 theorem prover and programming language.
+\newblock In \emph{Automated Deduction -- CADE 28}, LNCS 12699, pages
+  625--635. Springer, 2021.
+
+\bibitem{harrison-homology}
+J.~Harrison.
+\newblock A HOL Light formalization of singular homology.
+\newblock Presentation at Hales60: From the Fundamental Lemma to Discrete
+  Geometry, to Formal Verification, 2018.
+
+\bibitem{paulson-porting}
+L.~C. Paulson.
+\newblock Porting libraries of mathematics between proof assistants.
+\newblock Blog post and the \texttt{HOL-Homology} session of the Isabelle
+  distribution, 2022.
+
+\bibitem{brunerie}
+G.~Brunerie.
+\newblock \emph{On the homotopy groups of spheres in homotopy type theory}.
+\newblock PhD thesis, Universit\'e Nice Sophia Antipolis, 2016.
+
+\bibitem{buchholtz-favonia}
+U.~Buchholtz and K.~Hou~(Favonia).
+\newblock Cellular cohomology in homotopy type theory.
+\newblock In \emph{Proceedings of the 33rd Annual ACM/IEEE Symposium on
+  Logic in Computer Science (LICS 2018)}, pages 521--529. ACM, 2018.
+
+\bibitem{ljungstrom-mortberg}
+A.~Ljungstr\"om and A.~M\"ortberg.
+\newblock Formalizing $\pi_4(S^3) \cong \mathbb{Z}/2\mathbb{Z}$ and
+  computing a Brunerie number in cubical Agda.
+\newblock In \emph{Proceedings of the 38th Annual ACM/IEEE Symposium on
+  Logic in Computer Science (LICS 2023)}. IEEE, 2023.
+
+\bibitem{birs-cohomology}
+A.~Topaz et al.
+\newblock Formalization of cohomology theories.
+\newblock BIRS workshop report 23w5124, Banff International Research
+  Station, 2023.
+
+\end{thebibliography}
+
+\end{document}
