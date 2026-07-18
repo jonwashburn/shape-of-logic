@@ -9,9 +9,12 @@ import IndisputableMonolith.Foundation.AlexanderDuality
 We formalize the topological (T) specialization: for loop-loop linking
 (p=1), the Alexander duality computation H₁(Sᴰ \ K) ≅ ℤ iff D=3
 reduces to a cohomology computation on S¹. The genuine formalization
-lives in `IndisputableMonolith.Foundation.AlexanderDuality`, which
-axiomatizes the reduced cohomology of S¹ and proves the linking
-characterization as a theorem.
+lives in `IndisputableMonolith.Foundation.AlexanderDuality`. At the pinned
+commit the linking selector **encodes** `D = 3` via
+`CircleReducedCohomologyNontrivial k := k = 1`; same-sector arithmetic
+permits all odd `D ≥ 3`, and the loop-loop conclusion `D = 3` uses the
+specialization `p = 1`. Audit:
+`Verification.T6T8SpineAudit.t8_same_sector_allows_odd_dimensions`.
 
 ## U10: Nontriviality Witness for A_A Converse
 
