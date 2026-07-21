@@ -70,15 +70,18 @@ structure FullTheoryBenchmarks where
   `seam_effective_count_derived` passing its gate. -/
   discriminating_prediction_confirmed : Bool
 
-/-- The current benchmark state.  2026-07-15 starting line: every benchmark
-open. -/
+/-- The current benchmark state.  `gap_action_recovery` flipped 2026-07-21
+after honest geometric `S_RS_converges_EH_4d` (Option-C scale-explicit
+Tendsto + discrete torus bridge + exact midpoint m² faces; kernel-accepted
+modulo `native_decide`/`ofReduceBool` on the m² table certificates).
+Constant-face bookkeeping inhabit of the same day remains rejected. -/
 def fullTheoryBenchmarks : FullTheoryBenchmarks where
   gap1_bridge_derived := false
   gap2_continuum_and_measure := false
   gap6_lorentzian_action := false
   gap4_operator_recovery := false
   gap5_constraint_recovery := false
-  gap_action_recovery := false
+  gap_action_recovery := true
   discriminating_prediction_confirmed := false
 
 /-- Pillar 1 (classical recovery, all three strengths, 4D Lorentzian). -/
@@ -115,7 +118,7 @@ theorem all_pillars_open :
     ¬ Pillar2Closed fullTheoryBenchmarks ∧
     ¬ Pillar3Closed fullTheoryBenchmarks := by
   refine ⟨fun h => ?_, fun h => ?_, fun h => ?_⟩
-  · have := h.1; simp [fullTheoryBenchmarks] at this
+  · have := h.2.1; simp [fullTheoryBenchmarks] at this
   · have := h.1; simp [fullTheoryBenchmarks] at this
   · simp [Pillar3Closed, fullTheoryBenchmarks] at h
 

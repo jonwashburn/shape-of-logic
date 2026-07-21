@@ -1,0 +1,19 @@
+import IndisputableMonolith.Gravity.Analysis.Regge4DTensorAlgebraicCloser
+
+/-!
+# Audit: 4D tensor algebraic closer (partial)
+-/
+
+open IndisputableMonolith.Gravity.Analysis.Regge4DTensorAlgebraicCloser
+
+#print axioms distinctHingeMomentForm_smul
+#print axioms distinctHingeMomentForm_axisTTPlus_symbolDir
+#print axioms distinctHingeMomentForm_axisTTCross_symbolDir
+#print axioms distinctHingeMomentForm_axisTTPlus_e0Dir
+#print axioms distinctHingeMomentForm_axisTTCross_e0Dir
+#print axioms continuumFace_normalizedPlus_symbolDir
+#print axioms continuumFace_normalizedCross_e0Dir
+#print axioms continuumFace_normalizedPlus_e0Dir_vanishes
+#print axioms residual_factor_four_arithmetic
+#print axioms axis_isotropy_blocker_negated
+#print axioms does_not_flip_gap_action_recovery

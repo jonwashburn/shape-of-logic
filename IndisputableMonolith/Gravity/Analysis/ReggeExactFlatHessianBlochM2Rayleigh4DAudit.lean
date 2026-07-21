@@ -1,0 +1,7 @@
+import IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochM2Rayleigh4D
+
+open IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochM2Rayleigh4D
+
+#print axioms exactMidpointBlochM2_rayleigh_eq_unitFrobeniusTTCoeff
+#print axioms exactMidpointBlochM2_rayleigh_eq_gaugeCoeff
+#print axioms typedResidual_m2_rayleigh_eq_algebraic_face

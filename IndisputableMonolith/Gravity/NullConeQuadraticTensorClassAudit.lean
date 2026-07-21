@@ -1,0 +1,28 @@
+import IndisputableMonolith.Gravity.NullConeQuadraticTensorClass
+
+/-!
+Axiom audit for the Phase-5 algebraic null-cone rigidity prerequisite.
+-/
+
+namespace IndisputableMonolith
+namespace Gravity
+namespace NullConeQuadraticTensorClass
+
+#print axioms symmetrize4_symmetric
+#print axioms quadContr_eq_quadContr_symmetrize4
+#print axioms quadContr_antisymmetrize4_eq_zero
+#print axioms quadContr_neg
+#print axioms all_null_quad_eq_of_future_nonzero_null_quad_eq
+#print axioms null_quadratic_eq_implies_diff_scalar_eta
+#print axioms future_null_quadratic_eq_implies_diff_scalar_eta
+#print axioms diff_scalar_eta_implies_null_quadratic_eq
+#print axioms null_quadratic_eq_iff_diff_scalar_eta
+#print axioms null_quadratic_eq_iff_symmetrize_diff_scalar_eta
+#print axioms determinesAlgebraicNullQuadraticClass_quadContr
+#print axioms fixedSymmetricStress_determinesAlgebraicNullQuadraticClass
+#print axioms fixedSymmetricStress_null_class_unique
+#print axioms nullConeQuadraticTensorClassCert
+
+end NullConeQuadraticTensorClass
+end Gravity
+end IndisputableMonolith

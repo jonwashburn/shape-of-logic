@@ -1,0 +1,8 @@
+import IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochTorusBridge4D
+open IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochTorusBridge4D
+#print axioms tendsto_torusScale_nhdsWithin_ne_zero
+#print axioms tendsto_exactMidpointBloch_torus_family_centered
+#print axioms tendsto_exactMidpointBloch_torus_family
+#print axioms discrete_torus_family_bridge_of_symbolZero
+#print axioms discrete_torus_family_bridge
+#print axioms continuumSymbolIs_midpoint_rayleigh

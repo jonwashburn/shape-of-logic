@@ -1,0 +1,5 @@
+import IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochSymbolZero4D
+open IndisputableMonolith.Gravity.Analysis.ReggeExactFlatHessianBlochSymbolZero4D
+#print axioms qCoeff_eq_zero
+#print axioms exactMidpointBlochSymbolZero_eq_zero
+#print axioms typedResidual_midpointBloch_symbolZero
