@@ -50,13 +50,20 @@ T3   additive ledger bookkeeping
 T4   recognition witness
 T5   canonical reciprocal cost J forced by the Law-of-Logic equation
 T6   phi forced by self-similar hierarchy
-T8   D = 3 from linking
-T7   eight-tick cadence downstream of D = 3
+T8   D = 3 from content-typed circle-complement linking
+T7   eight-tick cube period downstream of D = 3
 ```
 
-T8 is current with the `/reality` SOTA: the public T-2-to-T8 certificate carries
-the Mathlib circle-H1 handoff directly, via `circleH1ZNonzero_unconditional` and
-`circleH1ZIsoInt_holds`.
+T8 is current with the `/reality` SOTA. The architecture authority is
+`Foundation.PublicSpineLinkingClosure.forces_D3` /
+`target_D3`: an embedded circle in `S^D` has nontrivial complement `H₁`
+exactly when `D = 3`, over Mathlib singular homology, with no arithmetic
+encoding. The circle-`H₁` handoff
+(`circleH1ZNonzero_unconditional`, `circleH1ZIsoInt_holds`) is a premise of
+that bridge. Legacy `Foundation.DimensionForcing.linking_requires_D3` and
+`UnifiedForcingChain.t8_holds` remain certificates only. The physical claim
+that Recognition requires this topological detector is OPEN and is not
+discharged by the T8 Lean surface.
 
 ## Boundary Rule
 
