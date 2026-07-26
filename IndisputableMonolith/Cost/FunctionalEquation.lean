@@ -153,8 +153,31 @@ lemma dAlembert_diff_square
       simp [h_sum, h_prod]
     _ = 4 * ((H t)^2 - 1) * ((H u)^2 - 1) := by ring
 
+/-- The paper's log curvature `κ(F) = lim_{t→0} 2 F(e^t)/t²`, stated on the
+**punctured** filter.
+
+The puncture is not cosmetic. On the full filter `nhds 0` this predicate is
+unsatisfiable for every nonzero `κ`: Lean's division is total with `x / 0 = 0`,
+so the quotient takes the value `0` at `t = 0`, and convergence along a filter
+that contains the point pins the value at the point. The repo carried the
+full-filter reading until 2026-07-25, which silently made two results vacuous;
+`hasLogCurvature_full_filter_forces_zero` keeps that from recurring quietly. -/
 def HasLogCurvature (H : ℝ → ℝ) (κ : ℝ) : Prop :=
-  Filter.Tendsto (fun t => 2 * (H t - 1) / t^2) (nhds 0) (nhds κ)
+  Filter.Tendsto (fun t => 2 * (H t - 1) / t^2)
+    (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds κ)
+
+/-- **Tripwire.** The full-filter reading of log curvature forces `κ = 0`, so at
+the calibrated value `κ = 1` it is satisfied by no function at all. Kept as a
+theorem so the defect cannot be reintroduced without a failing build. -/
+theorem hasLogCurvature_full_filter_forces_zero (Hf : ℝ → ℝ) (κ : ℝ)
+    (h : Filter.Tendsto (fun t => 2 * (Hf t - 1) / t^2) (nhds 0) (nhds κ)) :
+    κ = 0 := by
+  have h1 : Filter.Tendsto (fun t : ℝ => 2 * (Hf t - 1) / t ^ 2)
+      (pure 0) (nhds κ) := h.mono_left (pure_le_nhds 0)
+  have h2 : Filter.Tendsto (fun t : ℝ => 2 * (Hf t - 1) / t ^ 2)
+      (pure 0) (nhds (2 * (Hf 0 - 1) / (0 : ℝ) ^ 2)) := tendsto_pure_nhds _ _
+  have h3 := tendsto_nhds_unique h2 h1
+  simpa using h3.symm
 
 lemma sub_one_eq_mul_ratio (H : ℝ → ℝ) (h_one : H 0 = 1) (t : ℝ) :
   H t - 1 = (t^2 / 2) * (2 * (H t - 1) / t^2) := by
@@ -163,31 +186,40 @@ lemma sub_one_eq_mul_ratio (H : ℝ → ℝ) (h_one : H 0 = 1) (t : ℝ) :
     simp [h_one]
   · field_simp [ht]
 
+/-- Unit log curvature plus `H 0 = 1` give the two-sided limit at the origin.
+The curvature hypothesis lives on the punctured filter, so the value at the
+origin is supplied by `h_one` rather than assumed away. -/
 lemma tendsto_H_one_of_log_curvature
   (H : ℝ → ℝ) (h_one : H 0 = 1) {κ : ℝ} (h_calib : HasLogCurvature H κ) :
   Filter.Tendsto H (nhds 0) (nhds 1) := by
-  have h_t : Filter.Tendsto (fun t : ℝ => t) (nhds 0) (nhds (0 : ℝ)) := by
-    simpa using (Filter.tendsto_id : Filter.Tendsto (fun t : ℝ => t) (nhds (0 : ℝ)) (nhds (0 : ℝ)))
-  have h_t2 : Filter.Tendsto (fun t : ℝ => t^2) (nhds 0) (nhds (0 : ℝ)) := by
-    simpa [pow_two] using h_t.mul h_t
-  have h_t2_div : Filter.Tendsto (fun t : ℝ => t^2 / 2) (nhds 0) (nhds (0 : ℝ)) := by
-    have h_const : Filter.Tendsto (fun _ : ℝ => (1 / 2 : ℝ)) (nhds 0) (nhds (1 / 2 : ℝ)) :=
-      tendsto_const_nhds
-    simpa [div_eq_mul_inv] using h_t2.mul h_const
-  have h_sub : Filter.Tendsto (fun t => H t - 1) (nhds 0) (nhds (0 : ℝ)) := by
-    have h_prod :
-        Filter.Tendsto (fun t => (t^2 / 2) * (2 * (H t - 1) / t^2)) (nhds 0)
-          (nhds ((0 : ℝ) * κ)) := h_t2_div.mul h_calib
-    have h_eq :
-        (fun t => H t - 1) = (fun t => (t^2 / 2) * (2 * (H t - 1) / t^2)) := by
-      funext t
-      exact sub_one_eq_mul_ratio H h_one t
-    simpa [h_eq] using h_prod
-  have h_const : Filter.Tendsto (fun _ : ℝ => (1 : ℝ)) (nhds 0) (nhds (1 : ℝ)) :=
-    tendsto_const_nhds
-  have h_add : Filter.Tendsto (fun t => (H t - 1) + 1) (nhds 0) (nhds (0 + (1 : ℝ))) :=
-    h_sub.add h_const
-  simpa using h_add
+  have h_t2_div :
+      Filter.Tendsto (fun t : ℝ => t^2 / 2) (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ))
+        (nhds (0 : ℝ)) := by
+    have hfull : Filter.Tendsto (fun t : ℝ => t^2 / 2) (nhds (0 : ℝ)) (nhds (0 : ℝ)) := by
+      simpa using ((continuous_pow 2).div_const 2).tendsto (0 : ℝ)
+    exact hfull.mono_left nhdsWithin_le_nhds
+  have h_prod :
+      Filter.Tendsto (fun t => (t^2 / 2) * (2 * (H t - 1) / t^2))
+        (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds ((0 : ℝ) * κ)) :=
+    h_t2_div.mul h_calib
+  have h_sub :
+      Filter.Tendsto (fun t => H t - 1) (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ))
+        (nhds (0 : ℝ)) := by
+    have h_congr : ∀ t : ℝ, (t^2 / 2) * (2 * (H t - 1) / t^2) = H t - 1 :=
+      fun t => (sub_one_eq_mul_ratio H h_one t).symm
+    simpa using (Filter.Tendsto.congr h_congr h_prod)
+  have h_punct :
+      Filter.Tendsto H (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds 1) := by
+    have h_const : Filter.Tendsto (fun _ : ℝ => (1 : ℝ))
+        (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds (1 : ℝ)) := tendsto_const_nhds
+    simpa using h_sub.add h_const
+  have h_cw : ContinuousWithinAt H ({(0 : ℝ)}ᶜ) 0 := by
+    unfold ContinuousWithinAt
+    rw [h_one]
+    exact h_punct
+  have h_ca : ContinuousAt H 0 := continuousWithinAt_compl_self.mp h_cw
+  have h := h_ca.tendsto
+  rwa [h_one] at h
 
 theorem dAlembert_continuous_of_log_curvature
   (H : ℝ → ℝ)
@@ -1130,6 +1162,190 @@ theorem law_of_logic_forces_jcost (F : ℝ → ℝ)
       = F (Real.exp (Real.log x)) := by rw [ht]
     _ = Gf (Real.log x) := rfl
     _ = Real.cosh (Real.log x) - 1 := h_G_cosh (Real.log x)
+    _ = G Cost.Jcost (Real.log x) := by simp only [hJG]
+    _ = Cost.Jcost (Real.exp (Real.log x)) := by simp [G]
+    _ = Cost.Jcost x := by simp [ht]
+
+/-! ## Two premises suffice
+
+The published theorem (Washburn & Zlatanović, *Uniqueness of the Canonical
+Reciprocal Cost*) assumes normalization `F 1 = 0`, the composition law, unit log
+curvature, and, silently in its type declaration, nonnegativity of `F`. Only two
+of those are doing work. The composition law together with unit log curvature
+force `F = J`; normalization and nonnegativity are conclusions.
+
+The proof runs: the composition law at `y = 1` leaves only `F 1 = 0` or the
+constant `-1`, and the constant has no unit log curvature, so normalization is
+free; curvature plus `H 0 = 1` gives the limit at the origin, which upgrades a
+d'Alembert solution to a continuous one; Aczél's classification makes it smooth;
+evenness kills the first derivative; and one l'Hôpital step turns `κ = 1` into
+`H''(0) = 1`, which the ODE uniqueness converts to `cosh`. -/
+
+/-- The composition law together with unit log curvature force normalization.
+The composition law at `y = 1` gives `F 1 * (F x + 1) = 0`, so either `F 1 = 0`
+or `F` is constantly `-1`; the constant has `H ≡ 0`, whose curvature quotient is
+negative throughout a punctured neighbourhood and so cannot tend to `1`. -/
+theorem logCurvature_forces_normalized (F : ℝ → ℝ)
+    (hComp : SatisfiesCompositionLaw F) (hκ : HasLogCurvature (H F) 1) :
+    IsNormalized F := by
+  by_contra hne
+  have hconst : ∀ x : ℝ, 0 < x → F x = -1 := by
+    intro x hx
+    have h := hComp x 1 hx one_pos
+    rw [mul_one, div_one] at h
+    have hquad : F 1 * (F x + 1) = 0 := by nlinarith
+    rcases mul_eq_zero.mp hquad with h1 | h2
+    · exact absurd h1 hne
+    · linarith
+  have hH : ∀ t : ℝ, H F t = 0 := by
+    intro t
+    have hx := hconst (Real.exp t) (Real.exp_pos t)
+    simp [H, G, hx]
+  have hgt : ∀ᶠ t in nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ),
+      (1 / 2 : ℝ) < 2 * (H F t - 1) / t ^ 2 :=
+    hκ.eventually (eventually_gt_nhds (by norm_num))
+  have hne0 : ∀ᶠ t in nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ), t ≠ 0 := by
+    filter_upwards [self_mem_nhdsWithin] with t ht using ht
+  obtain ⟨t, hgt', ht0⟩ := (hgt.and hne0).exists
+  have ht2 : 0 < t ^ 2 := by positivity
+  have hneg : 2 * (H F t - 1) / t ^ 2 < 0 := by
+    rw [hH t]
+    exact div_neg_of_neg_of_pos (by norm_num) ht2
+  linarith
+
+/-- For a smooth function with `Hf 0 = 1` and vanishing first derivative, the log
+curvature exists and equals the second derivative at the origin. This is the
+l'Hôpital step, and it is also what makes the corrected calibration satisfiable
+rather than empty. -/
+theorem logCurvature_eq_deriv2 (Hf : ℝ → ℝ) (hsm : ContDiff ℝ ⊤ Hf)
+    (h1 : Hf 0 = 1) (hd0 : deriv Hf 0 = 0) :
+    HasLogCurvature Hf (deriv (deriv Hf) 0) := by
+  have h2 : ContDiff ℝ 2 Hf := hsm.of_le (by exact_mod_cast le_top)
+  have hderiv_diff : Differentiable ℝ (deriv Hf) := by
+    have h3 := h2
+    rw [show (2 : WithTop ℕ∞) = 1 + 1 from rfl] at h3
+    rw [contDiff_succ_iff_deriv] at h3
+    exact h3.2.2.differentiable (by decide : (1 : WithTop ℕ∞) ≠ 0)
+  have hdiffHf : Differentiable ℝ Hf :=
+    h2.differentiable (by decide : (2 : WithTop ℕ∞) ≠ 0)
+  have hd2 : HasDerivAt (deriv Hf) (deriv (deriv Hf) 0) 0 :=
+    (hderiv_diff 0).hasDerivAt
+  have hslope :
+      Filter.Tendsto (fun t : ℝ => deriv Hf t / t)
+        (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds (deriv (deriv Hf) 0)) := by
+    have h := hasDerivAt_iff_tendsto_slope.mp hd2
+    have hsl : ∀ t : ℝ, slope (deriv Hf) 0 t = deriv Hf t / t := by
+      intro t
+      simp [slope_def_field, hd0]
+    exact Filter.Tendsto.congr hsl h
+  have hnum : Filter.Tendsto (fun t : ℝ => 2 * (Hf t - 1))
+      (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds 0) := by
+    have hcont : Filter.Tendsto Hf (nhds (0 : ℝ)) (nhds (Hf 0)) :=
+      hdiffHf.continuous.tendsto 0
+    have hconst : Filter.Tendsto (fun _ : ℝ => (1 : ℝ)) (nhds (0 : ℝ)) (nhds 1) :=
+      tendsto_const_nhds
+    have hsub : Filter.Tendsto (fun t : ℝ => Hf t - 1) (nhds (0 : ℝ))
+        (nhds (Hf 0 - 1)) := hcont.sub hconst
+    have hmul : Filter.Tendsto (fun t : ℝ => 2 * (Hf t - 1)) (nhds (0 : ℝ))
+        (nhds (2 * (Hf 0 - 1))) := hsub.const_mul (2 : ℝ)
+    rw [h1] at hmul
+    simpa using hmul.mono_left nhdsWithin_le_nhds
+  have hden : Filter.Tendsto (fun t : ℝ => t ^ 2)
+      (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds 0) := by
+    have h := (continuous_pow 2).tendsto (0 : ℝ)
+    simpa using h.mono_left nhdsWithin_le_nhds
+  have hff' : ∀ᶠ t in nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ),
+      HasDerivAt (fun s : ℝ => 2 * (Hf s - 1)) (2 * deriv Hf t) t := by
+    filter_upwards with t
+    simpa using ((hdiffHf t).hasDerivAt.sub_const 1).const_mul (2 : ℝ)
+  have hgg' : ∀ᶠ t in nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ),
+      HasDerivAt (fun s : ℝ => s ^ 2) (2 * t) t := by
+    filter_upwards with t
+    simpa [mul_comm] using hasDerivAt_pow 2 t
+  have hg'ne : ∀ᶠ t in nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ), (2 : ℝ) * t ≠ 0 := by
+    filter_upwards [self_mem_nhdsWithin] with t ht
+    have htne : t ≠ 0 := ht
+    positivity
+  have hdiv :
+      Filter.Tendsto (fun t : ℝ => (2 * deriv Hf t) / (2 * t))
+        (nhdsWithin (0 : ℝ) ({(0 : ℝ)}ᶜ)) (nhds (deriv (deriv Hf) 0)) := by
+    refine Filter.Tendsto.congr' ?_ hslope
+    filter_upwards [self_mem_nhdsWithin] with t ht
+    have htne : t ≠ 0 := ht
+    field_simp
+  exact HasDerivAt.lhopital_zero_nhdsNE hff' hgg' hg'ne hnum hden hdiv
+
+/-- Unit log curvature pins the second derivative at the origin. -/
+theorem deriv2_of_logCurvature (Hf : ℝ → ℝ) (hsm : ContDiff ℝ ⊤ Hf)
+    (h1 : Hf 0 = 1) (hd0 : deriv Hf 0 = 0) (hκ : HasLogCurvature Hf 1) :
+    deriv (deriv Hf) 0 = 1 :=
+  tendsto_nhds_unique (logCurvature_eq_deriv2 Hf hsm h1 hd0) hκ
+
+/-- **Non-vacuity witness.** The canonical cost satisfies the calibration. A
+regularity hypothesis nobody exhibits a model for is worth nothing, which is the
+lesson of the full-filter version this replaced. -/
+theorem jcost_hasLogCurvature_one : HasLogCurvature (H Cost.Jcost) 1 := by
+  have hfun : H Cost.Jcost = Real.cosh := by
+    funext t
+    have h := Jcost_G_eq_cosh_sub_one t
+    simp only [H]
+    linarith [h]
+  have hd0 : deriv Real.cosh 0 = 0 := by
+    rw [Real.deriv_cosh]; exact Real.sinh_zero
+  have hd2 : deriv (deriv Real.cosh) 0 = 1 := by
+    rw [Real.deriv_cosh, Real.deriv_sinh]; exact Real.cosh_zero
+  have h := logCurvature_eq_deriv2 Real.cosh Real.contDiff_cosh Real.cosh_zero hd0
+  rw [hd2] at h
+  rwa [hfun]
+
+/-- **The cost theorem on two premises.** The composition law and unit log
+curvature force `F = J` on the positives. Normalization, nonnegativity, and
+continuity are all conclusions rather than hypotheses; compare
+`law_of_logic_forces_jcost`, which assumes all of them. -/
+theorem composition_logCurvature_forces_jcost [AczelSmoothnessPackage]
+    (F : ℝ → ℝ)
+    (hComp : SatisfiesCompositionLaw F)
+    (hκ : HasLogCurvature (H F) 1) :
+    ∀ x : ℝ, 0 < x → F x = Cost.Jcost x := by
+  have hNorm : IsNormalized F := logCurvature_forces_normalized F hComp hκ
+  have hN : F 1 = 0 := hNorm
+  have hH0 : H F 0 = 1 := by simp [H, G, hN]
+  have hCosh : CoshAddIdentity F := (composition_law_equiv_coshAdd F).mp hComp
+  have hdA : ∀ t u, H F (t + u) + H F (t - u) = 2 * H F t * H F u := by
+    intro t u
+    have hG := hCosh t u
+    have hgoal :
+        (G F (t + u) + 1) + (G F (t - u) + 1) =
+          2 * (G F t + 1) * (G F u + 1) := by
+      calc
+        (G F (t + u) + 1) + (G F (t - u) + 1)
+            = (G F (t + u) + G F (t - u)) + 2 := by ring
+        _ = (2 * (G F t * G F u) + 2 * (G F t + G F u)) + 2 := by simpa [hG]
+        _ = 2 * (G F t + 1) * (G F u + 1) := by ring
+    simpa [H] using hgoal
+  have hcont : Continuous (H F) :=
+    dAlembert_continuous_of_log_curvature (H F) hH0 hdA hκ
+  have hsm : ContDiff ℝ ⊤ (H F) := aczel_dAlembert_smooth (H F) hH0 hcont hdA
+  have heven : Function.Even (H F) := dAlembert_even (H F) hH0 hdA
+  have hd0 : deriv (H F) 0 = 0 :=
+    even_deriv_at_zero (H F) heven
+      (hsm.differentiable (by decide : (⊤ : WithTop ℕ∞) ≠ 0) 0)
+  have hd2 : deriv (deriv (H F)) 0 = 1 :=
+    deriv2_of_logCurvature (H F) hsm hH0 hd0 hκ
+  have hcosh : ∀ t, H F t = Real.cosh t :=
+    dAlembert_cosh_solution_aczel (H F) hH0 hcont hdA hd2
+  intro x hx
+  have hGc : G F (Real.log x) = Real.cosh (Real.log x) - 1 := by
+    have h := hcosh (Real.log x)
+    simp only [H] at h
+    linarith
+  have ht : Real.exp (Real.log x) = x := Real.exp_log hx
+  have hJG : G Cost.Jcost (Real.log x) = Real.cosh (Real.log x) - 1 :=
+    Jcost_G_eq_cosh_sub_one (Real.log x)
+  calc
+    F x = F (Real.exp (Real.log x)) := by rw [ht]
+    _ = G F (Real.log x) := rfl
+    _ = Real.cosh (Real.log x) - 1 := hGc
     _ = G Cost.Jcost (Real.log x) := by simp only [hJG]
     _ = Cost.Jcost (Real.exp (Real.log x)) := by simp [G]
     _ = Cost.Jcost x := by simp [ht]

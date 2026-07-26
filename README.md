@@ -38,6 +38,35 @@ Gravity.Rotation        -- Newtonian rotation-curve identities
 Gravity.DerivedFactors  -- HSB suppression from SevenBeatViolation saturation
 ```
 
+### The unit of the recognition cost (T5 continued)
+
+```lean
+Cost.FunctionalEquation      -- law_of_logic_forces_jcost: the shape of J is forced
+Cost.RealTraceRoot           -- realTraceRoot: the principal root of a doubled trace
+Cost.RealCharacterFactorization
+                             -- every anchor-free cost factors through a real character
+Cost.MonotoneMultiplicativePower
+                             -- Erdos's theorem, completely multiplicative case (Howe's proof)
+Cost.TraceRationalExponent   -- rational traces force an integer exponent
+Cost.GaugeOrbitFromRealCharacter
+                             -- the sign cost and the signed power costs
+Cost.GaugeOrbitClassification
+                             -- the anchor-free cost ledger has one member per exponent
+Cost.UnitFromMinimality      -- J is the strict least member once exponent zero is excluded
+```
+
+T5 forces the shape of the recognition cost and leaves its scale free. This slice
+closes the scale question on the countable carrier. The classification
+(`GaugeOrbitIsSignedPowerFamily_of_sixExponentials`) is complete up to one named
+hypothesis, `TraceRationalExponent.SixExponentialsTraceInput`, which carries the six
+exponentials theorem of transcendence theory; that hypothesis appears in the statement
+of every result that uses it and is not an axiom. Erdos's theorem on monotone
+multiplicative functions was the other external input and is now proved here. With the
+classification in hand, `jcost_lt_pow` and `anchor_is_minimality_over_powers` say that
+`J` is the cheapest member that charges anything, so the numeric unit is a consequence
+of a least-cost rule rather than a stipulation. Papers: *The Cost of Distinction* and
+*Monotonicity Replaces Continuity in the d'Alembert Equation over the Rationals*.
+
 The forcing-chain scope is:
 
 ```text
