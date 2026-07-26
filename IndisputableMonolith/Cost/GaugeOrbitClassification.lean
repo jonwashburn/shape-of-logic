@@ -245,6 +245,121 @@ theorem nontrivial_is_signedPower (hS : SansAnchorHypotheses F)
     congr 1
     ring
 
+/-! ## Nondegeneracy is one equation at one point, and it is strictness
+
+The classification admits exponent zero, the sign cost, and that member charges nothing at
+any positive ratio, so it undercuts `J` without competing with it
+(`Cost.UnitFromMinimality.exponent_zero_undercuts_everything`). Selection therefore needs a
+nondegeneracy hypothesis, and the fair objection is that this looks like a new dial: an extra
+postulate with content of its own, added to rescue the answer.
+
+It is not. For an inhabitant of the anchor-free ledger, all of the following are the same
+condition: it charges something at the single orbit two, it charges something somewhere on
+the positive ratios, the ledger's monotonicity holds strictly at some pair, and it is not the
+sign cost. So nondegeneracy adds no surface beyond the strict form of a hypothesis the ledger
+already carries, and it is decided by one rational equation at one point.
+
+None of this needs the six exponentials input or Erdős's theorem. The entire dichotomy is the
+degenerate branch of the trace at two, which `degenerate_is_signGauge` settled above, so
+these results are unconditional where the classification is not.
+
+What the degenerate member is, stated precisely, because "charges nothing" is the wrong
+description: `signGauge_sees_orientation_only` says it charges the full reversal penalty at
+every negative ratio and nothing at every positive one. It is not a cost that is free. It is
+a cost that records which way a comparison points and never how far apart its sides are. The
+content of nondegeneracy is that cost sees magnitude. -/
+
+/-- Cost vanishes at orbit two exactly when the trace there takes the degenerate value. -/
+theorem vanishes_at_two_iff_trace_two (hS : SansAnchorHypotheses F) :
+    (F two).toRat = 0 ↔ rationalTrace F 2 = 2 := by
+  have hd := cost_display hS two
+  rw [two_toRat] at hd
+  constructor
+  · intro h
+    rw [h] at hd
+    push_cast at hd
+    linarith
+  · intro h
+    rw [h] at hd
+    have hz : ((F two).toRat : ℝ) = 0 := by rw [hd]; norm_num
+    exact_mod_cast hz
+
+/-- **Charging nothing at one point is charging nothing anywhere.** An inhabitant that is
+free at orbit two is free at every positive ratio, however far apart its sides are. -/
+theorem vanishes_at_two_iff_flat (hS : SansAnchorHypotheses F) :
+    (F two).toRat = 0 ↔ ∀ q : RatioOrbit, 0 < q.toRat → (F q).toRat = 0 := by
+  constructor
+  · intro h q hq
+    have hd := cost_display hS q
+    rw [rationalTrace_pos_eq_two_of_two_eq_two hS ((vanishes_at_two_iff_trace_two hS).mp h) hq]
+      at hd
+    have hz : ((F q).toRat : ℝ) = 0 := by rw [hd]; norm_num
+    exact_mod_cast hz
+  · intro h
+    exact h two (by rw [two_toRat]; norm_num)
+
+/-- A nondegenerate inhabitant charges a strictly positive amount at orbit two, so the
+condition may be read as an inequality rather than a disequality. -/
+theorem charges_positively_at_two (hS : SansAnchorHypotheses F)
+    (hne : (F two).toRat ≠ 0) : 0 < (F two).toRat := by
+  have hge : (2 : ℝ) ≤ rationalTrace F 2 := by
+    have h := IndisputableMonolith.Cost.RealCharacterFactorization.rationalTrace_nat_ge_two hS
+      (n := 2) (by norm_num)
+    simpa using h
+  have hgt : (2 : ℝ) < rationalTrace F 2 :=
+    lt_of_le_of_ne hge (Ne.symm fun h => hne ((vanishes_at_two_iff_trace_two hS).mpr h))
+  have hd := cost_display hS two
+  rw [two_toRat] at hd
+  have hpos : (0 : ℝ) < ((F two).toRat : ℝ) := by rw [hd]; linarith
+  exact_mod_cast hpos
+
+/-- **Nondegeneracy is the strict form of the ledger's monotonicity.** Charging anything at
+orbit two is equivalent to the cost order being strict at some pair of positive ratios. The
+ledger assumes monotonicity non-strictly (`PRCNativeCostMonotone` is `≤ → ≤`), and the only
+inhabitant that keeps it flat is the sign cost. -/
+theorem strict_somewhere_iff_charges_at_two (hS : SansAnchorHypotheses F) :
+    (∃ a b : RatioOrbit, 0 < a.toRat ∧ 0 < b.toRat ∧ a.toRat ≤ b.toRat ∧
+        (F a).toRat < (F b).toRat)
+      ↔ (F two).toRat ≠ 0 := by
+  constructor
+  · rintro ⟨a, b, ha, hb, -, hlt⟩ hzero
+    have hflat := (vanishes_at_two_iff_flat hS).mp hzero
+    rw [hflat a ha, hflat b hb] at hlt
+    exact absurd hlt (lt_irrefl 0)
+  · intro hne
+    refine ⟨RatioOrbit.one, two, ?_, ?_, ?_, ?_⟩
+    · rw [RatioOrbit.one_toRat]; norm_num
+    · rw [two_toRat]; norm_num
+    · rw [RatioOrbit.one_toRat, two_toRat]; norm_num
+    · rw [hS.base_sans_two.unit_zero, RatioOrbit.zero_toRat]
+      exact charges_positively_at_two hS hne
+
+/-- **Nondegeneracy is exactly the exclusion of the sign cost**, with no reference to
+exponents and no appeal to the classification. -/
+theorem charges_at_two_iff_not_signGauge (hS : SansAnchorHypotheses F) :
+    (F two).toRat ≠ 0 ↔
+      ¬ ∀ q : RatioOrbit, RatioOrbit.crossEq (F q) (signGaugeNativeCost q) := by
+  constructor
+  · intro hne hall
+    have h := crossDisp (hall two)
+    rw [signGaugeNativeCost_toRat, two_toRat, signGaugeCostDisplay,
+      if_pos (by norm_num : (0 : ℚ) < 2)] at h
+    exact hne h
+  · intro hnot hzero
+    exact hnot (degenerate_is_signGauge hS ((vanishes_at_two_iff_trace_two hS).mp hzero))
+
+/-- What the degenerate member actually is. It charges the full reversal penalty at every
+negative ratio and nothing at every positive one: a cost that records orientation and never
+magnitude. So the nondegeneracy hypothesis is not "assume cost is not free"; it is "assume
+cost sees how far apart the two sides are". -/
+theorem signGauge_sees_orientation_only (q : RatioOrbit) :
+    (0 < q.toRat → (signGaugeNativeCost q).toRat = 0) ∧
+      (q.toRat < 0 → (signGaugeNativeCost q).toRat = -2) := by
+  refine ⟨fun hq => ?_, fun hq => ?_⟩
+  · rw [signGaugeNativeCost_toRat, signGaugeCostDisplay, if_pos hq]
+  · rw [signGaugeNativeCost_toRat, signGaugeCostDisplay, if_neg (not_lt.mpr hq.le),
+      if_neg (ne_of_lt hq)]
+
 /-! ## The classification -/
 
 /-- **The anchor-free gauge classification, on one named import.** Every inhabitant of the
@@ -267,6 +382,12 @@ theorem GaugeOrbitIsSignedPowerFamily_of_sixExponentials
 /-! ### Axiom audit -/
 
 #print axioms degenerate_is_signGauge
+#print axioms vanishes_at_two_iff_trace_two
+#print axioms vanishes_at_two_iff_flat
+#print axioms charges_positively_at_two
+#print axioms strict_somewhere_iff_charges_at_two
+#print axioms charges_at_two_iff_not_signGauge
+#print axioms signGauge_sees_orientation_only
 #print axioms exists_nat_exponent
 #print axioms nontrivial_is_signedPower
 #print axioms GaugeOrbitIsSignedPowerFamily_of_sixExponentials

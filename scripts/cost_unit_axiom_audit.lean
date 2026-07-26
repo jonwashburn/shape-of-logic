@@ -17,6 +17,17 @@ import IndisputableMonolith.Cost.FunctionalEquation
 
 #print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.GaugeOrbitIsSignedPowerFamily_of_sixExponentials
 #print axioms IndisputableMonolith.Cost.MonotonePower.exists_exponent
+
+-- The nondegeneracy dichotomy. None of these takes the six exponentials hypothesis, so a
+-- clean report here is the whole claim: the condition that separates the degenerate solution
+-- from every other one is decided inside the kernel from the ledger alone.
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.vanishes_at_two_iff_trace_two
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.vanishes_at_two_iff_flat
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.charges_positively_at_two
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.strict_somewhere_iff_charges_at_two
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.charges_at_two_iff_not_signGauge
+#print axioms IndisputableMonolith.Foundation.PrimitiveRecognitionCalculus.PRCJCost.signGauge_sees_orientation_only
+
 #print axioms IndisputableMonolith.Cost.UnitFromMinimality.jcost_lt_pow
 #print axioms IndisputableMonolith.Cost.UnitFromMinimality.anchor_is_minimality_over_powers
 #print axioms IndisputableMonolith.Cost.FunctionalEquation.law_of_logic_forces_jcost
