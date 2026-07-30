@@ -26,6 +26,16 @@ import Mathlib
   full Recognition Science library and is an instance of the class theorem
   proved here.
 
+  The module carries the theorem in two forms. `ScaleHomogeneityNoGo`
+  proves the joint-selector form (a posted value against a
+  scale-invariant target). `ScaleHomogeneityNoGo.AmplitudeForm` proves
+  the paper's S5 statement verbatim: over a scaled configuration space
+  (a `ℝ_{>0}`-action with a degree-one homogeneous amplitude), an
+  invariant selector's selected amplitude set is contained in `{0}` or
+  contains every positive real, with the positive-quadrant witness
+  pinning the scale-invariant ratio `a/b` to `2` while leaving the
+  amplitude free.
+
   No `sorry`; no new Lean `axiom`.
 -/
 
@@ -202,6 +212,149 @@ theorem vec_witness :
     probWeight probWeight_scaleInvariant _ hpos hpos
 
 end
+
+/-! ## The amplitude form (the paper's S5 statement)
+
+The capstone paper states the no-go in amplitude form: a scaled
+configuration space is a type carrying an action of the multiplicative
+group of positive reals and a degree-one homogeneous amplitude readout,
+and an invariant selector is a predicate blind to the action. The
+selected amplitude set is then either contained in `0` or contains every
+positive real, so no positive amplitude is forced unless the selector is
+unsatisfiable. The witness is the positive quadrant with `A(a,b) = a`
+and the selector `a = 2b`, which pins the scale-invariant ratio `a/b`
+to `2` while leaving the amplitude completely free: dimensionless
+readouts are outside the theorem's reach. This section is that form,
+kernel-checked, with its witness. -/
+
+namespace AmplitudeForm
+
+/-- A scaled configuration space: a carrier with a multiplicative
+`ℝ_{>0}`-action and a nonnegative amplitude readout, homogeneous of
+degree one. -/
+structure ScaledConfigSpace where
+  X : Type u
+  scale : {c : ℝ // 0 < c} → X → X
+  scale_one : ∀ x, scale ⟨1, one_pos⟩ x = x
+  scale_mul : ∀ (c d : {c : ℝ // 0 < c}) (x : X),
+    scale ⟨c.1 * d.1, mul_pos c.2 d.2⟩ x = scale c (scale d x)
+  A : X → ℝ
+  A_nonneg : ∀ x, 0 ≤ A x
+  A_homog : ∀ (c : {c : ℝ // 0 < c}) (x : X), A (scale c x) = c.1 * A x
+
+namespace ScaledConfigSpace
+
+variable (sp : ScaledConfigSpace)
+
+/-- A selector is invariant when it cannot distinguish a configuration
+from its rescaled copy. -/
+def IsInvariantSelector (P : sp.X → Prop) : Prop :=
+  ∀ (c : {c : ℝ // 0 < c}) (x : sp.X), P (sp.scale c x) ↔ P x
+
+/-- The scale-homogeneity no-go, amplitude form: the selected amplitude
+set is either contained in `{0}` or contains every positive real. -/
+theorem selected_amplitudes_eq_zero_or_all_pos
+    (P : sp.X → Prop) (hP : IsInvariantSelector sp P) :
+    (∀ x, P x → sp.A x = 0) ∨ (∀ c : ℝ, 0 < c → ∃ x, P x ∧ sp.A x = c) := by
+  by_cases h : ∃ x, P x ∧ 0 < sp.A x
+  · right
+    obtain ⟨x, hx, hA⟩ := h
+    intro c hc
+    refine ⟨sp.scale ⟨c / sp.A x, div_pos hc hA⟩ x, ?_, ?_⟩
+    · exact (hP _ x).mpr hx
+    · rw [sp.A_homog, div_mul_cancel₀ c (ne_of_gt hA)]
+  · left
+    intro x hx
+    have h1 : sp.A x ≤ 0 := by
+      by_contra hgt
+      push_neg at hgt
+      exact h ⟨x, hx, hgt⟩
+    exact le_antisymm h1 (sp.A_nonneg x)
+
+/-- Consequence: an invariant selector that is satisfied somewhere
+cannot force every selected configuration to have one positive
+amplitude. -/
+theorem no_forced_positive_amplitude
+    (P : sp.X → Prop) (hP : IsInvariantSelector sp P)
+    (a : ℝ) (ha : 0 < a) :
+    (∃ x, P x) → ¬ ∀ x, P x → sp.A x = a := by
+  intro ⟨x0, hx0⟩ hall
+  rcases selected_amplitudes_eq_zero_or_all_pos sp P hP with hz | hallpos
+  · have h0 := hz x0 hx0
+    rw [hall x0 hx0] at h0
+    linarith
+  · obtain ⟨y, hy, hAy⟩ := hallpos (2 * a) (by linarith)
+    have := hall y hy
+    linarith
+
+end ScaledConfigSpace
+
+/-- The positive quadrant as a scaled configuration space, with the
+first coordinate as amplitude. -/
+def quadrantSpace : ScaledConfigSpace where
+  X := { p : ℝ × ℝ // 0 < p.1 ∧ 0 < p.2 }
+  scale := fun c p => ⟨(c.1 * p.1.1, c.1 * p.1.2),
+    mul_pos c.2 p.2.1, mul_pos c.2 p.2.2⟩
+  scale_one := fun p => by ext <;> simp
+  scale_mul := fun c d p => by ext <;> simp [mul_assoc]
+  A := fun p => p.1.1
+  A_nonneg := fun p => le_of_lt p.2.1
+  A_homog := fun c p => rfl
+
+/-- The paper's witness selector: `a = 2b`. -/
+def quadrantSelector : quadrantSpace.X → Prop := fun p => p.1.1 = 2 * p.1.2
+
+theorem quadrantSelector_invariant :
+    quadrantSpace.IsInvariantSelector quadrantSelector := by
+  intro c p
+  show (c.1 * p.1.1 = 2 * (c.1 * p.1.2)) ↔ (p.1.1 = 2 * p.1.2)
+  constructor
+  · intro h
+    have hc : c.1 ≠ 0 := ne_of_gt c.2
+    have h3 : c.1 * (p.1.1 - 2 * p.1.2) = 0 := by rw [mul_sub, h]; ring
+    rcases mul_eq_zero.mp h3 with hc0 | hdiff
+    · exact absurd hc0 hc
+    · linarith
+  · intro h
+    rw [h]; ring
+
+/-- The witness point (2, 1) in the positive quadrant. -/
+def quadrantPoint21 : quadrantSpace.X :=
+  ⟨(2, 1), by norm_num, by norm_num⟩
+
+theorem quadrantPoint21_selected : quadrantSelector quadrantPoint21 := by
+  show (2 : ℝ) = 2 * 1
+  norm_num
+
+theorem quadrantPoint21_amplitude : quadrantSpace.A quadrantPoint21 = 2 := rfl
+
+theorem quadrant_witness :
+    (∃ x, quadrantSelector x ∧ 0 < quadrantSpace.A x) ∧
+    ¬ ∀ x, quadrantSelector x → quadrantSpace.A x = 2 := by
+  refine ⟨⟨quadrantPoint21, quadrantPoint21_selected, ?_⟩, ?_⟩
+  · rw [quadrantPoint21_amplitude]; norm_num
+  · exact quadrantSpace.no_forced_positive_amplitude _
+      quadrantSelector_invariant 2 (by norm_num)
+      ⟨quadrantPoint21, quadrantPoint21_selected⟩
+
+/-- The scale-invariant readout `B(a,b) = a/b`: constant on orbits, and
+pinned to `2` on every selected configuration. This is the content of
+the paper's "what this theorem does not add" remark, kernel-checked. -/
+theorem quadrant_ratio_pinned (p : quadrantSpace.X)
+    (hp : quadrantSelector p) : p.1.1 / p.1.2 = 2 := by
+  have hb : p.1.2 ≠ 0 := ne_of_gt p.2.2
+  have hp' : p.1.1 = 2 * p.1.2 := hp
+  field_simp
+  linarith
+
+theorem quadrant_ratio_scaleInvariant (c : {c : ℝ // 0 < c})
+    (p : quadrantSpace.X) :
+    (quadrantSpace.scale c p).1.1 / (quadrantSpace.scale c p).1.2 =
+      p.1.1 / p.1.2 := by
+  show (c.1 * p.1.1) / (c.1 * p.1.2) = p.1.1 / p.1.2
+  exact mul_div_mul_left _ _ (ne_of_gt c.2)
+
+end AmplitudeForm
 
 end ScaleHomogeneityNoGo
 end Foundation
