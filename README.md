@@ -67,6 +67,29 @@ classification in hand, `jcost_lt_pow` and `anchor_is_minimality_over_powers` sa
 of a least-cost rule rather than a stipulation. Papers: *The Cost of Distinction* and
 *Monotonicity Replaces Continuity in the d'Alembert Equation over the Rationals*.
 
+### Forced response / two-way traffic (cost-derived kinetics)
+
+```lean
+Thermodynamics.ForcedResponseLaw
+Thermodynamics.ForcedResponseOddness
+Thermodynamics.ForcedResponseLargeDeviationBridge
+Thermodynamics.ForcedResponseSignBlindMobility
+Thermodynamics.ForcedResponseDetailedBalanceNormalForm
+Thermodynamics.ForcedResponseCostDeterminedActivity
+Thermodynamics.ForcedResponseCostIsTheBarrier
+```
+
+These modules derive the detailed-balance normal form, sign-blind mobility,
+and the recognition-cost barrier law used in *Two-Way Traffic from a Recognition
+Cost*. Headline receipts include
+`flux_eq_two_exp_deviation_mul_sinh_half`,
+`barrier_law_implies_reciprocity`, and
+`calibrated_activity_gt_marcus`. Build tip:
+
+```bash
+lake build IndisputableMonolith.Thermodynamics.ForcedResponseCostIsTheBarrier
+```
+
 The forcing-chain scope is:
 
 ```text

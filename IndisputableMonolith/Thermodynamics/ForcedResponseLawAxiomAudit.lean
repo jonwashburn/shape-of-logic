@@ -1,0 +1,21 @@
+import IndisputableMonolith.Thermodynamics.ForcedResponseLaw
+
+namespace IndisputableMonolith
+namespace Thermodynamics
+namespace ForcedResponseLawAxiomAudit
+
+#print axioms ForcedResponseLaw.canonicalLogCost_eq_cosh_sub_one
+#print axioms ForcedResponseLaw.canonicalLogCost_deriv
+#print axioms ForcedResponseLaw.bridgedCost_deriv
+#print axioms ForcedResponseLaw.gradientFlux_formula
+#print axioms ForcedResponseLaw.linearBridge_cost_deriv
+#print axioms ForcedResponseLaw.identity_and_double_bridge_costs_differ
+#print axioms ForcedResponseLaw.butlerVolmer_half_eq_two_sinh
+#print axioms ForcedResponseLaw.butlerVolmer_factorization
+#print axioms ForcedResponseLaw.butlerVolmerMobility_pos
+#print axioms ForcedResponseLaw.every_butlerVolmer_alpha_is_gradientFlux
+#print axioms ForcedResponseLaw.rate_ratio_does_not_determine_net_rate
+
+end ForcedResponseLawAxiomAudit
+end Thermodynamics
+end IndisputableMonolith
