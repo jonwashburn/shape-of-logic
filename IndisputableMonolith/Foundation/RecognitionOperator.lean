@@ -237,8 +237,12 @@ theorem RecognitionOperator.conserves (R : RecognitionOperator) (s : LedgerState
   trivial
 
 /-- Legacy compatibility: analytic evolution does not increase the placeholder
-recognition cost. -/
-theorem RecognitionOperator.minimizes_J (R : RecognitionOperator) (s : LedgerState)
+recognition cost. The placeholder is the constant 0, so this is `0 ≤ 0` and
+asserts nothing about minimization. Substituting a real cost does not rescue
+the minimization reading: the alternating signal is annihilated by the
+operator, so its image sits at the pole of `Jcost`. -/
+theorem RecognitionOperator.RecognitionCost_nonincrease_on_legacy_carrier
+    (R : RecognitionOperator) (s : LedgerState)
     (_hs : admissible s) : RecognitionCost (R.evolve s) ≤ RecognitionCost s := by
   simp [RecognitionCost]
 

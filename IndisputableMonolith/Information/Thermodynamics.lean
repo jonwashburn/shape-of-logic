@@ -31,7 +31,10 @@ noncomputable def RecognitionCost (s : LedgerState) : ℝ :=
 noncomputable def reciprocity_skew (s : LedgerState) : ℝ :=
   s.active_bonds.sum (fun b => |Real.log (s.bond_multipliers b)|)
 
-/-- Admissibility predicate for the local information ledger. -/
+/-- Admissibility predicate for the local information ledger. On this carrier it
+is unconstrained: every state satisfies it. The name is a definitional choice,
+not a claim; what it means is that a theorem taking `admissible s` as a
+hypothesis gains nothing from it here. -/
 def admissible (_s : LedgerState) : Prop := True
 
 /-- A local dissipative recognition operator for information thermodynamics. -/
@@ -49,11 +52,9 @@ noncomputable def ledger_entropy (s : LedgerState) : ℝ :=
 noncomputable def thermal_cost (T : ℝ) : ℝ :=
   T * Real.log 2
 
-/-- **THEOREM: Landauer Bound for Recognition**
-    The recognition cost required to reduce mismatch must satisfy the Landauer bound.
-    Specifically, the sum of J-costs across the ledger provides a quadratic lower
-    bound on the information dissipation. -/
-theorem landauer_bound_holds (s : LedgerState) :
+/-- For every active bond with positive multiplier m, Jcost m is at least (log m)^2 / 2.
+No temperature, bit, or erasure appears, so this is not the Landauer bound. -/
+theorem active_bond_jcost_log_quadratic_lower_bound (s : LedgerState) :
     ∀ b ∈ s.active_bonds,
       let m := s.bond_multipliers b
       let u := Real.log m
@@ -78,16 +79,15 @@ theorem total_dissipation_bound (s : LedgerState) :
   rw [Finset.mul_sum]
   apply Finset.sum_le_sum
   intro b hb
-  have h := landauer_bound_holds s b hb
+  have h := active_bond_jcost_log_quadratic_lower_bound s b hb
   dsimp at h
   linarith
 
-/-- **8-Tick Dissipation Limit**
-    The total dissipation over one 8-tick cycle corresponds to the Landauer limit
-    for pattern closure. -/
-theorem eight_tick_dissipation_limit (R : RecognitionOperator) (s : LedgerState) :
+/-- The local operator field gives evolved recognition cost no greater than initial
+recognition cost from initial-state admissibility. No eight-tick cycle enters the
+statement or the proof. -/
+theorem recognition_cost_evolve_le_of_initial_admissibility (R : RecognitionOperator) (s : LedgerState) :
     let s_next := R.evolve s
-    -- Over one complete cycle, the integrated cost balances the erasure
     admissible s → admissible s_next → RecognitionCost s_next ≤ RecognitionCost s := by
   intro s_next hadm_s _
   exact R.minimizes_J s hadm_s
