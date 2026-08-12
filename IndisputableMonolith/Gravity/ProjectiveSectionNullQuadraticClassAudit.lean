@@ -1,0 +1,27 @@
+import IndisputableMonolith.Gravity.ProjectiveSectionNullQuadraticClass
+
+/-!
+Axiom audit for the Phase-5 projective-section null-quadratic algebra package.
+Import path is stress-free and affine-wall-free.
+-/
+
+namespace IndisputableMonolith
+namespace Gravity
+namespace ProjectiveSectionNullQuadraticClass
+
+#print axioms quadContr_smul_vector
+#print axioms normalizeToCanonicalSection_canonical
+#print axioms quadContr_eq_scale_sq_normalize
+#print axioms future_nonzero_null_quad_eq_of_canonical_section_quad_eq
+#print axioms canonical_section_quad_eq_implies_diff_scalar_eta
+#print axioms geometricG0_symmetric
+#print axioms quadContr_geometricG0
+#print axioms quadContr_geometricG0_canonical
+#print axioms geometricG0_unique_mod_eta_of_canonical_section_eq
+#print axioms geometricG0_unique_mod_eta_of_section_scalar_neg_one
+#print axioms geometricG0_determinesAlgebraicNullQuadraticClass_sectionNegOne
+#print axioms projectiveSectionNullQuadraticClassCert
+
+end ProjectiveSectionNullQuadraticClass
+end Gravity
+end IndisputableMonolith

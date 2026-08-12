@@ -1,0 +1,36 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap4OperatorDecoyReceipt
+
+/-!
+# Axiom audit: Wave C3 R0 gap4 operator decoy receipt
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap4OperatorDecoyReceipt
+open IndisputableMonolith.Gravity.SevenGaps.CurvedOperatorUnderdetermination
+open IndisputableMonolith.Gravity.SevenGaps.FullTheoryLedger
+
+#check TypedResidual_countermodel_spectrum_not_ledger_close
+#check curvedSpectrumConverges_inhabited_by_countermodels
+#check curvedSpectrumConverges_of_coupling
+#check curvedSpectrumConverges_coupling_one
+#check curvedSpectrumConverges_coupling_two
+#check typedResidual_countermodel_spectrum_not_ledger_close
+#check TypedResidual_countermodel_spectrum_not_ledger_close_closed
+#check decoy_rateBound_both_couplings
+#check decoy_gap4_blocker_certified
+#check Gap4LedgerTerminalGuard
+#check gap4LedgerTerminalGuard
+#check gap4OperatorDecoyReceiptStatus_flags
+
+#print axioms curvedSpectrumConverges_inhabited_by_countermodels
+#print axioms curvedSpectrumConverges_of_coupling
+#print axioms curvedSpectrumConverges_coupling_one
+#print axioms curvedSpectrumConverges_coupling_two
+#print axioms typedResidual_countermodel_spectrum_not_ledger_close
+#print axioms TypedResidual_countermodel_spectrum_not_ledger_close_closed
+#print axioms decoy_rateBound_both_couplings
+#print axioms decoy_gap4_blocker_certified
+#print axioms gap4LedgerTerminalGuard
+#print axioms gap4OperatorDecoyReceiptStatus_flags

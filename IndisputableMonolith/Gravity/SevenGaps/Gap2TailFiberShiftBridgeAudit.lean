@@ -1,0 +1,34 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2TailFiberShiftBridge
+
+/-!
+# Axiom audit: Wave C1 R4 conditional TailFiberShift bridge
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2TailFiberShiftBridge
+
+#check TailFiberShift
+#check tickFiberMass_succ_of_tailFiberShift
+#check eventuallyTickFiberMassBalanced_of_tailFiberShift
+#check oscillatoryTail_of_tailFiberShift
+#check oscillatoryTail_of_labeled_tailFiberShift
+#check tick_shift_excludes_fixed_point
+#check fixed_class_blocks_tick_shift
+#check endpointReversal_fixes_allLoops
+#check tetSlotRotation_fixes_constTet
+#check endpointReversal_no_tailFiberShift
+#check tetSlotRotation_no_tailFiberShift
+#check endpointReversalThenTetSlotRotation_no_tailFiberShift
+#check gap2TailFiberShiftBridgeStatus_flags
+
+#print axioms eventuallyTickFiberMassBalanced_of_tailFiberShift
+#print axioms oscillatoryTail_of_tailFiberShift
+#print axioms oscillatoryTail_of_labeled_tailFiberShift
+#print axioms tick_shift_excludes_fixed_point
+#print axioms fixed_class_blocks_tick_shift
+#print axioms endpointReversal_no_tailFiberShift
+#print axioms tetSlotRotation_no_tailFiberShift
+#print axioms endpointReversalThenTetSlotRotation_no_tailFiberShift
+#print axioms gap2TailFiberShiftBridgeStatus_flags

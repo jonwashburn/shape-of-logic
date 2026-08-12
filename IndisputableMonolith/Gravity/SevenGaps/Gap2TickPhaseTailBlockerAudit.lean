@@ -1,0 +1,37 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2TickPhaseTailBlocker
+
+/-!
+# Axiom audit: Wave C1 R4 gap2 tick-phase tail blocker
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2TickPhaseTailBlocker
+
+#check exactPathClass_zero_subsingleton
+#check exactPathClass_zero_subsingleton_or_the_precise_finite_head_fact
+#check tickFiberMass_shell_zero
+#check no_tickFiberMassBalanced
+#check exactShellAmplitude_eq_zero_of_massBalanced_at
+#check tickFiberMassBalanced_implies_exactShellTailCancellation
+#check tickFiberMassBalanced_implies_oscillatoryTail
+#check exactShellTailCancellation_of_identically_zero_amplitudes
+#check EventuallyTickFiberMassBalanced
+#check eventuallyTickFiberMassBalanced_implies_oscillatoryTail
+#check eventuallyTickFiberMassBalanced_implies_exactShellTailCancellation
+#check ShellSigTick
+#check SignatureFin8OscillatoryTailBlocker
+#check gap2TickPhaseTailBlockerStatus_flags
+
+#print axioms exactPathClass_zero_subsingleton
+#print axioms exactPathClass_zero_subsingleton_or_the_precise_finite_head_fact
+#print axioms tickFiberMass_shell_zero
+#print axioms no_tickFiberMassBalanced
+#print axioms exactShellAmplitude_eq_zero_of_massBalanced_at
+#print axioms tickFiberMassBalanced_implies_exactShellTailCancellation
+#print axioms tickFiberMassBalanced_implies_oscillatoryTail
+#print axioms exactShellTailCancellation_of_identically_zero_amplitudes
+#print axioms eventuallyTickFiberMassBalanced_implies_oscillatoryTail
+#print axioms eventuallyTickFiberMassBalanced_implies_exactShellTailCancellation
+#print axioms gap2TickPhaseTailBlockerStatus_flags

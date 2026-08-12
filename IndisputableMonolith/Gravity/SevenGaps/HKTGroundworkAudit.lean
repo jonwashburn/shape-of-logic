@@ -1,0 +1,31 @@
+import IndisputableMonolith.Gravity.SevenGaps.HKTOneSiteCounterexample
+import IndisputableMonolith.Gravity.SevenGaps.HKTDynamicTarget
+import IndisputableMonolith.Gravity.SevenGaps.HKTLocalFunctionalEquation
+
+/-!
+# Axiom audit: Wave C2 R5/R6 HKT groundwork
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.HKTOneSiteCounterexample
+open IndisputableMonolith.Gravity.SevenGaps.HKTDynamicTarget
+open IndisputableMonolith.Gravity.SevenGaps.HKTLocalFunctionalEquation
+
+#check quarticOneSiteHKT
+#check one_site_wronskians_vacuous
+#check not_HKTRigidityStatement_one
+#check HojmanKucharTeitelboimTargetDyn
+#check HKTRigidityStatementDyn
+#check unitStructure_recovers_original_ham_ham_RHS
+#check unitStructure_is_phaseSpaceConstant
+#check hktDynamicTargetStatus_flags
+#check local_profile_ham_ham_form
+#check localHamHamCoefficient_witnesses_identity
+
+#print axioms one_site_wronskians_vacuous
+#print axioms not_HKTRigidityStatement_one
+#print axioms unitStructure_recovers_original_ham_ham_RHS
+#print axioms unitStructure_is_phaseSpaceConstant
+#print axioms hktDynamicTargetStatus_flags
+#print axioms local_profile_ham_ham_form
+#print axioms localHamHamCoefficient_witnesses_identity
+#print axioms bracket_quarticHam_quarticHam

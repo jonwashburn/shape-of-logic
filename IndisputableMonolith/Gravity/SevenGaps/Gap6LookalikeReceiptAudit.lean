@@ -1,0 +1,43 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap6LookalikeReceipt
+
+/-!
+# Axiom audit: Wave C4 R0 gap6 lookalike-falsify receipt
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap6LookalikeReceipt
+open IndisputableMonolith.Gravity.SevenGaps.FullTheoryLedger
+
+#check TypedResidual_gap6_lookalike_decoys_fail
+#check typedResidual_gap6_lookalike_decoys_fail
+#check TypedResidual_gap6_lookalike_decoys_fail_closed
+#check lorentzianContinuation3DNotAction4DCertificate
+#check lorentzianContinuation4DKinematicalNotActionCertificate
+#check hingeDataNotActionLevelCertificate
+#check cm4SignNotActionLevelCertificate
+#check branchRegularOnNotDeficitSumCertificate
+#check twoPentNotInteriorActionCertificate
+#check ehRecoveryNotGap6Certificate
+#check Gap6LedgerTerminalGuard
+#check gap6LedgerTerminalGuard
+#check gap6LookalikeReceiptStatus_flags
+#check simplex3d_vertex_card_ne_4d
+#check simplex3d_edge_card_ne_4d
+#check two_pent_interior_impossible
+
+#print axioms typedResidual_gap6_lookalike_decoys_fail
+#print axioms TypedResidual_gap6_lookalike_decoys_fail_closed
+#print axioms lorentzianContinuation3DNotAction4DCertificate
+#print axioms lorentzianContinuation4DKinematicalNotActionCertificate
+#print axioms hingeDataNotActionLevelCertificate
+#print axioms cm4SignNotActionLevelCertificate
+#print axioms branchRegularOnNotDeficitSumCertificate
+#print axioms twoPentNotInteriorActionCertificate
+#print axioms ehRecoveryNotGap6Certificate
+#print axioms gap6LedgerTerminalGuard
+#print axioms gap6LookalikeReceiptStatus_flags
+#print axioms simplex3d_vertex_card_ne_4d
+#print axioms simplex3d_edge_card_ne_4d
+#print axioms two_pent_interior_impossible

@@ -1,0 +1,28 @@
+import IndisputableMonolith.Gravity.SevenGaps.DynamicStructureContinuumSmearing
+
+/-!
+# Axiom audit: Wave C2 R3 dynamic structure continuum smearing
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.DynamicStructureContinuumSmearing
+
+#check dynamicStructureProfile
+#check DynamicWeightedContinuumReach
+#check continuousOn_dynamicStructureProfile
+#check concreteDynamicInverseMetric_eq_dynamicStructureProfile
+#check concreteDynamicInverseMetric_eq_sample
+#check dynamic_weighted_continuum_reach
+#check background_weighted_reach_misses_dynamic_family
+#check no_fixed_profile_equals_all_dynamic_profiles
+#check TypedResidual_gap5_dynamic_continuum_smearing
+#check typedResidual_gap5_dynamic_continuum_smearing
+
+#print axioms continuousOn_dynamicStructureProfile
+#print axioms concreteDynamicInverseMetric_eq_dynamicStructureProfile
+#print axioms dynamic_weighted_continuum_reach
+#print axioms background_weighted_reach_misses_dynamic_family
+#print axioms no_fixed_profile_equals_all_dynamic_profiles
+#print axioms typedResidual_gap5_dynamic_continuum_smearing

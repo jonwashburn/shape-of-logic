@@ -1,0 +1,24 @@
+import IndisputableMonolith.Gravity.SevenGaps.HKTCanonicalMomTarget
+
+open IndisputableMonolith.Gravity.SevenGaps.HKTCanonicalMomTarget
+open IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitStrong
+open IndisputableMonolith.Gravity.SevenGaps.FullTheoryLedger
+
+#check quarticBalancedStrongTarget
+#check not_HKTRigidityStatementPointSplitDynN2Strong
+#check HKTPointSplitTargetDynCanonicalMom
+#check hamDynPointSplitTargetCanonicalMom
+#check canonicalMom_excludes_balanced_quartic
+#check HKTRigidityStatementPointSplitDynN2Canonical
+#check hktCanonicalMomStatus_flags
+
+#print axioms not_HKTRigidityStatementPointSplitDynN2Strong
+#print axioms quarticBalanced_mom_load_bearing_witness
+#print axioms quarticBalanced_fails_canonical_mom
+#print axioms canonicalMom_excludes_balanced_quartic
+#print axioms hktPointSplitTargetDynCanonicalMom_nonvacuous
+#print axioms hktCanonicalMomStatus_flags
+
+example : fullTheoryBenchmarks.gap5_constraint_recovery = true := rfl
+example : ¬ HKTRigidityStatementPointSplitDynN2Strong :=
+  not_HKTRigidityStatementPointSplitDynN2Strong

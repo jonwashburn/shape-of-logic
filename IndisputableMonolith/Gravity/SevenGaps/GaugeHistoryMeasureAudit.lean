@@ -1,0 +1,56 @@
+import IndisputableMonolith.Gravity.SevenGaps.GaugeHistoryMeasure
+
+/-!
+# Axiom audit: Wave C1 R5 gauge-history measure (post-critic repair)
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.GaugeHistoryMeasure
+
+#check PostedBoundedHistory
+#check canonicalHistory
+#check CanonicalHistory
+#check CanonicalHistory.fiber_unique
+#check CanonicalHistory.equivUnderlying
+#check HistoryRelabel
+#check HistoryRelabel.toRelabel
+#check HistoryRelabel.ofRelabel
+#check historyRelabel_equiv_relabel
+#check historyRelabel_equiv_relabel_canonical
+#check historyOrbitCardClass
+#check historyPairCountClass
+#check GaugeHistoryEnrichment
+#check nuBuild
+#check nuBuild_def_history_only
+#check history_class_equiv_orbit
+#check historyOrbitCardClass_eq_orbitCardClass
+#check history_pair_equiv_pair
+#check historyPairCountClass_eq_pairCountClass
+#check nuBuild_gaugeCounting
+#check nuBuild_eq_gaugeOrbitMass
+#check gap2_gauge_counting_from_history_discharged
+#check TypedResidual_gap2_gauge_counting_from_history
+#check typedResidual_gap2_gauge_counting_from_history_closed
+#check TypedResidual_gap2_gauge_counting_from_history_closed
+#check circularNu
+#check circularNu_def_is_gaugeOrbitMass
+#check circularNu_satisfies_gaugeCounting
+#check decoy_uniformClassMass_not_gaugeCounting
+#check gap2_history_measure_decoy_anchors
+
+#print axioms CanonicalHistory.fiber_unique
+#print axioms historyRelabel_equiv_relabel
+#print axioms nuBuild_def_history_only
+#print axioms historyOrbitCardClass_eq_orbitCardClass
+#print axioms historyPairCountClass_eq_pairCountClass
+#print axioms nuBuild_gaugeCounting
+#print axioms nuBuild_eq_gaugeOrbitMass
+#print axioms gap2_gauge_counting_from_history_discharged
+#print axioms typedResidual_gap2_gauge_counting_from_history_closed
+#print axioms TypedResidual_gap2_gauge_counting_from_history_closed
+#print axioms circularNu_def_is_gaugeOrbitMass
+#print axioms circularNu_satisfies_gaugeCounting
+#print axioms decoy_uniformClassMass_not_gaugeCounting
+#print axioms gap2_history_measure_decoy_anchors

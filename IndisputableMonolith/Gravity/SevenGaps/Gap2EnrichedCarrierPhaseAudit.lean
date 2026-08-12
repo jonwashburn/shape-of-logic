@@ -1,0 +1,34 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2EnrichedCarrierPhase
+
+/-!
+# Axiom audit: Wave C R5 enriched-carrier phase terminal
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2EnrichedCarrierPhase
+
+#check descendedTick
+#check GlobalEquivalentInvariant
+#check selfLoopCount_congr
+#check selfLoopTick_invariant
+#check selfLoopClassTick_not_ShellSigTick
+#check oscillatoryTail_of_enriched_eventual_balance
+#check oscillatoryTail_of_enriched_identically_zero
+#check TypedResidual_enriched_carrier_oscillatoryTail
+#check bare_r5_of_enriched_carrier_oscillatoryTail
+#check typedResidual_continuum_substrate_oscillatoryTail_of_enriched
+#check enrichedCarrierPhaseSubstrate_nonempty
+#check signatureBlocker_iff_no_shellSig_oscillatoryTail
+#check gap2EnrichedCarrierPhaseStatus_flags
+
+#print axioms selfLoopCount_congr
+#print axioms selfLoopTick_invariant
+#print axioms selfLoopClassTick_not_ShellSigTick
+#print axioms oscillatoryTail_of_enriched_eventual_balance
+#print axioms oscillatoryTail_of_enriched_identically_zero
+#print axioms bare_r5_of_enriched_carrier_oscillatoryTail
+#print axioms typedResidual_continuum_substrate_oscillatoryTail_of_enriched
+#print axioms enrichedCarrierPhaseSubstrate_nonempty
+#print axioms gap2EnrichedCarrierPhaseStatus_flags

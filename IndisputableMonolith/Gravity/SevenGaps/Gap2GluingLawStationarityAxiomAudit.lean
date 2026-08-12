@@ -1,0 +1,29 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2GluingLawStationarity
+
+/-!
+# Axiom audit: Gap2 gluing-law stationarity
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps
+open IndisputableMonolith.Gravity.SevenGaps.Gap2GluingLawStationarity
+
+#print axioms insertionStationarity_forces_inverse_factorial
+#print axioms gluingLaw_gives_insertionStationarity
+#print axioms insertionStationarity_gives_gluingLaw
+#print axioms gluingLaw_iff_insertionStationarity
+#print axioms insertionStationarity_gives_gaugeCounting
+#print axioms barePostingMove_card
+#print axioms labelInsertionSlot_card
+#print axioms bare_posting_degree_not_insertion_degree_at_two
+#print axioms no_bare_posting_count_is_insertion_count
+#print axioms bareUnionPostingMove_card
+#print axioms bare_union_posting_degree_not_interleave_two_vertices
+#print axioms no_bare_posting_degree_supplies_interleave
+#print axioms bare_posting_blind_to_weight
+#print axioms factorialWorld_stationary
+#print axioms constantWorld_not_stationary
+#print axioms bare_posting_does_not_force_insertion_stationarity
+#print axioms labelInsertionKernel_gives_stationarity
+#print axioms labelInsertionKernel_gives_gaugeCounting
+#print axioms gap2_measure_derived_unmoved
+#print axioms gluingLawStationarityCert

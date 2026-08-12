@@ -1,0 +1,23 @@
+import IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitStrong
+
+open IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitStrong
+open IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitTarget
+
+#check HKTPointSplitTargetDynStrong
+#check HKTRigidityStatementPointSplitDynN2Strong
+#check quarticZeroMomTarget
+#check quarticZeroMomTarget_not_strong
+#check hamDynPointSplitTargetStrong
+#check hktPointSplitTargetDynStrong_two_nonvacuous
+#check strong_target_discriminates_decoy
+#check UnsplitMomHamNoSmoothNearestNeighborWitnessHamDyn
+#check unsplit_mom_ham_no_smooth_nearestNeighbor_witness_frozenHam
+
+#print axioms hamAdvFrom_eq_computed
+#print axioms hamAdvTo_eq_computed
+#print axioms quarticZeroMomTarget_not_strong
+#print axioms hamDyn_mom_load_bearing_witness
+#print axioms hamDyn_kinetic_regular_witness
+#print axioms hktPointSplitTargetDynStrong_two_nonvacuous
+#print axioms strong_target_discriminates_decoy
+#print axioms unsplit_mom_ham_no_smooth_nearestNeighbor_witness_frozenHam

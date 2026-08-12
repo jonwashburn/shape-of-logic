@@ -1,0 +1,13 @@
+import IndisputableMonolith.Gravity.SevenGaps.HKTDynamicTarget
+
+open IndisputableMonolith.Gravity.SevenGaps.HKTDynamicTarget
+
+#check HojmanKucharTeitelboimTargetDyn
+#check HKTRigidityStatementDyn
+#check unitStructure_recovers_original_ham_ham_RHS
+#check unitStructure_is_phaseSpaceConstant
+#check hktDynamicTargetStatus_flags
+
+#print axioms unitStructure_recovers_original_ham_ham_RHS
+#print axioms unitStructure_is_phaseSpaceConstant
+#print axioms hktDynamicTargetStatus_flags

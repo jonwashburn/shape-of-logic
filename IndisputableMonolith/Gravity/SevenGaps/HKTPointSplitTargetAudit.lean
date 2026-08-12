@@ -1,0 +1,25 @@
+import IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitTarget
+
+open IndisputableMonolith.Gravity.SevenGaps.HKTPointSplitTarget
+
+#check HKTPointSplitTargetDyn
+#check HKTRigidityStatementPointSplitDynN2
+#check unsplit_mom_ham_no_smooth_nearestNeighbor_witness_frozenHam
+#check unsplit_mom_ham_no_smooth_local_witness
+#check UnsplitMomHamNoSmoothNearestNeighborWitnessHamDyn
+#check forced_unsplit_partial_relation_impossible
+#check hamDynPointSplitTarget
+#check hktPointSplitTargetDyn_two_nonvacuous
+#check bracket_MomDyn_MomDyn
+#check bracket_MomDyn_HamDyn
+#check DgenSym_eq_zero_two
+#check zero_density_fails_nondegenerate
+
+#print axioms forced_unsplit_partial_relation_impossible
+#print axioms unsplit_mom_ham_no_smooth_nearestNeighbor_witness_frozenHam
+#print axioms unsplit_mom_ham_no_smooth_local_witness
+#print axioms bracket_MomDyn_MomDyn
+#print axioms bracket_MomDyn_HamDyn
+#print axioms hktPointSplitTargetDyn_two_nonvacuous
+#print axioms DgenSym_eq_zero_two
+#print axioms zero_density_fails_nondegenerate

@@ -1,0 +1,21 @@
+import IndisputableMonolith.Gravity.Pillar3Successor.RapidityOverlapKernel
+
+/-!
+Deterministic axiom audit for the standalone rapidity-overlap kernel.
+-/
+
+open IndisputableMonolith.Gravity.Pillar3Successor.RapidityOverlapKernel
+
+#print axioms reversalAverageRapidityCovector_eq
+#print axioms inverseMetricPairing_frameChange
+#print axioms rapidityMetricLeaf_minkowski
+#print axioms flatRecovery_forces_subtraction_coefficient_one
+#print axioms halfTimeInverse_symmetric
+#print axioms halfTimeInverse_nondegenerate
+#print axioms halfTimeInverse_lorentzian_diagonal
+#print axioms rapidityMetricAction_actual_dependence
+#print axioms rapidityMetricAction_line_hasDerivAt
+#print axioms finiteInverseMetricStressTensor_symmetric
+#print axioms unitCarrier_metricDerivative_ne_zero
+#print axioms unitCarrier_finiteStress_nonzero
+#print axioms rawOverlap_wrong_at_zero

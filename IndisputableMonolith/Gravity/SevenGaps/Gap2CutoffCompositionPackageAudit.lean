@@ -1,0 +1,35 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2CutoffCompositionPackage
+
+/-!
+# Axiom audit: Wave C1 R1 gap2 cutoff composition package
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps
+
+#check TypedResidual_gap2_cutoff_composition_package
+#check oscillatoryTail_implies_hasPhasedZqComplexityLimit_capPhaseFamily
+#check typedResidual_gap2_cutoff_composition_package_closed
+#check TypedResidual_gap2_cutoff_composition_package_closed
+#check oscillatoryTail_iff_exactShellTailCancellation
+#check exactComplexityCutoff_eq_Zcap_succ
+#check decoy_shellConstant_not_oscillatoryTail
+#check decoy_eventuallyZeroPhase_not_oscillatoryTail
+#check decoy_zeroPhase_not_oscillatoryTail
+#check gap2_cutoff_composition_decoy_anchors
+#check gap2CutoffCompositionPackageStatus_flags
+#check r2_interface_ready
+
+#print axioms oscillatoryTail_implies_hasPhasedZqComplexityLimit_capPhaseFamily
+#print axioms typedResidual_gap2_cutoff_composition_package_closed
+#print axioms TypedResidual_gap2_cutoff_composition_package_closed
+#print axioms oscillatoryTail_iff_exactShellTailCancellation
+#print axioms exactComplexityCutoff_eq_Zcap_succ
+#print axioms decoy_shellConstant_not_oscillatoryTail
+#print axioms decoy_eventuallyZeroPhase_not_oscillatoryTail
+#print axioms decoy_zeroPhase_not_oscillatoryTail
+#print axioms gap2_cutoff_composition_decoy_anchors
+#print axioms gap2CutoffCompositionPackageStatus_flags
+#print axioms r2_interface_ready

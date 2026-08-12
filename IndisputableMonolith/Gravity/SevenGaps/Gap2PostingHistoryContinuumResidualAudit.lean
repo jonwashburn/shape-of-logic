@@ -1,0 +1,44 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2PostingHistoryContinuumResidual
+
+/-!
+# Axiom audit: Gap2 posting-history continuum residual API
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2PostingHistoryContinuumResidual
+
+#check PostingHistoryContinuumData
+#check postingHistoryShellAmplitude
+#check PostingTransactionForcedExactTick
+#check PostingHistoryExactCharacterBridge
+#check CharacterPushforwardOfForcedObligation
+#check postingHistoryAmplitudeMatchesExactShell
+#check TypedResidual_posting_history_attachment
+#check PostingHistoryContinuumClose
+#check PostingHistoryContinuumClose.data
+#check PostingHistoryContinuumClose.bridge
+#check PostingHistoryContinuumClose.tail
+#check TypedResidual_posting_history_continuum_close
+#check bare_r5_of_posting_history_continuum_close
+#check PostingHistoryCertifiedCloseV2
+#check PostingHistoryCertifiedCloseV2.generated
+#check PostingHistoryCertifiedCloseV2.gaugeInvariant
+#check PostingHistoryCertifiedCloseV2.amplitude_matches
+#check TypedResidual_posting_history_certified_close_v2
+#check posting_history_continuum_close_of_v2
+#check certified_fin8_phase_close_of_v2
+#check bare_r5_of_v2
+#check AdversarialGate_unconstrainedProductRefused
+#check adversarialGate_unconstrainedProductRefused
+#check continuumData_refuses_forgetful_product_descent
+#check gap2PostingHistoryContinuumResidualStatus_flags
+
+#print axioms bare_r5_of_posting_history_continuum_close
+#print axioms posting_history_continuum_close_of_v2
+#print axioms certified_fin8_phase_close_of_v2
+#print axioms bare_r5_of_v2
+#print axioms adversarialGate_unconstrainedProductRefused
+#print axioms continuumData_refuses_forgetful_product_descent
+#print axioms gap2PostingHistoryContinuumResidualStatus_flags

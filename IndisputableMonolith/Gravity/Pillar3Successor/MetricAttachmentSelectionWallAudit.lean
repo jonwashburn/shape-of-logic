@@ -1,0 +1,14 @@
+import IndisputableMonolith.Gravity.Pillar3Successor.MetricAttachmentSelectionWall
+
+/-!
+Deterministic axiom audit for the metric-attachment non-selection wall.
+-/
+
+open IndisputableMonolith.Gravity.Pillar3Successor.MetricAttachmentSelectionWall
+
+#print axioms metricBlindLeaf_satisfies_currentPremises
+#print axioms rapidityMetricLeaf_satisfies_currentPremises
+#print axioms metricBlindLeaf_ne_rapidityMetricLeaf
+#print axioms currentPremises_do_not_select_uniqueMetricLeaf
+#print axioms rapidityMetricLeaf_unit_derivative_ne_zero
+#print axioms currentPremises_support_zero_and_nonzero_response

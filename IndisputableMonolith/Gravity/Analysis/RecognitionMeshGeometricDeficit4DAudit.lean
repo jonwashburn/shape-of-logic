@@ -1,0 +1,29 @@
+import IndisputableMonolith.Gravity.Analysis.RecognitionMeshGeometricDeficit4D
+
+/-!
+# Axiom audit: RecognitionMeshGeometricDeficit4D (Wave B R1)
+
+Closure theorem and decoys must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.Analysis.RecognitionMeshGeometricDeficit4D
+
+#check TypedResidual_mesh_geometricDeficit_identified
+#check typedResidual_mesh_geometricDeficit_identified_closed
+#check meshGeometricDeficit
+#check decoy_even_function_ne_mesh_geometricDeficit
+#check decoy_log_even_ratio_over_kappa_ne_starDeficit
+#check adversarial_decoys_mesh_geometricDeficit
+#check recognitionMeshGeometricDeficit4DStatus_flags
+
+#print axioms typedResidual_mesh_geometricDeficit_identified_closed
+#print axioms TypedResidual_mesh_geometricDeficit_identified_closed
+#print axioms meshGeometricDeficit_eq_arcsin
+#print axioms meshGeometricDeficit_odd
+#print axioms meshGeometricDeficit_flat
+#print axioms meshGeometricDeficit_sign
+#print axioms decoy_even_function_ne_mesh_geometricDeficit
+#print axioms decoy_log_even_ratio_over_kappa_ne_starDeficit
+#print axioms adversarial_decoys_mesh_geometricDeficit
+#print axioms recognitionMeshGeometricDeficit4DStatus_flags

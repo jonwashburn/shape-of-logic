@@ -1,0 +1,28 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2CensusFirstMoments
+import IndisputableMonolith.Gravity.SevenGaps.Gap2CensusVarianceSep
+import IndisputableMonolith.Gravity.SevenGaps.Gap2CensusOneSidedRate
+import IndisputableMonolith.Gravity.SevenGaps.Gap2SharpRateGap
+import IndisputableMonolith.Gravity.SevenGaps.QGSharpRateHostileProbe
+
+open Gap2CensusFirstMoments Gap2CensusVarianceSep Gap2CensusOneSidedRate
+open Gap2SharpRateGap QGSharpRateHostileProbe
+
+#print axioms Gap2CensusFirstMoments.expect_nloop
+#print axioms Gap2CensusFirstMoments.expect_nproper
+#print axioms Gap2CensusVarianceSep.norm_sq_resid_obsL
+#print axioms Gap2CensusVarianceSep.qfrac_eval
+#print axioms Gap2CensusOneSidedRate.qfrac_le_one_sided
+#print axioms Gap2CensusOneSidedRate.qfrac_eventually_one_sided
+#print axioms Gap2CensusOneSidedRate.qfrac_mul_clogc_eventually_le
+#print axioms Gap2CensusOneSidedRate.tendsto_qfrac_mul_sqrt_clogc_zero
+#print axioms Gap2SharpRateGap.qfrac_sharp_rate_of_gap
+#print axioms Gap2SharpRateGap.qfrac_sharp_rate_one_add_o1
+#print axioms QGSharpRateHostileProbe.qfrac_pos
+#print axioms QGSharpRateHostileProbe.varSum_two
+#print axioms QGSharpRateHostileProbe.varSum_two_ne_decoy
+#print axioms QGSharpRateHostileProbe.msqSum_two
+#print axioms QGSharpRateHostileProbe.msqSum_two_ne_decoy
+#print axioms QGSharpRateHostileProbe.a48_envelope_cannot_deliver_rate
+#print axioms QGSharpRateHostileProbe.qfrac_mul_sharp_split
+#print axioms QGSharpRateHostileProbe.qfrac_sharp_rate_of_general
+#print axioms QGSharpRateHostileProbe.nhds_one_ne_two

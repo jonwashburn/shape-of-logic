@@ -1,0 +1,32 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2AntipodalBalanceBridge
+
+/-!
+# Axiom audit: Gap2 R4 antipodal balance bridge
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2AntipodalBalanceBridge
+
+#check EventuallyTickFiberAntipodalMassBalanced
+#check tickRoot_add_four
+#check exactShellAmplitude_eq_zero_of_antipodalBalanced_at
+#check eventuallyAntipodalBalanced_implies_oscillatoryTail
+#check TailAntipodalShift
+#check tickFiberMass_add_four_of_tailAntipodalShift
+#check eventuallyTickFiberAntipodalMassBalanced_of_tailAntipodalShift
+#check oscillatoryTail_of_tailAntipodalShift
+#check nonempty_tailAntipodalShift_of_tailFiberShift
+#check eventuallyTickFiberMassBalanced_implies_antipodal
+#check gap2AntipodalBalanceBridgeStatus_flags
+
+#print axioms tickRoot_add_four
+#print axioms exactShellAmplitude_eq_zero_of_antipodalBalanced_at
+#print axioms eventuallyAntipodalBalanced_implies_oscillatoryTail
+#print axioms tickFiberMass_add_four_of_tailAntipodalShift
+#print axioms eventuallyTickFiberAntipodalMassBalanced_of_tailAntipodalShift
+#print axioms oscillatoryTail_of_tailAntipodalShift
+#print axioms nonempty_tailAntipodalShift_of_tailFiberShift
+#print axioms eventuallyTickFiberMassBalanced_implies_antipodal
+#print axioms gap2AntipodalBalanceBridgeStatus_flags

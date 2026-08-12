@@ -1,0 +1,41 @@
+import IndisputableMonolith.Gravity.Analysis.RecognitionDualEntryEnrichment4D
+import IndisputableMonolith.Gravity.Analysis.RecognitionMeshDualEntryCoupling4D
+
+/-!
+# Axiom audit: Wave B R3+R4 dual-entry enrichment and mesh coupling
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.Analysis.RecognitionDualEntryEnrichment4D
+open IndisputableMonolith.Gravity.Analysis.RecognitionMeshDualEntryCoupling4D
+
+#check DualEntryStrainState
+#check DualEntryStrainState.ofLedger
+#check DualEntryStrainState.phi_ofLedger
+#check enrichedWitness
+#check enrichedWitness_eq_ofLedger
+#check extract_not_bare_factorable
+#check typedResidual_signed_source_enrichment_schema_closed
+#check meshDualEntrySource_eq
+#check meshDualEntryCoupling
+#check mesh_recognition_ratio_derived
+#check typedResidual_DeficitSourceConstitutiveCoupling_from_enrichment_closed
+#check decoy_magnitude_only_ne_mesh_geometricDeficit
+
+#print axioms extract_not_bare_factorable
+#print axioms DualEntryStrainState.toBare_swap
+#print axioms DualEntryStrainState.phi_ofLedger
+#print axioms enrichedWitness_eq_ofLedger
+#print axioms enrichedWitness_toBare
+#print axioms toBare_not_injective
+#print axioms bare_factorable_is_swap_even
+#print axioms typedResidual_signed_source_enrichment_schema_closed
+#print axioms meshDualEntrySource_eq
+#print axioms mesh_recognition_ratio_derived
+#print axioms typedResidual_DeficitSourceConstitutiveCoupling_from_enrichment_closed
+#print axioms decoy_magnitude_only_ne_mesh_geometricDeficit
+#print axioms adversarial_decoys_mesh_dual_entry
+#print axioms recognitionDualEntryEnrichment4DStatus_flags
+#print axioms recognitionMeshDualEntryCoupling4DStatus_flags

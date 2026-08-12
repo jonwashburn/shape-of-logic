@@ -1,0 +1,36 @@
+import IndisputableMonolith.Gravity.SevenGaps.Gap2TickPhaseSubstrate
+
+/-!
+# Axiom audit: Wave C1 R2 gap2 tick-phase substrate
+
+Headline theorems must print within
+`[propext, Classical.choice, Quot.sound]`.
+-/
+
+open IndisputableMonolith.Gravity.SevenGaps.Gap2TickPhaseSubstrate
+
+#check ExactShellTickPhaseSubstrate
+#check TickEquidistributedInShell
+#check TickFiberMassBalanced
+#check tickEquidistribution_implies_shellAmplitudeVanishes
+#check sum_tickRoots_eq_zero
+#check TypedResidual_strengthened_tick_balance
+#check TypedResidual_shell_phase_enrichment_schema
+#check signatureVertexTickSubstrate
+#check typedResidual_shell_phase_enrichment_schema_closed
+#check complexityTickPhase_shellConstant
+#check complexityTickPhase_not_oscillatoryTail
+#check complexityTickPhase_decoy_dead
+#check gap2TickPhaseSubstrateStatus_flags
+
+#print axioms tickEquidistribution_implies_shellAmplitudeVanishes
+#print axioms sum_tickRoots_eq_zero
+#print axioms signatureVertexTickPhase_not_shellConstant
+#print axioms signatureVertexTickPhase_not_eventuallyZero
+#print axioms typedResidual_shell_phase_enrichment_schema_closed
+#print axioms complexityTickPhase_shellConstant
+#print axioms complexityTickPhase_not_oscillatoryTail
+#print axioms complexityTickPhase_decoy_dead
+#print axioms gap2TickPhaseSubstrateStatus_flags
+#print axioms tickCardEquidistribution_constantMu_implies_massBalanced
+#print axioms exactShellAmplitude_eq_zero_of_massBalanced

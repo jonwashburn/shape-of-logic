@@ -1,0 +1,4 @@
+-- Scratch axiom probe, superseded. The real audit ran on bigbird against
+-- IndisputableMonolith.Gravity.SevenGaps.Gap1MomentTensorNecessity and is
+-- recorded in QG/memory (C-qg-nogo-transports-to-class-lengths). This file is
+-- intentionally empty of declarations and is not imported by anything.
