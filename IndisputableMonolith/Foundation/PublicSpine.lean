@@ -263,8 +263,9 @@ theorem cubePeriodEight_holds : CubePeriodEight := by
 
 /-- **Target: eight-tick downstream of a non-encoding D=3 — now THEOREM.**
 Both conjuncts are proved: the bridge (`PublicSpineLinkingClosure.target_D3`)
-and the period half (`cubePeriodEight_holds`). See
-`Skeleton.guidepost_public_eight_tick` for the assembled proof. -/
+and the period half (`cubePeriodEight_holds`). The assembled proof is
+`target_eight_tick_of_bridge` applied to
+`PublicSpineLinkingClosure.target_D3`. -/
 def target_eight_tick_from_D3 : Prop :=
   target_D3_from_nonencoding_linking ∧ CubePeriodEight
 
@@ -297,7 +298,7 @@ Downstream modules that previously bundled `UnifiedForcingChain.t0_holds`…`t8_
 as a closed architecture spine should cite these instead. Inhabited content is
 `PublicSpineCert`. D=3 / eight-tick are now closed:
 `PublicSpineLinkingClosure.target_D3` and
-`Skeleton.guidepost_public_eight_tick`. -/
+`target_eight_tick_of_bridge`. -/
 
 /-- Preferred name for the inhabited public substrate (Channel B retarget). -/
 abbrev SubstrateCert : Prop := PublicSpineCert
