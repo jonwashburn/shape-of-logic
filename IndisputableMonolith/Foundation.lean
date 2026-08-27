@@ -1,12 +1,20 @@
 import IndisputableMonolith.Foundation.NothingToDistinction
 import IndisputableMonolith.Foundation.TMinus1ToT8Bridge
+import IndisputableMonolith.Foundation.LinkingNecessity
+import IndisputableMonolith.Foundation.LinkingFromHierarchy
+import IndisputableMonolith.Foundation.RecognitionToLinkingSeam
+import IndisputableMonolith.Foundation.RecognitionLinkingPositiveID
+import IndisputableMonolith.Foundation.RecognitionProducedEmbedding
+import IndisputableMonolith.Foundation.LinkingNumbers
 
 /-!
 # Shape of Logic Core Foundation
 
 This public aggregator is intentionally narrow.  It exposes the T-2 through T8
-core theory and the Mathlib circle-H1 T8 closure, and does not re-export the
-later physics or private application layers.
+core theory, the Mathlib circle-H1 T8 closure, and the Recognition-to-detector
+seam (`LinkingNecessity`, `RecognitionToLinkingSeam`,
+`RecognitionProducedEmbedding`). It does not re-export later physics or
+private application layers.
 -/
 
 namespace IndisputableMonolith

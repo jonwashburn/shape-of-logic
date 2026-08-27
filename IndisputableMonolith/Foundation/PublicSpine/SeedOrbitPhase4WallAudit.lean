@@ -1,0 +1,23 @@
+import IndisputableMonolith.Foundation.PublicSpine.SeedOrbitPhase4Wall
+
+/-!
+# SeedOrbitPhase4WallAudit
+
+Kernel-facing receipt for the Phase-4 seed-orbit non-identifiability wall.
+-/
+
+open IndisputableMonolith.Foundation.PublicSpine.SeedOrbitPhase4Wall
+
+#check joinReading_lowerData
+#check nonjoinReading_lowerData
+#check joinReading_additive_cost_image
+#check nonjoinReading_additive_cost_image
+
+#print axioms readings_agree_off_level_two
+#print axioms readings_have_same_cost_at_every_index
+#print axioms joinReading_seed_event_composes
+#print axioms nonjoinReading_not_seed_event_composes
+#print axioms exact_cost_reading_does_not_identify_seed_orbit
+#print axioms seed_event_composes_iff_support_exact
+#print axioms reopen_condition_rejects_same_cost_nonjoin
+#print axioms canonical_support_seed_compose_is_definitional

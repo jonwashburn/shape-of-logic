@@ -1,5 +1,8 @@
 import IndisputableMonolith.Foundation.NothingToDistinction
 import IndisputableMonolith.Foundation.TMinus1ToT8Bridge
+import IndisputableMonolith.Foundation.LinkingNecessity
+import IndisputableMonolith.Foundation.RecognitionToLinkingSeam
+import IndisputableMonolith.Foundation.RecognitionProducedEmbedding
 import IndisputableMonolith.RecognitionCore
 import IndisputableMonolith.LedgerFloor
 import IndisputableMonolith.Gravity

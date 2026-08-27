@@ -113,9 +113,25 @@ exactly when `D = 3`, over Mathlib singular homology, with no arithmetic
 encoding. The circle-`H₁` handoff
 (`circleH1ZNonzero_unconditional`, `circleH1ZIsoInt_holds`) is a premise of
 that bridge. Legacy `Foundation.DimensionForcing.linking_requires_D3` and
-`UnifiedForcingChain.t8_holds` remain certificates only. The physical claim
-that Recognition requires this topological detector is OPEN and is not
-discharged by the T8 Lean surface.
+`UnifiedForcingChain.t8_holds` remain certificates only.
+
+The Recognition-to-detector identification is banked on the same tree, with
+honest walls:
+
+* `Foundation.RecognitionToLinkingSeam` — bare Recognition supply does not
+  force the content-typed detector
+* `Foundation.LinkingNecessity` — the Deformation-Erasure Principle is the
+  named residual; it forces `D = 3` and is independent of the realization layer
+* `Foundation.RecognitionProducedEmbedding` — a detecting embedding produced
+  from the hierarchy winding, proved unequal to the bare unknot
+* `Foundation.PublicSpine.PostingPhase3Wall` — the balanced six-cycle is a
+  compiled countermodel; posting-derived predicates cannot force coverage
+* `Foundation.PublicSpine.PartINamedAxiomClosure` — completeness is a
+  disclosed `SemanticClockLaw`, not a consequence of balance
+
+`Foundation/PublicSpine/CalibrationDischargeProbe.lean` is included as a
+readable residual probe. It imports a scale-boundary module that is not in
+this public slice, so it is a reference file rather than a core-build leaf.
 
 ## Boundary Rule
 

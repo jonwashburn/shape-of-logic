@@ -9,6 +9,19 @@ import IndisputableMonolith.Foundation.UnknotComplementRetract
 import IndisputableMonolith.Foundation.LinkingVanishingLowDim
 import IndisputableMonolith.Cost.FunctionalEquation
 import IndisputableMonolith.Verification.T6T8SpineAudit
+import IndisputableMonolith.Foundation.PublicSpine.CalibrationGauge
+import IndisputableMonolith.Foundation.PublicSpine.SelectedScaleClosure
+import IndisputableMonolith.Foundation.PublicSpine.BooleanCompletePass
+import IndisputableMonolith.Foundation.PublicSpine.CalibrationNecessity
+import IndisputableMonolith.Foundation.PublicSpine.SelectedClosureNecessity
+import IndisputableMonolith.Foundation.PublicSpine.BooleanCompletePassNecessity
+import IndisputableMonolith.Foundation.PublicSpine.SeedComposeBridge
+import IndisputableMonolith.Foundation.PublicSpine.SeedOrbitPhase4Wall
+import IndisputableMonolith.Foundation.PublicSpine.LocalityFromPosting
+import IndisputableMonolith.Foundation.PublicSpine.TangentChartCalibration
+import IndisputableMonolith.Foundation.PublicSpine.AxiomExtensionNecessityProbe
+import IndisputableMonolith.Foundation.PublicSpine.PostingPhase3Wall
+import IndisputableMonolith.Foundation.PublicSpine.PartINamedAxiomClosure
 
 /-!
 # PublicSpine — dual forcing surface (δ stratification)
@@ -305,6 +318,54 @@ structure DimensionEightTickOpen : Prop where
 theorem dimensionEightTickOpen_holds : DimensionEightTickOpen where
   d3_is_bridge := rfl
   eight_is_bridge_and_period := rfl
+
+/-! ## Part I residual binders
+
+Named residuals for calibration gauge, selected φ-closure, and Boolean
+complete-pass. Kept as a separate cert so `PublicSpineCert` stays the
+dual-surface floor. -/
+
+structure PartIResidualCert : Prop where
+  calibration : CalibrationGauge
+  selected_scale : SelectedScaleClosure
+  boolean_complete_pass : BooleanCompletePass
+
+theorem partIResidualCert_holds : PartIResidualCert where
+  calibration := calibrationGauge_holds
+  selected_scale := selectedScaleClosure_holds
+  boolean_complete_pass := booleanCompletePass_holds
+
+theorem cubePeriodEight_of_local :
+    CubePeriodEightLocal → CubePeriodEight :=
+  fun h => h
+
+structure PartINecessityCert : Prop where
+  calibration_necessity : CalibrationNecessity
+  selected_closure_necessity : SelectedClosureNecessity
+  boolean_complete_pass_necessity : BooleanCompletePassNecessity
+
+theorem partINecessityCert_holds : PartINecessityCert where
+  calibration_necessity := calibrationNecessity_holds
+  selected_closure_necessity := selectedClosureNecessity_holds
+  boolean_complete_pass_necessity := booleanCompletePassNecessity_holds
+
+structure PartIDischargeArcCert : Prop where
+  seed_compose_wall : SeedComposeBridge.SeedComposeBridgeWall
+  locality_wall : LocalityFromPosting.LocalityFromPostingWall
+  tangent_chart_wall : TangentChartCalibration.TangentChartNecessity
+
+theorem partIDischargeArcCert_holds : PartIDischargeArcCert where
+  seed_compose_wall := SeedComposeBridge.seedComposeBridgeWall_holds
+  locality_wall := LocalityFromPosting.localityFromPostingWall_holds
+  tangent_chart_wall := TangentChartCalibration.tangentChartNecessity_holds
+
+theorem partIGateTerminal_holds :
+    AxiomExtensionNecessityProbe.AxiomExtensionNecessity :=
+  AxiomExtensionNecessityProbe.axiomExtensionNecessity_holds
+
+theorem partINamedAxiomClosure_holds :
+    PartINamedAxiomClosure.PartINamedAxiomClosureCert :=
+  PartINamedAxiomClosure.partINamedAxiomClosureCert_holds
 
 end PublicSpine
 end Foundation
