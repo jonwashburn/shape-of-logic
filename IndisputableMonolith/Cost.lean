@@ -335,7 +335,9 @@ lemma Jcost_zero_iff_one {x : ℝ} (hx : 0 < x) (h : Jcost x = 0) : x = 1 :=
 lemma Jcost_exp_cosh (t : ℝ) : Jcost (Real.exp t) = Real.cosh t - 1 :=
   Jlog_as_cosh t
 
-/-- The sqrt of 2*J gives |log|, which IS a metric. -/
+/-- The sqrt of 2*J: Jmetric(x) = √(2 J(x)) = 2|sinh(log x / 2)| for x > 0.
+    NOT a metric: the triangle inequality fails, see `sqrt_triangle_violation`
+    and `Jmetric_triangle_FALSE` below. -/
 noncomputable def Jmetric (x : ℝ) : ℝ := Real.sqrt (2 * Jcost x)
 
 /-- Jmetric(1) = 0 -/

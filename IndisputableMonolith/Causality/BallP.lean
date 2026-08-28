@@ -1,6 +1,11 @@
 import Mathlib
 import IndisputableMonolith.Causality.Basic
 
+/-!
+`ballP` and the ball-comparison lemmas. `Kinematics` and reach live in
+`Causality.Basic`.
+-/
+
 namespace IndisputableMonolith
 namespace Causality
 

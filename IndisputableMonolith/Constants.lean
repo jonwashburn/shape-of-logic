@@ -245,7 +245,19 @@ lemma cLagLock_pos : 0 < cLagLock := by
   unfold cLagLock
   exact Real.rpow_pos_of_pos hphi (-(5 : ℝ))
 
-/-- The elementary ledger bit cost J_bit = ln φ. -/
+/-- Owning definition of the name `J_bit`.
+
+    Value: `ln φ`.
+    This is the only definition permitted to be called `J_bit`.
+
+    Distinct objects that previously shared the name (identifiers kept;
+    they are not this number):
+    * `PlanckScaleMatching.J_bit_val` = `J(φ)` = `φ - 3/2`
+    * `LambdaRecDerivation.J_bit_normalized` = `1`
+
+    The λ_rec breadcrumb below that writes a unit cost of `1` refers to
+    `J_bit_normalized`, not to this definition. `BoltzmannConstant.k_R_eq_J_bit`
+    is `rfl` against this owner. -/
 noncomputable def J_bit : ℝ := Real.log phi
 
 /-- Coherence energy in RS units (dimensionless).
@@ -473,10 +485,12 @@ lemma c_ell0_tau0 : c * tau0 = ell0 := by
 `λ_rec = ℓ₀ = 1` looks like a unit choice on the surface. It is a
 **derived** quantity, not a calibration. The chain:
 
-1. The bit cost `J_bit = 1` (normalized recognition event cost).
+1. The unit-normalized recognition-event cost
+   `LambdaRecDerivation.J_bit_normalized = 1`
+   (not `J_bit` above, which is `ln φ`).
 2. The curvature cost `J_curv(λ) = 2λ²` from the Q₃ Gauss-Bonnet
    normalization (8 vertices × angular deficit π/2 each = 4π = 2π·χ(S²)).
-3. The balance condition `J_bit = J_curv` forces a unique positive
+3. The balance condition `J_bit_normalized = J_curv` forces a unique positive
    `λ_0 = 1/√2` in dimensionless RS-native units.
 4. The discrete lattice convention `ℓ₀ = 1` (one voxel = one causal step)
    absorbs the `√2`, giving `λ_rec = ℓ₀ = 1`.
@@ -485,6 +499,13 @@ Every step is proved in `IndisputableMonolith/Constants/LambdaRecDerivation.lean
 see `balance_at_lambda_0`, `balance_unique_positive_root`,
 `balance_determines_lambda`, `total_curvature_gauss_bonnet`,
 `G_derivation_chain_complete`. Zero sorry, zero RS-internal axioms.
+
+**TRAP (paid for 2026-08-05):** do NOT cite
+`Bridge.LambdaRecForcing` as the derivation. That module's curvature
+functional is a *post-definitional tautology* built from ℏ, G, c after G
+has already been defined from λ_rec. Its header now redirects here. The
+Skeleton guideposts are `guidepost_lambda_rec_balance_forced` and
+`guidepost_G_derivation_chain` in `Skeleton.Constants`.
 
 `G := λ_rec² · c³ / (π · ℏ)` follows by substitution and gives
 `G = φ⁵/π` in RS-native units (zero free parameters at this level).
@@ -495,10 +516,8 @@ If you are looking for the place the framework calibrates against
 SI/CODATA, it is NOT λ_rec. The SI bridge lives in:
 * `Constants/RSNativeUnits.lean` `ExternalCalibration` structure
   (seconds_per_tick, meters_per_voxel, joules_per_coh, with c-consistency).
-* `Foundation/SIBridgeClosure.lean` (the conversion-map closure; the
-  dimensional ANCHOR itself remains the explicit "principal open
-  frontier" — one external scale must be supplied, by dimensional
-  analysis it cannot be derived from dimensionless structure).
+* `Foundation/DimensionalBridgeStructural.lean` (the explicit "principal
+  open frontier" tag with the named residual).
 The dimensional bridge is one open frontier, not a hidden cluster of
 calibrations spread across the constants. -/
 noncomputable def lambda_rec : ℝ := ell0

@@ -1079,10 +1079,9 @@ theorem ode_regularity_bootstrap_of_smooth {H : ℝ → ℝ} (h : ContDiff ℝ �
     ode_linear_regularity_bootstrap_hypothesis H :=
   fun _ _ _ => h.of_le le_top
 
-/-- **Theorem (d'Alembert → cosh, Aczél form)**: Using only the Aczél axiom, a continuous
-    solution to d'Alembert with H(0) = 1 and H''(0) = 1 must equal cosh.
-
-    This is the clean version of `dAlembert_cosh_solution`, requiring no regularity params. -/
+/-- Continuous d'Alembert solution with `H(0) = 1` and `H''(0) = 1` equals
+    `cosh`, using the `AczelSmoothnessPackage` instance (a theorem in
+    `Cost.AczelProof`, not a global axiom). -/
 theorem dAlembert_cosh_solution_aczel
     [AczelSmoothnessPackage]
     (H : ℝ → ℝ)
@@ -1101,11 +1100,12 @@ theorem dAlembert_cosh_solution_aczel
   have h_C2 : ContDiff ℝ 2 H := h_smooth.of_le le_top
   exact ode_cosh_uniqueness_contdiff H h_C2 h_ode h_one h_H'0
 
-/-- **Law of Logic cost theorem**: The J-cost function is the unique
-    reciprocal cost satisfying the RCL, normalization, calibration, and continuity.
-
-    This version uses the global Aczél axiom internally and requires NO regularity
-    hypothesis parameters from the caller. -/
+/-- Uniqueness of `Jcost` on `(0, ∞)` from composition, normalization,
+    calibration, continuity, and the `AczelSmoothnessPackage` instance
+    (a theorem in `Cost.AczelProof`, not a global axiom). Reciprocity is
+    bound as `hSymm` and unused. Cite
+    `composition_logCurvature_forces_jcost` or
+    `Cost.FunctionalEquationStrict.composition_logCurvature_forces_jcost_unconditional`. -/
 theorem law_of_logic_forces_jcost (F : ℝ → ℝ)
     [AczelSmoothnessPackage]
     (hRecip : IsReciprocalCost F)

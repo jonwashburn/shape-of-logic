@@ -1,5 +1,10 @@
 import Mathlib
 
+/-!
+Owner of the Causality kinematics API: `Kinematics`, `ReachN`, `inBall`,
+`Reaches`, and the reach lemmas.
+-/
+
 namespace IndisputableMonolith
 namespace Causality
 
