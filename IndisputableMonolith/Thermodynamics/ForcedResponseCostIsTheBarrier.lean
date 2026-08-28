@@ -121,6 +121,21 @@ theorem barrierTraffic_even {P0 : ℝ} {B : ℝ → ℝ} {b : ℝ} (hb : b ≠ 0
     barrierTraffic P0 B b (-A) = barrierTraffic P0 B b A := by
   simp only [barrierTraffic, recognitionCost, neg_div, Real.cosh_neg]
 
+/-- Reciprocity from the traffic identification, with no linearity assumption on `B`.
+    Paper: Theorem 4.3 (v12). The linear-conversion wrapper
+    `barrier_law_implies_reciprocity` is the special case. -/
+theorem barrierTraffic_implies_reciprocity
+    {F G : ℝ → ℝ} (hDB : DetailedBalance F G) {P0 : ℝ} {B : ℝ → ℝ} {b : ℝ}
+    (hb : b ≠ 0)
+    (hP : ∀ A : ℝ, deviation F A = barrierTraffic P0 B b A) :
+    (∀ A : ℝ, responseOfLogRates F G (-A) = -responseOfLogRates F G A)
+      ∧ StateExchange F G := by
+  have heven : ∀ A : ℝ, deviation F (-A) = deviation F A := by
+    intro A
+    rw [hP (-A), hP A, barrierTraffic_even hb]
+  exact ⟨(odd_iff_deviation_even hDB).mpr heven,
+         (stateExchange_iff_deviation_even hDB).mpr heven⟩
+
 /-- **Reciprocity, now with linearity derived rather than assumed.** If the mean barrier is the
 recognition cost in thermal units, then the response is odd and the two states are interchangeable. -/
 theorem barrier_law_implies_reciprocity
