@@ -7,6 +7,27 @@ content, and the core gravity (ILG) layer.
 This repository is the public core-theory slice of `/reality`. It is not a
 mirror of the primary repo and must not grow application or domain layers.
 
+## Read me first
+
+Open `IndisputableMonolith/Verdict.lean`, the front door: every premise and every
+conclusion of Recognition Science in one theorem signature,
+
+```lean
+Verdict.recognition_science (c : Cited) (P : Premises F κ D Fr H) : Conclusions F κ D Fr H
+```
+
+with consistency and independence theorems beside it. `Verdict_Read_Me_First.html`
+walks a newcomer through what to open, what to check, and the exact sentence the
+file licenses. `bash scripts/verify_rs.sh` (from the repository root, after
+`lake exe cache get`) rebuilds the door, prints its axioms, walks its transitive
+closure, and writes `Verdict_Report_<date>.html`; the 2026-09-03 run is committed.
+
+Euclid's geometry is the axioms and everything the axioms force. Recognition
+Science is the T-2 through T8 theorems and everything forced from them. That
+the premises hold of the world is not proved here; what is proved is that
+anyone who accepts them has accepted the conclusions, and that no premise is
+hidden.
+
 ## Public Theorem Surface
 
 ### Forcing-chain spine (T-2 through T8)

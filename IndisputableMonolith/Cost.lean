@@ -3,6 +3,8 @@ import Mathlib
 namespace IndisputableMonolith
 namespace Cost
 
+/-- The recognition cost of a ratio `x > 0`: `J(x) = (x + 1/x)/2 − 1`. Zero exactly
+at `x = 1` (balance), symmetric under `x ↦ 1/x`, positive elsewhere. -/
 noncomputable def Jcost (x : ℝ) : ℝ := (x + x⁻¹) / 2 - 1
 
 structure CostRequirements (F : ℝ → ℝ) : Prop where

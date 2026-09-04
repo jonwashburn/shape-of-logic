@@ -5168,9 +5168,9 @@ abbrev WitnessNx := (5 : ℕ)
 abbrev WitnessNy := (5 : ℕ)
 abbrev WitnessNz := (5 : ℕ)
 
-instance witnessNeNx : NeZero WitnessNx := ⟨by decide⟩
-instance witnessNeNy : NeZero WitnessNy := ⟨by decide⟩
-instance witnessNeNz : NeZero WitnessNz := ⟨by decide⟩
+scoped instance witnessNeNx : NeZero WitnessNx := ⟨by decide⟩
+scoped instance witnessNeNy : NeZero WitnessNy := ⟨by decide⟩
+scoped instance witnessNeNz : NeZero WitnessNz := ⟨by decide⟩
 
 def witnessHx : 2 < WitnessNx := by decide
 def witnessHy : 2 < WitnessNy := by decide

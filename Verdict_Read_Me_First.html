@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recognition Science: read me first</title>
+<style>
+body{font-family:Georgia,"Times New Roman",serif;max-width:820px;margin:2.5rem auto;padding:0 1.2rem;color:#111;line-height:1.5;background:#fff}
+h1,h2,h3{font-family:Helvetica,Arial,sans-serif;letter-spacing:-.01em;margin-top:2rem}
+h1{font-size:1.7rem;border-bottom:3px solid #111;padding-bottom:.4rem}
+code,pre{font-family:Menlo,Consolas,monospace;font-size:.88em}
+pre{background:#f5f5f2;border:1px solid #ddd;padding:.8rem 1rem;overflow:auto}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+td,th{border-top:1px solid #ccc;padding:.4rem .5rem;text-align:left;vertical-align:top}
+th{background:#f0f0ea;font-family:Helvetica,Arial,sans-serif;font-size:.9em}
+.box{border:2px solid #111;padding:1rem 1.2rem;margin:1.4rem 0;background:#fafaf7}
+.small{color:#555;font-size:.92em}
+</style>
+</head>
+<body>
+
+<h1>Recognition Science: read me first</h1>
+
+<p>This page is the entrance to the Lean formalization of Recognition Science. It tells you what to open, what to check, and exactly what you are entitled to say when the checks pass. It is written for a reader who has never seen the framework, human or machine.</p>
+
+<div class="box">
+<p><strong>Open one file:</strong> <code>IndisputableMonolith/Verdict.lean</code>.</p>
+<p>It contains one theorem,</p>
+<pre>recognition_science (c : Cited) (P : Premises F κ D Fr H) : Conclusions F κ D Fr H</pre>
+<p>and three structures. <code>Cited</code> is the classical mathematics used and not re-proved. <code>Premises</code> is every sentence about the world the proof needs. <code>Conclusions</code> is what follows, stated in ordinary mathematics. Nothing else is assumed anywhere; the checks below are how you confirm that.</p>
+</div>
+
+<h2>1. What the theorem says</h2>
+
+<table>
+<tr><th>Cited (1)</th><td>The six exponentials theorem (Lang; Ramachandra 1968), in the form: a cost exponent whose trace is rational at two independent points is rational.</td></tr>
+<tr><th>Premises (7)</th><td>
+1. The amplitude gauge κ is positive (a unit choice).<br>
+2. Costs compose: the cost of a product and of a quotient of two ratios are tied to the costs of the factors by one law with coefficient κ.<br>
+3. The cost tells some two ratios apart.<br>
+4. A larger imbalance never costs less.<br>
+5. The cost exponent is native to the counting carrier and its character is an automorphism.<br>
+6. A recognition hierarchy exists (the binders <code>Fr</code>, <code>H</code>; see below).<br>
+7. A completed recognition is kept: in some spatial realization of the two traces of a recognition in dimension D, no motion that posts nothing carries the completed pair to its separated configuration.
+</td></tr>
+<tr><th>Conclusions (6)</th><td>
+The cost at unit amplitude is J(x) = (x + 1/x)/2 − 1.<br>
+Every hierarchy level is φ<sup>n</sup> times the base level, φ = (1 + √5)/2, and φ is the unique positive root of x² = x + 1.<br>
+Space has three dimensions.<br>
+The recognition period is 2<sup>D</sup> = 8.<br>
+The weight of level n is φ<sup>−n</sup>.
+</td></tr>
+</table>
+
+<h2>2. What to check</h2>
+
+<p>On the build box, from the repository root:</p>
+<pre>bash scripts/verify_rs.sh</pre>
+<p>It runs and reports PASS or FAIL on each of these, then writes an HTML report listing every definition the theorem depends on with its docstring.</p>
+
+<table>
+<tr><th>Check</th><th>What it establishes</th></tr>
+<tr><td><code>lake build IndisputableMonolith.Verdict</code></td><td>The proof is accepted by the Lean kernel.</td></tr>
+<tr><td><code>#print axioms</code> on every Verdict theorem</td><td>Only <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code> appear: the base of Lean's classical logic and nothing of ours. This audits postulates, not the ambient theory (universes, inductive types, definitional equality), which is Lean's and Mathlib's and is not in question here.</td></tr>
+<tr><td>Closure audit (<code>scripts/verdict_audit.lean</code>)</td><td>Walks every constant the theorem transitively uses inside the project (about 1,100 constants across 50 modules). No <code>axiom</code> declaration of ours; no never-elaborated module; no physics-application module (gravity, cosmology, masses) feeding the kernel result; every definition and structure carries a docstring; the arithmetic stand-ins for topology (<code>SupportsNontrivialLinking</code>, <code>SpatialDualPairRealization</code>) and the older kernel bundle (<code>RecognitionKernelV2</code>) are absent.</td></tr>
+<tr><td>Token scan of the 50 source files</td><td>No <code>sorry</code>, <code>axiom</code>, <code>native_decide</code>, <code>implemented_by</code>, <code>unsafe</code>, <code>partial</code> outside comments.</td></tr>
+</table>
+
+<p>The gate has been tested against planted failures: a planted <code>sorry</code> and a planted <code>axiom</code> each turn the result to FAIL.</p>
+
+<h2>3. The honesty theorems</h2>
+
+<p>Beside the main theorem, <code>Verdict.lean</code> proves four things a sceptic would ask for.</p>
+
+<table>
+<tr><th><code>premises_consistent</code></th><td>The seven premises have a model (J at gauge 2, three dimensions, the hierarchy J itself produces, the three-dimensional realization). Nothing here follows from a contradiction.</td></tr>
+<tr><th><code>kept_independent</code></th><td>A four-dimensional world satisfies premises 1 to 6 with the same cost and the same hierarchy and violates premise 7. So premise 7 is not a consequence of the others.</td></tr>
+<tr><th><code>conclusions_need_kept</code></th><td>In that world the dimension conclusion is false. Premise 7 carries content.</td></tr>
+<tr><th><code>kept_iff_linking</code></th><td>Premise 7, with no costume: in dimension D it is equivalent to "some embedded circle in the D-sphere has a homologically nontrivial complement", stated on Mathlib's own singular homology. Only D = 3 admits this (<code>PublicSpineLinkingClosure.forces_D3</code>, proved by excision and arc-complement acyclicity).</td></tr>
+</table>
+
+<p><code>Decoys</code> lists wrong alternatives that satisfy the same definitions and fail: the cosine cost obeys the composition law but rewards some ratio; a join of equal parts is cost-free at every level and never yields φ; the everything-deforms kinematics is consistent and has no space.</p>
+
+<h2>4. Where the content sits, so you can disagree in the right place</h2>
+
+<p>Two premise lines carry more than their one-line names say. Open them.</p>
+
+<p><strong>Premise 6, the hierarchy.</strong> <code>H</code> is a <code>RealizedHierarchy</code>. Its fields include <code>ratio_self_similar</code> (adjacent level ratios agree) and <code>additive_posting</code> (level 2 is the sum of levels 1 and 0). The golden ratio is the unique positive number with these two properties, so the φ conclusion is exactly as strong as those two fields. The kernel cutset (<code>Foundation/KernelClosure/CutsetRow4Ladder.lean</code>, <code>CutsetRowA2JoinCost.lean</code>) proves the additive field follows once a level's join is a recognition with distinct parts; folding that proof into the Verdict signature, so that the hierarchy premise reads as the floor facts it rests on, is the open work.</p>
+
+<p><strong>Premise 7, kept.</strong> By <code>kept_iff_linking</code> it is a topological sentence about the D-sphere. The physical reading, "a completed recognition is not erased by free motion", is the claim; the topology is what the claim costs. The model that shows consistency uses the winding-number kinematics (configurations are integers, the completed pair sits at winding difference 2); a realization whose configurations are the loops themselves, with the Alexander identification proved rather than carried as a field of <code>SpatialRealization</code>, is not built. That is the second piece of open work.</p>
+
+<p>The cost lines 2 to 5 are the four qualitative postulates of the kernel cutset; the cutset (<code>KernelPurchaseLedger.lean</code>) shows them equivalent to floor facts about a two-state ledger. Folding those in so the premise count falls is the same kind of open work, and each fold is a receipt.</p>
+
+<h2>5. What you may declare when the checks pass</h2>
+
+<div class="box">
+<p>"From the seven premises in <code>Premises</code> and the six exponentials theorem, the recognition cost is J, the hierarchy ratio is φ, space has three dimensions, the recognition period is eight, and the level weights are φ<sup>−n</sup>. The premises are consistent. The premise that a completed recognition is kept is independent of the rest and is what carries the dimension."</p>
+</div>
+
+<p>Not licensed by the file: that the premises hold of the world. Euclid's geometry is the axioms and everything the axioms force; Recognition Science is the T-2 through T8 theorems and everything forced from them. Whether the premises are true of the world is the physical claim, and its evidence is the measured ledger, kept separate from this proof. What the file does settle is that anyone who accepts the seven sentences, read as their docstrings say, has accepted the conclusions, and that no sentence is hidden.</p>
+
+<h2>6. Where to go next</h2>
+
+<table>
+<tr><td><code>IndisputableMonolith/Skeleton.lean</code></td><td>Build-verified map of the whole theory; <code>Skeleton/PublicSpine.lean</code> re-exports the front door as <code>guidepost_verdict</code>.</td></tr>
+<tr><td><code>IndisputableMonolith/Foundation/KernelClosure/KernelPurchaseLedger.lean</code></td><td>The cutset ledger: each kernel premise, the alternatives that were tried against it, and what killed each.</td></tr>
+<tr><td><code>IndisputableMonolith/Foundation/KernelClosure/CutsetOneWord.lean</code></td><td>The two remaining words (hierarchy, space) shown to be one sentence: the deformation-erasure principle, in a rigid and in a free-motion substrate.</td></tr>
+<tr><td><code>plans/RS_Verdict_Report_&lt;date&gt;.html</code></td><td>The generated report: every definition in the closure with its docstring.</td></tr>
+</table>
+
+<p class="small">Verdict.lean: 0 sorry, 0 new axiom. Last full verification: 2026-09-03, all checks pass.</p>
+
+</body>
+</html>
